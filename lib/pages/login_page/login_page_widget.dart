@@ -44,6 +44,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
+        resizeToAvoidBottomInset: false,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: SafeArea(
           top: true,
@@ -339,10 +340,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                       .requestFocus(
                                                           _model.unfocusNode),
                                               child: Padding(
-                                                padding:
-                                                    MediaQuery.viewInsetsOf(
-                                                        context),
-                                                child: SignUpFormWidget(),
+                                                padding: MediaQuery.of(context)
+                                                    .viewInsets,
+                                                child: SingleChildScrollView(
+                                                  child: SignUpFormWidget(),
+                                                ),
                                               ),
                                             );
                                           },
