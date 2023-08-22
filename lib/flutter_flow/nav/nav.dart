@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:joiner_1/models/lobby_model.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '/index.dart';
@@ -72,7 +73,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'Lobby',
           path: '/lobby',
-          builder: (context, params) => LobbyWidget(),
+          builder: (context, params) {
+            dynamic obj = params.state.extra;
+            return LobbyWidget(extra: obj);
+          },
         ),
         FFRoute(
           name: 'CarRentals',

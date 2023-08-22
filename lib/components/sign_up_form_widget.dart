@@ -1,3 +1,6 @@
+import 'package:joiner_1/models/user_model.dart';
+import 'package:joiner_1/service/api_service.dart';
+
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -46,6 +49,18 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+
+    FutureBuilder _signUp(UserModel nUser) {
+      return FutureBuilder(
+          future: apiService.registerUser(nUser),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Dialog(child: Text('Registered successfully!'));
+            } else {
+              return Dialog(child: CircularProgressIndicator());
+            }
+          });
+    }
 
     return Material(
       color: Colors.transparent,
@@ -280,7 +295,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                     child: TextFormField(
                       controller: _model.textController4,
                       autofocus: true,
-                      obscureText: false,
+                      obscureText: true,
                       decoration: InputDecoration(
                         labelStyle:
                             FlutterFlowTheme.of(context).labelMedium.override(
@@ -333,7 +348,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                         Navigator.pop(context);
                       },
                       autofocus: true,
-                      obscureText: false,
+                      obscureText: true,
                       decoration: InputDecoration(
                         labelStyle:
                             FlutterFlowTheme.of(context).labelMedium.override(
@@ -382,7 +397,17 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               ),
               FFButtonWidget(
                 onPressed: () async {
-                  Navigator.pop(context);
+                  final nUser = UserModel(
+                    first_name: _model.textController1.text,
+                    last_name: _model.textController2.text,
+                    email: _model.textController3.text,
+                    password: _model.textController4.text,
+                  );
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return _signUp(nUser);
+                      });
                 },
                 text: 'Sign Up',
                 options: FFButtonOptions(

@@ -1,3 +1,5 @@
+import 'package:joiner_1/models/user_model.dart';
+
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -24,11 +26,14 @@ class _AccountWidgetState extends State<AccountWidget> {
     super.initState();
     _model = createModel(context, () => AccountModel());
 
-    _model.textController1 ??= TextEditingController(text: 'Albert');
-    _model.textController2 ??= TextEditingController(text: 'Ereh');
-    _model.textController3 ??=
-        TextEditingController(text: 'albert.E@gmail.com');
-    _model.textController4 ??= TextEditingController(text: 'albertos');
+    _model.fNameController ??=
+        TextEditingController(text: FFAppState().currentUser?.first_name);
+    _model.lNameController ??=
+        TextEditingController(text: FFAppState().currentUser?.last_name);
+    _model.emailController ??=
+        TextEditingController(text: FFAppState().currentUser?.email);
+    _model.passwordController ??=
+        TextEditingController(text: FFAppState().currentUser?.password);
   }
 
   @override
@@ -104,7 +109,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              'Albert E.',
+                                              '${_model.fNameController.text} ${_model.lNameController.text}.',
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
@@ -207,7 +212,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                       width: 160.0,
                                                       child: TextFormField(
                                                         controller: _model
-                                                            .textController1,
+                                                            .fNameController,
                                                         autofocus: true,
                                                         readOnly:
                                                             !_model.editMode,
@@ -300,7 +305,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                         textAlign:
                                                             TextAlign.center,
                                                         validator: _model
-                                                            .textController1Validator
+                                                            .fNameControllerValidator
                                                             .asValidator(
                                                                 context),
                                                       ),
@@ -334,7 +339,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                       width: 160.0,
                                                       child: TextFormField(
                                                         controller: _model
-                                                            .textController2,
+                                                            .lNameController,
                                                         autofocus: true,
                                                         readOnly:
                                                             !_model.editMode,
@@ -427,7 +432,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                         textAlign:
                                                             TextAlign.center,
                                                         validator: _model
-                                                            .textController2Validator
+                                                            .lNameControllerValidator
                                                             .asValidator(
                                                                 context),
                                                       ),
@@ -461,7 +466,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                       width: 160.0,
                                                       child: TextFormField(
                                                         controller: _model
-                                                            .textController3,
+                                                            .emailController,
                                                         autofocus: true,
                                                         readOnly:
                                                             !_model.editMode,
@@ -554,7 +559,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                         textAlign:
                                                             TextAlign.center,
                                                         validator: _model
-                                                            .textController3Validator
+                                                            .emailControllerValidator
                                                             .asValidator(
                                                                 context),
                                                       ),
@@ -588,7 +593,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                       width: 160.0,
                                                       child: TextFormField(
                                                         controller: _model
-                                                            .textController4,
+                                                            .passwordController,
                                                         autofocus: true,
                                                         readOnly:
                                                             !_model.editMode,
@@ -705,7 +710,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                         textAlign:
                                                             TextAlign.center,
                                                         validator: _model
-                                                            .textController4Validator
+                                                            .passwordControllerValidator
                                                             .asValidator(
                                                                 context),
                                                       ),

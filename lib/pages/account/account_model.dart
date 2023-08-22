@@ -14,18 +14,18 @@ class AccountModel extends FlutterFlowModel {
 
   final unfocusNode = FocusNode();
   // State field(s) for TextField widget.
-  TextEditingController? textController1;
-  String? Function(BuildContext, String?)? textController1Validator;
+  TextEditingController? fNameController;
+  String? Function(BuildContext, String?)? fNameControllerValidator;
   // State field(s) for TextField widget.
-  TextEditingController? textController2;
-  String? Function(BuildContext, String?)? textController2Validator;
+  TextEditingController? lNameController;
+  String? Function(BuildContext, String?)? lNameControllerValidator;
   // State field(s) for TextField widget.
-  TextEditingController? textController3;
-  String? Function(BuildContext, String?)? textController3Validator;
+  TextEditingController? emailController;
+  String? Function(BuildContext, String?)? emailControllerValidator;
   // State field(s) for TextField widget.
-  TextEditingController? textController4;
+  TextEditingController? passwordController;
   late bool passwordVisibility;
-  String? Function(BuildContext, String?)? textController4Validator;
+  String? Function(BuildContext, String?)? passwordControllerValidator;
 
   /// Initialization and disposal methods.
 
@@ -35,10 +35,10 @@ class AccountModel extends FlutterFlowModel {
 
   void dispose() {
     unfocusNode.dispose();
-    textController1?.dispose();
-    textController2?.dispose();
-    textController3?.dispose();
-    textController4?.dispose();
+    fNameController?.dispose();
+    lNameController?.dispose();
+    emailController?.dispose();
+    passwordController?.dispose();
   }
 
   /// Action blocks are added here.

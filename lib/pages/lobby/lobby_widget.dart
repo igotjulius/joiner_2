@@ -1,3 +1,5 @@
+import 'package:joiner_1/widgets/widget_trip_details.dart';
+
 import '/components/budget_graph_widget.dart';
 import '/components/chat_widget.dart';
 import '/components/joiners_widget.dart';
@@ -9,10 +11,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'lobby_model.dart';
+import 'package:joiner_1/models/lobby_model.dart' as ModelLobby;
 export 'lobby_model.dart';
 
 class LobbyWidget extends StatefulWidget {
-  const LobbyWidget({Key? key}) : super(key: key);
+  final Map? extra;
+  const LobbyWidget({Key? key, this.extra}) : super(key: key);
 
   @override
   _LobbyWidgetState createState() => _LobbyWidgetState();
@@ -27,6 +31,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
   @override
   void initState() {
     super.initState();
+    print(widget.extra!['currentLobby']);
     _model = createModel(context, () => LobbyModel());
 
     _model.tabBarController = TabController(
@@ -46,7 +51,6 @@ class _LobbyWidgetState extends State<LobbyWidget>
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
@@ -79,7 +83,8 @@ class _LobbyWidgetState extends State<LobbyWidget>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Trip to Lambug Beach',
+                      widget.extra!['currentLobby'].title,
+                      //'Title: ',
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(
                                 fontFamily: 'Open Sans',
@@ -88,7 +93,8 @@ class _LobbyWidgetState extends State<LobbyWidget>
                               ),
                     ),
                     Text(
-                      'Planned Date: Jul 30',
+                      widget.extra!['currentLobby'].plannedDate,
+                      //'Date',
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(
                                 fontFamily: 'Roboto Flex',
@@ -98,18 +104,29 @@ class _LobbyWidgetState extends State<LobbyWidget>
                     ),
                   ],
                 ),
-                Flexible(
-                  child: Align(
-                    alignment: AlignmentDirectional(1.0, 0.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(
-                        'assets/images/Vector.png',
-                        width: 4.0,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                Spacer(
+                  flex: 1,
+                ),
+                IconButton(
+                  icon: Image.asset(
+                    'assets/images/Vector.png',
+                    width: 4.0,
+                    fit: BoxFit.cover,
                   ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        backgroundColor: Colors.transparent,
+                        child: Wrap(children: [
+                          WidgetTripDetails(
+                            currentLobby: widget.extra!['currentLobby']
+                                as ModelLobby.LobbyModel,
+                          )
+                        ]),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

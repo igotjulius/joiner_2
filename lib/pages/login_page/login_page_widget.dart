@@ -1,3 +1,6 @@
+import 'package:joiner_1/models/user_model.dart';
+import 'package:joiner_1/service/api_service.dart';
+
 import '/components/sign_up_form_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -189,7 +192,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 TextFormField(
                                   controller: _model.textController2,
                                   autofocus: true,
-                                  obscureText: false,
+                                  obscureText: true,
                                   decoration: InputDecoration(
                                     labelText: 'Password',
                                     labelStyle: FlutterFlowTheme.of(context)
@@ -268,16 +271,30 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
-                                      context.goNamed(
-                                        'VirtualLobby',
-                                        extra: <String, dynamic>{
-                                          kTransitionInfoKey: TransitionInfo(
-                                            hasTransition: true,
-                                            transitionType:
-                                                PageTransitionType.rightToLeft,
-                                          ),
+                                      await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return _loginUser();
                                         },
                                       );
+                                      context
+                                                  .read<FFAppState>()
+                                                  .currentUser
+                                                  ?.email !=
+                                              null
+                                          ? context.goNamed(
+                                              'VirtualLobby',
+                                              extra: <String, dynamic>{
+                                                kTransitionInfoKey:
+                                                    TransitionInfo(
+                                                  hasTransition: true,
+                                                  transitionType:
+                                                      PageTransitionType
+                                                          .rightToLeft,
+                                                ),
+                                              },
+                                            )
+                                          : ();
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(
@@ -394,6 +411,41 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
           ),
         ),
       ),
+    );
+  }
+
+  UserModel? userData;
+
+  FutureBuilder<UserModel> _loginUser() {
+    final user = UserModel(
+      email: _model.textController1.text,
+      password: _model.textController2.text,
+    );
+    return FutureBuilder(
+      future: apiService.loginUser(user),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          userData = snapshot.data;
+          if (userData?.email != null) {
+            context.read<FFAppState>().currentUser = userData;
+          }
+          return userData?.email != null
+              ? Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text('Welcome!'),
+                  ),
+                )
+              : Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text('User not registered'),
+                  ),
+                );
+        } else {
+          return Dialog(child: SizedBox.shrink());
+        }
+      },
     );
   }
 }

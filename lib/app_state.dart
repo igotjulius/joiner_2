@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 
@@ -23,6 +24,8 @@ class FFAppState extends ChangeNotifier {
   set isLobbyEmpty(bool _value) {
     _isLobbyEmpty = _value;
   }
+
+  UserModel? currentUser;
 }
 
 LatLng? _latLngFromString(String? val) {

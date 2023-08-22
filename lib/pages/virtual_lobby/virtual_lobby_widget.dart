@@ -65,22 +65,29 @@ class _VirtualLobbyWidgetState extends State<VirtualLobbyWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                if (FFAppState().isLobbyEmpty)
-                  Expanded(
-                    child: wrapWithModel(
-                      model: _model.emptyLobbyModel,
-                      updateCallback: () => setState(() {}),
-                      child: EmptyLobbyWidget(),
-                    ),
+                // if (FFAppState().isLobbyEmpty)
+                //   Expanded(
+                //     child: wrapWithModel(
+                //       model: _model.emptyLobbyModel,
+                //       updateCallback: () => setState(() {}),
+                //       child: EmptyLobbyWidget(),
+                //     ),
+                //   ),
+                // if (!FFAppState().isLobbyEmpty)
+                //   Expanded(
+                //     child: wrapWithModel(
+                //       model: _model.filledLobbyModel,
+                //       updateCallback: () => setState(() {}),
+                //       child: FilledLobbyWidget(),
+                //     ),
+                //   ),
+                Expanded(
+                  child: wrapWithModel(
+                    model: _model.filledLobbyModel,
+                    updateCallback: () => setState(() {}),
+                    child: FilledLobbyWidget(),
                   ),
-                if (!FFAppState().isLobbyEmpty)
-                  Expanded(
-                    child: wrapWithModel(
-                      model: _model.filledLobbyModel,
-                      updateCallback: () => setState(() {}),
-                      child: FilledLobbyWidget(),
-                    ),
-                  ),
+                ),
               ],
             ),
           ),

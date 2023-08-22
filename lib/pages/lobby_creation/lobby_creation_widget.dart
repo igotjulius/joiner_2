@@ -1,3 +1,6 @@
+import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/service/api_service.dart';
+
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -462,6 +465,8 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                             EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
                         child: FFButtonWidget(
                           onPressed: () async {
+                            // send request to server to create lobby
+                            await _postLobby();
                             context.pushNamed(
                               'VirtualLobby',
                               extra: <String, dynamic>{
@@ -509,6 +514,25 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
           ),
         ),
       ),
+    );
+  }
+
+  FutureBuilder _postLobby() {
+    final nLobby = LobbyModel(
+        title: 'Trip to Palawan',
+        plannedDate:
+            DateFormat(DateFormat.ABBR_MONTH_DAY).format(DateTime.now()));
+    return FutureBuilder(
+      future: apiService.postLobby(nLobby),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return SizedBox.shrink();
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }
