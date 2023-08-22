@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../models/transaction_model.dart';
 import '../models/user_model.dart';
 import 'package:retrofit/http.dart';
 import '../models/lobby_model.dart';
@@ -52,10 +53,30 @@ abstract class ApiService {
     String contentType = 'application/x-www-form-urlencoded',
   });
 
-  //Login user
+  // Login user
   @POST('login')
   Future<UserModel> loginUser(
     @Body() UserModel user, {
+    @Header('Content-Type')
+    String contentType = 'application/x-www-form-urlencoded',
+  });
+
+  // Get all transaction
+  @GET('transaction')
+  Future<List<TransactionModel>> getTransaction();
+
+  // Add transaction
+  @POST('transaction')
+  Future<TransactionModel> addTransaction(
+    @Body() TransactionModel transaction, {
+    @Header('Content-Type')
+    String contentType = 'application/x-www-form-urlencoded',
+  });
+
+  // Cancel transaction
+  @POST('cancelTransaction')
+  Future<TransactionModel> cancelTransaction(
+    @Body() TransactionModel transaction, {
     @Header('Content-Type')
     String contentType = 'application/x-www-form-urlencoded',
   });

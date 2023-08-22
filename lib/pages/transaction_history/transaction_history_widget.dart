@@ -1,3 +1,7 @@
+import 'package:joiner_1/models/transaction_model.dart';
+import 'package:joiner_1/service/api_service.dart';
+import 'package:joiner_1/widgets/widget_transaction.dart';
+
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -91,73 +95,11 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                         ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Sedan (4-seater)',
-                            style: FlutterFlowTheme.of(context).bodyMedium,
-                          ),
-                          Text(
-                            'July 27, 2023 - 1:03 PM',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Roboto Flex',
-                                  color: FlutterFlowTheme.of(context).accent4,
-                                ),
-                          ),
-                        ].divide(SizedBox(height: 10.0)),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            '₱1,234.00',
-                            style: FlutterFlowTheme.of(context).bodyMedium,
-                          ),
-                          FFButtonWidget(
-                            onPressed: () {
-                              print('Button pressed ...');
-                            },
-                            text: 'Details',
-                            options: FFButtonOptions(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  8.0, 0.0, 8.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'Roboto Flex',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                  ),
-                              elevation: 0.0,
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ].divide(SizedBox(height: 10.0)),
-                      ),
-                    ],
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: _getTransaction(),
                   ),
-                ),
-                Divider(
-                  thickness: 1.0,
-                  color: FlutterFlowTheme.of(context).secondaryText,
                 ),
               ].divide(SizedBox(height: 10.0)),
             ),
@@ -165,5 +107,18 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
         ),
       ),
     );
+  }
+
+  FutureBuilder<List<TransactionModel>> _getTransaction() {
+    return FutureBuilder(
+        future: apiService.getTransaction(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final List<TransactionModel> transactions = snapshot.data!;
+            return WidgetTransaction(transactions);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }

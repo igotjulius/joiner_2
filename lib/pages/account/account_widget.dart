@@ -109,7 +109,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              '${_model.fNameController.text} ${_model.lNameController.text}.',
+                                              '${_model.fNameController.text} ${_model.lNameController.text[0]}.',
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
@@ -791,6 +791,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                 .canPop()) {
                                               context.pop();
                                             }
+                                            FFAppState().currentUser = null;
                                             context.pushNamed('LoginPage');
                                           },
                                           text: 'Logout',

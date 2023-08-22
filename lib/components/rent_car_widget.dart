@@ -1,3 +1,6 @@
+import 'package:joiner_1/models/transaction_model.dart';
+import 'package:joiner_1/service/api_service.dart';
+
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_toggle_icon.dart';
@@ -416,7 +419,12 @@ class _RentCarWidgetState extends State<RentCarWidget> {
               ),
               FFButtonWidget(
                 onPressed: () async {
-                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return _addTransaction();
+                    },
+                  );
                 },
                 text: 'CONTINUE',
                 options: FFButtonOptions(
@@ -446,6 +454,37 @@ class _RentCarWidgetState extends State<RentCarWidget> {
             .addToStart(SizedBox(height: 20.0))
             .addToEnd(SizedBox(height: 20.0)),
       ),
+    );
+  }
+
+  FutureBuilder _addTransaction() {
+    final nTransaction = TransactionModel(
+      roomId: '123',
+      hostId: '123',
+      transactDate: DateTime.now(),
+      status: 'Pending',
+      amount: 1234.0,
+      rentalId: '123',
+      vehicleType: 'Sedan (4-seater)',
+      startRental: DateTime.now(),
+      endRental: DateTime.now(),
+    );
+
+    return FutureBuilder(
+      future: apiService.addTransaction(nTransaction),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done)
+          return Dialog(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              children: [
+                Text('Vehicle Rented'),
+              ],
+            ),
+          );
+        else
+          return Center(child: CircularProgressIndicator());
+      },
     );
   }
 }

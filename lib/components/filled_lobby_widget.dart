@@ -44,8 +44,8 @@ class _FilledLobbyWidgetState extends State<FilledLobbyWidget> {
     context.watch<FFAppState>();
 
     return Container(
-      width: double.infinity,
-      height: double.infinity,
+      width: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
       ),

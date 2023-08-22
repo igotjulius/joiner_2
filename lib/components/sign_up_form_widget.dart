@@ -404,10 +404,11 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                     password: _model.textController4.text,
                   );
                   showDialog(
-                      context: context,
-                      builder: (context) {
-                        return _signUp(nUser);
-                      });
+                    context: context,
+                    builder: (context) {
+                      return _signUp(nUser);
+                    },
+                  );
                 },
                 text: 'Sign Up',
                 options: FFButtonOptions(
