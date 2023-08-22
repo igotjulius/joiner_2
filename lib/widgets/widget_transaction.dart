@@ -23,12 +23,7 @@ class WidgetTransaction extends StatelessWidget {
       },
       itemBuilder: (context, index) {
         return Material(
-          color: Colors.yellow,
           child: InkWell(
-            splashColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
             onLongPress: () {
               print(transactions[index].toJson());
               // Cancel action

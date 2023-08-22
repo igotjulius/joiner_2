@@ -431,15 +431,31 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
           }
           return userData?.email != null
               ? Dialog(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text('Welcome!'),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Text(
+                          'Welcome!',
+                          style: FlutterFlowTheme.of(context).bodyLarge,
+                        ),
+                      ),
+                    ],
                   ),
                 )
               : Dialog(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text('User not registered'),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Text(
+                          'User not registered',
+                          style: FlutterFlowTheme.of(context).bodyLarge,
+                        ),
+                      ),
+                    ],
                   ),
                 );
         } else {

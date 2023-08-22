@@ -478,7 +478,13 @@ class _RentCarWidgetState extends State<RentCarWidget> {
             child: Wrap(
               alignment: WrapAlignment.center,
               children: [
-                Text('Vehicle Rented'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    'Vehicle Rented',
+                    style: FlutterFlowTheme.of(context).bodyLarge,
+                  ),
+                ),
               ],
             ),
           );
