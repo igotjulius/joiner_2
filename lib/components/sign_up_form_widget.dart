@@ -1,12 +1,10 @@
 import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/service/api_service.dart';
-
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'sign_up_form_model.dart';
 export 'sign_up_form_model.dart';
@@ -55,11 +53,33 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
           future: apiService.registerUser(nUser),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Dialog(child: Text('Registered successfully!'));
+              return Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                child: Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Text(
+                      'Registered successfully!',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),),
+                  ),
+                )
+              );
             } else {
-              return Dialog(child: CircularProgressIndicator());
+              return Dialog(
+                backgroundColor: Colors.transparent,
+                child: SizedBox(
+                  width: 40.0,
+                  height:40.0,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                    )
+                  )
+              );
             }
-          });
+          }
+      );
     }
 
     return Material(
