@@ -26,21 +26,21 @@ class _AccountWidgetState extends State<AccountWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => AccountModel());
-    UserModel? user;
-apiService.getAccount('650963e2ff267fdf6ea95a73').then((value) => {
-  print();
-});
-    print(user?.email);
+    apiService.getAccount('650963e2ff267fdf6ea95a73').then((value) {
+      _model.fNameController ??= TextEditingController(text: value.firstName);
+      _model.lNameController ??= TextEditingController(text: value.lastName);
+      _model.emailController ??= TextEditingController(text: value.email);
+      _model.passwordController ??= TextEditingController(text: value.password);
+    });
+
     //  _model.fNameController ??=
-      //  TextEditingController(text: user!.firstName);
+    //  TextEditingController(text: user!.firstName);
     // _model.lNameController ??=
     //     TextEditingController(text: FFAppState().currentUser?.last_name);
     // _model.emailController ??=
     //     TextEditingController(text: FFAppState().currentUser?.email);
     // _model.passwordController ??=
     //     TextEditingController(text: FFAppState().currentUser?.password);
-
-        
   }
 
   @override
@@ -53,7 +53,6 @@ apiService.getAccount('650963e2ff267fdf6ea95a73').then((value) => {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
-
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
@@ -117,7 +116,7 @@ apiService.getAccount('650963e2ff267fdf6ea95a73').then((value) => {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              "",// '${_model.fNameController.text} ${_model.lNameController.text[0]}.',
+                                              _model.fNameController.text,
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
