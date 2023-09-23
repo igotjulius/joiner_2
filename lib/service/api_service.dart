@@ -21,33 +21,22 @@ abstract class ApiService {
   @POST('user/register')
   Future<String> registerUser(
     @Body() UserModel nUser, {
-    @Header('Content-Type')
-    String contentType = 'application/json',
+    @Header('Content-Type') String contentType = 'application/json',
   });
 
-  // Get lobby
+  // Create lobby
   @POST('/user/{userId}/lobby')
   Future<String> postLobby(
     @Body() LobbyModel lobbies,
-    @Path('userId')String userId,{
-    @Header('Content-Type')
-    String contentType = 'application/json',
+    @Path('userId') String userId, {
+    @Header('Content-Type') String contentType = 'application/json',
   });
 
-  // Get all lobby
-  @GET('/user/650963e2ff267fdf6ea95a73/lobby')
-  Future<List<LobbyModel>> getLobby(
-    @Path('650963e2ff267fdf6ea95a73')String userId
-  );
+  // Get user lobby
+  @GET('/user/{userId}/lobby')
+  Future<Map<String, List<LobbyModel>>> getLobby(@Path('userId') String userId);
 
-
-
-
-
-
-
-
-
+  // Sample
   // Update lobby
   @POST('updateLobby')
   Future<LobbyModel> updateLobby(
@@ -63,9 +52,6 @@ abstract class ApiService {
     @Header('Content-Type')
     String contentType = 'application/x-www-form-urlencoded',
   });
-
-  
-  
 
   // Login user
   @POST('login')

@@ -78,27 +78,29 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<LobbyModel>> getLobby(userId) async {
+  Future<Map<String, List<LobbyModel>>> getLobby(userId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<LobbyModel>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<Map<String, List<LobbyModel>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/user/650963e2ff267fdf6ea95a73/lobby',
+              '/user/${userId}/lobby',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => LobbyModel.fromJson(i as Map<String, dynamic>))
-        .toList();
+    var value = _result.data!.map((k, dynamic v) => MapEntry(
+        k,
+        (v as List)
+            .map((i) => LobbyModel.fromJson(i as Map<String, dynamic>))
+            .toList()));
     return value;
   }
 

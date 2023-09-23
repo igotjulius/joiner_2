@@ -466,7 +466,11 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                         child: FFButtonWidget(
                           onPressed: () async {
                             // send request to server to create lobby
-                            await _postLobby();
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return _postLobby();
+                                });
                             context.pushNamed(
                               'VirtualLobby',
                               extra: <String, dynamic>{
@@ -519,12 +523,13 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
 
   FutureBuilder<String> _postLobby() {
     final nLobby = LobbyModel(
-      title: 'Busan City',
+      title: 'Nellah ',
+      participants: [],
       plannedDate: DateFormat(DateFormat.ABBR_MONTH_DAY).format(DateTime.now()),
     );
 
     return FutureBuilder(
-      future: apiService.postLobby(nLobby, 'userId'),
+      future: apiService.postLobby(nLobby, '650963e2ff267fdf6ea95a73'),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
@@ -533,8 +538,10 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
           }
           String postResult = snapshot.data!;
           print(postResult);
-          Navigator.of(context).pushNamed('VirtualLobby');
-          return SizedBox.shrink();
+          // Navigator.of(context).pushNamed('VirtualLobby');
+          return Dialog(
+            child: Text(postResult),
+          );
         } else {
           return Center(
             child: CircularProgressIndicator(),
@@ -543,6 +550,4 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
       },
     );
   }
-
-
 }

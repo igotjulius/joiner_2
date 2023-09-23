@@ -14,7 +14,6 @@ export 'filled_lobby_model.dart';
 class FilledLobbyWidget extends StatefulWidget {
   const FilledLobbyWidget({Key? key}) : super(key: key);
 
-  
   @override
   _FilledLobbyWidgetState createState() => _FilledLobbyWidgetState();
 }
@@ -58,16 +57,14 @@ class _FilledLobbyWidgetState extends State<FilledLobbyWidget> {
     );
   }
 
-  
-  FutureBuilder<List<LobbyModel>> _getLobby() {
-
+  FutureBuilder<Map<String, List<LobbyModel>>> _getLobby() {
     return FutureBuilder(
       future: apiService.getLobby('650963e2ff267fdf6ea95a73'),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          print(snapshot.data);
-          final List<LobbyModel> ? lobbies = snapshot.data;
-          print(lobbies);
+          final Map<String, List<LobbyModel>> response = snapshot.data!;
+          final List<LobbyModel> lobbies = response['active']!;
+          print(lobbies[0].title);
           return WidgetLobby(lobbies);
         } else {
           return const Center(
@@ -77,9 +74,4 @@ class _FilledLobbyWidgetState extends State<FilledLobbyWidget> {
       },
     );
   }
-
-
-
-
-
 }
