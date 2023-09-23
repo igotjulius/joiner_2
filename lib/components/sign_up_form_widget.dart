@@ -50,17 +50,18 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    FutureBuilder _signUp(UserModel nUser) {
-      return FutureBuilder(
-          future: apiService.registerUser(nUser),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Dialog(child: Text('Registered successfully!'));
-            } else {
-              return Dialog(child: CircularProgressIndicator());
-            }
-          });
-    }
+   // FutureBuilder _signUp(UserModel nUser) {
+     // return FutureBuilder(
+    //      future: apiService.registerUser(nUser),
+    //      builder: (context, snapshot) {
+    //        if (snapshot.connectionState == ConnectionState.done) {
+    //          return Dialog(child: Text('Registered successfully!'));
+    //        } else {
+    //          return Dialog(child: CircularProgressIndicator());
+    //        }
+    //      });
+   // }
+
 
     return Material(
       color: Colors.transparent,
@@ -398,15 +399,15 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               FFButtonWidget(
                 onPressed: () async {
                   final nUser = UserModel(
-                    first_name: _model.textController1.text,
-                    last_name: _model.textController2.text,
+                    firstName: _model.textController1.text,
+                    lastName: _model.textController2.text,
                     email: _model.textController3.text,
                     password: _model.textController4.text,
                   );
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return _signUp(nUser);
+                      return Placeholder();// _signUp(nUser);
                     },
                   );
                 },

@@ -274,15 +274,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       await showDialog(
                                         context: context,
                                         builder: (context) {
-                                          return _loginUser();
+                                          return loginUser();
                                         },
                                       );
-                                      context
-                                                  .read<FFAppState>()
-                                                  .currentUser
-                                                  ?.email !=
-                                              null
-                                          ? context.goNamed(
+                                       context.goNamed(
                                               'VirtualLobby',
                                               extra: <String, dynamic>{
                                                 kTransitionInfoKey:
@@ -293,8 +288,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                           .rightToLeft,
                                                 ),
                                               },
-                                            )
-                                          : ();
+                                            );
+                                          
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(
@@ -416,52 +411,29 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
   UserModel? userData;
 
-  FutureBuilder<UserModel> _loginUser() {
-    final user = UserModel(
-      email: _model.textController1.text,
-      password: _model.textController2.text,
-    );
-    return FutureBuilder(
-      future: apiService.loginUser(user),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          userData = snapshot.data;
-          if (userData?.email != null) {
-            context.read<FFAppState>().currentUser = userData;
-          }
-          return userData?.email != null
-              ? Dialog(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Text(
-                          'Welcome!',
-                          style: FlutterFlowTheme.of(context).bodyLarge,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : Dialog(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Text(
-                          'User not registered',
-                          style: FlutterFlowTheme.of(context).bodyLarge,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-        } else {
-          return Dialog(child: SizedBox.shrink());
-        }
-      },
-    );
+  FutureBuilder<String> loginUser() {
+    final user = UserModel(email: _model.textController1.text,
+    password: _model.textController2.text);
+    return FutureBuilder(future: apiService.loginUser(user),
+    builder: (context, snapshot)
+    {
+      if (snapshot.connectionState == ConnectionState.done) {
+        String loginResult = snapshot.data!;
+        return Dialog(
+          child: Wrap(alignment: WrapAlignment.center, 
+          children: [
+            Padding(padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Text(
+              loginResult,
+              style: FlutterFlowTheme.of(context).bodyLarge,
+            ),)
+          ],),
+        );
+      } else {
+        return Dialog(child: SizedBox.shrink(),
+        );
+      }
+    },);
   }
+
 }

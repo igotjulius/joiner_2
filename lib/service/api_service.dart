@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:joiner_1/pages/account/account_model.dart';
 import '../models/transaction_model.dart';
 import '../models/user_model.dart';
 import 'package:retrofit/http.dart';
@@ -8,7 +9,7 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-const String serverUrl = 'https://joiner-backend-f4k3.onrender.com/';
+const String serverUrl = 'https://joiner-backend-v2.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -16,6 +17,23 @@ final apiService =
 @RestApi(baseUrl: serverUrl)
 abstract class ApiService {
   factory ApiService(Dio dio) = _ApiService;
+
+
+
+  // Login user
+  @POST('user/login')
+  Future<String> loginUser(
+    @Body() UserModel user, {
+    @Header('Content-Type')
+    String contentType = 'application/json',
+  });
+
+// Get user profile
+@GET('user/{userId}/profile')
+Future<UserModel> getAccount(
+  @Path('userId') String userId
+);
+
 
   // Get all lobby
   @GET('lobby')
@@ -46,20 +64,22 @@ abstract class ApiService {
   });
 
   // Register user
+  //@POST('register')
+  //Future<UserModel> registerUser(
+  //  @Body() UserModel nUser, {
+  //  @Header('Content-Type')
+  //  String contentType = 'application/x-www-form-urlencoded',
+  //});
+
+
   @POST('register')
-  Future<UserModel> registerUser(
+  Future<String> registerUser(
     @Body() UserModel nUser, {
     @Header('Content-Type')
-    String contentType = 'application/x-www-form-urlencoded',
-  });
+    String contentType = 'application/x-www-form-urlencoded,'
+    });
 
-  // Login user
-  @POST('login')
-  Future<UserModel> loginUser(
-    @Body() UserModel user, {
-    @Header('Content-Type')
-    String contentType = 'application/x-www-form-urlencoded',
-  });
+  
 
   // Get all transaction
   @GET('transaction')

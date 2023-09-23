@@ -1,4 +1,5 @@
 import 'package:joiner_1/models/user_model.dart';
+import 'package:joiner_1/service/api_service.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -25,15 +26,21 @@ class _AccountWidgetState extends State<AccountWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => AccountModel());
+    UserModel? user;
+apiService.getAccount('650963e2ff267fdf6ea95a73').then((value) => {
+  print();
+});
+    print(user?.email);
+    //  _model.fNameController ??=
+      //  TextEditingController(text: user!.firstName);
+    // _model.lNameController ??=
+    //     TextEditingController(text: FFAppState().currentUser?.last_name);
+    // _model.emailController ??=
+    //     TextEditingController(text: FFAppState().currentUser?.email);
+    // _model.passwordController ??=
+    //     TextEditingController(text: FFAppState().currentUser?.password);
 
-    _model.fNameController ??=
-        TextEditingController(text: FFAppState().currentUser?.first_name);
-    _model.lNameController ??=
-        TextEditingController(text: FFAppState().currentUser?.last_name);
-    _model.emailController ??=
-        TextEditingController(text: FFAppState().currentUser?.email);
-    _model.passwordController ??=
-        TextEditingController(text: FFAppState().currentUser?.password);
+        
   }
 
   @override
@@ -46,6 +53,7 @@ class _AccountWidgetState extends State<AccountWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
@@ -109,7 +117,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              '${_model.fNameController.text} ${_model.lNameController.text[0]}.',
+                                              "",// '${_model.fNameController.text} ${_model.lNameController.text[0]}.',
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
