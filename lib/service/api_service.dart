@@ -8,7 +8,7 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-const String serverUrl = 'https://joiner-backend-f4k3.onrender.com/';
+const String serverUrl = 'https://joiner-backend-v2.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -17,17 +17,36 @@ final apiService =
 abstract class ApiService {
   factory ApiService(Dio dio) = _ApiService;
 
-  // Get all lobby
-  @GET('lobby')
-  Future<List<LobbyModel>> getLobby();
+  // Register user
+  @POST('user/register')
+  Future<String> registerUser(
+    @Body() UserModel nUser, {
+    @Header('Content-Type')
+    String contentType = 'application/json',
+  });
 
   // Get lobby
-  @POST('lobby')
-  Future<LobbyModel> postLobby(
-    @Body() LobbyModel lobbies, {
+  @POST('/user/{userId}/lobby')
+  Future<String> postLobby(
+    @Body() LobbyModel lobbies,
+    @Path('userId')String userId,{
     @Header('Content-Type')
-    String contentType = 'application/x-www-form-urlencoded',
+    String contentType = 'application/json',
   });
+
+  // Get all lobby
+  @GET('/user/650963e2ff267fdf6ea95a73/lobby')
+  Future<List<LobbyModel>> getLobby(
+    @Path('650963e2ff267fdf6ea95a73')String userId
+  );
+
+
+
+
+
+
+
+
 
   // Update lobby
   @POST('updateLobby')
@@ -45,13 +64,8 @@ abstract class ApiService {
     String contentType = 'application/x-www-form-urlencoded',
   });
 
-  // Register user
-  @POST('register')
-  Future<UserModel> registerUser(
-    @Body() UserModel nUser, {
-    @Header('Content-Type')
-    String contentType = 'application/x-www-form-urlencoded',
-  });
+  
+  
 
   // Login user
   @POST('login')

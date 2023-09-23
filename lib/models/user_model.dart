@@ -10,15 +10,15 @@ class UserModel {
     name: '_id',
   )
   String? id;
-  String? first_name;
-  String? last_name;
+  String? firstName;
+  String? lastName;
   String email;
   String? password;
 
   UserModel({
     this.id,
-    this.first_name,
-    this.last_name,
+    this.firstName,
+    this.lastName,
     required this.email,
     this.password,
   });

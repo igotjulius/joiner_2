@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:joiner_1/components/filled_lobby_widget.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -41,7 +42,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => LoginPageWidget(),
+          builder: (context, _) => LobbyCreationWidget(),
         ),
         FFRoute(
           name: 'LoginPage',

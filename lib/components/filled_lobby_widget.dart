@@ -1,3 +1,4 @@
+import 'package:joiner_1/index.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/widgets/widget_lobby.dart';
 
@@ -13,6 +14,7 @@ export 'filled_lobby_model.dart';
 class FilledLobbyWidget extends StatefulWidget {
   const FilledLobbyWidget({Key? key}) : super(key: key);
 
+  
   @override
   _FilledLobbyWidgetState createState() => _FilledLobbyWidgetState();
 }
@@ -56,12 +58,16 @@ class _FilledLobbyWidgetState extends State<FilledLobbyWidget> {
     );
   }
 
+  
   FutureBuilder<List<LobbyModel>> _getLobby() {
+
     return FutureBuilder(
-      future: apiService.getLobby(),
+      future: apiService.getLobby('650963e2ff267fdf6ea95a73'),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          final List<LobbyModel> lobbies = snapshot.data!;
+          print(snapshot.data);
+          final List<LobbyModel> ? lobbies = snapshot.data;
+          print(lobbies);
           return WidgetLobby(lobbies);
         } else {
           return const Center(
@@ -71,4 +77,9 @@ class _FilledLobbyWidgetState extends State<FilledLobbyWidget> {
       },
     );
   }
+
+
+
+
+
 }

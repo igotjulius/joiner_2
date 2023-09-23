@@ -27,9 +27,9 @@ class _AccountWidgetState extends State<AccountWidget> {
     _model = createModel(context, () => AccountModel());
 
     _model.fNameController ??=
-        TextEditingController(text: FFAppState().currentUser?.first_name);
+        TextEditingController(text: FFAppState().currentUser?.firstName);
     _model.lNameController ??=
-        TextEditingController(text: FFAppState().currentUser?.last_name);
+        TextEditingController(text: FFAppState().currentUser?.lastName);
     _model.emailController ??=
         TextEditingController(text: FFAppState().currentUser?.email);
     _model.passwordController ??=
