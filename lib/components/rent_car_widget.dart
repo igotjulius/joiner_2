@@ -422,7 +422,8 @@ class _RentCarWidgetState extends State<RentCarWidget> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return _addTransaction();
+                      // return _addTransaction();
+                      return Placeholder();
                     },
                   );
                 },
@@ -457,40 +458,40 @@ class _RentCarWidgetState extends State<RentCarWidget> {
     );
   }
 
-  FutureBuilder _addTransaction() {
-    final nTransaction = TransactionModel(
-      roomId: '123',
-      hostId: '123',
-      transactDate: DateTime.now(),
-      status: 'Pending',
-      amount: 1234.0,
-      rentalId: '123',
-      vehicleType: 'Sedan (4-seater)',
-      startRental: DateTime.now(),
-      endRental: DateTime.now(),
-    );
+  // FutureBuilder _addTransaction() {
+  //   final nTransaction = TransactionModel(
+  //     roomId: '123',
+  //     hostId: '123',
+  //     transactDate: DateTime.now(),
+  //     status: 'Pending',
+  //     amount: 1234.0,
+  //     rentalId: '123',
+  //     vehicleType: 'Sedan (4-seater)',
+  //     startRental: DateTime.now(),
+  //     endRental: DateTime.now(),
+  //   );
 
-    return FutureBuilder(
-      future: apiService.addTransaction(nTransaction),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done)
-          return Dialog(
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    'Vehicle Rented',
-                    style: FlutterFlowTheme.of(context).bodyLarge,
-                  ),
-                ),
-              ],
-            ),
-          );
-        else
-          return Center(child: CircularProgressIndicator());
-      },
-    );
-  }
+  //   return FutureBuilder(
+  //     future: apiService.addTransaction(nTransaction),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.done)
+  //         return Dialog(
+  //           child: Wrap(
+  //             alignment: WrapAlignment.center,
+  //             children: [
+  //               Padding(
+  //                 padding: const EdgeInsets.symmetric(vertical: 20),
+  //                 child: Text(
+  //                   'Vehicle Rented',
+  //                   style: FlutterFlowTheme.of(context).bodyLarge,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       else
+  //         return Center(child: CircularProgressIndicator());
+  //     },
+  //   );
+  // }
 }

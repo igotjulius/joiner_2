@@ -85,7 +85,7 @@ class _WidgetTripDetailsState extends State<WidgetTripDetails> {
                   id: widget.currentLobby.id,
                   title: _titleController.text,
                 );
-                await apiService.updateLobby(updatedLobby);
+                // await apiService.updateLobby(updatedLobby);
               },
               text: 'Save',
               options: FFButtonOptions(

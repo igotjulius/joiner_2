@@ -41,7 +41,7 @@ class WidgetLobby extends StatelessWidget {
                             //     return _deleteLobby(lobbies[index].id!);
                             //   },
                             // );
-                            _deleteLobby(lobbies[index].id!);
+                            // _deleteLobby(lobbies[index].id!);
                             Navigator.pop(context);
                           },
                           child: Text('Yes'),
@@ -158,20 +158,20 @@ class WidgetLobby extends StatelessWidget {
     );
   }
 
-  FutureBuilder _deleteLobby(String lobbyId) {
-    return FutureBuilder(
-      future: apiService.deleteLobby(LobbyModel(id: lobbyId)),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Dialog(
-            child: Text('Trip cancelled.'),
-          );
-        } else {
-          return Dialog(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
+  // FutureBuilder _deleteLobby(String lobbyId) {
+  //   return FutureBuilder(
+  //     future: apiService.deleteLobby(LobbyModel(id: lobbyId)),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.done) {
+  //         return Dialog(
+  //           child: Text('Trip cancelled.'),
+  //         );
+  //       } else {
+  //         return Dialog(
+  //           child: CircularProgressIndicator(),
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 }

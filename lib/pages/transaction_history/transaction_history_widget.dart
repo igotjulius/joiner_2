@@ -98,7 +98,7 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
-                    child: _getTransaction(),
+                    // child: _getTransaction(),
                   ),
                 ),
               ].divide(SizedBox(height: 10.0)),
@@ -109,16 +109,16 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
     );
   }
 
-  FutureBuilder<List<TransactionModel>> _getTransaction() {
-    return FutureBuilder(
-        future: apiService.getTransaction(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            final List<TransactionModel> transactions = snapshot.data!;
-            return WidgetTransaction(transactions);
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
-  }
+  // FutureBuilder<List<TransactionModel>> _getTransaction() {
+  //   return FutureBuilder(
+  //       future: apiService.getTransaction(),
+  //       builder: (context, snapshot) {
+  //         if (snapshot.connectionState == ConnectionState.done) {
+  //           final List<TransactionModel> transactions = snapshot.data!;
+  //           return WidgetTransaction(transactions);
+  //         } else {
+  //           return Center(child: CircularProgressIndicator());
+  //         }
+  //       });
+  // }
 }

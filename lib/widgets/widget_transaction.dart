@@ -35,7 +35,7 @@ class WidgetTransaction extends StatelessWidget {
                   actions: [
                     TextButton(
                         onPressed: () async {
-                          await _cancelTransaction(transactions[index].id!);
+                          // await _cancelTransaction(transactions[index].id!);
                         },
                         child: Text('Yes')),
                     TextButton(
@@ -125,8 +125,8 @@ class WidgetTransaction extends StatelessWidget {
     );
   }
 
-  Future _cancelTransaction(String transactionId) {
-    final transaction = TransactionModel(id: transactionId);
-    return apiService.cancelTransaction(transaction);
-  }
+  // Future _cancelTransaction(String transactionId) {
+  //   final transaction = TransactionModel(id: transactionId);
+  //   return apiService.cancelTransaction(transaction);
+  // }
 }
