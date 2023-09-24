@@ -10,11 +10,13 @@ class LobbyModel {
   String? id;
   String? title;
   String? plannedDate;
+  List<String>? participants;
 
   LobbyModel({
     this.id,
     this.title,
     this.plannedDate,
+    this.participants,
   });
 
   factory LobbyModel.fromJson(Map<String, dynamic> json) =>
