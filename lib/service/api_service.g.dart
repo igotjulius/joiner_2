@@ -13,7 +13,7 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://joiner-backend-v2.onrender.com/';
+    baseUrl ??= 'https://joiner-backend-v3.onrender.com/';
   }
 
   final Dio _dio;
@@ -152,6 +152,66 @@ class _ApiService implements ApiService {
         (v as List)
             .map((i) => LobbyModel.fromJson(i as Map<String, dynamic>))
             .toList()));
+    return value;
+  }
+
+  @override
+  Future<String> postConversation(
+    messages,
+    userId,
+    lobbyId,
+    conversationId, {
+    contentType = 'application/json',
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(messages.toJson());
+    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+        .compose(
+          _dio.options,
+          '/user/${userId}/lobby/${lobbyId}/conversation/${conversationId}/message',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data!;
+    return value;
+  }
+
+  @override
+  Future<List<MessageModel>> getConversation(
+    userId,
+    lobbyId,
+    conversationId,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<MessageModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/user/${userId}/lobby/${lobbyId}/conversation/${conversationId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    var value = _result.data!
+        .map((dynamic i) => MessageModel.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 

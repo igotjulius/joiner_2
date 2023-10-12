@@ -31,7 +31,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
   @override
   void initState() {
     super.initState();
-    print(widget.extra!['currentLobby']);
+
     _model = createModel(context, () => LobbyModel());
 
     _model.tabBarController = TabController(
@@ -83,7 +83,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.extra!['currentLobby'].title,
+                      'Temp',
                       //'Title: ',
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(
@@ -93,7 +93,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                               ),
                     ),
                     Text(
-                      widget.extra!['currentLobby'].plannedDate,
+                      'Temp',
                       //'Date',
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(

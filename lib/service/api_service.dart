@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/pages/account/account_model.dart';
 import '../models/transaction_model.dart';
 import '../models/user_model.dart';
@@ -9,7 +10,7 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-const String serverUrl = 'https://joiner-backend-v2.onrender.com/';
+const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -47,4 +48,20 @@ abstract class ApiService {
   // Get user lobby
   @GET('/user/{userId}/lobby')
   Future<Map<String, List<LobbyModel>>> getLobby(@Path('userId') String userId);
+
+  //Post Conversation
+  @POST('/user/{userId}/lobby/{lobbyId}/conversation/{conversationId}/message')
+  Future<String> postConversation(
+    @Body() MessageModel messages,
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+    @Path('conversationId') String conversationId, {
+      @Header('Content-Type') String contentType = 'application/json',
+    });
+
+  //Get Conversation
+  @GET('/user/{userId}/lobby/{lobbyId}/conversation/{conversationId}')
+  Future<List<MessageModel>> getConversation(@Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+    @Path('conversationId') String conversationId);
 }

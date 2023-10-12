@@ -1,3 +1,5 @@
+import 'package:joiner_1/models/message_model.dart';
+
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'chat_model.dart';
 export 'chat_model.dart';
+import 'package:joiner_1/service/api_service.dart';
 
 class ChatWidget extends StatefulWidget {
   const ChatWidget({Key? key}) : super(key: key);
@@ -41,604 +44,137 @@ class _ChatWidgetState extends State<ChatWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
+    FutureBuilder<List<MessageModel>> getConversation() {
+      return FutureBuilder(
+          future: apiService.getConversation('6522a0c73e680ea09ee89d5f',
+              '65279f410e8b2ee1b1412372', '65279f410e8b2ee1b1412375'),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<MessageModel> result = snapshot.data!;
+              return ListView.separated(itemCount: result.length, itemBuilder: (context, index) {
+                return Text(result[index].creator! + ' ' + result[index].message!);
+              }, separatorBuilder: (context, index) {
+                return Divider(height: 10, thickness: 1);
+              },);
+            } else {
+              return Dialog(child: SizedBox.shrink());
+            }
+          });
+    }
+
     return Container(
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 32.0,
-                        height: 32.0,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).secondaryBackground,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: Image.asset(
-                              'assets/images/User_01c_(1).png',
-                            ).image,
-                          ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, 0.0),
-                            child: Text(
-                              'Elen',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Roboto Flex',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color(0x7FDADADA),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(20.0),
-                                bottomRight: Radius.circular(10.0),
-                                topLeft: Radius.circular(0.0),
-                                topRight: Radius.circular(20.0),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  10.0, 10.0, 10.0, 10.0),
-                              child: Text(
-                                'Lorem Ipsum',
-                                style: FlutterFlowTheme.of(context).bodyMedium,
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, 0.0),
-                            child: Text(
-                              '9:01 AM',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Roboto Flex',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
-                          ),
-                        ].divide(SizedBox(height: 2.0)),
-                      ),
-                    ].divide(SizedBox(width: 10.0)),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 32.0,
-                        height: 32.0,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).secondaryBackground,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: Image.asset(
-                              'assets/images/User_05c_(1).png',
-                            ).image,
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).secondaryBackground,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional(-1.0, 0.0),
-                                child: Text(
-                                  'John',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Roboto Flex',
-                                        color:
-                                            FlutterFlowTheme.of(context).tertiary,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                ),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Color(0x7FDADADA),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(10.0),
-                                    topLeft: Radius.circular(0.0),
-                                    topRight: Radius.circular(20.0),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 10.0, 10.0, 10.0),
-                                  child: Text(
-                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                                    style:
-                                        FlutterFlowTheme.of(context).bodyMedium,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0x7FDADADA),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(10.0),
-                                    topLeft: Radius.circular(0.0),
-                                    topRight: Radius.circular(20.0),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 10.0, 10.0, 10.0),
-                                  child: Text(
-                                    'Lorem Ipsum',
-                                    style:
-                                        FlutterFlowTheme.of(context).bodyMedium,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: AlignmentDirectional(-1.0, 0.0),
-                                child: Text(
-                                  '9:01 AM',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Roboto Flex',
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                        fontSize: 10.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                ),
-                              ),
-                            ].divide(SizedBox(height: 2.0)),
-                          ),
-                        ),
-                      ),
-                    ].divide(SizedBox(width: 10.0)),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 32.0,
-                        height: 32.0,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).secondaryBackground,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: Image.asset(
-                              'assets/images/User_01c_(1).png',
-                            ).image,
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).secondaryBackground,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional(-1.0, 0.0),
-                                child: Text(
-                                  'Juana',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Roboto Flex',
-                                        color:
-                                            FlutterFlowTheme.of(context).tertiary,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                ),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Color(0x7FDADADA),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(10.0),
-                                    topLeft: Radius.circular(0.0),
-                                    topRight: Radius.circular(20.0),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 10.0, 10.0, 10.0),
-                                  child: Text(
-                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                                    style:
-                                        FlutterFlowTheme.of(context).bodyMedium,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0x7FDADADA),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(10.0),
-                                    topLeft: Radius.circular(0.0),
-                                    topRight: Radius.circular(20.0),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 10.0, 10.0, 10.0),
-                                  child: Text(
-                                    'Lorem Ipsum',
-                                    style:
-                                        FlutterFlowTheme.of(context).bodyMedium,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: AlignmentDirectional(-1.0, 0.0),
-                                child: Text(
-                                  '9:03 AM',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Roboto Flex',
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                        fontSize: 10.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                ),
-                              ),
-                            ].divide(SizedBox(height: 2.0)),
-                          ),
-                        ),
-                      ),
-                    ].divide(SizedBox(width: 10.0)),
-                  ),
-
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Align(
-                        alignment: AlignmentDirectional(1.0, 0.0),
-                        child: Container(
-                          width: MediaQuery.sizeOf(context).width * 0.85,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).primary,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                10.0, 10.0, 10.0, 10.0),
-                            child: Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Roboto Flex',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: AlignmentDirectional(1.0, 0.0),
-                        child: Text(
-                          '9:03 AM',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'Roboto Flex',
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                fontSize: 10.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Align(
-                        alignment: AlignmentDirectional(1.0, 0.0),
-                        child: Container(
-                          width: MediaQuery.sizeOf(context).width * 0.85,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).primary,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                10.0, 10.0, 10.0, 10.0),
-                            child: Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Roboto Flex',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: AlignmentDirectional(1.0, 0.0),
-                        child: Text(
-                          '9:03 AM',
-                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                fontFamily: 'Roboto Flex',
-                                color: FlutterFlowTheme.of(context).secondaryText,
-                                fontSize: 10.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 32.0,
-                        height: 32.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: Image.asset(
-                              'assets/images/User_05c_(1).png',
-                            ).image,
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional(-1.0, 0.0),
-                                child: Text(
-                                  'John',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Roboto Flex',
-                                        color: FlutterFlowTheme.of(context)
-                                            .tertiary,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                ),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Color(0x7FDADADA),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(10.0),
-                                    topLeft: Radius.circular(0.0),
-                                    topRight: Radius.circular(20.0),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 10.0, 10.0, 10.0),
-                                  child: Text(
-                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                                    style:
-                                        FlutterFlowTheme.of(context).bodyMedium,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0x7FDADADA),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(10.0),
-                                    topLeft: Radius.circular(0.0),
-                                    topRight: Radius.circular(20.0),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 10.0, 10.0, 10.0),
-                                  child: Text(
-                                    'Lorem Ipsum',
-                                    style:
-                                        FlutterFlowTheme.of(context).bodyMedium,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: AlignmentDirectional(-1.0, 0.0),
-                                child: Text(
-                                  '9:01 AM',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Roboto Flex',
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                        fontSize: 10.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                ),
-                              ),
-                            ].divide(SizedBox(height: 2.0)),
-                          ),
-                        ),
-                      ),
-                    ].divide(SizedBox(width: 10.0)),
-                  )
-                ].divide(SizedBox(height: 10.0)),
-              ),
+      child: Column(children: [
+        Expanded(child: getConversation()),
+        Material(
+          color: Colors.transparent,
+          elevation: 0.0,
+          child: Container(
+            width: double.infinity,
+            height: 60.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 8.0,
+                  color: Color(0x33000000),
+                  offset: Offset(0.0, 0.0),
+                  spreadRadius: 2.0,
+                )
+              ],
             ),
-            //SizedBox(height: 180),
-            Material(
-              color: Colors.transparent,
-              elevation: 0.0,
-              child: Container(
-                width: double.infinity,
-                height: 60.0,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 8.0,
-                      color: Color(0x33000000),
-                      offset: Offset(0.0, 0.0),
-                      spreadRadius: 2.0,
-                    )
-                  ],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+                    child: Container(
+                      width: 100.0,
+                      height: 100.0,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFDADADA),
+                        borderRadius: BorderRadius.circular(24.0),
+                      ),
                       child: Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
-                            10.0, 10.0, 10.0, 10.0),
-                        child: Container(
-                          width: 100.0,
-                          height: 100.0,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFDADADA),
-                            borderRadius: BorderRadius.circular(24.0),
+                            20.0, 0.0, 20.0, 0.0),
+                        child: TextFormField(
+                          controller: _model.textController,
+                          autofocus: true,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            labelStyle:
+                                FlutterFlowTheme.of(context).labelMedium,
+                            hintText: 'Enter message..',
+                            hintStyle: FlutterFlowTheme.of(context)
+                                .labelMedium
+                                .override(
+                                  fontFamily: 'Roboto Flex',
+                                  fontStyle: FontStyle.italic,
+                                ),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            focusedErrorBorder: InputBorder.none,
+                            contentPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 10.0),
                           ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                20.0, 0.0, 20.0, 0.0),
-                            child: TextFormField(
-                              controller: _model.textController,
-                              autofocus: true,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelStyle:
-                                    FlutterFlowTheme.of(context).labelMedium,
-                                hintText: 'Enter message..',
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      fontFamily: 'Roboto Flex',
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                focusedErrorBorder: InputBorder.none,
-                                contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 10.0),
-                              ),
-                              style: FlutterFlowTheme.of(context).bodyMedium,
-                              validator: _model.textControllerValidator
-                                  .asValidator(context),
-                            ),
-                          ),
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                          validator: _model.textControllerValidator
+                              .asValidator(context),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
-                      child: FFButtonWidget(
-                        onPressed: () {
-                          print('Button pressed ...');
-                        },
-                        text: 'SEND',
-                        options: FFButtonOptions(
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Roboto Flex',
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                          elevation: 3.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                      await apiService.postConversation(
+                          MessageModel(
+                              creatorId: '6522a0c73e680ea09ee89d5f',
+                              creator: 'John',
+                              message: _model.textController.text),
+                          '6522a0c73e680ea09ee89d5f',
+                          '65279f410e8b2ee1b1412372',
+                          '65279f410e8b2ee1b1412375');
+                      print('Button pressed ...');
+                    },
+                    text: 'SEND',
+                    options: FFButtonOptions(
+                      height: 40.0,
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                      iconPadding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      color: FlutterFlowTheme.of(context).primary,
+                      textStyle:
+                          FlutterFlowTheme.of(context).titleSmall.override(
+                                fontFamily: 'Roboto Flex',
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                      elevation: 3.0,
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        )
+      ]),
     );
   }
 }
