@@ -26,21 +26,14 @@ class _AccountWidgetState extends State<AccountWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => AccountModel());
-    apiService.getAccount('650963e2ff267fdf6ea95a73').then((value) {
-      _model.fNameController ??= TextEditingController(text: value.firstName);
-      _model.lNameController ??= TextEditingController(text: value.lastName);
-      _model.emailController ??= TextEditingController(text: value.email);
-      _model.passwordController ??= TextEditingController(text: value.password);
-    });
 
-    //  _model.fNameController ??=
-    //  TextEditingController(text: user!.firstName);
-    // _model.lNameController ??=
-    // TextEditingController(text: FFAppState().currentUser?.last_name);
-    // _model.emailController ??=
-    //     TextEditingController(text: FFAppState().currentUser?.email);
-    // _model.passwordController ??=
-    //     TextEditingController(text: FFAppState().currentUser?.password);
+    _model.fNameController ??=
+        TextEditingController(text: FFAppState().getCurrentUser().firstName);
+    _model.lNameController ??=
+        TextEditingController(text: FFAppState().getCurrentUser().lastName);
+    _model.emailController ??=
+        TextEditingController(text: FFAppState().getCurrentUser().email);
+    _model.passwordController ??= TextEditingController(text: '***');
   }
 
   @override
@@ -799,7 +792,8 @@ class _AccountWidgetState extends State<AccountWidget> {
                                               context.pop();
                                             }
                                             FFAppState().currentUser = null;
-                                            context.pushNamed('LoginPage');
+                                            context.goNamed('LoginPage');
+                                            FFAppState.pref!.clear();
                                           },
                                           text: 'Logout',
                                           icon: Icon(

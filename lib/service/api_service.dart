@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:joiner_1/pages/account/account_model.dart';
-import '../models/transaction_model.dart';
+import 'package:joiner_1/utils/generic_response.dart';
+import 'package:retrofit/dio.dart';
 import '../models/user_model.dart';
 import 'package:retrofit/http.dart';
 import '../models/lobby_model.dart';
@@ -9,7 +9,8 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-const String serverUrl = 'https://joiner-backend-v2.onrender.com/';
+// const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -20,7 +21,7 @@ abstract class ApiService {
 
   // Login user
   @POST('user/login')
-  Future<String> loginUser(
+  Future<HttpResponse<ResponseModel<UserModel>>> loginUser(
     @Body() UserModel user, {
     @Header('Content-Type') String contentType = 'application/json',
   });
@@ -46,5 +47,6 @@ abstract class ApiService {
 
   // Get user lobby
   @GET('/user/{userId}/lobby')
-  Future<Map<String, List<LobbyModel>>> getLobby(@Path('userId') String userId);
+  Future<HttpResponse<ResponseModel<Map<String, List<LobbyModel>>>>> getLobby(
+      @Path('userId') String userId);
 }

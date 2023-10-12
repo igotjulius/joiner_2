@@ -15,7 +15,8 @@ class VirtualLobbyWidget extends StatefulWidget {
   _VirtualLobbyWidgetState createState() => _VirtualLobbyWidgetState();
 }
 
-class _VirtualLobbyWidgetState extends State<VirtualLobbyWidget> {
+class _VirtualLobbyWidgetState extends State<VirtualLobbyWidget>
+    with TickerProviderStateMixin {
   late VirtualLobbyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -42,20 +43,55 @@ class _VirtualLobbyWidgetState extends State<VirtualLobbyWidget> {
       child: WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              context.pushNamed('LobbyCreation', extra: <String, dynamic>{
+                kTransitionInfoKey: TransitionInfo(
+                  hasTransition: true,
+                  transitionType: PageTransitionType.rightToLeft,
+                ),
+              });
+            },
+            child: const Icon(
+              Icons.add,
+              size: 32,
+            ),
+          ),
           key: scaffoldKey,
           backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
           appBar: AppBar(
             backgroundColor: FlutterFlowTheme.of(context).primary,
             automaticallyImplyLeading: false,
-            title: Text(
-              'Travel Lobby',
-              style: FlutterFlowTheme.of(context).headlineMedium.override(
-                    fontFamily: 'Open Sans',
-                    color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
+            title: Column(children: [
+              Align(
+                alignment: Alignment(0, 0),
+                child: TabBar(
+                  labelColor: FlutterFlowTheme.of(context).secondaryBackground,
+                  unselectedLabelColor:
+                      FlutterFlowTheme.of(context).primaryBackground,
+                  labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
+                        fontFamily: 'Open Sans',
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  unselectedLabelStyle: TextStyle(),
+                  indicatorColor:
+                      FlutterFlowTheme.of(context).secondaryBackground,
+                  tabs: [
+                    Tab(
+                      text: 'Lobby',
+                    ),
+                    Tab(
+                      text: 'Discover trips',
+                    ),
+                  ],
+                  controller:
+                      TabController(length: 2, vsync: this, initialIndex: 0),
+                  // create a local tabcontroller
+                  onTap: (value) => setState(() {}),
+                ),
+              ),
+            ]),
             actions: [],
             centerTitle: false,
             elevation: 2.0,
@@ -65,22 +101,6 @@ class _VirtualLobbyWidgetState extends State<VirtualLobbyWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                // if (FFAppState().isLobbyEmpty)
-                //   Expanded(
-                //     child: wrapWithModel(
-                //       model: _model.emptyLobbyModel,
-                //       updateCallback: () => setState(() {}),
-                //       child: EmptyLobbyWidget(),
-                //     ),
-                //   ),
-                // if (!FFAppState().isLobbyEmpty)
-                //   Expanded(
-                //     child: wrapWithModel(
-                //       model: _model.filledLobbyModel,
-                //       updateCallback: () => setState(() {}),
-                //       child: FilledLobbyWidget(),
-                //     ),
-                //   ),
                 Expanded(
                   child: wrapWithModel(
                     model: _model.filledLobbyModel,

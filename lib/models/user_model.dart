@@ -12,14 +12,14 @@ class UserModel {
   String? id;
   String? firstName;
   String? lastName;
-  String email;
+  String? email;
   String? password;
 
   UserModel({
     this.id,
     this.firstName,
     this.lastName,
-    required this.email,
+    this.email,
     this.password,
   });
   factory UserModel.fromJson(Map<String, dynamic> json) =>
