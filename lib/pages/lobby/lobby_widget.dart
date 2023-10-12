@@ -31,7 +31,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
   @override
   void initState() {
     super.initState();
-
+    print(widget.extra!['currentLobby']);
     _model = createModel(context, () => LobbyModel());
 
     _model.tabBarController = TabController(

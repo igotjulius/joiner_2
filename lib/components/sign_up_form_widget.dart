@@ -59,7 +59,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
       return FutureBuilder(
         future: apiService.registerUser(user),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
             String signUpResult = snapshot.data!;
             return Dialog(
               child: Wrap(

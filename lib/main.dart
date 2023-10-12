@@ -75,6 +75,7 @@ class _MyAppState extends State<MyApp> {
       ),
       themeMode: _themeMode,
       routerConfig: _router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -97,7 +98,7 @@ class _NavBarPageState extends State<NavBarPage> {
   @override
   void initState() {
     super.initState();
-    _currentPageName = widget.initialPage ?? _currentPageName;
+    // _currentPageName = widget.initialPage ?? _currentPageName;
     _currentPage = widget.page;
   }
 

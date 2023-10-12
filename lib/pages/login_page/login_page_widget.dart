@@ -1,3 +1,4 @@
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 
@@ -271,25 +272,19 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
-                                      await showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return loginUser();
-                                        },
+                                      final user = UserModel(
+                                        email: _model.textController1.text,
+                                        password: _model.textController2.text,
                                       );
-                                       context.goNamed(
-                                              'VirtualLobby',
-                                              extra: <String, dynamic>{
-                                                kTransitionInfoKey:
-                                                    TransitionInfo(
-                                                  hasTransition: true,
-                                                  transitionType:
-                                                      PageTransitionType
-                                                          .rightToLeft,
-                                                ),
-                                              },
-                                            );
-                                          
+                                      await UserController.loginUser(
+                                          user, context);
+                                      // await showDialog(
+                                      //   context: context,
+                                      //   builder: (context) {
+                                      //     return UserController.login(
+                                      //         user, context);
+                                      //   },
+                                      // );
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(
@@ -408,32 +403,4 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
       ),
     );
   }
-
-  UserModel? userData;
-
-  FutureBuilder<String> loginUser() {
-    final user = UserModel(email: _model.textController1.text,
-    password: _model.textController2.text);
-    return FutureBuilder(future: apiService.loginUser(user),
-    builder: (context, snapshot)
-    {
-      if (snapshot.connectionState == ConnectionState.done) {
-        String loginResult = snapshot.data!;
-        return Dialog(
-          child: Wrap(alignment: WrapAlignment.center, 
-          children: [
-            Padding(padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Text(
-              loginResult,
-              style: FlutterFlowTheme.of(context).bodyLarge,
-            ),)
-          ],),
-        );
-      } else {
-        return Dialog(child: SizedBox.shrink(),
-        );
-      }
-    },);
-  }
-
 }

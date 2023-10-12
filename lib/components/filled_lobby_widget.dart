@@ -1,3 +1,4 @@
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/index.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/widgets/widget_lobby.dart';
@@ -52,26 +53,8 @@ class _FilledLobbyWidgetState extends State<FilledLobbyWidget> {
       ),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-        child: _getLobby(),
+        child: UserController.userLobbies(FFAppState().getCurrentUser().id!),
       ),
-    );
-  }
-
-  FutureBuilder<Map<String, List<LobbyModel>>> _getLobby() {
-    return FutureBuilder(
-      future: apiService.getLobby('650963e2ff267fdf6ea95a73'),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final Map<String, List<LobbyModel>> response = snapshot.data!;
-          final List<LobbyModel> lobbies = response['active']!;
-          print(lobbies[0].title);
-          return WidgetLobby(lobbies);
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
     );
   }
 }

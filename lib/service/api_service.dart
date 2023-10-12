@@ -21,7 +21,7 @@ abstract class ApiService {
 
   // Login user
   @POST('user/login')
-  Future<String> loginUser(
+  Future<HttpResponse<ResponseModel<UserModel>>> loginUser(
     @Body() UserModel user, {
     @Header('Content-Type') String contentType = 'application/json',
   });

@@ -21,7 +21,7 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<String> loginUser(
+  Future<HttpResponse<ResponseModel<UserModel>>> loginUser(
     user, {
     contentType = 'application/json',
   }) async {
@@ -31,21 +31,23 @@ class _ApiService implements ApiService {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(user.toJson());
-    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ResponseModel<UserModel>>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
       contentType: contentType,
     )
-        .compose(
-          _dio.options,
-          'user/login',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = _result.data!;
-    return value;
+            .compose(
+              _dio.options,
+              'user/login',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ResponseModel<UserModel>.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
   }
 
   @override
@@ -129,30 +131,29 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<Map<String, List<LobbyModel>>> getLobby(userId) async {
+  Future<HttpResponse<ResponseModel<Map<String, List<LobbyModel>>>>> getLobby(
+      userId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<Map<String, List<LobbyModel>>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(_setStreamType<
+        HttpResponse<ResponseModel<Map<String, List<LobbyModel>>>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/user/${userId}/lobby',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!.map((k, dynamic v) => MapEntry(
-        k,
-        (v as List)
-            .map((i) => LobbyModel.fromJson(i as Map<String, dynamic>))
-            .toList()));
-    return value;
+        .compose(
+          _dio.options,
+          '/user/${userId}/lobby',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value =
+        ResponseModel<Map<String, List<LobbyModel>>>.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
   }
 
   @override

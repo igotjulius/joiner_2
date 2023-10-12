@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joiner_1/components/filled_lobby_widget.dart';
 import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '/index.dart';
