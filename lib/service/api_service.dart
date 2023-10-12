@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/pages/account/account_model.dart';
+import 'package:joiner_1/utils/generic_response.dart';
+import 'package:retrofit/dio.dart';
 import '../models/transaction_model.dart';
 import '../models/user_model.dart';
 import 'package:retrofit/http.dart';
@@ -47,7 +49,7 @@ abstract class ApiService {
 
   // Get user lobby
   @GET('/user/{userId}/lobby')
-  Future<Map<String, List<LobbyModel>>> getLobby(@Path('userId') String userId);
+  Future<HttpResponse<ResponseModel<Map<String, List<LobbyModel>>>>> getLobby(@Path('userId') String userId);
 
   //Post Conversation
   @POST('/user/{userId}/lobby/{lobbyId}/conversation/{conversationId}/message')
