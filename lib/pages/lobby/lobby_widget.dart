@@ -15,8 +15,8 @@ import 'package:joiner_1/models/lobby_model.dart' as ModelLobby;
 export 'lobby_model.dart';
 
 class LobbyWidget extends StatefulWidget {
-  final Map? extra;
-  const LobbyWidget({Key? key, this.extra}) : super(key: key);
+  final ModelLobby.LobbyModel? currentLobby;
+  const LobbyWidget({Key? key, this.currentLobby}) : super(key: key);
 
   @override
   _LobbyWidgetState createState() => _LobbyWidgetState();
@@ -82,6 +82,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+                      // widget.currentLobby!.title!,
                       'Temp',
                       //'Title: ',
                       style:
@@ -92,6 +93,10 @@ class _LobbyWidgetState extends State<LobbyWidget>
                               ),
                     ),
                     Text(
+                      // widget.currentLobby!.startDate ==
+                      //         widget.currentLobby!.endDate
+                      //     ? widget.currentLobby!.startDate.toString()
+                      //     : "${widget.currentLobby!.startDate.toString()} - ${widget.currentLobby!.endDate.toString()}",
                       'Temp',
                       //'Date',
                       style:
@@ -119,8 +124,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                         backgroundColor: Colors.transparent,
                         child: Wrap(children: [
                           WidgetTripDetails(
-                            currentLobby: widget.extra!['currentLobby']
-                                as ModelLobby.LobbyModel,
+                            currentLobby: widget.currentLobby!,
                           )
                         ]),
                       ),

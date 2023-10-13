@@ -40,7 +40,6 @@ class FFAppState extends ChangeNotifier {
   UserModel? currentUser;
 
   UserModel getCurrentUser() {
-    if (_currentUser == null) print('User is null');
     return _currentUser!;
   }
 

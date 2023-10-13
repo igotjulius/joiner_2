@@ -1,3 +1,4 @@
+import '../../controllers/user_controller.dart';
 import '/components/empty_lobby_widget.dart';
 import '/components/filled_lobby_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -105,7 +106,13 @@ class _VirtualLobbyWidgetState extends State<VirtualLobbyWidget>
                   child: wrapWithModel(
                     model: _model.filledLobbyModel,
                     updateCallback: () => setState(() {}),
-                    child: FilledLobbyWidget(),
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                          10.0, 10.0, 10.0, 10.0),
+                      child: UserController.userLobbies(
+                        FFAppState().getCurrentUser().id!,
+                      ),
+                    ),
                   ),
                 ),
               ],

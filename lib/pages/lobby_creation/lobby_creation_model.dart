@@ -10,7 +10,7 @@ class LobbyCreationModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  DateTime? datePicked;
+  DateTimeRange? datePicked;
   // State field(s) for Checkbox widget.
   bool? checkboxValue1;
   // State field(s) for Checkbox widget.
@@ -21,20 +21,17 @@ class LobbyCreationModel extends FlutterFlowModel {
   bool? checkboxValue4;
 
   // State field(s) for TextField widget.
-  TextEditingController? textController1;
-  String? Function(BuildContext, String?)? textController1Validator;
+  TextEditingController? titleInput;
+  String? Function(BuildContext, String?)? titleInputValidator;
   // State field(s) for TextField widget.
-  TextEditingController? textController2;
-  String? Function(BuildContext, String?)? textController2Validator;
+  TextEditingController? descInput;
+  String? Function(BuildContext, String?)? descInputValidator;
   // State field(s) for TextField widget.
-  TextEditingController? textController3;
-  String? Function(BuildContext, String?)? textController3Validator;
+  TextEditingController? budgetInput;
+  String? Function(BuildContext, String?)? budgetInputValidator;
   // State field(s) for TextField widget.
-  TextEditingController? textController4;
-  String? Function(BuildContext, String?)? textController4Validator;
-  // State field(s) for TextField widget.
-  TextEditingController? textController5;
-  String? Function(BuildContext, String?)? textController5Validator;
+  TextEditingController? meetingInput;
+  String? Function(BuildContext, String?)? meetingInputValidator;
 
   /// Initialization and disposal methods.
 
@@ -42,6 +39,10 @@ class LobbyCreationModel extends FlutterFlowModel {
 
   void dispose() {
     unfocusNode.dispose();
+    titleInput?.dispose();
+    descInput?.dispose();
+    budgetInput?.dispose();
+    meetingInput?.dispose();
   }
 
   /// Action blocks are added here.

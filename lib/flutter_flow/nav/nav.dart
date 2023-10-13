@@ -76,8 +76,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'Lobby',
           path: '/lobby',
           builder: (context, params) {
-            dynamic obj = params.state.extra;
-            return LobbyWidget(extra: obj);
+            LobbyModel obj =
+                params.state.extraMap['currentLobby'] as LobbyModel;
+            return LobbyWidget(currentLobby: obj);
           },
         ),
         FFRoute(

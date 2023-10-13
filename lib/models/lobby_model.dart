@@ -7,15 +7,19 @@ class LobbyModel {
   @JsonKey(
     name: '_id',
   )
-  String? id;
-  String? title;
-  String? plannedDate;
-  List<String>? participants;
+  final String? id;
+  final String? title;
+  final String? description;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final List<String>? participants;
 
-  LobbyModel({
+  const LobbyModel({
     this.id,
     this.title,
-    this.plannedDate,
+    this.description,
+    this.startDate,
+    this.endDate,
     this.participants,
   });
 

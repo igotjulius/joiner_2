@@ -1,4 +1,5 @@
 import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -18,8 +19,8 @@ class ResponseModel<T> {
   ResponseModel({this.code, this.data, this.message});
 
   static T? _fromJson<T>(Object? json) {
+    var converted;
     if (json is Map<String, dynamic>) {
-      var converted;
       if (json.containsKey('email'))
         converted = UserModel.fromJson(json);
       else if (json.containsKey('pending')) {
@@ -31,6 +32,16 @@ class ResponseModel<T> {
           'active':
               active.map((element) => LobbyModel.fromJson(element)).toList()
         };
+      }
+
+      return converted as T;
+    } else if (json is List<dynamic>) {
+      var data = json.asMap()[0];
+      if (data == null)
+        return <MessageModel>[] as T;
+      else if (data.containsKey('creator')) {
+        converted =
+            json.map((element) => MessageModel.fromJson(element)).toList();
       }
 
       return converted as T;

@@ -1,3 +1,4 @@
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/message_model.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -44,24 +45,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    FutureBuilder<List<MessageModel>> getConversation() {
-      return FutureBuilder(
-          future: apiService.getConversation('6522a0c73e680ea09ee89d5f',
-              '65279f410e8b2ee1b1412372', '65279f410e8b2ee1b1412375'),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List<MessageModel> result = snapshot.data!;
-              return ListView.separated(itemCount: result.length, itemBuilder: (context, index) {
-                return Text(result[index].creator! + ' ' + result[index].message!);
-              }, separatorBuilder: (context, index) {
-                return Divider(height: 10, thickness: 1);
-              },);
-            } else {
-              return Dialog(child: SizedBox.shrink());
-            }
-          });
-    }
-
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -69,7 +52,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         color: FlutterFlowTheme.of(context).secondaryBackground,
       ),
       child: Column(children: [
-        Expanded(child: getConversation()),
+        Expanded(child: UserController.getConversation()),
         Material(
           color: Colors.transparent,
           elevation: 0.0,
@@ -137,15 +120,12 @@ class _ChatWidgetState extends State<ChatWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      await apiService.postConversation(
-                          MessageModel(
-                              creatorId: '6522a0c73e680ea09ee89d5f',
-                              creator: 'John',
-                              message: _model.textController.text),
-                          '6522a0c73e680ea09ee89d5f',
-                          '65279f410e8b2ee1b1412372',
-                          '65279f410e8b2ee1b1412375');
-                      print('Button pressed ...');
+                      final message = MessageModel(
+                        creatorId: '6522a0c73e680ea09ee89d5f',
+                        creator: 'John',
+                        message: _model.textController.text,
+                      );
+                      await UserController.createMessage(message, context);
                     },
                     text: 'SEND',
                     options: FFButtonOptions(

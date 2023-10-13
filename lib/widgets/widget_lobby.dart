@@ -104,7 +104,6 @@ class WidgetLobby extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              //'Trip to Lambug Beach',
                               lobbies[index].title!,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
@@ -115,8 +114,9 @@ class WidgetLobby extends StatelessWidget {
                                   ),
                             ),
                             Text(
-                              //'Planned Date: Jul 30',
-                              lobbies[index].plannedDate!,
+                              lobbies[index].startDate != null
+                                  ? "${lobbies[index].startDate!} - ${lobbies[index].startDate!}"
+                                  : '-',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
