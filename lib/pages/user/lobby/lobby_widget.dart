@@ -1,14 +1,12 @@
+import 'package:joiner_1/components/user/budget_graph_widget.dart';
+import 'package:joiner_1/components/user/chat_widget.dart';
+import 'package:joiner_1/components/user/joiners_widget.dart';
+import 'package:joiner_1/components/user/poll_widget.dart';
 import 'package:joiner_1/widgets/widget_trip_details.dart';
-
-import '/components/budget_graph_widget.dart';
-import '/components/chat_widget.dart';
-import '/components/joiners_widget.dart';
-import '/components/poll_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'lobby_model.dart';
 import 'package:joiner_1/models/lobby_model.dart' as ModelLobby;

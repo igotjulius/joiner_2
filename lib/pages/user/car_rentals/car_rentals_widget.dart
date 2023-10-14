@@ -1,5 +1,5 @@
-import '/components/plan_trip_widget.dart';
-import '/components/rent_car_widget.dart';
+import 'package:joiner_1/components/user/plan_trip_widget.dart';
+import 'package:joiner_1/components/user/rent_car_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';

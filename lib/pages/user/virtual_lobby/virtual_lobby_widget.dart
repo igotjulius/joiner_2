@@ -1,6 +1,6 @@
-import '../../controllers/user_controller.dart';
-import '/components/empty_lobby_widget.dart';
-import '/components/filled_lobby_widget.dart';
+import '../../../controllers/user_controller.dart';
+import '/components/user/empty_lobby_widget.dart';
+import '/components/user/filled_lobby_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';

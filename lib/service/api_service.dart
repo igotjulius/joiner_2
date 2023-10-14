@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/message_model.dart';
-import 'package:joiner_1/pages/account/account_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:retrofit/dio.dart';
 import '../models/transaction_model.dart';
@@ -12,8 +12,8 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-// const String serverUrl = 'http://localhost:443/';
-const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -22,6 +22,7 @@ final apiService =
 abstract class ApiService {
   factory ApiService(Dio dio) = _ApiService;
 
+  // User Api's
   // Login user
   @POST('user/login')
   Future<ResponseModel<UserModel>> loginUser(
@@ -30,7 +31,7 @@ abstract class ApiService {
   });
 
   // Create lobby
-  @POST('/user/{userId}/lobby')
+  @POST('user/{userId}/lobby')
   Future<ResponseModel> createLobby(
     @Body() LobbyModel lobby,
     @Path('userId') String userId, {
@@ -38,12 +39,12 @@ abstract class ApiService {
   });
 
   // Get user lobby
-  @GET('/user/{userId}/lobby')
+  @GET('user/{userId}/lobby')
   Future<ResponseModel<Map<String, List<LobbyModel>>>> getLobby(
       @Path('userId') String userId);
 
-  //Create message
-  @POST('/user/{userId}/lobby/{lobbyId}/conversation/{conversationId}/message')
+  // Create message
+  @POST('user/{userId}/lobby/{lobbyId}/conversation/{conversationId}/message')
   Future<void> createMessage(
     @Body() MessageModel message,
     @Path('userId') String userId,
@@ -52,13 +53,25 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
-  //Get Conversation
-  @GET('/user/{userId}/lobby/{lobbyId}/conversation/{conversationId}')
+  // Get Conversation
+  @GET('user/{userId}/lobby/{lobbyId}/conversation/{conversationId}')
   Future<ResponseModel<List<MessageModel>>> getConversation(
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
     @Path('conversationId') String conversationId,
   );
+
+  // CRA API's
+  // Get all cars
+  @GET('admin/car')
+  Future<ResponseModel<List<CarModel>>> getCars();
+
+  @POST('admin/car')
+  Future<ResponseModel> addCar(
+    @Body() CarModel car, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+  //
 
   // Get user profile
   @GET('user/{userId}/profile')

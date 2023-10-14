@@ -1,17 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:joiner_1/components/filled_lobby_widget.dart';
 import 'package:joiner_1/models/lobby_model.dart';
-import 'package:joiner_1/widgets/atoms/text_input.dart';
+import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
+import 'package:joiner_1/pages/cra/car/car_widget.dart';
+import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '/index.dart';
 import '/main.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/lat_lng.dart';
-import '/flutter_flow/place.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'serialization_util.dart';
 
@@ -39,96 +35,131 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) => LoginPageWidget(),
-      routes: [
-        FFRoute(
-          name: '_initialize',
-          path: '/',
-          builder: (context, _) => LobbyWidget(),
-        ),
-        FFRoute(
-          name: 'LoginPage',
-          path: '/loginPage',
-          builder: (context, params) => LoginPageWidget(),
-        ),
-        FFRoute(
-          name: 'BrowseMap',
-          path: '/browseMap',
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'BrowseMap')
-              : BrowseMapWidget(),
-        ),
-        FFRoute(
-          name: 'VirtualLobby',
-          path: '/virtualLobby',
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'VirtualLobby')
-              : NavBarPage(
-                  initialPage: 'VirtualLobby',
-                  page: VirtualLobbyWidget(),
-                ),
-        ),
-        FFRoute(
-          name: 'LobbyCreation',
-          path: '/lobbyCreation',
-          builder: (context, params) => LobbyCreationWidget(),
-        ),
-        FFRoute(
-          name: 'Lobby',
-          path: '/lobby',
-          builder: (context, params) {
-            LobbyModel obj =
-                params.state.extraMap['currentLobby'] as LobbyModel;
-            return LobbyWidget(currentLobby: obj);
-          },
-        ),
-        FFRoute(
-          name: 'CarRentals',
-          path: '/carRentals',
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'CarRentals')
-              : NavBarPage(
-                  initialPage: 'CarRentals',
-                  page: CarRentalsWidget(
-                    loc: params.getParam('loc', ParamType.LatLng),
-                  ),
-                ),
-        ),
-        FFRoute(
-          name: 'Friends',
-          path: '/friends',
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'Friends')
-              : FriendsWidget(),
-        ),
-        FFRoute(
-          name: 'Account',
-          path: '/account',
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'Account')
-              : AccountWidget(),
-        ),
-        FFRoute(
-          name: 'TransactionHistory',
-          path: '/transactionHistory',
-          builder: (context, params) => TransactionHistoryWidget(),
-        ),
-        FFRoute(
-          name: 'InviteFriend',
-          path: '/inviteFriend',
-          builder: (context, params) => InviteFriendWidget(),
-        ),
-        FFRoute(
-          name: 'InviteJoiners',
-          path: '/inviteJoiners',
-          builder: (context, params) => InviteJoinersWidget(),
-        ),
-        FFRoute(
-          name: 'Participants',
-          path: '/participants',
-          builder: (context, params) => ParticipantsWidget(),
-        )
-      ].map((r) => r.toRoute(appStateNotifier)).toList(),
+      routes: craRoutes().map((r) => r.toRoute(appStateNotifier)).toList(),
     );
+
+List<FFRoute> userRoutes() {
+  return [
+    FFRoute(
+      name: '_initialize',
+      path: '/',
+      builder: (context, _) => LobbyWidget(),
+    ),
+    FFRoute(
+      name: 'LoginPage',
+      path: '/loginPage',
+      builder: (context, params) => LoginPageWidget(),
+    ),
+    FFRoute(
+      name: 'BrowseMap',
+      path: '/browseMap',
+      builder: (context, params) => params.isEmpty
+          ? NavBarPage(initialPage: 'BrowseMap')
+          : BrowseMapWidget(),
+    ),
+    FFRoute(
+      name: 'VirtualLobby',
+      path: '/virtualLobby',
+      builder: (context, params) => params.isEmpty
+          ? NavBarPage(initialPage: 'VirtualLobby')
+          : NavBarPage(
+              initialPage: 'VirtualLobby',
+              page: VirtualLobbyWidget(),
+            ),
+    ),
+    FFRoute(
+      name: 'LobbyCreation',
+      path: '/lobbyCreation',
+      builder: (context, params) => LobbyCreationWidget(),
+    ),
+    FFRoute(
+      name: 'Lobby',
+      path: '/lobby',
+      builder: (context, params) {
+        LobbyModel obj = params.state.extraMap['currentLobby'] as LobbyModel;
+        return LobbyWidget(currentLobby: obj);
+      },
+    ),
+    FFRoute(
+      name: 'CarRentals',
+      path: '/carRentals',
+      builder: (context, params) => params.isEmpty
+          ? NavBarPage(initialPage: 'CarRentals')
+          : NavBarPage(
+              initialPage: 'CarRentals',
+              page: CarRentalsWidget(
+                loc: params.getParam('loc', ParamType.LatLng),
+              ),
+            ),
+    ),
+    FFRoute(
+      name: 'Friends',
+      path: '/friends',
+      builder: (context, params) =>
+          params.isEmpty ? NavBarPage(initialPage: 'Friends') : FriendsWidget(),
+    ),
+    FFRoute(
+      name: 'Account',
+      path: '/account',
+      builder: (context, params) =>
+          params.isEmpty ? NavBarPage(initialPage: 'Account') : AccountWidget(),
+    ),
+    FFRoute(
+      name: 'TransactionHistory',
+      path: '/transactionHistory',
+      builder: (context, params) => TransactionHistoryWidget(),
+    ),
+    FFRoute(
+      name: 'InviteFriend',
+      path: '/inviteFriend',
+      builder: (context, params) => InviteFriendWidget(),
+    ),
+    FFRoute(
+      name: 'InviteJoiners',
+      path: '/inviteJoiners',
+      builder: (context, params) => InviteJoinersWidget(),
+    ),
+    FFRoute(
+      name: 'Participants',
+      path: '/participants',
+      builder: (context, params) => ParticipantsWidget(),
+    )
+  ];
+}
+
+List<FFRoute> craRoutes() {
+  return [
+    FFRoute(
+      name: '_initialize',
+      path: '/',
+      builder: (context, _) => NavBarPage(
+        initialPage: 'Cars',
+        page: CarWidget(),
+      ),
+    ),
+    FFRoute(
+      name: 'Earnings',
+      path: '/earnings',
+      builder: (context, params) => EarningsWidget(),
+    ),
+    FFRoute(
+      name: 'Cars',
+      path: '/cars',
+      builder: (context, params) =>
+          params.isEmpty ? NavBarPage(initialPage: 'Cars') : CarWidget(),
+    ),
+    FFRoute(
+      name: 'Account',
+      path: '/account',
+      builder: (context, params) => params.isEmpty
+          ? NavBarPage(initialPage: 'Account')
+          : NavBarPage(
+              initialPage: 'Account',
+              page: CraAccountWidget(),
+            ),
+    ),
+  ];
+}
 
 extension NavParamExtensions on Map<String, String?> {
   Map<String, String> get withoutNulls => Map.fromEntries(

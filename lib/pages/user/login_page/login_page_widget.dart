@@ -1,13 +1,10 @@
+import 'package:joiner_1/components/user/sign_up_form_widget.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/user_model.dart';
-import 'package:joiner_1/service/api_service.dart';
-
-import '/components/sign_up_form_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'login_page_model.dart';
 export 'login_page_model.dart';

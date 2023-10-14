@@ -1,3 +1,4 @@
+import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/user_model.dart';
@@ -33,7 +34,6 @@ class ResponseModel<T> {
               active.map((element) => LobbyModel.fromJson(element)).toList()
         };
       }
-
       return converted as T;
     } else if (json is List<dynamic>) {
       var data = json.asMap()[0];
@@ -42,6 +42,8 @@ class ResponseModel<T> {
       else if (data.containsKey('creator')) {
         converted =
             json.map((element) => MessageModel.fromJson(element)).toList();
+      } else if (data.containsKey('vehicleType')) {
+        converted = json.map((element) => CarModel.fromJson(element)).toList();
       }
 
       return converted as T;

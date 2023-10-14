@@ -1,6 +1,5 @@
-import 'package:joiner_1/widgets/widget_lobby.dart';
+import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -8,10 +7,15 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
+import 'pages/cra/car/car_widget.dart';
+import 'pages/cra/earnings/earnings_widget.dart';
+import 'pages/user/account/account_widget.dart';
+import 'pages/user/browse_map/browse_map_widget.dart';
+import 'pages/user/car_rentals/car_rentals_widget.dart';
+import 'pages/user/friends/friends_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -98,12 +102,16 @@ class _NavBarPageState extends State<NavBarPage> {
   @override
   void initState() {
     super.initState();
-    // _currentPageName = widget.initialPage ?? _currentPageName;
+    _currentPageName = widget.initialPage ?? _currentPageName;
     _currentPage = widget.page;
   }
 
   @override
   Widget build(BuildContext context) {
+    return craDashboard();
+  }
+
+  Widget userDashboard() {
     final tabs = {
       'VirtualLobby': VirtualLobbyWidget(),
       'BrowseMap': BrowseMapWidget(),
@@ -112,7 +120,6 @@ class _NavBarPageState extends State<NavBarPage> {
       'Account': AccountWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
-
     return Scaffold(
       body: _currentPage ?? tabs[_currentPageName],
       bottomNavigationBar: GNav(
@@ -158,6 +165,53 @@ class _NavBarPageState extends State<NavBarPage> {
             text: 'Account',
             iconSize: 24.0,
           )
+        ],
+      ),
+    );
+  }
+
+  Widget craDashboard() {
+    final tabs = {
+      'Earnings': EarningsWidget(),
+      'Cars': CarWidget(),
+      'Account': CraAccountWidget(),
+    };
+    final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
+    return Scaffold(
+      body: _currentPage ?? tabs[_currentPageName],
+      bottomNavigationBar: GNav(
+        selectedIndex: currentIndex,
+        onTabChange: (i) => setState(() {
+          _currentPage = null;
+          _currentPageName = tabs.keys.toList()[i];
+        }),
+        backgroundColor: Colors.white,
+        color: FlutterFlowTheme.of(context).secondaryText,
+        activeColor: FlutterFlowTheme.of(context).primary,
+        tabBackgroundColor: Color(0x00000000),
+        tabBorderRadius: 0.0,
+        tabMargin: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+        padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+        gap: 0.0,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        duration: Duration(milliseconds: 500),
+        haptic: false,
+        tabs: [
+          GButton(
+            icon: Icons.attach_money,
+            text: 'Earnings',
+            iconSize: 24.0,
+          ),
+          GButton(
+            icon: Icons.directions_car,
+            text: 'Cars',
+            iconSize: 24.0,
+          ),
+          GButton(
+            icon: Icons.person,
+            text: 'Account',
+            iconSize: 24.0,
+          ),
         ],
       ),
     );

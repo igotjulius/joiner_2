@@ -13,7 +13,7 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://joiner-backend-v3.onrender.com/';
+    baseUrl ??= 'http://localhost:443/';
   }
 
   final Dio _dio;
@@ -70,7 +70,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/user/${userId}/lobby',
+              'user/${userId}/lobby',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -93,7 +93,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/user/${userId}/lobby',
+              'user/${userId}/lobby',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -125,7 +125,7 @@ class _ApiService implements ApiService {
     )
         .compose(
           _dio.options,
-          '/user/${userId}/lobby/${lobbyId}/conversation/${conversationId}/message',
+          'user/${userId}/lobby/${lobbyId}/conversation/${conversationId}/message',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -150,12 +150,64 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/user/${userId}/lobby/${lobbyId}/conversation/${conversationId}',
+              'user/${userId}/lobby/${lobbyId}/conversation/${conversationId}',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = ResponseModel<List<MessageModel>>.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ResponseModel<List<CarModel>>> getCars() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseModel<List<CarModel>>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'admin/car',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ResponseModel<List<CarModel>>.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ResponseModel<dynamic>> addCar(
+    car, {
+    contentType = 'application/json',
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(car.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseModel<dynamic>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              'admin/car',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ResponseModel<dynamic>.fromJson(_result.data!);
     return value;
   }
 
