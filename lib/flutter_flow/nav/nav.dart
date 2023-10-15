@@ -133,8 +133,8 @@ List<FFRoute> craRoutes() {
       name: '_initialize',
       path: '/',
       builder: (context, _) => NavBarPage(
-        initialPage: 'Cars',
-        page: CarWidget(),
+        initialPage: 'Earnings',
+        page: EarningsWidget(),
       ),
     ),
     FFRoute(
