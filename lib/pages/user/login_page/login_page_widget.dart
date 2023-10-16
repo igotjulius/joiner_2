@@ -1,4 +1,5 @@
 import 'package:joiner_1/components/user/sign_up_form_widget.dart';
+import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/user_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -245,6 +246,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   validator: _model.textController2Validator
                                       .asValidator(context),
                                 ),
+                                Checkbox(
+                                    value: _model.isCra,
+                                    onChanged: (val) {
+                                      _model.isCra = val!;
+                                    }),
                                 Align(
                                   alignment: AlignmentDirectional(-1.0, 0.0),
                                   child: Text(
@@ -273,15 +279,14 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         email: _model.textController1.text,
                                         password: _model.textController2.text,
                                       );
-                                      await UserController.loginUser(
-                                          user, context);
-                                      // await showDialog(
-                                      //   context: context,
-                                      //   builder: (context) {
-                                      //     return UserController.login(
+                                      print(_model.isCra);
+                                      // _model.isCra
+                                      //     ? await CraController.loginCra(
+                                      //         _model.textController1.text,
+                                      //         _model.textController2.text,
+                                      //         context)
+                                      //     : await UserController.loginUser(
                                       //         user, context);
-                                      //   },
-                                      // );
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(

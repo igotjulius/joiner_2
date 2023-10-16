@@ -1,13 +1,7 @@
-import 'package:joiner_1/models/transaction_model.dart';
-import 'package:joiner_1/service/api_service.dart';
-import 'package:joiner_1/widgets/widget_transaction.dart';
-
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'transaction_history_model.dart';
 export 'transaction_history_model.dart';

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:joiner_1/components/cra/add_car_model.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/models/car_model.dart';
-import 'package:joiner_1/service/api_service.dart';
-
+import '../../controllers/cra_controller.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../widgets/atoms/text_input.dart';
 
@@ -111,14 +109,14 @@ class _AddCarModalState extends State<AddCarModal> {
                   text: 'Register Car',
                   onPressed: () async {
                     final car = CarModel(
-                      _model.licenseController.text,
-                      _model.vehicleTypeController.text,
-                      'Available',
-                      _model.datePicked!.start,
-                      _model.datePicked!.end,
-                      double.parse(_model.priceController.text),
+                      licensePlate: _model.licenseController.text,
+                      vehicleType: _model.vehicleTypeController.text,
+                      availableStartDate: _model.datePicked!.start,
+                      availableEndDate: _model.datePicked!.end,
+                      price: double.parse(_model.priceController.text),
                     );
-                    await apiService.addCar(car);
+                    await CraController.addCar(car);
+                    return Navigator.pop(context);
                   },
                   options: FFButtonOptions(height: 40.0)),
             ].divide(

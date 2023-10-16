@@ -1,21 +1,15 @@
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
 import 'pages/cra/car/car_widget.dart';
 import 'pages/cra/earnings/earnings_widget.dart';
-import 'pages/user/account/account_widget.dart';
-import 'pages/user/browse_map/browse_map_widget.dart';
-import 'pages/user/car_rentals/car_rentals_widget.dart';
-import 'pages/user/friends/friends_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -108,7 +102,7 @@ class _NavBarPageState extends State<NavBarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return craDashboard();
+    return FFAppState().isCra ? craDashboard() : userDashboard();
   }
 
   Widget userDashboard() {

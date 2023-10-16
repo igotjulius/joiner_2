@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/car_widget.dart';
 import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:joiner_1/pages/user/car_listings/car_listings_widget.dart';
 import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'serialization_util.dart';
 
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
@@ -35,7 +33,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) => LoginPageWidget(),
-      routes: craRoutes().map((r) => r.toRoute(appStateNotifier)).toList(),
+      routes: FFAppState().isCra
+          ? craRoutes().map((r) => r.toRoute(appStateNotifier)).toList()
+          : userRoutes().map((r) => r.toRoute(appStateNotifier)).toList(),
     );
 
 List<FFRoute> userRoutes() {
@@ -43,7 +43,10 @@ List<FFRoute> userRoutes() {
     FFRoute(
       name: '_initialize',
       path: '/',
-      builder: (context, _) => LobbyWidget(),
+      builder: (context, _) => NavBarPage(
+        initialPage: 'CarRentals',
+        page: CarRentalsWidget(),
+      ),
     ),
     FFRoute(
       name: 'LoginPage',
@@ -91,6 +94,13 @@ List<FFRoute> userRoutes() {
                 loc: params.getParam('loc', ParamType.LatLng),
               ),
             ),
+      routes: [
+        GoRoute(
+          name: 'Listings',
+          path: 'listings',
+          builder: (context, params) => CarListingsWidget(),
+        ),
+      ],
     ),
     FFRoute(
       name: 'Friends',

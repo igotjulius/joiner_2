@@ -2,8 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
-import 'package:retrofit/dio.dart';
-import '../models/transaction_model.dart';
 import '../models/user_model.dart';
 import 'package:retrofit/http.dart';
 import '../models/lobby_model.dart';
@@ -61,16 +59,50 @@ abstract class ApiService {
     @Path('conversationId') String conversationId,
   );
 
-  // CRA API's
-  // Get all cars
-  @GET('admin/car')
-  Future<ResponseModel<List<CarModel>>> getCars();
+  // Get all available cars
+  @GET('user/{userId}/rent/car?availability={availability}')
+  Future<ResponseModel<List<CarModel>>> getAvailableCars(
+    @Path('userId') String userId, {
+    @Query('availability') String availability = 'Available',
+  });
 
-  @POST('admin/car')
-  Future<ResponseModel> addCar(
-    @Body() CarModel car, {
+  // Rent a car
+  @POST('user/{userId}/rent/car')
+  Future<void> bookCar(
+    @Body() Map<String, dynamic> map,
+    @Path('userId') String userId, {
     @Header('Content-Type') String contentType = 'application/json',
   });
+
+  // CRA API's
+  // Login CRA
+  @POST('cra/login')
+  Future<ResponseModel> loginCra(
+    @Body() Map<String, dynamic> map, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Get all cars of corresponding CRA
+  @GET('cra/{craUserId}/car')
+  Future<ResponseModel<List<CarModel>>> getCars(
+    @Path('craUserId') String craUserId,
+  );
+
+  // CHECK =>
+  // Register a car
+  @POST('cra/{craUserId}/car')
+  Future<ResponseModel> addCar(
+    @Body() CarModel car,
+    @Path('craUserId') String craUserId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Edit car availability
+  @PUT('cra/{craUserId}/car/{licensePlate}')
+  Future<ResponseModel> editAvailability(
+    @Path('licensePlate') String licensePlate,
+  );
+
   //
 
   // Get user profile

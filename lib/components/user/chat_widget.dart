@@ -1,17 +1,17 @@
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/message_model.dart';
-
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'chat_model.dart';
+
 export 'chat_model.dart';
-import 'package:joiner_1/service/api_service.dart';
 
 class ChatWidget extends StatefulWidget {
-  const ChatWidget({Key? key}) : super(key: key);
+  final Function callback;
+  const ChatWidget(this.callback, {Key? key}) : super(key: key);
 
   @override
   _ChatWidgetState createState() => _ChatWidgetState();
@@ -126,6 +126,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                         message: _model.textController.text,
                       );
                       await UserController.createMessage(message, context);
+                      widget.callback(() {});
                     },
                     text: 'SEND',
                     options: FFButtonOptions(

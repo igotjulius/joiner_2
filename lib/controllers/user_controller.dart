@@ -1,15 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
+import 'package:joiner_1/components/user/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/index.dart';
+import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/widgets/widget_lobby.dart';
-import 'package:retrofit/dio.dart';
 
 import '../models/user_model.dart';
 
@@ -23,12 +21,15 @@ class UserController {
     await apiService.loginUser(user).then((response) {
       if (response.code == HttpStatus.ok) {
         FFAppState().setCurrentUser(response.data!);
-        context.goNamed('VirtualLobby', extra: <String, dynamic>{
-          kTransitionInfoKey: TransitionInfo(
-            hasTransition: true,
-            transitionType: PageTransitionType.rightToLeft,
-          ),
-        });
+        context.goNamed(
+          'VirtualLobby',
+          extra: <String, dynamic>{
+            kTransitionInfoKey: TransitionInfo(
+              hasTransition: true,
+              transitionType: PageTransitionType.rightToLeft,
+            ),
+          },
+        );
       } else {
         showDialog(
             context: context,
@@ -148,5 +149,42 @@ class UserController {
         }
       },
     );
+  }
+
+  static FutureBuilder<ResponseModel<List<CarModel>>> getAvailableCars(
+      Function callback) {
+    return FutureBuilder(
+      future: apiService.getAvailableCars(_userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data!.data!.isEmpty)
+            return Center(
+              child: Text('No available cars for today :('),
+            );
+          final cars = snapshot.data!.data!;
+          double width = MediaQuery.of(context).size.width / 2;
+          return GridView.extent(
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+            maxCrossAxisExtent: width,
+            children: List.generate(
+              cars.length,
+              (i) => CarItemWidget(callback, car: cars[i]),
+            ),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+
+  static Future<void> bookCar(String licensePlate) async {
+    await apiService
+        .bookCar({'licensePlate': licensePlate}, _userId).catchError((error) {
+      print(error);
+    });
   }
 }

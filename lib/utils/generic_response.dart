@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/message_model.dart';
@@ -36,10 +38,12 @@ class ResponseModel<T> {
       }
       return converted as T;
     } else if (json is List<dynamic>) {
+      if (json.isEmpty) {
+        return <CarModel>[] as T;
+      }
       var data = json.asMap()[0];
-      if (data == null)
-        return <MessageModel>[] as T;
-      else if (data.containsKey('creator')) {
+
+      if (data.containsKey('creator')) {
         converted =
             json.map((element) => MessageModel.fromJson(element)).toList();
       } else if (data.containsKey('vehicleType')) {
@@ -47,7 +51,9 @@ class ResponseModel<T> {
       }
 
       return converted as T;
-    } else if (json == null) return null;
+    } else if (json == null) {
+      return [] as T;
+    }
     throw ArgumentError.value(json, 'json', 'Cannot handle this JSON payload');
   }
 

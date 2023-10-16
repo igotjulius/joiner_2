@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/models/lobby_model.dart';
-import 'package:joiner_1/service/api_service.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
 
 class WidgetLobby extends StatelessWidget {
   WidgetLobby(this.lobbies, {super.key});
-  late List<LobbyModel> lobbies;
+  late final List<LobbyModel> lobbies;
 
   @override
   Widget build(BuildContext context) {

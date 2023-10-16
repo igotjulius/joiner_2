@@ -7,6 +7,11 @@ class FFAppState extends ChangeNotifier {
   static final FFAppState _instance = FFAppState._internal();
   static SharedPreferences? pref;
   UserModel? _currentUser;
+  bool _isCra = false;
+  bool get isCra => _isCra;
+  set isCra(bool _value) {
+    _isCra = _value;
+  }
 
   factory FFAppState() {
     return _instance;

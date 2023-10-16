@@ -171,7 +171,7 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                             wrapWithModel(
                               model: _model.chatModel,
                               updateCallback: () => setState(() {}),
-                              child: ChatWidget(),
+                              child: ChatWidget(setState),
                             ),
                             wrapWithModel(
                               model: _model.budgetGraphModel,

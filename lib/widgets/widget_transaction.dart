@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/models/transaction_model.dart';
-import 'package:joiner_1/service/api_service.dart';
-
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 
 class WidgetTransaction extends StatelessWidget {
   WidgetTransaction(this.transactions, {super.key});
-  late final List<TransactionModel> transactions;
+  late final List<String> transactions;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +22,7 @@ class WidgetTransaction extends StatelessWidget {
         return Material(
           child: InkWell(
             onLongPress: () {
-              print(transactions[index].toJson());
+              // print(transactions[index].toJson());
               // Cancel action
               showDialog(
                 context: context,
@@ -61,12 +58,14 @@ class WidgetTransaction extends StatelessWidget {
                       children: [
                         Text(
                           //'Sedan (4-seater)',
-                          transactions[index].vehicleType!,
+                          // transactions[index].vehicleType!,
+                          transactions[index],
                           style: FlutterFlowTheme.of(context).bodyMedium,
                         ),
                         Text(
                           // 'July 27, 2023 - 1:03 PM',
-                          transactions[index].transactDate.toString(),
+                          // transactions[index].transactDate.toString(),
+                          transactions[index],
                           style:
                               FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'Roboto Flex',
@@ -74,7 +73,8 @@ class WidgetTransaction extends StatelessWidget {
                                   ),
                         ),
                         Text(
-                          transactions[index].status!,
+                          // transactions[index].status!,
+                          transactions[index],
                           style: FlutterFlowTheme.of(context).bodyMedium,
                         ),
                       ].divide(SizedBox(height: 10.0)),
@@ -84,7 +84,8 @@ class WidgetTransaction extends StatelessWidget {
                       children: [
                         Text(
                           // '₱1,234.00',
-                          '₱${transactions[index].amount}',
+                          // '₱${transactions[index].amount}',
+                          '₱${transactions[index]}',
                           style: FlutterFlowTheme.of(context).bodyMedium,
                         ),
                         FFButtonWidget(

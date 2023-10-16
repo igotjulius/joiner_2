@@ -1,10 +1,7 @@
-import 'package:joiner_1/components/user/plan_trip_widget.dart';
-import 'package:joiner_1/components/user/rent_car_widget.dart';
+import '../../../flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'car_rentals_model.dart';
 export 'car_rentals_model.dart';
@@ -30,28 +27,6 @@ class _CarRentalsWidgetState extends State<CarRentalsWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => CarRentalsModel());
-
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (context) {
-          return GestureDetector(
-            onTap: () =>
-                FocusScope.of(context).requestFocus(_model.unfocusNode),
-            child: Padding(
-              padding: MediaQuery.viewInsetsOf(context),
-              child: Container(
-                height: MediaQuery.sizeOf(context).height * 0.75,
-                child: RentCarWidget(),
-              ),
-            ),
-          );
-        },
-      ).then((value) => setState(() {}));
-    });
   }
 
   @override
@@ -72,43 +47,30 @@ class _CarRentalsWidgetState extends State<CarRentalsWidget> {
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: SafeArea(
           top: true,
-          child: InkWell(
-            splashColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: () async {
-              await showModalBottomSheet(
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                context: context,
-                builder: (context) {
-                  return GestureDetector(
-                    onTap: () =>
-                        FocusScope.of(context).requestFocus(_model.unfocusNode),
-                    child: Padding(
-                      padding: MediaQuery.viewInsetsOf(context),
-                      child: Container(
-                        height: MediaQuery.sizeOf(context).height * 0.4,
-                        child: PlanTripWidget(),
-                      ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text('Upcoming Rentals'),
+                    FFButtonWidget(
+                      text: 'Browse Listings',
+                      onPressed: () {
+                        context.pushNamed(
+                          'Listings',
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.rightToLeft,
+                            ),
+                          },
+                        );
+                      },
+                      options: FFButtonOptions(height: 40),
                     ),
-                  );
-                },
-              ).then((value) => setState(() {}));
-            },
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).primaryBackground,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: Image.asset(
-                    'assets/images/browsin.png',
-                  ).image,
+                  ],
                 ),
-              ),
+              ],
             ),
           ),
         ),

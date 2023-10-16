@@ -187,7 +187,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                           wrapWithModel(
                             model: _model.chatModel,
                             updateCallback: () => setState(() {}),
-                            child: ChatWidget(),
+                            child: ChatWidget(setState),
                           ),
                           wrapWithModel(
                             model: _model.budgetGraphModel,

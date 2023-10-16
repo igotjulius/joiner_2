@@ -5,6 +5,8 @@ class LoginPageModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
+
+  bool isCra = false;
   // State field(s) for TextField widget.
   TextEditingController? textController1;
   String? Function(BuildContext, String?)? textController1Validator;
