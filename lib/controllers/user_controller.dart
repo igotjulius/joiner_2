@@ -122,31 +122,43 @@ class UserController {
 
   // Get conversation
   static FutureBuilder<ResponseModel<List<MessageModel>>> getConversation() {
-    return FutureBuilder(
-      future: apiService.getConversation(_userId, _lobbyId, _conversationId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<MessageModel> result = snapshot.data!.data!;
-          if (result.isEmpty)
-            return Center(
-              child: Text('Say hi!'),
-            );
-          return ListView.separated(
-            itemCount: result.length,
-            itemBuilder: (context, index) {
-              return Text(
-                  result[index].creator! + ' ' + result[index].message!);
-            },
-            separatorBuilder: (context, index) {
-              return Divider(height: 10, thickness: 1);
-            },
-          );
-        } else {
+  return FutureBuilder(
+    future: apiService.getConversation(_userId, _lobbyId, _conversationId),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        List<MessageModel> result = snapshot.data!.data!;
+        if (result.isEmpty)
           return Center(
-            child: CircularProgressIndicator(),
+            child: Text('Say hi!'),
           );
-        }
-      },
-    );
-  }
+        return ListView.builder(
+          itemCount: result.length,
+          itemBuilder: (context, index) {
+            return Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                margin: EdgeInsets.only(right: 10, bottom: 7, top: 5), 
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue, 
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    result[index].message!,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      } else {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+    },
+  );
+}
 }
