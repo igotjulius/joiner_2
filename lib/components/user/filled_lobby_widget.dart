@@ -37,7 +37,8 @@ class _FilledLobbyWidgetState extends State<FilledLobbyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
+    final appState = context.watch<FFAppState>();
+    print(appState.currentUser);
 
     return Container(
       width: MediaQuery.of(context).size.height,
@@ -47,7 +48,7 @@ class _FilledLobbyWidgetState extends State<FilledLobbyWidget> {
       ),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-        child: UserController.userLobbies(FFAppState().getCurrentUser().id!),
+        child: UserController.userLobbies(appState),
       ),
     );
   }

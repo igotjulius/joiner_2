@@ -3,4 +3,4 @@ build/
 .flutter-plugins
 .flutter-plugins-dependencies
 .flutter-plugins*
-.g*
+.g.dart

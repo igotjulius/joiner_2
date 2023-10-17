@@ -33,17 +33,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
   @override
   void dispose() {
-    _model.dispose();
-
     super.dispose();
+    _model.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
+    final appState = context.watch<FFAppState>();
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      // onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         resizeToAvoidBottomInset: false,
@@ -132,7 +130,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                               children: [
                                 TextFormField(
                                   controller: _model.textController1,
-                                  autofocus: true,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     labelText: 'Email',
@@ -190,7 +187,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 ),
                                 TextFormField(
                                   controller: _model.textController2,
-                                  autofocus: true,
                                   obscureText: true,
                                   decoration: InputDecoration(
                                     labelText: 'Password',
@@ -246,11 +242,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   validator: _model.textController2Validator
                                       .asValidator(context),
                                 ),
-                                Checkbox(
-                                    value: _model.isCra,
-                                    onChanged: (val) {
-                                      _model.isCra = val!;
-                                    }),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Checkbox(
+                                      value: appState.isCra,
+                                      onChanged: (val) {
+                                        _model.setIsCra(val!);
+                                        appState.setIsCra(val);
+                                      }),
+                                ),
                                 Align(
                                   alignment: AlignmentDirectional(-1.0, 0.0),
                                   child: Text(
@@ -274,19 +274,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 Align(
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: FFButtonWidget(
-                                    onPressed: () async {
-                                      final user = UserModel(
-                                        email: _model.textController1.text,
-                                        password: _model.textController2.text,
-                                      );
-                                      print(_model.isCra);
-                                      // _model.isCra
-                                      //     ? await CraController.loginCra(
-                                      //         _model.textController1.text,
-                                      //         _model.textController2.text,
-                                      //         context)
-                                      //     : await UserController.loginUser(
-                                      //         user, context);
+                                    onPressed: () {
+                                      _model.setRoutes();
+                                      _model.loginUser();
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(

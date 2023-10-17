@@ -1,53 +1,27 @@
 import 'dart:io';
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/utils/generic_response.dart';
-
 import '../models/car_model.dart';
 
 class CraController {
   static final String _craUserId = '652be8380547c1c1b9323173';
 
   // Login CRA
-  static Future<void> loginCra(
-      String email, String password, BuildContext context) async {
+  static void loginCra(
+      String email, String password, FFAppState appState) async {
     try {
-      await apiService
-          .loginCra({'email': email, 'password': password}).then((response) {
-        if (response.code == HttpStatus.ok) {
-          context.goNamed(
-            'Earnings',
-            extra: <String, dynamic>{
-              kTransitionInfoKey: TransitionInfo(
-                hasTransition: true,
-                transitionType: PageTransitionType.rightToLeft,
-              ),
-            },
-          );
-        } else {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return Dialog(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Text(response.message!),
-                      ),
-                    ],
-                  ),
-                );
-              });
-        }
-      });
+      final response =
+          await apiService.loginCra({'email': email, 'password': password});
+      print(response);
+      if (response.code == HttpStatus.ok) {
+        appState.setCurrentUser(response.data);
+      }
     } catch (e) {
       print(e);
+      throw e;
     }
   }
 

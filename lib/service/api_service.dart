@@ -23,7 +23,7 @@ abstract class ApiService {
   // User Api's
   // Login user
   @POST('user/login')
-  Future<ResponseModel<UserModel>> loginUser(
+  Future<ResponseModel<dynamic>> loginUser(
     @Body() UserModel user, {
     @Header('Content-Type') String contentType = 'application/json',
   });
@@ -77,7 +77,7 @@ abstract class ApiService {
   // CRA API's
   // Login CRA
   @POST('cra/login')
-  Future<ResponseModel> loginCra(
+  Future<ResponseModel<dynamic>> loginCra(
     @Body() Map<String, dynamic> map, {
     @Header('Content-Type') String contentType = 'application/json',
   });

@@ -5,6 +5,7 @@ import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/car_widget.dart';
 import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
 import 'package:joiner_1/pages/user/car_listings/car_listings_widget.dart';
+import 'package:provider/provider.dart';
 import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -26,33 +27,33 @@ class AppStateNotifier extends ChangeNotifier {
     showSplashImage = false;
     notifyListeners();
   }
+
+  List<FFRoute> _routes = baseRoute();
+  List<FFRoute> get routes => _routes;
+  void setRoutes(bool isCra) {
+    if (isCra) {
+      _routes = baseRoute();
+      _routes.addAll(craRoutes());
+    } else {
+      _routes = baseRoute();
+      _routes.addAll(userRoutes());
+    }
+    notifyListeners();
+  }
 }
 
-GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
-      initialLocation: '/',
-      debugLogDiagnostics: true,
-      refreshListenable: appStateNotifier,
-      errorBuilder: (context, state) => LoginPageWidget(),
-      routes: FFAppState().isCra
-          ? craRoutes().map((r) => r.toRoute(appStateNotifier)).toList()
-          : userRoutes().map((r) => r.toRoute(appStateNotifier)).toList(),
-    );
-
-List<FFRoute> userRoutes() {
+List<FFRoute> baseRoute() {
   return [
     FFRoute(
       name: '_initialize',
-      path: '/',
-      builder: (context, _) => NavBarPage(
-        initialPage: 'CarRentals',
-        page: CarRentalsWidget(),
-      ),
-    ),
-    FFRoute(
-      name: 'LoginPage',
-      path: '/loginPage',
+      path: '/login',
       builder: (context, params) => LoginPageWidget(),
     ),
+  ];
+}
+
+List<FFRoute> userRoutes() {
+  return [
     FFRoute(
       name: 'BrowseMap',
       path: '/browseMap',
@@ -61,15 +62,9 @@ List<FFRoute> userRoutes() {
           : BrowseMapWidget(),
     ),
     FFRoute(
-      name: 'VirtualLobby',
-      path: '/virtualLobby',
-      builder: (context, params) => params.isEmpty
-          ? NavBarPage(initialPage: 'VirtualLobby')
-          : NavBarPage(
-              initialPage: 'VirtualLobby',
-              page: VirtualLobbyWidget(),
-            ),
-    ),
+        name: 'VirtualLobby',
+        path: '/virtualLobby',
+        builder: (context, params) => NavBarPage(initialPage: 'VirtualLobby')),
     FFRoute(
       name: 'LobbyCreation',
       path: '/lobbyCreation',
@@ -140,17 +135,11 @@ List<FFRoute> userRoutes() {
 List<FFRoute> craRoutes() {
   return [
     FFRoute(
-      name: '_initialize',
-      path: '/',
-      builder: (context, _) => NavBarPage(
-        initialPage: 'Earnings',
-        page: EarningsWidget(),
-      ),
-    ),
-    FFRoute(
       name: 'Earnings',
       path: '/earnings',
-      builder: (context, params) => EarningsWidget(),
+      builder: (context, params) => NavBarPage(
+        initialPage: 'Earnings',
+      ),
     ),
     FFRoute(
       name: 'Cars',

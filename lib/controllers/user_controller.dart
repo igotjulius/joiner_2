@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/car_item_widget.dart';
@@ -8,6 +9,7 @@ import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/widgets/widget_lobby.dart';
+import 'package:provider/provider.dart';
 
 import '../models/user_model.dart';
 
@@ -17,44 +19,19 @@ class UserController {
   static String _conversationId = '65279f410e8b2ee1b1412375';
 
   // Login user
-  static Future<void> loginUser(UserModel user, BuildContext context) async {
+  static void loginUser(UserModel user, FFAppState appState) async {
     await apiService.loginUser(user).then((response) {
       if (response.code == HttpStatus.ok) {
-        FFAppState().setCurrentUser(response.data!);
-        context.goNamed(
-          'VirtualLobby',
-          extra: <String, dynamic>{
-            kTransitionInfoKey: TransitionInfo(
-              hasTransition: true,
-              transitionType: PageTransitionType.rightToLeft,
-            ),
-          },
-        );
-      } else {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return Dialog(
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: Text(response.message!),
-                    ),
-                  ],
-                ),
-              );
-            });
+        appState.setCurrentUser(response.data!);
       }
     });
   }
 
   // Get user lobbies
   static FutureBuilder<ResponseModel<Map<String, List<LobbyModel>>>>
-      userLobbies(String userId) {
+      userLobbies(FFAppState appState) {
     return FutureBuilder(
-      future: apiService.getLobby(FFAppState().getCurrentUser().id!),
+      future: apiService.getLobby(appState.currentUser!.id!),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.code == HttpStatus.ok) {
@@ -84,7 +61,8 @@ class UserController {
   // Create lobby
   static Future<void> createLobby(
       LobbyModel lobby, BuildContext context) async {
-    await apiService.createLobby(lobby, FFAppState().getCurrentUser().id!).then(
+    final appState = Provider.of<FFAppState>(context);
+    await apiService.createLobby(lobby, appState.currentUser!.id!).then(
       (response) {
         showDialog(
           context: context,

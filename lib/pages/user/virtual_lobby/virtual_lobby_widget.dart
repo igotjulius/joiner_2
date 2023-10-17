@@ -37,7 +37,7 @@ class _VirtualLobbyWidgetState extends State<VirtualLobbyWidget>
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
+    final appState = context.watch<FFAppState>();
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
@@ -109,9 +109,7 @@ class _VirtualLobbyWidgetState extends State<VirtualLobbyWidget>
                     child: Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(
                           10.0, 10.0, 10.0, 10.0),
-                      child: UserController.userLobbies(
-                        FFAppState().getCurrentUser().id!,
-                      ),
+                      child: UserController.userLobbies(appState),
                     ),
                   ),
                 ),

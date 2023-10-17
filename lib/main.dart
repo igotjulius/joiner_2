@@ -18,8 +18,15 @@ void main() async {
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
-  runApp(ChangeNotifierProvider(
-    create: (context) => appState,
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => appState,
+      ),
+      ChangeNotifierProvider(
+        create: (context) => AppStateNotifier.instance,
+      ),
+    ],
     child: MyApp(),
   ));
 }
@@ -37,14 +44,9 @@ class _MyAppState extends State<MyApp> {
   Locale? _locale;
   ThemeMode _themeMode = ThemeMode.system;
 
-  late AppStateNotifier _appStateNotifier;
-  late GoRouter _router;
-
   @override
   void initState() {
     super.initState();
-    _appStateNotifier = AppStateNotifier.instance;
-    _router = createRouter(_appStateNotifier);
   }
 
   void setLocale(String language) {
@@ -57,23 +59,46 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Joiner 1',
-      localizationsDelegates: [
-        FFLocalizationsDelegate(),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      locale: _locale,
-      supportedLocales: const [Locale('en', '')],
-      theme: ThemeData(
-        brightness: Brightness.light,
-        scrollbarTheme: ScrollbarThemeData(),
+    final appState = Provider.of<FFAppState>(context);
+    final _appStateNotifier = Provider.of<AppStateNotifier>(context);
+    return ChangeNotifierProvider(
+      create: (context) => _appStateNotifier,
+      child: MaterialApp.router(
+        title: 'Joiner 1',
+        localizationsDelegates: [
+          FFLocalizationsDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        locale: _locale,
+        supportedLocales: const [Locale('en', '')],
+        theme: ThemeData(
+          brightness: Brightness.light,
+          scrollbarTheme: ScrollbarThemeData(),
+        ),
+        themeMode: _themeMode,
+        routerConfig: GoRouter(
+          initialLocation: '/login',
+          debugLogDiagnostics: true,
+          refreshListenable: _appStateNotifier,
+          errorBuilder: (context, state) => LoginPageWidget(),
+          routes: _appStateNotifier.routes
+              .map((r) => r.toRoute(_appStateNotifier))
+              .toList(),
+          redirect: (context, state) {
+            final appState = Provider.of<FFAppState>(context, listen: false);
+            if (appState.currentUser != null) {
+              if (appState.isCra)
+                return '/earnings';
+              else
+                return '/virtualLobby';
+            }
+            return null;
+          },
+        ),
+        debugShowCheckedModeBanner: false,
       ),
-      themeMode: _themeMode,
-      routerConfig: _router,
-      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -102,7 +127,11 @@ class _NavBarPageState extends State<NavBarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FFAppState().isCra ? craDashboard() : userDashboard();
+    return Consumer<FFAppState>(
+      builder: (context, value, child) {
+        return value.isCra ? craDashboard() : userDashboard();
+      },
+    );
   }
 
   Widget userDashboard() {

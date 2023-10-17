@@ -25,14 +25,15 @@ class _AccountWidgetState extends State<AccountWidget> {
   @override
   void initState() {
     super.initState();
+    final appState = context.watch<FFAppState>();
     _model = createModel(context, () => AccountModel());
 
     _model.fNameController ??=
-        TextEditingController(text: FFAppState().getCurrentUser().firstName);
+        TextEditingController(text: appState.currentUser!.firstName);
     _model.lNameController ??=
-        TextEditingController(text: FFAppState().getCurrentUser().lastName);
+        TextEditingController(text: appState.currentUser!.lastName);
     _model.emailController ??=
-        TextEditingController(text: FFAppState().getCurrentUser().email);
+        TextEditingController(text: appState.currentUser!.email);
     _model.passwordController ??= TextEditingController(text: '***');
   }
 
@@ -45,7 +46,7 @@ class _AccountWidgetState extends State<AccountWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
+    final appState = context.watch<FFAppState>();
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
@@ -791,7 +792,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                 .canPop()) {
                                               context.pop();
                                             }
-                                            FFAppState().currentUser = null;
+                                            appState.setCurrentUser(null);
                                             context.goNamed('LoginPage');
                                             FFAppState.pref!.clear();
                                           },
