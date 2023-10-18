@@ -2,7 +2,7 @@ import 'package:joiner_1/components/user/budget_graph_widget.dart';
 import 'package:joiner_1/components/user/chat_widget.dart';
 import 'package:joiner_1/components/user/joiners_widget.dart';
 import 'package:joiner_1/components/user/poll_widget.dart';
-import 'package:joiner_1/widgets/widget_trip_details.dart';
+import 'package:joiner_1/widgets/molecules/widget_trip_details.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -14,7 +14,7 @@ export 'lobby_model.dart';
 
 class LobbyWidget extends StatefulWidget {
   final ModelLobby.LobbyModel? currentLobby;
-  const LobbyWidget({Key? key, this.currentLobby}) : super(key: key);
+  LobbyWidget({Key? key, this.currentLobby}) : super(key: key);
 
   @override
   _LobbyWidgetState createState() => _LobbyWidgetState();
@@ -36,6 +36,18 @@ class _LobbyWidgetState extends State<LobbyWidget>
       length: 4,
       initialIndex: 0,
     );
+    if (widget.currentLobby == null) {
+      _model.currentLobby = new ModelLobby.LobbyModel(
+        title: 'Mock',
+        startDate: DateTime.now(),
+        endDate: DateTime.now(),
+        budget: {
+          'Gas': 1000,
+          'Food': 1000,
+        },
+      );
+    } else
+      _model.currentLobby = widget.currentLobby!;
   }
 
   @override
@@ -80,9 +92,8 @@ class _LobbyWidgetState extends State<LobbyWidget>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      // widget.currentLobby!.title!,
-                      'Temp',
-                      //'Title: ',
+                      _model.currentLobby.title!,
+                      // 'Title: ',
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(
                                 fontFamily: 'Open Sans',
@@ -91,11 +102,12 @@ class _LobbyWidgetState extends State<LobbyWidget>
                               ),
                     ),
                     Text(
-                      // widget.currentLobby!.startDate ==
-                      //         widget.currentLobby!.endDate
-                      //     ? widget.currentLobby!.startDate.toString()
-                      //     : "${widget.currentLobby!.startDate.toString()} - ${widget.currentLobby!.endDate.toString()}",
-                      'Temp',
+                      _model.currentLobby.startDate ==
+                              _model.currentLobby.endDate
+                          ? (_model.currentLobby.startDate == null
+                              ? 'Date undecided'
+                              : "${_model.currentLobby.startDate.toString()}")
+                          : "${_model.currentLobby.startDate.toString()} - ${_model.currentLobby.endDate.toString()}",
                       //'Date',
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(
@@ -192,7 +204,9 @@ class _LobbyWidgetState extends State<LobbyWidget>
                           wrapWithModel(
                             model: _model.budgetGraphModel,
                             updateCallback: () => setState(() {}),
-                            child: BudgetGraphWidget(),
+                            child: BudgetGraphWidget(
+                              budget: _model.currentLobby.budget,
+                            ),
                           ),
                           wrapWithModel(
                             model: _model.pollModel,

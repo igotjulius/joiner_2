@@ -13,6 +13,7 @@ class LobbyModel {
   final DateTime? startDate;
   final DateTime? endDate;
   final List<String>? participants;
+  final Map<String, double>? budget;
 
   const LobbyModel({
     this.id,
@@ -21,6 +22,7 @@ class LobbyModel {
     this.startDate,
     this.endDate,
     this.participants,
+    this.budget,
   });
 
   factory LobbyModel.fromJson(Map<String, dynamic> json) =>

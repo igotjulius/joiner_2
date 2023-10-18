@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 class BudgetAllocationModel extends FlutterFlowModel {
   /// Initialization and disposal methods.
 
+  List<String>? keys;
+
   void initState(BuildContext context) {}
 
   void dispose() {}

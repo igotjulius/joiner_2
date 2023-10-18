@@ -8,9 +8,8 @@ import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
-import 'package:joiner_1/widgets/widget_lobby.dart';
+import 'package:joiner_1/widgets/molecules/widget_lobby.dart';
 import 'package:provider/provider.dart';
-
 import '../models/user_model.dart';
 
 class UserController {
@@ -61,7 +60,7 @@ class UserController {
   // Create lobby
   static Future<void> createLobby(
       LobbyModel lobby, BuildContext context) async {
-    final appState = Provider.of<FFAppState>(context);
+    final appState = Provider.of<FFAppState>(context, listen: false);
     await apiService.createLobby(lobby, appState.currentUser!.id!).then(
       (response) {
         showDialog(
@@ -129,6 +128,7 @@ class UserController {
     );
   }
 
+  // Fetch available cars
   static FutureBuilder<ResponseModel<List<CarModel>>> getAvailableCars(
       Function callback) {
     return FutureBuilder(
@@ -159,10 +159,16 @@ class UserController {
     );
   }
 
+  // Book a car
   static Future<void> bookCar(String licensePlate) async {
     await apiService
         .bookCar({'licensePlate': licensePlate}, _userId).catchError((error) {
       print(error);
     });
+  }
+
+  static Future<void> addBudget(String label, double amount) async {
+    await apiService
+        .addBudget({'label': label, 'amount': amount}, _userId, _lobbyId);
   }
 }

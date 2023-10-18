@@ -59,46 +59,36 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final appState = Provider.of<FFAppState>(context);
+    final appState = context.watch<FFAppState>();
     final _appStateNotifier = Provider.of<AppStateNotifier>(context);
-    return ChangeNotifierProvider(
-      create: (context) => _appStateNotifier,
-      child: MaterialApp.router(
-        title: 'Joiner 1',
-        localizationsDelegates: [
-          FFLocalizationsDelegate(),
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        locale: _locale,
-        supportedLocales: const [Locale('en', '')],
-        theme: ThemeData(
-          brightness: Brightness.light,
-          scrollbarTheme: ScrollbarThemeData(),
-        ),
-        themeMode: _themeMode,
-        routerConfig: GoRouter(
-          initialLocation: '/login',
-          debugLogDiagnostics: true,
-          refreshListenable: _appStateNotifier,
-          errorBuilder: (context, state) => LoginPageWidget(),
-          routes: _appStateNotifier.routes
-              .map((r) => r.toRoute(_appStateNotifier))
-              .toList(),
-          redirect: (context, state) {
-            final appState = Provider.of<FFAppState>(context, listen: false);
-            if (appState.currentUser != null) {
-              if (appState.isCra)
-                return '/earnings';
-              else
-                return '/virtualLobby';
-            }
-            return null;
-          },
-        ),
-        debugShowCheckedModeBanner: false,
+    return MaterialApp.router(
+      title: 'Joiner 1',
+      localizationsDelegates: [
+        FFLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: _locale,
+      supportedLocales: const [Locale('en', '')],
+      theme: ThemeData(
+        brightness: Brightness.light,
+        scrollbarTheme: ScrollbarThemeData(),
       ),
+      themeMode: _themeMode,
+      routerConfig: GoRouter(
+        initialLocation: '/login',
+        debugLogDiagnostics: true,
+        refreshListenable: _appStateNotifier,
+        errorBuilder: (context, state) => LoginPageWidget(),
+        routes: _appStateNotifier.routes
+            .map((r) => r.toRoute(_appStateNotifier))
+            .toList(),
+        redirect: (context, state) {
+          return _appStateNotifier.redirectState(context, state, appState);
+        },
+      ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -115,7 +105,7 @@ class NavBarPage extends StatefulWidget {
 
 /// This is the private State class that goes with NavBarPage.
 class _NavBarPageState extends State<NavBarPage> {
-  String _currentPageName = 'VirtualLobby';
+  String _currentPageName = 'Login';
   late Widget? _currentPage;
 
   @override
@@ -137,7 +127,6 @@ class _NavBarPageState extends State<NavBarPage> {
   Widget userDashboard() {
     final tabs = {
       'VirtualLobby': VirtualLobbyWidget(),
-      'BrowseMap': BrowseMapWidget(),
       'CarRentals': CarRentalsWidget(),
       'Friends': FriendsWidget(),
       'Account': AccountWidget(),
@@ -166,11 +155,6 @@ class _NavBarPageState extends State<NavBarPage> {
           GButton(
             icon: Icons.meeting_room_rounded,
             text: 'Lobby',
-            iconSize: 24.0,
-          ),
-          GButton(
-            icon: Icons.map_rounded,
-            text: 'Browse',
             iconSize: 24.0,
           ),
           GButton(

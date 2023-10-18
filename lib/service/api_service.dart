@@ -74,6 +74,12 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
+  // Create new budget category
+  @POST('user/{userId}/lobby/{lobbyId}/budget')
+  Future<void> addBudget(@Body() Map<String, dynamic> map,
+      @Path('userId') String userId, @Path('lobbyId') String lobbyId,
+      {@Header('Content-Type') String contentType = 'application/json'});
+
   // CRA API's
   // Login CRA
   @POST('cra/login')

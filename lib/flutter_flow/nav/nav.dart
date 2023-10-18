@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:joiner_1/components/user/add_budget_widget.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/car_widget.dart';
-import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
 import 'package:joiner_1/pages/user/car_listings/car_listings_widget.dart';
-import 'package:provider/provider.dart';
 import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -40,43 +39,64 @@ class AppStateNotifier extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  FutureOr<String?> redirectState(
+      BuildContext context, GoRouterState state, FFAppState appState) {
+    bool loggingIn =
+        appState.currentUser != null && state.matchedLocation == '/login';
+    bool loggingOut =
+        appState.currentUser == null && state.matchedLocation == '/account';
+    if (loggingIn) return appState.isCra ? '/earnings' : '/virtualLobby';
+    if (loggingOut) return '/login';
+
+    return null;
+  }
 }
 
 List<FFRoute> baseRoute() {
-  return [
+  List<FFRoute> routes = [
     FFRoute(
-      name: '_initialize',
+      name: 'Login',
       path: '/login',
       builder: (context, params) => LoginPageWidget(),
     ),
   ];
+  routes.addAll(userRoutes());
+  return routes;
 }
 
 List<FFRoute> userRoutes() {
   return [
     FFRoute(
-      name: 'BrowseMap',
-      path: '/browseMap',
-      builder: (context, params) => params.isEmpty
-          ? NavBarPage(initialPage: 'BrowseMap')
-          : BrowseMapWidget(),
-    ),
-    FFRoute(
-        name: 'VirtualLobby',
-        path: '/virtualLobby',
-        builder: (context, params) => NavBarPage(initialPage: 'VirtualLobby')),
-    FFRoute(
-      name: 'LobbyCreation',
-      path: '/lobbyCreation',
-      builder: (context, params) => LobbyCreationWidget(),
-    ),
-    FFRoute(
-      name: 'Lobby',
-      path: '/lobby',
-      builder: (context, params) {
-        LobbyModel obj = params.state.extraMap['currentLobby'] as LobbyModel;
-        return LobbyWidget(currentLobby: obj);
-      },
+      name: 'VirtualLobby',
+      path: '/virtualLobby',
+      builder: (context, params) => NavBarPage(initialPage: 'VirtualLobby'),
+      routes: [
+        GoRoute(
+          name: 'Lobby',
+          path: 'lobby',
+          builder: (context, state) {
+            LobbyModel obj = state.extraMap['currentLobby'] as LobbyModel;
+            return LobbyWidget(currentLobby: obj);
+            // return LobbyWidget();
+          },
+        ),
+        GoRoute(
+          name: 'LobbyCreation',
+          path: 'lobbyCreation',
+          builder: ((context, state) => LobbyCreationWidget()),
+        ),
+        GoRoute(
+          name: 'InviteJoiners',
+          path: 'inviteJoiners',
+          builder: (context, params) => InviteJoinersWidget(),
+        ),
+        GoRoute(
+          name: 'Participants',
+          path: 'participants',
+          builder: (context, params) => ParticipantsWidget(),
+        )
+      ],
     ),
     FFRoute(
       name: 'CarRentals',
@@ -102,33 +122,27 @@ List<FFRoute> userRoutes() {
       path: '/friends',
       builder: (context, params) =>
           params.isEmpty ? NavBarPage(initialPage: 'Friends') : FriendsWidget(),
+      routes: [
+        GoRoute(
+          name: 'InviteFriend',
+          path: 'inviteFriend',
+          builder: (context, params) => InviteFriendWidget(),
+        ),
+      ],
     ),
     FFRoute(
       name: 'Account',
       path: '/account',
       builder: (context, params) =>
           params.isEmpty ? NavBarPage(initialPage: 'Account') : AccountWidget(),
+      routes: [
+        GoRoute(
+          name: 'TransactionHistory',
+          path: 'transactionHistory',
+          builder: (context, params) => TransactionHistoryWidget(),
+        ),
+      ],
     ),
-    FFRoute(
-      name: 'TransactionHistory',
-      path: '/transactionHistory',
-      builder: (context, params) => TransactionHistoryWidget(),
-    ),
-    FFRoute(
-      name: 'InviteFriend',
-      path: '/inviteFriend',
-      builder: (context, params) => InviteFriendWidget(),
-    ),
-    FFRoute(
-      name: 'InviteJoiners',
-      path: '/inviteJoiners',
-      builder: (context, params) => InviteJoinersWidget(),
-    ),
-    FFRoute(
-      name: 'Participants',
-      path: '/participants',
-      builder: (context, params) => ParticipantsWidget(),
-    )
   ];
 }
 

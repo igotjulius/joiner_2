@@ -39,7 +39,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final appState = context.watch<FFAppState>();
     return GestureDetector(
       // onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
@@ -245,11 +244,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Checkbox(
-                                      value: appState.isCra,
-                                      onChanged: (val) {
-                                        _model.setIsCra(val!);
-                                        appState.setIsCra(val);
-                                      }),
+                                    value: _model.isCra,
+                                    onChanged: (val) {
+                                      _model.setIsCra(val!);
+                                      setState(() {});
+                                    },
+                                  ),
                                 ),
                                 Align(
                                   alignment: AlignmentDirectional(-1.0, 0.0),
@@ -275,8 +275,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   alignment: AlignmentDirectional(0.0, 0.0),
                                   child: FFButtonWidget(
                                     onPressed: () {
-                                      _model.setRoutes();
+                                      Provider.of<FFAppState>(context,
+                                              listen: false)
+                                          .setIsCra(_model.isCra);
                                       _model.loginUser();
+                                      // _model.setRoutes();
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/lobby_model.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-
-import '../flutter_flow/flutter_flow_theme.dart';
 
 class WidgetLobby extends StatelessWidget {
   WidgetLobby(this.lobbies, {super.key});
@@ -55,14 +54,10 @@ class WidgetLobby extends StatelessWidget {
                     )),
               );
             },
-            onTap: () async {
+            onTap: () {
               context.pushNamed(
                 'Lobby',
                 extra: <String, dynamic>{
-                  kTransitionInfoKey: TransitionInfo(
-                    hasTransition: true,
-                    transitionType: PageTransitionType.rightToLeft,
-                  ),
                   'currentLobby': lobbies[index],
                 },
               );
