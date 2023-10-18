@@ -123,7 +123,7 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
-  //Get Poll
+  // Get Poll
   @GET('user/{userId}/lobby/{lobbyId}/poll')
   Future<List<PollModel>> getPoll(
       @Path('userId') String userId, @Path('lobbyId') String lobbyId);
@@ -137,6 +137,7 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
+  // Delete poll
   @DELETE('user/{userId}/lobby/{lobbyId}/poll/{pollId}')
   Future<void> deletePoll(
     @Path('userId') String userId,

@@ -1,12 +1,9 @@
 import 'package:joiner_1/controllers/user_controller.dart';
-
-import '/components/survey_poll_widget.dart';
+import '/components/user/survey_poll_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'poll_model.dart';
 export 'poll_model.dart';
@@ -63,7 +60,7 @@ class _PollWidgetState extends State<PollWidget> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Flexible(child: UserController.getPoll()),
-                ].divide(SizedBox(height: 10.0)),
+              ].divide(SizedBox(height: 10.0)),
             ),
           ),
         ),
@@ -83,9 +80,11 @@ class _PollWidgetState extends State<PollWidget> {
                 size: 40.0,
               ),
               onPressed: () async {
-                showDialog(context: context, builder: (context){
-                  return SurveyPollWidget();
-                });
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return SurveyPollWidget();
+                    });
               },
             ),
           ),
@@ -93,4 +92,4 @@ class _PollWidgetState extends State<PollWidget> {
       ],
     );
   }
- }
+}

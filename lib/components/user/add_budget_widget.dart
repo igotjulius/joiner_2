@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:joiner_1/components/user/add_budget_model.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
@@ -47,6 +47,8 @@ class _AddBudgetWidgetState extends State<AddBudgetWidget> {
             CustomTextInput(
               label: 'Amount',
               controller: _model.amountController,
+              keyboardType: TextInputType.number,
+              inputFormatters: FilteringTextInputFormatter.digitsOnly,
               validator: _model.amountValidator,
             ),
             FFButtonWidget(

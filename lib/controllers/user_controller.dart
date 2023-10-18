@@ -10,14 +10,12 @@ import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/widgets/molecules/poll_item.dart';
-import 'package:joiner_1/widgets/widget_lobby.dart';
-import 'package:retrofit/dio.dart';
-
 import 'package:joiner_1/widgets/molecules/widget_lobby.dart';
 import 'package:provider/provider.dart';
 import '../models/user_model.dart';
 
 class UserController {
+  //TODO: change to dynamic
   static String _userId = '6522a0c73e680ea09ee89d5f';
   static String _lobbyId = '65279f410e8b2ee1b1412372';
   static String _conversationId = '65279f410e8b2ee1b1412375';
@@ -145,6 +143,7 @@ class UserController {
     );
   }
 
+  // Get all poll of a lobby
   static FutureBuilder<List<PollModel>> getPoll() {
     return FutureBuilder(
         future: apiService.getPoll(_userId, _lobbyId),
@@ -163,11 +162,58 @@ class UserController {
         }));
   }
 
+  // Add/create a poll of a lobby
   static void postPoll(PollModel poll) {
     apiService.postPoll(poll, _userId, _lobbyId);
   }
 
+  // Delete corresponding poll
   static void deletePoll(String pollId) {
     apiService.deletePoll(_userId, _lobbyId, pollId);
+  }
+
+  // Add/create a budget to a lobby
+  static Future<void> addBudget(String label, double amount) async {
+    await apiService
+        .addBudget({'label': label, 'amount': amount}, _userId, _lobbyId);
+  }
+
+  // Get available cars
+  static FutureBuilder<ResponseModel<List<CarModel>>> getAvailableCars(
+      Function callback) {
+    return FutureBuilder(
+      future: apiService.getAvailableCars(_userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data!.data!.isEmpty)
+            return Center(
+              child: Text('No available cars for today :('),
+            );
+          final cars = snapshot.data!.data!;
+          double width = MediaQuery.of(context).size.width / 2;
+          return GridView.extent(
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+            maxCrossAxisExtent: width,
+            children: List.generate(
+              cars.length,
+              (i) => CarItemWidget(callback, car: cars[i]),
+            ),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+
+  // Book corresponding car
+  static Future<void> bookCar(String licensePlate) async {
+    await apiService
+        .bookCar({'licensePlate': licensePlate}, _userId).catchError((error) {
+      print(error);
+    });
   }
 }

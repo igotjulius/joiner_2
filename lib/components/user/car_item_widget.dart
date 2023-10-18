@@ -3,7 +3,6 @@ import 'package:joiner_1/components/user/car_item_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
-
 import '../../controllers/user_controller.dart';
 
 class CarItemWidget extends StatefulWidget {
