@@ -5,9 +5,11 @@ import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/index.dart';
 import 'package:joiner_1/models/message_model.dart';
+import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
+import 'package:joiner_1/widgets/molecules/poll_item.dart';
 import 'package:joiner_1/widgets/widget_lobby.dart';
 import 'package:retrofit/dio.dart';
 
@@ -135,7 +137,8 @@ class UserController {
           itemCount: result.length,
           itemBuilder: (context, index) {
             return Align(
-              alignment: Alignment.centerRight,
+              
+              alignment: Alignment.bottomRight,
               child: Container(
                 margin: EdgeInsets.only(right: 10, bottom: 7, top: 5), 
                 child: Container(
@@ -160,5 +163,27 @@ class UserController {
       }
     },
   );
+}
+
+static FutureBuilder<List<PollModel>> getPoll() {
+  return FutureBuilder(future: apiService.getPoll(_userId, _lobbyId), builder: ((context, snapshot) {
+    if (snapshot.hasData) {
+      List<PollModel> polls = snapshot.data!;
+        return ListView.builder(itemCount: polls.length, itemBuilder: (context, index) {
+          return PollItem(poll: polls[index]);
+        },);
+    }
+    else {
+      return Center(child: CircularProgressIndicator());
+    }
+  }));
+}
+
+static void postPoll(PollModel poll) {
+  apiService.postPoll(poll, _userId, _lobbyId);
+}
+
+static void deletePoll(String pollId) {
+  apiService.deletePoll(_userId, _lobbyId, pollId);
 }
 }

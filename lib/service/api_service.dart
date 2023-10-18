@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:joiner_1/models/message_model.dart';
+import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/pages/account/account_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:retrofit/dio.dart';
@@ -70,4 +71,25 @@ abstract class ApiService {
     @Body() UserModel nUser, {
     @Header('Content-Type') String contentType = 'application/json',
   });
+
+  //Get Poll
+  @GET('user/{userId}/lobby/{lobbyId}/poll')
+  Future<List<PollModel>> getPoll(@Path('userId') String userId, @Path('lobbyId') String lobbyId);
+
+  //Post Poll
+  @POST('user/{userId}/lobby/{lobbyId}/poll')
+  Future<void> postPoll (
+    @Body() PollModel poll,
+    @Path('userId') String userId, 
+    @Path('lobbyId') String lobbyId, {
+    @Header('Content-Type') String contentType = 'application/json',
+    }
+  );
+
+  @DELETE('user/{userId}/lobby/{lobbyId}/poll/{pollId}')
+  Future<void> deletePoll (
+    @Path('userId') String userId, 
+    @Path('lobbyId') String lobbyId, 
+    @Path('pollId') String pollId,
+  );
 }

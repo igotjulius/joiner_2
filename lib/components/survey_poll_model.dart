@@ -15,9 +15,14 @@ class SurveyPollModel extends FlutterFlowModel {
   TextEditingController? textController2;
   String? Function(BuildContext, String?)? textController2Validator;
 
+  List<TextEditingController>? choices;
+
   /// Initialization and disposal methods.
 
-  void initState(BuildContext context) {}
+  void initState(BuildContext context) {
+    choices = [];
+
+  }
 
   void dispose() {
     textController1?.dispose();
