@@ -5,9 +5,14 @@ import 'package:joiner_1/components/user/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/message_model.dart';
+import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
+import 'package:joiner_1/widgets/molecules/poll_item.dart';
+import 'package:joiner_1/widgets/widget_lobby.dart';
+import 'package:retrofit/dio.dart';
+
 import 'package:joiner_1/widgets/molecules/widget_lobby.dart';
 import 'package:provider/provider.dart';
 import '../models/user_model.dart';
@@ -109,14 +114,26 @@ class UserController {
             return Center(
               child: Text('Say hi!'),
             );
-          return ListView.separated(
+          return ListView.builder(
             itemCount: result.length,
             itemBuilder: (context, index) {
-              return Text(
-                  result[index].creator! + ' ' + result[index].message!);
-            },
-            separatorBuilder: (context, index) {
-              return Divider(height: 10, thickness: 1);
+              return Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  margin: EdgeInsets.only(right: 10, bottom: 7, top: 5),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      result[index].message!,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              );
             },
           );
         } else {
@@ -128,47 +145,29 @@ class UserController {
     );
   }
 
-  // Fetch available cars
-  static FutureBuilder<ResponseModel<List<CarModel>>> getAvailableCars(
-      Function callback) {
+  static FutureBuilder<List<PollModel>> getPoll() {
     return FutureBuilder(
-      future: apiService.getAvailableCars(_userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data!.data!.isEmpty)
-            return Center(
-              child: Text('No available cars for today :('),
+        future: apiService.getPoll(_userId, _lobbyId),
+        builder: ((context, snapshot) {
+          if (snapshot.hasData) {
+            List<PollModel> polls = snapshot.data!;
+            return ListView.builder(
+              itemCount: polls.length,
+              itemBuilder: (context, index) {
+                return PollItem(poll: polls[index]);
+              },
             );
-          final cars = snapshot.data!.data!;
-          double width = MediaQuery.of(context).size.width / 2;
-          return GridView.extent(
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
-            maxCrossAxisExtent: width,
-            children: List.generate(
-              cars.length,
-              (i) => CarItemWidget(callback, car: cars[i]),
-            ),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }));
   }
 
-  // Book a car
-  static Future<void> bookCar(String licensePlate) async {
-    await apiService
-        .bookCar({'licensePlate': licensePlate}, _userId).catchError((error) {
-      print(error);
-    });
+  static void postPoll(PollModel poll) {
+    apiService.postPoll(poll, _userId, _lobbyId);
   }
 
-  static Future<void> addBudget(String label, double amount) async {
-    await apiService
-        .addBudget({'label': label, 'amount': amount}, _userId, _lobbyId);
+  static void deletePoll(String pollId) {
+    apiService.deletePoll(_userId, _lobbyId, pollId);
   }
 }
