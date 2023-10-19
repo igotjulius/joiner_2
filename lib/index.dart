@@ -15,5 +15,3 @@ export '/pages/user/invite_friend/invite_friend_widget.dart'
     show InviteFriendWidget;
 export '/pages/user/invite_joiners/invite_joiners_widget.dart'
     show InviteJoinersWidget;
-export '/pages/user/participants/participants_widget.dart'
-    show ParticipantsWidget;

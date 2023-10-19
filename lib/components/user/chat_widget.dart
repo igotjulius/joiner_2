@@ -10,8 +10,11 @@ import 'chat_model.dart';
 export 'chat_model.dart';
 
 class ChatWidget extends StatefulWidget {
+  final String? lobbyId;
+  final String? conversationId;
   final Function callback;
-  const ChatWidget(this.callback, {Key? key}) : super(key: key);
+  const ChatWidget(this.callback, this.lobbyId, this.conversationId, {Key? key})
+      : super(key: key);
 
   @override
   _ChatWidgetState createState() => _ChatWidgetState();
@@ -52,7 +55,9 @@ class _ChatWidgetState extends State<ChatWidget> {
         color: FlutterFlowTheme.of(context).secondaryBackground,
       ),
       child: Column(children: [
-        Expanded(child: UserController.getConversation()),
+        Expanded(
+            child: UserController.getConversation(
+                widget.lobbyId!, widget.conversationId!)),
         Material(
           color: Colors.transparent,
           elevation: 0.0,
@@ -120,13 +125,18 @@ class _ChatWidgetState extends State<ChatWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      final message = MessageModel(
-                        creatorId: '6522a0c73e680ea09ee89d5f',
-                        creator: 'John',
-                        message: _model.textController.text,
-                      );
-                      await UserController.createMessage(message, context);
-                      widget.callback(() {});
+                      String mssg = _model.textController.text.trim();
+                      if (mssg.isNotEmpty) {
+                        final message = MessageModel(
+                          creatorId: '6522a0c73e680ea09ee89d5f',
+                          creator: 'John',
+                          message: mssg,
+                        );
+                        await UserController.createMessage(message, context,
+                            widget.lobbyId!, widget.conversationId!);
+                        widget.callback(() {});
+                        _model.textController!.clear();
+                      }
                     },
                     text: 'SEND',
                     options: FFButtonOptions(

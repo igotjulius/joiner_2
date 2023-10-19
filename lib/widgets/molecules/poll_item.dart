@@ -4,12 +4,15 @@ import 'package:joiner_1/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
+import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/widgets/atoms/poll_choices.dart';
 
 class PollItem extends StatefulWidget {
   final PollModel? poll;
-  const PollItem({super.key, this.poll});
+  final String? lobby;
+  final Function? callback;
+  const PollItem(this.callback, {super.key, this.poll, this.lobby});
 
   @override
   State<PollItem> createState() => _PollItemState();
@@ -76,8 +79,9 @@ class _PollItemState extends State<PollItem> {
                           color: FlutterFlowTheme.of(context).primary,
                           size: 24.0,
                         ),
-                        onPressed: () {
-                          UserController.deletePoll(widget.poll!.id!);
+                        onPressed: () async {
+                          UserController.deletePoll(widget.lobby!, widget.poll!.id!);
+                          widget.callback!(() {});
                         },
                       ),
                     ],

@@ -91,11 +91,6 @@ List<FFRoute> userRoutes() {
           path: 'inviteJoiners',
           builder: (context, params) => InviteJoinersWidget(),
         ),
-        GoRoute(
-          name: 'Participants',
-          path: 'participants',
-          builder: (context, params) => ParticipantsWidget(),
-        )
       ],
     ),
     FFRoute(

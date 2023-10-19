@@ -11,8 +11,8 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-const String serverUrl = 'http://localhost:443/';
-// const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+//const String serverUrl = 'http://localhost:443/';
+ const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -54,7 +54,7 @@ abstract class ApiService {
 
   // Get Conversation
   @GET('user/{userId}/lobby/{lobbyId}/conversation/{conversationId}')
-  Future<ResponseModel<List<MessageModel>>> getConversation(
+  Future<ResponseModel<List<MessageModel>?>> getConversation(
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
     @Path('conversationId') String conversationId,

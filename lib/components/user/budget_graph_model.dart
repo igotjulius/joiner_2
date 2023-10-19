@@ -15,7 +15,7 @@ class BudgetGraphModel extends FlutterFlowModel {
 
   /// Action blocks are added here.
   Widget showBudget() {
-    return keys.isNull
+    return keys == null
         ? Center(
             child: Text('Theres no budget yet'),
           )

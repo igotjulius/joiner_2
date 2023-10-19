@@ -19,6 +19,10 @@ LobbyModel _$LobbyModelFromJson(Map<String, dynamic> json) => LobbyModel(
       participants: (json['participants'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      budget: (json['budget'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toDouble()),
+      ),
+      conversation: json['conversation'] as String?,
     );
 
 Map<String, dynamic> _$LobbyModelToJson(LobbyModel instance) =>
@@ -29,4 +33,6 @@ Map<String, dynamic> _$LobbyModelToJson(LobbyModel instance) =>
       'startDate': instance.startDate?.toIso8601String(),
       'endDate': instance.endDate?.toIso8601String(),
       'participants': instance.participants,
+      'budget': instance.budget,
+      'conversation': instance.conversation,
     };

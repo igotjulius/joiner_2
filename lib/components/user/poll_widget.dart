@@ -9,7 +9,8 @@ import 'poll_model.dart';
 export 'poll_model.dart';
 
 class PollWidget extends StatefulWidget {
-  const PollWidget({
+  final String? lobbyId;
+  const PollWidget(this.lobbyId,{
     Key? key,
     this.index,
   }) : super(key: key);
@@ -45,7 +46,6 @@ class _PollWidgetState extends State<PollWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
-
     return Stack(
       children: [
         Container(
@@ -59,7 +59,7 @@ class _PollWidgetState extends State<PollWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Flexible(child: UserController.getPoll()),
+                Flexible(child: UserController.getPoll(setState, widget.lobbyId!)),
               ].divide(SizedBox(height: 10.0)),
             ),
           ),
@@ -83,7 +83,7 @@ class _PollWidgetState extends State<PollWidget> {
                 showDialog(
                     context: context,
                     builder: (context) {
-                      return SurveyPollWidget();
+                      return SurveyPollWidget(setState, widget.lobbyId);
                     });
               },
             ),

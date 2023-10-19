@@ -18,7 +18,7 @@ class UserController {
   //TODO: change to dynamic
   static String _userId = '6522a0c73e680ea09ee89d5f';
   static String _lobbyId = '65279f410e8b2ee1b1412372';
-  static String _conversationId = '65279f410e8b2ee1b1412375';
+  //static String _conversationId = '65279f410e8b2ee1b1412375';
 
   // Login user
   static void loginUser(UserModel user, FFAppState appState) async {
@@ -88,9 +88,9 @@ class UserController {
 
   // Create message
   static Future<void> createMessage(
-      MessageModel message, BuildContext context) async {
+      MessageModel message, BuildContext context, String lobbyId, String conversationId) async {
     await apiService
-        .createMessage(message, _userId, _lobbyId, _conversationId)
+        .createMessage(message, _userId, lobbyId, conversationId)
         .catchError((error) {
       showDialog(
         context: context,
@@ -102,13 +102,13 @@ class UserController {
   }
 
   // Get conversation
-  static FutureBuilder<ResponseModel<List<MessageModel>>> getConversation() {
+  static FutureBuilder<ResponseModel<List<MessageModel>?>> getConversation(String lobbyId, String conversationId) {
     return FutureBuilder(
-      future: apiService.getConversation(_userId, _lobbyId, _conversationId),
+      future: apiService.getConversation(_userId, lobbyId, conversationId),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<MessageModel> result = snapshot.data!.data!;
-          if (result.isEmpty)
+          List<MessageModel>? result = snapshot.data!.data;
+          if (result == null)
             return Center(
               child: Text('Say hi!'),
             );
@@ -144,16 +144,16 @@ class UserController {
   }
 
   // Get all poll of a lobby
-  static FutureBuilder<List<PollModel>> getPoll() {
+  static FutureBuilder<List<PollModel>> getPoll(Function callback, String lobbyId) {
     return FutureBuilder(
-        future: apiService.getPoll(_userId, _lobbyId),
+        future: apiService.getPoll(_userId, lobbyId),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             List<PollModel> polls = snapshot.data!;
             return ListView.builder(
               itemCount: polls.length,
               itemBuilder: (context, index) {
-                return PollItem(poll: polls[index]);
+                return PollItem(callback, poll: polls[index],lobby: lobbyId);
               },
             );
           } else {
@@ -163,13 +163,13 @@ class UserController {
   }
 
   // Add/create a poll of a lobby
-  static void postPoll(PollModel poll) {
-    apiService.postPoll(poll, _userId, _lobbyId);
+  static void postPoll(PollModel poll, String lobbyId) {
+    apiService.postPoll(poll, _userId, lobbyId);
   }
 
   // Delete corresponding poll
-  static void deletePoll(String pollId) {
-    apiService.deletePoll(_userId, _lobbyId, pollId);
+  static void deletePoll(String lobbyId, String pollId) {
+    apiService.deletePoll(_userId, lobbyId, pollId);
   }
 
   // Add/create a budget to a lobby

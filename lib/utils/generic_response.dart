@@ -37,7 +37,7 @@ class ResponseModel<T> {
       return converted as T;
     } else if (json is List<dynamic>) {
       if (json.isEmpty) {
-        return <CarModel>[] as T;
+        return null;
       }
       var data = json.asMap()[0];
 

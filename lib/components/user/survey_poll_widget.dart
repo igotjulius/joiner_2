@@ -11,7 +11,9 @@ import 'survey_poll_model.dart';
 export 'survey_poll_model.dart';
 
 class SurveyPollWidget extends StatefulWidget {
-  const SurveyPollWidget({Key? key}) : super(key: key);
+  final String? lobbyId;
+  final Function? callback;
+  const SurveyPollWidget(this.callback, this.lobbyId, {Key? key}) : super(key: key);
 
   @override
   _SurveyPollWidgetState createState() => _SurveyPollWidgetState();
@@ -152,8 +154,9 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                 onPressed: () async {
                   List<String> choices = [];
                   _model.choices!.forEach((element) => choices.add(element.text));
-                   UserController.postPoll(PollModel(question: _model.textController1.text, choices: choices));
+                   UserController.postPoll(PollModel(question: _model.textController1.text, choices: choices), widget.lobbyId!);
                    context.pop();
+                   widget.callback!(() {});
                 },
                 text: 'Create',
                 icon: Icon(
