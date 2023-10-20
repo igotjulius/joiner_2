@@ -5,6 +5,7 @@ import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/car_widget.dart';
 import 'package:joiner_1/pages/user/car_listings/car_listings_widget.dart';
+import 'package:provider/provider.dart';
 import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_util.dart';

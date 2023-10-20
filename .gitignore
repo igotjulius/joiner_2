@@ -4,4 +4,4 @@ build/
 .flutter-plugins-dependencies
 .flutter-plugins*
 *.g.dart
-pubspeck.lock
+pubspec.lock

@@ -6,7 +6,8 @@ import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class AddBudgetWidget extends StatefulWidget {
-  const AddBudgetWidget({super.key});
+  final String? lobbyId;
+  const AddBudgetWidget({super.key, this.lobbyId});
 
   @override
   State<AddBudgetWidget> createState() => _AddBudgetWidgetState();
@@ -54,7 +55,7 @@ class _AddBudgetWidgetState extends State<AddBudgetWidget> {
             FFButtonWidget(
               text: 'Add',
               onPressed: () {
-                _model.addBudget();
+                _model.addBudget(widget.lobbyId!);
                 context.pop();
               },
               options: FFButtonOptions(height: 40),

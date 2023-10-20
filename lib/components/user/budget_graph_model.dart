@@ -1,5 +1,4 @@
-import 'dart:js_interop';
-
+import 'package:joiner_1/components/user/add_budget_widget.dart';
 import '../../widgets/atoms/budget_category.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +29,13 @@ class BudgetGraphModel extends FlutterFlowModel {
               );
             }),
           );
+  }
+
+  void addBudget(BuildContext context, String lobbyId) {
+    showDialog(
+      context: context,
+      builder: (context) => AddBudgetWidget(lobbyId: lobbyId),
+    );
   }
 
   /// Additional helper methods are added here.

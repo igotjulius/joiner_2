@@ -247,6 +247,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     value: _model.isCra,
                                     onChanged: (val) {
                                       _model.setIsCra(val!);
+                                      // _model.setRoutes();
                                       setState(() {});
                                     },
                                   ),
@@ -279,7 +280,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                               listen: false)
                                           .setIsCra(_model.isCra);
                                       _model.loginUser();
-                                      // _model.setRoutes();
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(

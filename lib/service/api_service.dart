@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/message_model.dart';
+import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import '../models/user_model.dart';
@@ -11,8 +12,8 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-//const String serverUrl = 'http://localhost:443/';
- const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -77,9 +78,49 @@ abstract class ApiService {
 
   // Create new budget category
   @POST('user/{userId}/lobby/{lobbyId}/budget')
-  Future<void> addBudget(@Body() Map<String, dynamic> map,
-      @Path('userId') String userId, @Path('lobbyId') String lobbyId,
-      {@Header('Content-Type') String contentType = 'application/json'});
+  Future<void> addBudget(
+    @Body() Map<String, dynamic> map,
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Get all participants
+  @GET('user/{userId}/lobby/{lobbyId}/participants')
+  Future<ResponseModel<List<ParticipantModel>>> getParticipants(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
+
+  // Add a participant/s
+  @POST('user/{userId}/lobby/{lobbyId}/invitation')
+  Future<void> inviteParticipants(
+    @Body() List<ParticipantModel> participants,
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Invite a friend
+  @POST('user/{userId}/social')
+  Future<void> inviteFriend(
+    @Body() Map<String, String> user,
+    @Path('userId') String userId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Get user's friends
+  @GET('user/{userId}/social')
+  Future<ResponseModel<List<Map<String, String>>>?> getFriends(
+    @Path('userId') String userId,
+  );
+
+  // Accept friend request
+  @POST('user/{userId}/social/{friendId}')
+  Future<void> acceptFriendRequest(
+    @Path('userId') String userId,
+    @Path('friendId') String friendId,
+  );
 
   // CRA API's
   // Login CRA

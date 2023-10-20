@@ -199,7 +199,8 @@ class _LobbyWidgetState extends State<LobbyWidget>
                           wrapWithModel(
                             model: _model.chatModel,
                             updateCallback: () => setState(() {}),
-                            child: ChatWidget(setState, _model.currentLobby.id, _model.currentLobby.conversation),
+                            child: ChatWidget(setState, _model.currentLobby.id,
+                                _model.currentLobby.conversation),
                           ),
                           wrapWithModel(
                             model: _model.budgetGraphModel,
@@ -216,7 +217,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                           wrapWithModel(
                             model: _model.joinersModel,
                             updateCallback: () => setState(() {}),
-                            child: JoinersWidget(),
+                            child: JoinersWidget(widget.currentLobby!.id),
                           ),
                         ],
                       ),

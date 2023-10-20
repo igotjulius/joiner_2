@@ -1,6 +1,7 @@
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/message_model.dart';
+import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -46,8 +47,18 @@ class ResponseModel<T> {
             json.map((element) => MessageModel.fromJson(element)).toList();
       } else if (data.containsKey('vehicleType')) {
         converted = json.map((element) => CarModel.fromJson(element)).toList();
+      } else if (data.containsKey('joinStatus')) {
+        converted =
+            json.map((element) => ParticipantModel.fromJson(element)).toList();
+      } else if (data.containsKey('friendId')) {
+        converted = json
+            .map((element) => {
+                  'friendName': element['friendName'] as String,
+                  'friendId': element['friendId'] as String,
+                  'status': element['status'] as String,
+                })
+            .toList();
       }
-
       return converted as T;
     } else if (json == null) {
       return json as T;

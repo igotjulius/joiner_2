@@ -14,6 +14,7 @@ class UserModel {
   String? lastName;
   String? email;
   String? password;
+  List<Map<String, String>>? friends;
 
   UserModel({
     this.id,
@@ -21,6 +22,7 @@ class UserModel {
     this.lastName,
     this.email,
     this.password,
+    this.friends,
   });
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

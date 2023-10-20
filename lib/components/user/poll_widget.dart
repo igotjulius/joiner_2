@@ -1,5 +1,5 @@
 import 'package:joiner_1/controllers/user_controller.dart';
-import '/components/user/survey_poll_widget.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -10,7 +10,8 @@ export 'poll_model.dart';
 
 class PollWidget extends StatefulWidget {
   final String? lobbyId;
-  const PollWidget(this.lobbyId,{
+  const PollWidget(
+    this.lobbyId, {
     Key? key,
     this.index,
   }) : super(key: key);
@@ -46,50 +47,33 @@ class _PollWidgetState extends State<PollWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
-    return Stack(
-      children: [
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).secondaryBackground,
-          ),
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: FlutterFlowTheme.of(context).secondaryBackground,
+      ),
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Row(
               children: [
-                Flexible(child: UserController.getPoll(setState, widget.lobbyId!)),
-              ].divide(SizedBox(height: 10.0)),
+                Text('Poll'),
+                FFButtonWidget(
+                  text: 'Add',
+                  options: FFButtonOptions(height: 40),
+                  onPressed: () async {
+                    _model.addPoll(context, setState, widget.lobbyId!);
+                  },
+                ),
+              ],
             ),
-          ),
+            Flexible(child: _model.getPoll(setState, widget.lobbyId!)),
+          ].divide(SizedBox(height: 10.0)),
         ),
-        Align(
-          alignment: AlignmentDirectional(1.0, 1.0),
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 20.0),
-            child: FlutterFlowIconButton(
-              borderColor: Colors.transparent,
-              borderRadius: 50.0,
-              borderWidth: 1.0,
-              buttonSize: 52.0,
-              fillColor: FlutterFlowTheme.of(context).primary,
-              icon: Icon(
-                Icons.add,
-                color: FlutterFlowTheme.of(context).primaryBackground,
-                size: 40.0,
-              ),
-              onPressed: () async {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return SurveyPollWidget(setState, widget.lobbyId);
-                    });
-              },
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

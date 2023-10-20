@@ -5,26 +5,27 @@ import 'package:joiner_1/components/user/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/message_model.dart';
+import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
+import 'package:joiner_1/widgets/atoms/participant.dart';
 import 'package:joiner_1/widgets/molecules/poll_item.dart';
 import 'package:joiner_1/widgets/molecules/widget_lobby.dart';
-import 'package:provider/provider.dart';
 import '../models/user_model.dart';
 
 class UserController {
   //TODO: change to dynamic
-  static String _userId = '6522a0c73e680ea09ee89d5f';
-  static String _lobbyId = '65279f410e8b2ee1b1412372';
-  //static String _conversationId = '65279f410e8b2ee1b1412375';
+  static late String _userId = FFAppState().pref!.getString('userId')!;
 
   // Login user
   static void loginUser(UserModel user, FFAppState appState) async {
     await apiService.loginUser(user).then((response) {
       if (response.code == HttpStatus.ok) {
-        appState.setCurrentUser(response.data!);
+        final UserModel user = response.data!;
+        appState.setCurrentUser(user);
+        _userId = user.id!;
       }
     });
   }
@@ -33,7 +34,7 @@ class UserController {
   static FutureBuilder<ResponseModel<Map<String, List<LobbyModel>>>>
       userLobbies(FFAppState appState) {
     return FutureBuilder(
-      future: apiService.getLobby(appState.currentUser!.id!),
+      future: apiService.getLobby(_userId),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.code == HttpStatus.ok) {
@@ -63,8 +64,7 @@ class UserController {
   // Create lobby
   static Future<void> createLobby(
       LobbyModel lobby, BuildContext context) async {
-    final appState = Provider.of<FFAppState>(context, listen: false);
-    await apiService.createLobby(lobby, appState.currentUser!.id!).then(
+    await apiService.createLobby(lobby, _userId).then(
       (response) {
         showDialog(
           context: context,
@@ -87,8 +87,8 @@ class UserController {
   }
 
   // Create message
-  static Future<void> createMessage(
-      MessageModel message, BuildContext context, String lobbyId, String conversationId) async {
+  static Future<void> createMessage(MessageModel message, BuildContext context,
+      String lobbyId, String conversationId) async {
     await apiService
         .createMessage(message, _userId, lobbyId, conversationId)
         .catchError((error) {
@@ -102,7 +102,8 @@ class UserController {
   }
 
   // Get conversation
-  static FutureBuilder<ResponseModel<List<MessageModel>?>> getConversation(String lobbyId, String conversationId) {
+  static FutureBuilder<ResponseModel<List<MessageModel>?>> getConversation(
+      String lobbyId, String conversationId) {
     return FutureBuilder(
       future: apiService.getConversation(_userId, lobbyId, conversationId),
       builder: (context, snapshot) {
@@ -144,7 +145,8 @@ class UserController {
   }
 
   // Get all poll of a lobby
-  static FutureBuilder<List<PollModel>> getPoll(Function callback, String lobbyId) {
+  static FutureBuilder<List<PollModel>> getPoll(
+      Function callback, String lobbyId) {
     return FutureBuilder(
         future: apiService.getPoll(_userId, lobbyId),
         builder: ((context, snapshot) {
@@ -153,7 +155,7 @@ class UserController {
             return ListView.builder(
               itemCount: polls.length,
               itemBuilder: (context, index) {
-                return PollItem(callback, poll: polls[index],lobby: lobbyId);
+                return PollItem(callback, poll: polls[index], lobby: lobbyId);
               },
             );
           } else {
@@ -173,9 +175,52 @@ class UserController {
   }
 
   // Add/create a budget to a lobby
-  static Future<void> addBudget(String label, double amount) async {
+  static Future<void> addBudget(
+      String label, double amount, String lobbyId) async {
     await apiService
-        .addBudget({'label': label, 'amount': amount}, _userId, _lobbyId);
+        .addBudget({'label': label, 'amount': amount}, _userId, lobbyId);
+  }
+
+  // Get participants of a lobby
+  static FutureBuilder<ResponseModel<List<ParticipantModel>>> getParticipants(
+      String lobbyId) {
+    return FutureBuilder(
+      future: apiService.getParticipants(_userId, lobbyId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final result = snapshot.data!.data;
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: result!.length,
+              itemBuilder: (context, index) {
+                return ParticipantsAtom(result[index].name);
+              });
+        } else
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+      },
+    );
+  }
+
+  // Invite participant/s to a lobby
+  static Future<void> inviteParticipants(List<ParticipantModel> participants,
+      String userId, String lobbyId) async {
+    await apiService.inviteParticipants(participants, userId, lobbyId);
+  }
+
+  // Invite user a friend
+  static Future<void> inviteFriend(String friendEmail) async {
+    await apiService.inviteFriend({'email': friendEmail}, _userId);
+  }
+
+  static Future<ResponseModel<List<Map<String, String>>>?> getFriends() {
+    return apiService.getFriends(_userId);
+  }
+
+  // Accept friend request
+  static Future<void> acceptFriendRequest(String friendId) async {
+    await apiService.acceptFriendRequest(_userId, friendId);
   }
 
   // Get available cars

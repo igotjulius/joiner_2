@@ -16,10 +16,11 @@ class AddBudgetModel extends FlutterFlowModel {
   @override
   void initState(BuildContext context) {}
 
-  void addBudget() async {
+  void addBudget(String lobbyId) async {
     await UserController.addBudget(
       labelController.text,
       double.parse(amountController.text),
+      lobbyId,
     );
   }
 }

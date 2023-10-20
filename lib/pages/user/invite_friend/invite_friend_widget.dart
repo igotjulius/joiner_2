@@ -1,9 +1,10 @@
+import 'package:joiner_1/controllers/user_controller.dart';
+
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'invite_friend_model.dart';
 export 'invite_friend_model.dart';
@@ -161,7 +162,7 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
                 ),
                 FFButtonWidget(
                   onPressed: () {
-                    print('Button pressed ...');
+                    UserController.inviteFriend(_model.textController.text);
                   },
                   text: 'Send friend request',
                   options: FFButtonOptions(
