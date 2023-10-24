@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
+import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
@@ -301,6 +302,12 @@ class UserController {
         .bookCar({'licensePlate': licensePlate}, _userId).catchError((error) {
       print(error);
     });
+  }
+
+  // Users Renting a Car
+  static Future<ResponseModel<String>> postRental(
+      CarRentalModel carRental) async {
+    return await apiService.postRental(carRental, _userId);
   }
 
   // Fetch user's rentals

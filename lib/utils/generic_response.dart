@@ -38,6 +38,8 @@ class ResponseModel<T> {
       } else if (json.containsKey('participants')) {
         converted = LobbyModel.fromJson(json);
       }
+      else if(json.containsKey('redirUrl'))
+        converted = json['redirUrl'] as String;
       return converted as T;
     } else if (json is List<dynamic>) {
       if (json.isEmpty) {
