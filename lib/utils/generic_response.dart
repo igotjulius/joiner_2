@@ -2,6 +2,7 @@ import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
+import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -44,11 +45,14 @@ class ResponseModel<T> {
       }
       var data = json.asMap()[0];
 
-      if (data.containsKey('creator')) {
+      if (data.containsKey('creator'))
         converted =
             json.map((element) => MessageModel.fromJson(element)).toList();
-      } else if (data.containsKey('vehicleType')) {
+      else if (data.containsKey('vehicleType'))
         converted = json.map((element) => CarModel.fromJson(element)).toList();
+      else if (data.containsKey('renterName'))
+        converted =
+            json.map((element) => RentalModel.fromJson(element)).toList();
       } else if (data.containsKey('joinStatus')) {
         converted =
             json.map((element) => ParticipantModel.fromJson(element)).toList();

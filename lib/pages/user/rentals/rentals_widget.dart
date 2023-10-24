@@ -40,17 +40,18 @@ class _RentalsWidgetState extends State<RentalsWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: SafeArea(
-          top: true,
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      body: SafeArea(
+        top: true,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Upcoming Rentals'),
                     FFButtonWidget(
@@ -70,6 +71,7 @@ class _RentalsWidgetState extends State<RentalsWidget> {
                     ),
                   ],
                 ),
+                _model.getRentals(),
               ],
             ),
           ),

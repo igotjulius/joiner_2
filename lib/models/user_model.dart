@@ -9,14 +9,14 @@ class UserModel {
     includeToJson: false,
     name: '_id',
   )
-  String? id;
-  String? firstName;
-  String? lastName;
-  String? email;
-  String? password;
-  List<Map<String, String>>? friends;
+  final String? id;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? password;
+  final List<Map<String, String>>? friends;
 
-  UserModel({
+  const UserModel({
     this.id,
     this.firstName,
     this.lastName,

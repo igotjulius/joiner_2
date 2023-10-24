@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:js';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
@@ -7,6 +8,7 @@ import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
+import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
@@ -127,7 +129,7 @@ class UserController {
     });
   }
 
-  // Fetch conversation
+  // Get conversation
   static FutureBuilder<ResponseModel<List<MessageModel>?>> getConversation(
       String lobbyId, String conversationId) {
     return FutureBuilder(
@@ -170,7 +172,7 @@ class UserController {
     );
   }
 
-  // Fetch all poll of a lobby
+  // Get all poll of a lobby
   static FutureBuilder<List<PollModel>> getPoll(
       Function callback, String lobbyId) {
     return FutureBuilder(
@@ -181,8 +183,7 @@ class UserController {
             return ListView.builder(
               itemCount: polls.length,
               itemBuilder: (context, index) {
-                return PollItemMolecule(callback,
-                    poll: polls[index], lobby: lobbyId);
+                return PollItem(callback, poll: polls[index], lobby: lobbyId);
               },
             );
           } else {
@@ -301,5 +302,10 @@ class UserController {
         .bookCar({'licensePlate': licensePlate}, _userId).catchError((error) {
       print(error);
     });
+  }
+
+  // Fetch user's rentals
+  static Future<ResponseModel<List<RentalModel>>> getRentals() async {
+    return await apiService.getRentals(_userId);
   }
 }
