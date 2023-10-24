@@ -6,6 +6,7 @@ part 'lobby_model.g.dart';
 class LobbyModel {
   @JsonKey(
     name: '_id',
+    includeFromJson: true,
   )
   final String? id;
   final String? title;
@@ -16,16 +17,15 @@ class LobbyModel {
   final Map<String, double>? budget;
   final String? conversation;
 
-  const LobbyModel({
-    this.id,
-    this.title,
-    this.description,
-    this.startDate,
-    this.endDate,
-    this.participants,
-    this.budget,
-    this.conversation
-  });
+  const LobbyModel(
+      {this.id,
+      this.title,
+      this.description,
+      this.startDate,
+      this.endDate,
+      this.participants,
+      this.budget,
+      this.conversation});
 
   factory LobbyModel.fromJson(Map<String, dynamic> json) =>
       _$LobbyModelFromJson(json);

@@ -61,7 +61,9 @@ class _JoinersWidgetState extends State<JoinersWidget> {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => InviteParticipantsWidget(),
+                      builder: (context) => InviteParticipantsWidget(
+                        lobbyId: widget.lobbyId,
+                      ),
                     );
                   },
                   options: FFButtonOptions(height: 40),

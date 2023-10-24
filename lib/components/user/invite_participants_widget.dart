@@ -3,7 +3,8 @@ import 'package:joiner_1/components/user/invite_participants_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 
 class InviteParticipantsWidget extends StatefulWidget {
-  const InviteParticipantsWidget({super.key});
+  final String? lobbyId;
+  const InviteParticipantsWidget({super.key, this.lobbyId});
 
   @override
   State<InviteParticipantsWidget> createState() =>
@@ -16,7 +17,8 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => InviteParticipantsModel());
+    _model = createModel(
+        context, () => InviteParticipantsModel(lobbyId: widget.lobbyId));
   }
 
   @override

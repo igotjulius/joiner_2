@@ -3,22 +3,20 @@ import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
-import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/widgets/atoms/poll_choices.dart';
 
-class PollItem extends StatefulWidget {
+class PollItemMolecule extends StatefulWidget {
   final PollModel? poll;
   final String? lobby;
   final Function? callback;
-  const PollItem(this.callback, {super.key, this.poll, this.lobby});
+  const PollItemMolecule(this.callback, {super.key, this.poll, this.lobby});
 
   @override
-  State<PollItem> createState() => _PollItemState();
+  State<PollItemMolecule> createState() => _PollItemMoleculeState();
 }
 
-class _PollItemState extends State<PollItem> {
+class _PollItemMoleculeState extends State<PollItemMolecule> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,15 +52,15 @@ class _PollItemState extends State<PollItem> {
                   color: FlutterFlowTheme.of(context).accent4,
                 ),
                 ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: widget.poll!.choices!.length,
-                itemBuilder: ((context, index) {
-                  return PollChoices(
-                      choice: widget.poll?.choices![index]['title'],
-                      count: widget.poll?.choices![index]['count']);
-                }),
-              ),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: widget.poll!.choices!.length,
+                  itemBuilder: ((context, index) {
+                    return PollChoices(
+                        choice: widget.poll?.choices![index]['title'],
+                        count: widget.poll?.choices![index]['count']);
+                  }),
+                ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
                   child: Row(
@@ -80,7 +78,8 @@ class _PollItemState extends State<PollItem> {
                           size: 24.0,
                         ),
                         onPressed: () async {
-                          UserController.deletePoll(widget.lobby!, widget.poll!.id!);
+                          UserController.deletePoll(
+                              widget.lobby!, widget.poll!.id!);
                           widget.callback!(() {});
                         },
                       ),

@@ -22,7 +22,7 @@ class _ApiService implements ApiService {
 
   @override
   Future<ResponseModel<dynamic>> loginUser(
-    user, {
+    map, {
     contentType = 'application/json',
   }) async {
     const _extra = <String, dynamic>{};
@@ -30,7 +30,7 @@ class _ApiService implements ApiService {
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(user.toJson());
+    _data.addAll(map);
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ResponseModel<dynamic>>(Options(
       method: 'POST',
@@ -80,7 +80,8 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<ResponseModel<Map<String, List<LobbyModel>>>> getLobby(userId) async {
+  Future<ResponseModel<Map<String, List<LobbyModel>>>> getLobbies(
+      userId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -100,6 +101,32 @@ class _ApiService implements ApiService {
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value =
         ResponseModel<Map<String, List<LobbyModel>>>.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ResponseModel<LobbyModel>> getLobby(
+    userId,
+    lobbyId,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ResponseModel<LobbyModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'user/${userId}/lobby/${lobbyId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ResponseModel<LobbyModel>.fromJson(_result.data!);
     return value;
   }
 
@@ -287,6 +314,60 @@ class _ApiService implements ApiService {
         .compose(
           _dio.options,
           'user/${userId}/lobby/${lobbyId}/invitation',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+  }
+
+  @override
+  Future<void> acceptLobbyInvitation(
+    map,
+    userId, {
+    contentType = 'application/json',
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(map);
+    await _dio.fetch<void>(_setStreamType<void>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+        .compose(
+          _dio.options,
+          'user/${userId}/invitation/accept',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+  }
+
+  @override
+  Future<void> declineLobbyInvitation(
+    map,
+    userId, {
+    contentType = 'application/json',
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(map);
+    await _dio.fetch<void>(_setStreamType<void>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+        .compose(
+          _dio.options,
+          'user/${userId}/invitation/decline',
           queryParameters: queryParameters,
           data: _data,
         )

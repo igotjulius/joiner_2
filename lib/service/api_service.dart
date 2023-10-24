@@ -26,7 +26,7 @@ abstract class ApiService {
   // Login user
   @POST('user/login')
   Future<ResponseModel<dynamic>> loginUser(
-    @Body() UserModel user, {
+    @Body() Map<String, String> map, {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
@@ -38,10 +38,17 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
-  // Get user lobby
+  // Fetch user lobby
   @GET('user/{userId}/lobby')
-  Future<ResponseModel<Map<String, List<LobbyModel>>>> getLobby(
+  Future<ResponseModel<Map<String, List<LobbyModel>>>> getLobbies(
       @Path('userId') String userId);
+
+  // Fetch specific lobby
+  @GET('user/{userId}/lobby/{lobbyId}')
+  Future<ResponseModel<LobbyModel>> getLobby(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
 
   // Create message
   @POST('user/{userId}/lobby/{lobbyId}/conversation/{conversationId}/message')
@@ -92,7 +99,7 @@ abstract class ApiService {
     @Path('lobbyId') String lobbyId,
   );
 
-  // Add a participant/s
+  // Add a participant/s to a lobby
   @POST('user/{userId}/lobby/{lobbyId}/invitation')
   Future<void> inviteParticipants(
     @Body() List<ParticipantModel> participants,
@@ -101,7 +108,23 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
-  // Invite a friend
+  // Accept an invite to join a lobby
+  @POST('user/{userId}/invitation/accept')
+  Future<void> acceptLobbyInvitation(
+    @Body() Map<String, String> map,
+    @Path('userId') String userId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Decline an invite to join a lobby
+  @POST('user/{userId}/invitation/decline')
+  Future<void> declineLobbyInvitation(
+    @Body() Map<String, String> map,
+    @Path('userId') String userId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Invite a friend (send friend request)
   @POST('user/{userId}/social')
   Future<void> inviteFriend(
     @Body() Map<String, String> user,

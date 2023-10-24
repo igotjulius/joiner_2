@@ -1,7 +1,6 @@
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/user_model.dart';
-import 'package:joiner_1/utils/generic_response.dart';
 import 'package:provider/provider.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
@@ -26,12 +25,9 @@ class LoginPageModel extends FlutterFlowModel {
   String? Function(BuildContext, String?)? textController2Validator;
 
   /// Initialization and disposal methods.co
-
-  late FFAppState appState;
   late AppStateNotifier navState;
 
   void initState(BuildContext context) {
-    appState = context.read<FFAppState>();
     navState = context.read<AppStateNotifier>();
   }
 
@@ -42,20 +38,21 @@ class LoginPageModel extends FlutterFlowModel {
   }
 
   /// Action blocks are added here.
-  void loginUser() async {
+  Future<void> loginUser(FFAppState appState) async {
+    UserModel? currentUser;
     if (appState.isCra) {
-      CraController.loginCra(
+      currentUser = await CraController.loginCra(
           textController1.text, textController2.text, appState);
     } else {
-      UserController.loginUser(
-          UserModel(
-              email: textController1.text, password: textController2.text),
-          appState);
+      currentUser = await UserController.loginUser(
+          textController1.text, textController2.text);
     }
+    appState.setCurrentUser(currentUser);
+    setRoutes();
   }
 
   void setRoutes() {
-    navState.setRoutes(appState.isCra);
+    navState.setRoutes(isCra);
   }
 
   /// Additional helper methods are added here.

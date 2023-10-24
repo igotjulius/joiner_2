@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
+import 'package:joiner_1/widgets/atoms/participant_atom_model.dart';
 
-class ParticipantsAtoms extends StatefulWidget {
-  final String name;
+class ParticipantAtom extends StatefulWidget {
+  final String? name;
+  final String? friendId;
+  final bool? showCheckBox;
+  final Function(String, String)? eventCallback;
+  final String? suffixLabel;
 
-  const ParticipantsAtoms({Key? key, required this.name}) : super(key: key);
+  const ParticipantAtom({
+    Key? key,
+    this.name,
+    this.friendId,
+    this.showCheckBox,
+    this.eventCallback,
+    this.suffixLabel,
+  }) : super(key: key);
 
   @override
-  _ParticipantsAtomsState createState() => _ParticipantsAtomsState();
+  _ParticipantAtomState createState() => _ParticipantAtomState();
 }
 
-class _ParticipantsAtomsState extends State<ParticipantsAtoms> {
-  bool isCheckd = false;
+class _ParticipantAtomState extends State<ParticipantAtom> {
+  late ParticipantAtomModel _model;
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(
+        context, () => ParticipantAtomModel(friendId: widget.friendId));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,21 +63,28 @@ class _ParticipantsAtomsState extends State<ParticipantsAtoms> {
                         SizedBox(width: 12.1),
                         Expanded(
                           child: Text(
-                            widget.name,
+                            widget.name!,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
                             ),
                           ),
                         ),
-                        Checkbox(
-                          value: isCheckd,
-                          onChanged: (value) {
-                            setState(() {
-                              isCheckd = value!;
-                            });
-                          },
-                        ),
+                        if (widget.showCheckBox != null)
+                          Checkbox(
+                            value: _model.isChecked,
+                            onChanged: (value) {
+                              setState(() {
+                                _model.isChecked = value!;
+                                widget.eventCallback!(
+                                  _model.friendId!,
+                                  widget.name!,
+                                );
+                              });
+                            },
+                          ),
+                        if (widget.suffixLabel == 'Pending')
+                          Text(widget.suffixLabel!),
                       ],
                     ),
                   ],

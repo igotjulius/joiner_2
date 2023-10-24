@@ -59,6 +59,7 @@ class _PollWidgetState extends State<PollWidget> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Poll'),
                 FFButtonWidget(

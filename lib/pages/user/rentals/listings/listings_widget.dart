@@ -1,19 +1,19 @@
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
-import 'package:joiner_1/pages/user/car_listings/car_listings_model.dart';
+import 'package:joiner_1/pages/user/rentals/listings/listings_model.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CarListingsWidget extends StatefulWidget {
-  const CarListingsWidget({Key? key}) : super(key: key);
+class ListingsWidget extends StatefulWidget {
+  const ListingsWidget({Key? key}) : super(key: key);
 
   @override
-  _CarListingsWidgetState createState() => _CarListingsWidgetState();
+  _ListingsWidgetState createState() => _ListingsWidgetState();
 }
 
-class _CarListingsWidgetState extends State<CarListingsWidget> {
-  late CarListingsModel _model;
+class _ListingsWidgetState extends State<ListingsWidget> {
+  late ListingsModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -24,7 +24,7 @@ class _CarListingsWidgetState extends State<CarListingsWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CarListingsModel());
+    _model = createModel(context, () => ListingsModel());
   }
 
   @override

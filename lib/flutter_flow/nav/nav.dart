@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/add_budget_widget.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/car_widget.dart';
-import 'package:joiner_1/pages/user/car_listings/car_listings_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
+import 'package:joiner_1/widgets/atoms/lobby_item.dart';
 import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -31,14 +32,14 @@ class AppStateNotifier extends ChangeNotifier {
   List<FFRoute> _routes = baseRoute();
   List<FFRoute> get routes => _routes;
   void setRoutes(bool isCra) {
-    if (isCra) {
-      _routes = baseRoute();
-      _routes.addAll(craRoutes());
-    } else {
-      _routes = baseRoute();
-      _routes.addAll(userRoutes());
-    }
-    notifyListeners();
+    // if (isCra) {
+    //   _routes = baseRoute();
+    //   _routes.addAll(craRoutes());
+    // } else {
+    //   _routes = baseRoute();
+    //   _routes.addAll(userRoutes());
+    // }
+    // notifyListeners();
   }
 
   FutureOr<String?> redirectState(
@@ -47,7 +48,7 @@ class AppStateNotifier extends ChangeNotifier {
         appState.currentUser != null && state.matchedLocation == '/login';
     bool loggingOut =
         appState.currentUser == null && state.matchedLocation == '/account';
-    if (loggingIn) return appState.isCra ? '/earnings' : '/virtualLobby';
+    if (loggingIn) return appState.isCra ? '/earnings' : '/lobby';
     if (loggingOut) return '/login';
 
     return null;
@@ -70,46 +71,46 @@ List<FFRoute> userRoutes() {
   return [
     FFRoute(
       name: 'VirtualLobby',
-      path: '/virtualLobby',
+      path: '/lobby',
       builder: (context, params) => NavBarPage(initialPage: 'VirtualLobby'),
       routes: [
         GoRoute(
-          name: 'Lobby',
-          path: 'lobby',
-          builder: (context, state) {
-            LobbyModel obj = state.extraMap['currentLobby'] as LobbyModel;
-            return LobbyWidget(currentLobby: obj);
-            // return LobbyWidget();
-          },
-        ),
-        GoRoute(
           name: 'LobbyCreation',
-          path: 'lobbyCreation',
+          path: 'create',
           builder: ((context, state) => LobbyCreationWidget()),
         ),
         GoRoute(
           name: 'InviteJoiners',
-          path: 'inviteJoiners',
+          path: 'invite',
           builder: (context, params) => InviteJoinersWidget(),
+        ),
+        GoRoute(
+          name: 'Lobby',
+          path: ':lobbyId',
+          builder: (context, state) {
+            final obj = state.extraMap['currentLobby'] ??= null;
+            return LobbyWidget(
+              currentLobby: obj,
+              lobbyId: state.pathParameters['lobbyId'],
+            );
+          },
         ),
       ],
     ),
     FFRoute(
       name: 'CarRentals',
-      path: '/carRentals',
+      path: '/rentals',
       builder: (context, params) => params.isEmpty
           ? NavBarPage(initialPage: 'CarRentals')
           : NavBarPage(
               initialPage: 'CarRentals',
-              page: CarRentalsWidget(
-                loc: params.getParam('loc', ParamType.LatLng),
-              ),
+              page: RentalsWidget(),
             ),
       routes: [
         GoRoute(
           name: 'Listings',
           path: 'listings',
-          builder: (context, params) => CarListingsWidget(),
+          builder: (context, params) => ListingsWidget(),
         ),
       ],
     ),
@@ -121,7 +122,7 @@ List<FFRoute> userRoutes() {
       routes: [
         GoRoute(
           name: 'InviteFriend',
-          path: 'inviteFriend',
+          path: 'invite-request',
           builder: (context, params) => InviteFriendWidget(),
         ),
       ],
@@ -134,7 +135,7 @@ List<FFRoute> userRoutes() {
       routes: [
         GoRoute(
           name: 'TransactionHistory',
-          path: 'transactionHistory',
+          path: 'transactions',
           builder: (context, params) => TransactionHistoryWidget(),
         ),
       ],

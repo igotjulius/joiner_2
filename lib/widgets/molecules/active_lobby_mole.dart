@@ -3,13 +3,14 @@ import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 
-class WidgetLobby extends StatelessWidget {
-  WidgetLobby(this.lobbies, {super.key});
+class ActiveLobbyMolecule extends StatelessWidget {
+  ActiveLobbyMolecule(this.lobbies, {super.key});
   late final List<LobbyModel> lobbies;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      shrinkWrap: true,
       separatorBuilder: (context, index) {
         return SizedBox(
           height: 10,
@@ -57,6 +58,7 @@ class WidgetLobby extends StatelessWidget {
             onTap: () {
               context.pushNamed(
                 'Lobby',
+                pathParameters: {'lobbyId': lobbies[index].id!},
                 extra: <String, dynamic>{
                   'currentLobby': lobbies[index],
                 },
@@ -123,25 +125,6 @@ class WidgetLobby extends StatelessWidget {
                         ),
                       ].divide(SizedBox(width: 10.0)),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                          '4 new messages',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Roboto Flex',
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w200,
-                                  ),
-                        ),
-                        Icon(
-                          Icons.circle_rounded,
-                          color: FlutterFlowTheme.of(context).secondary,
-                          size: 16.0,
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -151,21 +134,4 @@ class WidgetLobby extends StatelessWidget {
       },
     );
   }
-
-  // FutureBuilder _deleteLobby(String lobbyId) {
-  //   return FutureBuilder(
-  //     future: apiService.deleteLobby(LobbyModel(id: lobbyId)),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.done) {
-  //         return Dialog(
-  //           child: Text('Trip cancelled.'),
-  //         );
-  //       } else {
-  //         return Dialog(
-  //           child: CircularProgressIndicator(),
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
 }

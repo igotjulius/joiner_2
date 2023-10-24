@@ -2,27 +2,27 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import '../models/car_model.dart';
 
 class CraController {
-  static final String _craUserId = '652be8380547c1c1b9323173';
+  static late String _craUserId;
 
   // Login CRA
-  static void loginCra(
+  static Future<UserModel?> loginCra(
       String email, String password, FFAppState appState) async {
-    try {
-      final response =
-          await apiService.loginCra({'email': email, 'password': password});
-      print(response);
+    UserModel? user;
+    await apiService
+        .loginCra({'email': email, 'password': password}).then((response) {
       if (response.code == HttpStatus.ok) {
-        appState.setCurrentUser(response.data);
+        user = response.data!;
+        _craUserId = user!.id!;
+        return user;
       }
-    } catch (e) {
-      print(e);
-      throw e;
-    }
+    });
+    return null;
   }
 
   // Get all registered cars of corresponding CRA

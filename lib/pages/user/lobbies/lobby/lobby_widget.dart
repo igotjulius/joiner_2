@@ -14,7 +14,8 @@ export 'lobby_model.dart';
 
 class LobbyWidget extends StatefulWidget {
   final ModelLobby.LobbyModel? currentLobby;
-  LobbyWidget({Key? key, this.currentLobby}) : super(key: key);
+  final String? lobbyId;
+  LobbyWidget({Key? key, this.currentLobby, this.lobbyId}) : super(key: key);
 
   @override
   _LobbyWidgetState createState() => _LobbyWidgetState();
@@ -36,18 +37,15 @@ class _LobbyWidgetState extends State<LobbyWidget>
       length: 4,
       initialIndex: 0,
     );
-    if (widget.currentLobby == null) {
-      _model.currentLobby = new ModelLobby.LobbyModel(
-        title: 'Mock',
-        startDate: DateTime.now(),
-        endDate: DateTime.now(),
-        budget: {
-          'Gas': 1000,
-          'Food': 1000,
-        },
-      );
-    } else
-      _model.currentLobby = widget.currentLobby!;
+    _model.currentLobby = widget.currentLobby;
+    if (_model.currentLobby == null)
+      _model.fetchLobby(widget.lobbyId!).then(
+            (value) => setState(
+              () {
+                _model.currentLobby = value;
+              },
+            ),
+          );
   }
 
   @override
@@ -60,9 +58,13 @@ class _LobbyWidgetState extends State<LobbyWidget>
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
-      child: Scaffold(
+    if (_model.currentLobby == null) {
+      _model.fetchLobby(widget.lobbyId!);
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else
+      return Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
@@ -83,7 +85,6 @@ class _LobbyWidgetState extends State<LobbyWidget>
             },
           ),
           title: Container(
-            decoration: BoxDecoration(),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -92,7 +93,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _model.currentLobby.title!,
+                      _model.currentLobby!.title!,
                       // 'Title: ',
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(
@@ -102,12 +103,12 @@ class _LobbyWidgetState extends State<LobbyWidget>
                               ),
                     ),
                     Text(
-                      _model.currentLobby.startDate ==
-                              _model.currentLobby.endDate
-                          ? (_model.currentLobby.startDate == null
+                      _model.currentLobby!.startDate ==
+                              _model.currentLobby!.endDate
+                          ? (_model.currentLobby!.startDate == null
                               ? 'Date undecided'
-                              : "${_model.currentLobby.startDate.toString()}")
-                          : "${_model.currentLobby.startDate.toString()} - ${_model.currentLobby.endDate.toString()}",
+                              : "${_model.currentLobby!.startDate.toString()}")
+                          : "${_model.currentLobby!.startDate.toString()} - ${_model.currentLobby!.endDate.toString()}",
                       //'Date',
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(
@@ -199,25 +200,25 @@ class _LobbyWidgetState extends State<LobbyWidget>
                           wrapWithModel(
                             model: _model.chatModel,
                             updateCallback: () => setState(() {}),
-                            child: ChatWidget(setState, _model.currentLobby.id,
-                                _model.currentLobby.conversation),
+                            child: ChatWidget(setState, _model.currentLobby!.id,
+                                _model.currentLobby!.conversation),
                           ),
                           wrapWithModel(
                             model: _model.budgetGraphModel,
                             updateCallback: () => setState(() {}),
                             child: BudgetGraphWidget(
-                              budget: _model.currentLobby.budget,
+                              budget: _model.currentLobby!.budget,
                             ),
                           ),
                           wrapWithModel(
                             model: _model.pollModel,
                             updateCallback: () => setState(() {}),
-                            child: PollWidget(_model.currentLobby.id),
+                            child: PollWidget(_model.currentLobby!.id),
                           ),
                           wrapWithModel(
                             model: _model.joinersModel,
                             updateCallback: () => setState(() {}),
-                            child: JoinersWidget(widget.currentLobby!.id),
+                            child: JoinersWidget(_model.currentLobby!.id),
                           ),
                         ],
                       ),
@@ -228,7 +229,6 @@ class _LobbyWidgetState extends State<LobbyWidget>
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }

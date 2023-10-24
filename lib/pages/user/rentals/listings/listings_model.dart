@@ -2,7 +2,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'package:flutter/material.dart';
 
-class CarListingsModel extends FlutterFlowModel {
+class ListingsModel extends FlutterFlowModel {
   ///  Local state fields for this component.
 
   bool defaultRB = true;

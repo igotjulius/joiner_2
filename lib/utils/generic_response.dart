@@ -34,6 +34,8 @@ class ResponseModel<T> {
           'active':
               active.map((element) => LobbyModel.fromJson(element)).toList()
         };
+      } else if (json.containsKey('participants')) {
+        converted = LobbyModel.fromJson(json);
       }
       return converted as T;
     } else if (json is List<dynamic>) {

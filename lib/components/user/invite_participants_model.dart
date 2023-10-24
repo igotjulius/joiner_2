@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/utils/generic_response.dart';
-import 'package:joiner_1/widgets/atoms/accepted_friend.dart';
+import 'package:joiner_1/widgets/atoms/participant_atom.dart';
+import 'package:joiner_1/models/participant_model.dart';
 
 class InviteParticipantsModel extends FlutterFlowModel {
+  List<ParticipantModel>? invitedFriends;
+  final String? lobbyId;
+
+  InviteParticipantsModel({this.lobbyId});
+
   @override
   void dispose() {}
 
   @override
-  void initState(BuildContext context) {}
+  void initState(BuildContext context) {
+    invitedFriends = [];
+  }
 
   FutureBuilder<ResponseModel<List<Map<String, String>>>?> friendList() {
     return FutureBuilder(
@@ -35,13 +44,27 @@ class InviteParticipantsModel extends FlutterFlowModel {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Friends'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Friends'),
+                FFButtonWidget(
+                    text: 'Invite',
+                    onPressed: () {
+                      sendInvitation();
+                    },
+                    options: FFButtonOptions(height: 40)),
+              ],
+            ),
             ListView.builder(
               shrinkWrap: true,
               itemCount: friends.length,
               itemBuilder: (context, index) {
-                return AcceptedFriendAtom(
+                return ParticipantAtom(
                   name: friends[index]['friendName'],
+                  friendId: friends[index]['friendId'],
+                  showCheckBox: true,
+                  eventCallback: addFriendToInvites,
                 );
               },
             ),
@@ -49,5 +72,16 @@ class InviteParticipantsModel extends FlutterFlowModel {
         );
       },
     );
+  }
+
+  void addFriendToInvites(String friendId, String name) {
+    invitedFriends!.add(new ParticipantModel(
+      userId: friendId,
+      name: name,
+    ));
+  }
+
+  void sendInvitation() async {
+    await UserController.inviteParticipants(invitedFriends!, lobbyId!);
   }
 }

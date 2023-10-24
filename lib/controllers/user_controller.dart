@@ -10,40 +10,57 @@ import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
-import 'package:joiner_1/widgets/atoms/participant.dart';
-import 'package:joiner_1/widgets/molecules/poll_item.dart';
-import 'package:joiner_1/widgets/molecules/widget_lobby.dart';
+import 'package:joiner_1/widgets/atoms/participant_atom.dart';
+import 'package:joiner_1/widgets/molecules/pending_lobby_mole.dart';
+import 'package:joiner_1/widgets/molecules/poll_item_mole.dart';
+import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
 import '../models/user_model.dart';
 
 class UserController {
-  //TODO: change to dynamic
   static late String _userId = FFAppState().pref!.getString('userId')!;
 
   // Login user
-  static void loginUser(UserModel user, FFAppState appState) async {
-    await apiService.loginUser(user).then((response) {
+  static Future<UserModel?> loginUser(String email, String password) async {
+    UserModel? user;
+    await apiService
+        .loginUser({'email': email, 'password': password}).then((response) {
       if (response.code == HttpStatus.ok) {
-        final UserModel user = response.data!;
-        appState.setCurrentUser(user);
-        _userId = user.id!;
+        user = response.data!;
+        _userId = user!.id!;
       }
     });
+    return user;
   }
 
-  // Get user lobbies
+  // Fetch user lobbies
   static FutureBuilder<ResponseModel<Map<String, List<LobbyModel>>>>
       userLobbies(FFAppState appState) {
     return FutureBuilder(
-      future: apiService.getLobby(_userId),
+      future: apiService.getLobbies(_userId),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.code == HttpStatus.ok) {
             final Map<String, List<LobbyModel>> result = snapshot.data!.data!;
             // final activeLobbies = result['active']!;
             final {'active': activeLobbies, 'pending': pendingLobbies} = result;
-            return activeLobbies.length == 0
-                ? Text('No active lobbies')
-                : WidgetLobby(activeLobbies);
+            return Column(
+              children: [
+                if (pendingLobbies.length != 0)
+                  Column(
+                    children: [
+                      Text('Invitations'),
+                      PendingLobbyMolecule(lobbies: pendingLobbies),
+                    ],
+                  ),
+                Column(
+                  children: [
+                    activeLobbies.length == 0
+                        ? Text('No active lobbies')
+                        : ActiveLobbyMolecule(activeLobbies),
+                  ],
+                ),
+              ],
+            );
           } else {
             return Wrap(
               alignment: WrapAlignment.center,
@@ -59,6 +76,15 @@ class UserController {
           return Dialog(child: SizedBox.shrink());
       }),
     );
+  }
+
+  // Fetch specific lobby
+  static Future<LobbyModel?> getLobby(String lobbyId) async {
+    final res = await apiService.getLobby(_userId, lobbyId);
+    if (res.code == HttpStatus.ok)
+      return res.data;
+    else
+      return null;
   }
 
   // Create lobby
@@ -101,7 +127,7 @@ class UserController {
     });
   }
 
-  // Get conversation
+  // Fetch conversation
   static FutureBuilder<ResponseModel<List<MessageModel>?>> getConversation(
       String lobbyId, String conversationId) {
     return FutureBuilder(
@@ -144,7 +170,7 @@ class UserController {
     );
   }
 
-  // Get all poll of a lobby
+  // Fetch all poll of a lobby
   static FutureBuilder<List<PollModel>> getPoll(
       Function callback, String lobbyId) {
     return FutureBuilder(
@@ -155,7 +181,8 @@ class UserController {
             return ListView.builder(
               itemCount: polls.length,
               itemBuilder: (context, index) {
-                return PollItem(callback, poll: polls[index], lobby: lobbyId);
+                return PollItemMolecule(callback,
+                    poll: polls[index], lobby: lobbyId);
               },
             );
           } else {
@@ -181,7 +208,7 @@ class UserController {
         .addBudget({'label': label, 'amount': amount}, _userId, lobbyId);
   }
 
-  // Get participants of a lobby
+  // Fetch participants of a lobby
   static FutureBuilder<ResponseModel<List<ParticipantModel>>> getParticipants(
       String lobbyId) {
     return FutureBuilder(
@@ -193,7 +220,10 @@ class UserController {
               shrinkWrap: true,
               itemCount: result!.length,
               itemBuilder: (context, index) {
-                return ParticipantsAtom(result[index].name);
+                return ParticipantAtom(
+                  name: result[index].name,
+                  suffixLabel: result[index].joinStatus,
+                );
               });
         } else
           return Center(
@@ -204,9 +234,19 @@ class UserController {
   }
 
   // Invite participant/s to a lobby
-  static Future<void> inviteParticipants(List<ParticipantModel> participants,
-      String userId, String lobbyId) async {
-    await apiService.inviteParticipants(participants, userId, lobbyId);
+  static Future<void> inviteParticipants(
+      List<ParticipantModel> participants, String lobbyId) async {
+    await apiService.inviteParticipants(participants, _userId, lobbyId);
+  }
+
+  // Accept invitation to join a lobby
+  static Future<void> acceptLobbyInvitation(String lobbyId) async {
+    await apiService.acceptLobbyInvitation({'lobbyId': lobbyId}, _userId);
+  }
+
+  // Decline invitation to join a lobby
+  static Future<void> declineLobbyInvitation(String lobbyId) async {
+    await apiService.declineLobbyInvitation({'lobbyId': lobbyId}, _userId);
   }
 
   // Invite user a friend
@@ -214,6 +254,7 @@ class UserController {
     await apiService.inviteFriend({'email': friendEmail}, _userId);
   }
 
+  // Fetch user's friend list
   static Future<ResponseModel<List<Map<String, String>>>?> getFriends() {
     return apiService.getFriends(_userId);
   }
@@ -223,7 +264,7 @@ class UserController {
     await apiService.acceptFriendRequest(_userId, friendId);
   }
 
-  // Get available cars
+  // Fetch available cars
   static FutureBuilder<ResponseModel<List<CarModel>>> getAvailableCars(
       Function callback) {
     return FutureBuilder(
