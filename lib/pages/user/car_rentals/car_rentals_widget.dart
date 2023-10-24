@@ -41,40 +41,95 @@ class _CarRentalsWidgetState extends State<CarRentalsWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
-      child: Scaffold(
+        onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+        child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: SafeArea(
-          top: true,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text('Upcoming Rentals'),
-                    FFButtonWidget(
-                      text: 'Browse Listings',
-                      onPressed: () {
-                        context.pushNamed(
-                          'Listings',
-                          extra: <String, dynamic>{
-                            kTransitionInfoKey: TransitionInfo(
-                              hasTransition: true,
-                              transitionType: PageTransitionType.rightToLeft,
-                            ),
-                          },
-                        );
-                      },
-                      options: FFButtonOptions(height: 40),
-                    ),
-                  ],
+        appBar: AppBar(
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Rentals',
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+                  fontFamily: 'Open Sans',
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
           ),
+          actions: [],
+          centerTitle: false,
+          elevation: 2.0,
         ),
-      ),
+        body:Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Align(
+              alignment: AlignmentDirectional(-1.00, 0.00),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 10),
+                child: Text(
+                  'Upcoming',
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'Roboto Flex',
+                        fontWeight: FontWeight.w900,
+                      ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: AlignmentDirectional(-1.00, 0.00),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
+                child: Text(
+                  'No rentals as of this moment',
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'Roboto Flex',
+                        fontWeight: FontWeight.w900,
+                      ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: AlignmentDirectional(-1.00, 0.00),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(30, 0, 0, 0),
+                child: FFButtonWidget(
+                  onPressed: () {
+                    context.pushNamed(
+                      'Listings',
+                      extra: <String, dynamic>{
+                        kTransitionInfoKey: TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.rightToLeft,
+                        ),
+                      },
+                    );
+                  },
+                  text: 'Browse Listings',
+                  options: FFButtonOptions(
+                    height: 40,
+                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                    iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                    color: FlutterFlowTheme.of(context).primary,
+                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                          fontFamily: 'Roboto Flex',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                    elevation: 3,
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+      )
     );
   }
 }

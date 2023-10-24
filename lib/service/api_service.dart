@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:joiner_1/models/car_model.dart';
+import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
@@ -144,4 +145,13 @@ abstract class ApiService {
     @Path('lobbyId') String lobbyId,
     @Path('pollId') String pollId,
   );
+
+  // Post Car Rentals
+  @POST('user/{userId}/rent/car')
+  Future<ResponseModel<String>> postRental(
+    @Body() CarRentalModel carRental,
+    @Path('userId') String userId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
 }

@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/add_budget_widget.dart';
+import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/car_widget.dart';
+import 'package:joiner_1/pages/user/car_booking/car_booking_widget.dart';
 import 'package:joiner_1/pages/user/car_listings/car_listings_widget.dart';
 import '/index.dart';
 import '/main.dart';
@@ -109,6 +111,17 @@ List<FFRoute> userRoutes() {
           name: 'Listings',
           path: 'listings',
           builder: (context, params) => CarListingsWidget(),
+
+          routes: [
+            GoRoute(
+              name: 'Booking',
+              path: 'booking',
+              builder: (context, state) { 
+                String obj = state.extraMap['licensePlate'] as String;
+                return CarBookingWidget(licensePlate: obj);
+              }
+                            )
+          ]
         ),
       ],
     ),

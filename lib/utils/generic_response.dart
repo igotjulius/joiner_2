@@ -34,6 +34,8 @@ class ResponseModel<T> {
               active.map((element) => LobbyModel.fromJson(element)).toList()
         };
       }
+      else if(json.containsKey('redirUrl'))
+        converted = json['redirUrl'] as String;
       return converted as T;
     } else if (json is List<dynamic>) {
       if (json.isEmpty) {
