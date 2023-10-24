@@ -53,10 +53,10 @@ class ResponseModel<T> {
       else if (data.containsKey('renterName'))
         converted =
             json.map((element) => RentalModel.fromJson(element)).toList();
-      } else if (data.containsKey('joinStatus')) {
+      else if (data.containsKey('joinStatus'))
         converted =
             json.map((element) => ParticipantModel.fromJson(element)).toList();
-      } else if (data.containsKey('friendId')) {
+      else if (data.containsKey('friendId')) {
         converted = json
             .map((element) => {
                   'friendName': element['friendName'] as String,

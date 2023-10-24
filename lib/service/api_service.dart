@@ -152,12 +152,6 @@ abstract class ApiService {
     @Path('userId') String userId,
   );
 
-  // Fetch user's rentals
-  @GET('user/{userId}/rent')
-  Future<ResponseModel<List<RentalModel>>> getRentals(
-    @Path('userId') String userId,
-  );
-
   // CRA API's
   // Login CRA
   @POST('cra/login')

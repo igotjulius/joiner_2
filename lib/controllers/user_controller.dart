@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-import 'dart:js';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
@@ -14,8 +12,8 @@ import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/widgets/atoms/participant_atom.dart';
 import 'package:joiner_1/widgets/molecules/pending_lobby_mole.dart';
-import 'package:joiner_1/widgets/molecules/poll_item_mole.dart';
 import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
+import 'package:joiner_1/widgets/molecules/poll_item_mole.dart';
 import '../models/user_model.dart';
 
 class UserController {
@@ -183,7 +181,8 @@ class UserController {
             return ListView.builder(
               itemCount: polls.length,
               itemBuilder: (context, index) {
-                return PollItem(callback, poll: polls[index], lobby: lobbyId);
+                return PollItemMolecule(callback,
+                    poll: polls[index], lobby: lobbyId);
               },
             );
           } else {
