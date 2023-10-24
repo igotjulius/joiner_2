@@ -12,6 +12,7 @@ import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/widgets/atoms/participant_atom.dart';
+import 'package:joiner_1/widgets/molecules/lobby_invitation_mole.dart';
 import 'package:joiner_1/widgets/molecules/pending_lobby_mole.dart';
 import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
 import 'package:joiner_1/widgets/molecules/poll_item_mole.dart';
@@ -50,7 +51,7 @@ class UserController {
                   Column(
                     children: [
                       Text('Invitations'),
-                      PendingLobbyMolecule(lobbies: pendingLobbies),
+                      LobbyInvitationMolecule(lobbies: pendingLobbies),
                     ],
                   ),
                 Column(
