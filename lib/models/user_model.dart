@@ -9,13 +9,13 @@ class UserModel {
     includeToJson: false,
     name: '_id',
   )
-  String? id;
-  String? firstName;
-  String? lastName;
-  String? email;
-  String? password;
+  final String? id;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? password;
 
-  UserModel({
+  const UserModel({
     this.id,
     this.firstName,
     this.lastName,

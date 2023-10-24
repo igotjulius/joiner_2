@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
+import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import '../models/user_model.dart';
 import 'package:retrofit/http.dart';
@@ -11,8 +12,8 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-//const String serverUrl = 'http://localhost:443/';
- const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+//  const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -80,6 +81,12 @@ abstract class ApiService {
   Future<void> addBudget(@Body() Map<String, dynamic> map,
       @Path('userId') String userId, @Path('lobbyId') String lobbyId,
       {@Header('Content-Type') String contentType = 'application/json'});
+
+  // Fetch user's rentals
+  @GET('user/{userId}/rent')
+  Future<ResponseModel<List<RentalModel>>> getRentals(
+    @Path('userId') String userId,
+  );
 
   // CRA API's
   // Login CRA

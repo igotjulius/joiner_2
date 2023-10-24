@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// ignore: unused_import
-import 'dart:ui_web' as ui;
 
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 

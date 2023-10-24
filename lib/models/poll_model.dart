@@ -4,15 +4,12 @@ part 'poll_model.g.dart';
 
 @JsonSerializable()
 class PollModel {
-  @JsonKey(name: '_id', includeToJson: false) 
-  String? id;
-  String? question;
-  List<dynamic>? choices;
+  @JsonKey(name: '_id', includeToJson: false)
+  final String? id;
+  final String? question;
+  final List<dynamic>? choices;
 
-  PollModel({
-    this.question,
-    this.choices
-  });
+  const PollModel({this.id, this.question, this.choices});
 
   factory PollModel.fromJson(Map<String, dynamic> json) =>
       _$PollModelFromJson(json);

@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
-// ignore: unused_import
-import 'dart:ui_web';
 
-class CarInfo extends StatefulWidget {
-  final double money;
-  final int numOfDays;
-  final String location;
-  final String pickupDate;
-  final String returnDate;
+class RentalInfo extends StatefulWidget {
+  final double? money;
+  final int? duration;
+  final String? vehicleOwner;
+  final String? pickupDate;
+  final String? returnDate;
 
-  const CarInfo(
-      {super.key,
-      required this.money,
-      required this.numOfDays,
-      required this.location,
-      required this.pickupDate,
-      required this.returnDate});
+  const RentalInfo({
+    super.key,
+    this.money,
+    this.duration,
+    this.vehicleOwner,
+    this.pickupDate,
+    this.returnDate,
+  });
 
   @override
-  State<CarInfo> createState() => _CarInfoState();
+  State<RentalInfo> createState() => _RentalInfoState();
 }
 
-class _CarInfoState extends State<CarInfo> {
+class _RentalInfoState extends State<RentalInfo> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -39,8 +38,7 @@ class _CarInfoState extends State<CarInfo> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         child: FFButtonWidget(
@@ -51,6 +49,10 @@ class _CarInfoState extends State<CarInfo> {
                               width: 100.0,
                               height: 30.0),
                         ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text('Contact owner'),
                       ),
                     ],
                   ),
@@ -76,19 +78,18 @@ class _CarInfoState extends State<CarInfo> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          '${widget.money}',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                      Text(
+                        '₱${widget.money}',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          ' for ${widget.numOfDays} days',
-                        ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        'for ${widget.duration} day${widget.duration! > 1 ? 's' : ''}',
                       ),
                     ],
                   ),
@@ -98,51 +99,33 @@ class _CarInfoState extends State<CarInfo> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          'LOCATION:',
-                        ),
+                      Text(
+                        'Car owner:',
                       ),
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          '${widget.location}',
-                        ),
+                      Text(
+                        '${widget.vehicleOwner}',
                       ),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          'PICK-UP DATE:',
-                        ),
+                      Text(
+                        'PICK-UP DATE:',
                       ),
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          '${widget.pickupDate}',
-                        ),
+                      Text(
+                        '${widget.pickupDate}',
                       ),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          'RETURN DATE:',
-                        ),
+                      Text(
+                        'RETURN DATE:',
                       ),
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          '${widget.returnDate}',
-                        ),
+                      Text(
+                        '${widget.returnDate}',
                       ),
                     ],
                   )

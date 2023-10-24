@@ -7,9 +7,10 @@ part of 'poll_model.dart';
 // **************************************************************************
 
 PollModel _$PollModelFromJson(Map<String, dynamic> json) => PollModel(
+      id: json['_id'] as String?,
       question: json['question'] as String?,
       choices: json['choices'] as List<dynamic>?,
-    )..id = json['_id'] as String?;
+    );
 
 Map<String, dynamic> _$PollModelToJson(PollModel instance) => <String, dynamic>{
       'question': instance.question,
