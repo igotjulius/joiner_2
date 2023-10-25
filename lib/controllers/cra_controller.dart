@@ -2,13 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import '../models/car_model.dart';
 
 class CraController {
-  static late String _craUserId;
+  static late String _craUserId = FFAppState().pref!.getString('userId')!;
 
   // Login CRA
   static Future<UserModel?> loginCra(
@@ -26,32 +27,9 @@ class CraController {
   }
 
   // Get all registered cars of corresponding CRA
-  static FutureBuilder<ResponseModel<List<CarModel>>> getCars() {
-    return FutureBuilder(
-      future: apiService.getCars(_craUserId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data!.data!.isEmpty)
-            return Center(
-              child: Text('No available cars for today :('),
-            );
-          final cars = snapshot.data!.data!;
-          double width = MediaQuery.of(context).size.width;
-          return GridView.extent(
-            crossAxisSpacing: 10,
-            maxCrossAxisExtent: width / 2,
-            children: List.generate(
-              cars.length,
-              (i) => CarItemWidget(car: cars[i]),
-            ),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
+  static Future<List<CarModel>> getCraCars() async {
+    final res = await apiService.getCraCars(_craUserId);
+    return res.data!;
   }
 
   // Register car under corresponding CRA
@@ -78,5 +56,11 @@ class CraController {
             );
           }
         });
+  }
+
+  // Fetch CRA's rentals
+  static Future<List<RentalModel>> getCraRentals() async {
+    final res = await apiService.getCraRentals(_craUserId);
+    return res.data!;
   }
 }

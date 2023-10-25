@@ -14,8 +14,8 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-//const String serverUrl = 'http://localhost:443/';
-const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -153,37 +153,6 @@ abstract class ApiService {
     @Path('userId') String userId,
   );
 
-  // CRA API's
-  // Login CRA
-  @POST('cra/login')
-  Future<ResponseModel<dynamic>> loginCra(
-    @Body() Map<String, dynamic> map, {
-    @Header('Content-Type') String contentType = 'application/json',
-  });
-
-  // Get all cars of corresponding CRA
-  @GET('cra/{craUserId}/car')
-  Future<ResponseModel<List<CarModel>>> getCars(
-    @Path('craUserId') String craUserId,
-  );
-
-  // CHECK =>
-  // Register a car
-  @POST('cra/{craUserId}/car')
-  Future<ResponseModel> addCar(
-    @Body() CarModel car,
-    @Path('craUserId') String craUserId, {
-    @Header('Content-Type') String contentType = 'application/json',
-  });
-
-  // Edit car availability
-  @PUT('cra/{craUserId}/car/{licensePlate}')
-  Future<ResponseModel> editAvailability(
-    @Path('licensePlate') String licensePlate,
-  );
-
-  //
-
   // Get user profile
   @GET('user/{userId}/profile')
   Future<UserModel> getAccount(@Path('userId') String userId);
@@ -217,7 +186,7 @@ abstract class ApiService {
     @Path('pollId') String pollId,
   );
 
-  // Post Car Rentals
+  // Create Car Rentals
   @POST('user/{userId}/rent/car')
   Future<ResponseModel<String>> postRental(
     @Body() CarRentalModel carRental,
@@ -225,4 +194,40 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
+  // CRA API's
+  // Login CRA
+  @POST('cra/login')
+  Future<ResponseModel<dynamic>> loginCra(
+    @Body() Map<String, dynamic> map, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Get all cars of corresponding CRA
+  @GET('cra/{craUserId}/car')
+  Future<ResponseModel<List<CarModel>>> getCraCars(
+    @Path('craUserId') String craUserId,
+  );
+
+  // CHECK =>
+  // Register a car
+  @POST('cra/{craUserId}/car')
+  Future<ResponseModel> addCar(
+    @Body() CarModel car,
+    @Path('craUserId') String craUserId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Edit car availability
+  @PUT('cra/{craUserId}/car/{licensePlate}')
+  Future<ResponseModel> editAvailability(
+    @Path('licensePlate') String licensePlate,
+  );
+
+  // Fetch Cra's rentals
+  @GET('cra/{craUserId}/rent')
+  Future<ResponseModel<List<RentalModel>>> getCraRentals(
+    @Path('craUserId') String craUserId,
+  );
+
+  //
 }

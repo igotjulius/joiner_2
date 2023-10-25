@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/add_car_widget.dart';
-import 'package:joiner_1/components/cra/car_item_widget.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
+import 'package:joiner_1/pages/cra/car/cra_car_model.dart';
 
-class CarWidget extends StatefulWidget {
-  const CarWidget({super.key});
+class CraCarWidget extends StatefulWidget {
+  const CraCarWidget({super.key});
 
   @override
-  State<CarWidget> createState() => _CarWidgetState();
+  State<CraCarWidget> createState() => _CraCarWidgetState();
 }
 
-class _CarWidgetState extends State<CarWidget> {
+class _CraCarWidgetState extends State<CraCarWidget> {
+  late CraCarModel _model;
+
   @override
   void initState() {
     super.initState();
+    _model = createModel(context, () => CraCarModel());
   }
 
   @override
@@ -52,7 +55,7 @@ class _CarWidgetState extends State<CarWidget> {
               ),
               Container(
                 height: MediaQuery.of(context).size.height,
-                child: CraController.getCars(),
+                child: _model.getCars(),
               ),
             ].divide(SizedBox(
               height: 10,

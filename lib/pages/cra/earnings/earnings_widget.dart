@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/pages/cra/earnings/earnings_model.dart';
 
 class EarningsWidget extends StatefulWidget {
   const EarningsWidget({super.key});
@@ -10,6 +11,14 @@ class EarningsWidget extends StatefulWidget {
 }
 
 class _EarningsWidgetState extends State<EarningsWidget> {
+  late EarningsModel _model;
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => EarningsModel());
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -47,7 +56,8 @@ class _EarningsWidgetState extends State<EarningsWidget> {
                     width: 10,
                   ),
                 ),
-              )
+              ),
+              _model.getCraRentals(),
             ].divide(
               SizedBox(
                 height: 20,

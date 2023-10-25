@@ -8,7 +8,7 @@ import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'index.dart';
-import 'pages/cra/car/car_widget.dart';
+import 'pages/cra/car/cra_car_widget.dart';
 import 'pages/cra/earnings/earnings_widget.dart';
 
 void main() async {
@@ -119,7 +119,8 @@ class _NavBarPageState extends State<NavBarPage> {
   Widget build(BuildContext context) {
     return Consumer<FFAppState>(
       builder: (context, value, child) {
-        return value.isCra ? craDashboard() : userDashboard();
+        // return value.isCra ? craDashboard() : userDashboard();
+        return craDashboard();
       },
     );
   }
@@ -180,7 +181,7 @@ class _NavBarPageState extends State<NavBarPage> {
   Widget craDashboard() {
     final tabs = {
       'Earnings': EarningsWidget(),
-      'Cars': CarWidget(),
+      'Cars': CraCarWidget(),
       'Account': CraAccountWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
