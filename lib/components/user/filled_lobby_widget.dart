@@ -38,7 +38,6 @@ class _FilledLobbyWidgetState extends State<FilledLobbyWidget> {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<FFAppState>();
-    print(appState.currentUser);
 
     return Container(
       width: MediaQuery.of(context).size.height,

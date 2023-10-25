@@ -28,21 +28,25 @@ class RentalsModel extends FlutterFlowModel {
           return Center(
             child: CircularProgressIndicator(),
           );
-        List<RentalModel> result = snapshot.data!.data!;
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: result.length,
-          itemBuilder: (context, index) {
-            RentalModel rental = result[index];
-            return RentalInfo(
-              money: rental.price,
-              duration: rental.duration,
-              vehicleOwner: rental.vehicleOwner,
-              pickupDate: rental.startRental.toString(),
-              returnDate: rental.endRental.toString(),
-            );
-          },
-        );
+        final result = snapshot.data!.data;
+        return result == null
+            ? Center(
+                child: Text('No upcoming rentals'),
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: result.length,
+                itemBuilder: (context, index) {
+                  RentalModel rental = result[index];
+                  return RentalInfo(
+                    money: rental.price,
+                    duration: rental.duration,
+                    vehicleOwner: rental.vehicleOwner,
+                    pickupDate: rental.startRental.toString(),
+                    returnDate: rental.endRental.toString(),
+                  );
+                },
+              );
       },
     );
   }

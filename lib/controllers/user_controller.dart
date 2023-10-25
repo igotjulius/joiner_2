@@ -13,7 +13,6 @@ import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/widgets/atoms/participant_atom.dart';
 import 'package:joiner_1/widgets/molecules/lobby_invitation_mole.dart';
-import 'package:joiner_1/widgets/molecules/pending_lobby_mole.dart';
 import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
 import 'package:joiner_1/widgets/molecules/poll_item_mole.dart';
 import '../models/user_model.dart';
@@ -24,13 +23,14 @@ class UserController {
   // Login user
   static Future<UserModel?> loginUser(String email, String password) async {
     UserModel? user;
-    await apiService
-        .loginUser({'email': email, 'password': password}).then((response) {
-      if (response.code == HttpStatus.ok) {
-        user = response.data!;
-        _userId = user!.id!;
-      }
-    });
+    await apiService.loginUser({'email': email, 'password': password}).then(
+      (response) {
+        if (response.code == HttpStatus.ok) {
+          user = response.data!;
+          _userId = user!.id!;
+        }
+      },
+    );
     return user;
   }
 
@@ -39,7 +39,7 @@ class UserController {
       userLobbies(FFAppState appState) {
     return FutureBuilder(
       future: apiService.getLobbies(_userId),
-      builder: ((context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.code == HttpStatus.ok) {
             final Map<String, List<LobbyModel>> result = snapshot.data!.data!;
@@ -75,8 +75,8 @@ class UserController {
             );
           }
         } else
-          return Dialog(child: SizedBox.shrink());
-      }),
+          return Center(child: CircularProgressIndicator());
+      },
     );
   }
 

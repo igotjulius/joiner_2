@@ -1,5 +1,4 @@
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
-import 'package:joiner_1/widgets/atoms/lobby_item.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

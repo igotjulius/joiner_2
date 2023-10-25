@@ -36,7 +36,7 @@ class AppStateNotifier extends ChangeNotifier {
     //   _routes = baseRoute();
     //   _routes.addAll(userRoutes());
     // }
-    // notifyListeners();
+    notifyListeners();
   }
 
   FutureOr<String?> redirectState(

@@ -239,7 +239,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   onChanged: (val) {
                                     setState(() {
                                       _model.setIsCra(val!);
-                                      _model.setRoutes();
                                     });
                                   },
                                 ),
@@ -267,9 +266,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                               Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: FFButtonWidget(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     appState.setIsCra(_model.isCra);
-                                    _model.loginUser(appState);
+                                    _model.loginUser(context);
                                   },
                                   text: 'Login',
                                   options: FFButtonOptions(

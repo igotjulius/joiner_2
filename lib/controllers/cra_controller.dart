@@ -14,15 +14,15 @@ class CraController {
   static Future<UserModel?> loginCra(
       String email, String password, FFAppState appState) async {
     UserModel? user;
-    await apiService
-        .loginCra({'email': email, 'password': password}).then((response) {
-      if (response.code == HttpStatus.ok) {
-        user = response.data!;
-        _craUserId = user!.id!;
-        return user;
-      }
-    });
-    return null;
+    await apiService.loginCra({'email': email, 'password': password}).then(
+      (response) {
+        if (response.code == HttpStatus.ok) {
+          user = response.data!;
+          _craUserId = user!.id!;
+        }
+      },
+    );
+    return user;
   }
 
   // Get all registered cars of corresponding CRA
