@@ -25,7 +25,7 @@ class ResponseModel<T> {
   static T? _fromJson<T>(Object? json) {
     var converted;
     if (json is Map<String, dynamic>) {
-      if (json.containsKey('friend'))
+      if (json.containsKey('friends'))
         converted = UserModel.fromJson(json);
       else if (json.containsKey('vehicles'))
         converted = CraUserModel.fromJson(json);

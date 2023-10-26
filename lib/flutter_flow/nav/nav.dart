@@ -29,13 +29,13 @@ class AppStateNotifier extends ChangeNotifier {
   List<FFRoute> _routes = baseRoute();
   List<FFRoute> get routes => _routes;
   void setRoutes(bool isCra) {
-    // if (isCra) {
-    //   _routes = baseRoute();
-    //   _routes.addAll(craRoutes());
-    // } else {
-    //   _routes = baseRoute();
-    //   _routes.addAll(userRoutes());
-    // }
+    if (isCra) {
+      _routes = baseRoute();
+      _routes.addAll(craRoutes());
+    } else {
+      _routes = baseRoute();
+      _routes.addAll(userRoutes());
+    }
     notifyListeners();
   }
 
@@ -60,7 +60,6 @@ List<FFRoute> baseRoute() {
       builder: (context, params) => LoginPageWidget(),
     ),
   ];
-  routes.addAll(craRoutes());
   return routes;
 }
 

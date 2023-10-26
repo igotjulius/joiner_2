@@ -119,8 +119,7 @@ class _NavBarPageState extends State<NavBarPage> {
   Widget build(BuildContext context) {
     return Consumer<FFAppState>(
       builder: (context, value, child) {
-        // return value.isCra ? craDashboard() : userDashboard();
-        return craDashboard();
+        return value.isCra ? craDashboard() : userDashboard();
       },
     );
   }
