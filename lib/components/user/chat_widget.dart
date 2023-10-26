@@ -13,6 +13,7 @@ class ChatWidget extends StatefulWidget {
   final String? lobbyId;
   final String? conversationId;
   final Function callback;
+  // final String? userId;
   const ChatWidget(this.callback, this.lobbyId, this.conversationId, {Key? key})
       : super(key: key);
 
@@ -46,8 +47,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
+    var appState = context.watch<FFAppState>();
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -57,7 +57,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       child: Column(children: [
         Expanded(
             child: UserController.getConversation(
-                widget.lobbyId!, widget.conversationId!)),
+                appState.currentUser!.id! ,widget.lobbyId!, widget.conversationId!)),
         Material(
           color: Colors.transparent,
           elevation: 0.0,
@@ -127,16 +127,19 @@ class _ChatWidgetState extends State<ChatWidget> {
                     onPressed: () async {
                       String mssg = _model.textController.text.trim();
                       if (mssg.isNotEmpty) {
+                        print(appState.currentUser!.id!);
                         final message = MessageModel(
-                          creatorId: '6522a0c73e680ea09ee89d5f',
-                          creator: 'John',
+                          creatorId: appState.currentUser!.id,
+                          creator: appState.currentUser!.firstName,
                           message: mssg,
                         );
-                        await UserController.createMessage(message, context,
+                        await UserController.createMessage(message, context, appState.currentUser!.id!,
                             widget.lobbyId!, widget.conversationId!);
                         widget.callback(() {});
                         _model.textController!.clear();
                       }
+                      else
+                        print(appState.currentUser!.id);
                     },
                     text: 'SEND',
                     options: FFButtonOptions(

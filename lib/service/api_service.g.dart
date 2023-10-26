@@ -13,7 +13,7 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://localhost:443/';
+    baseUrl ??= 'https://joiner-backend-v3.onrender.com/';
   }
 
   final Dio _dio;

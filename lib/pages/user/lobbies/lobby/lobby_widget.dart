@@ -15,6 +15,7 @@ export 'lobby_model.dart';
 class LobbyWidget extends StatefulWidget {
   final ModelLobby.LobbyModel? currentLobby;
   final String? lobbyId;
+ 
   LobbyWidget({Key? key, this.currentLobby, this.lobbyId}) : super(key: key);
 
   @override
@@ -57,6 +58,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
 
   @override
   Widget build(BuildContext context) {
+    
     context.watch<FFAppState>();
     if (_model.currentLobby == null) {
       _model.fetchLobby(widget.lobbyId!);
