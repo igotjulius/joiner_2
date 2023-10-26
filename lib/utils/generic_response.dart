@@ -1,4 +1,5 @@
 import 'package:joiner_1/models/car_model.dart';
+import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
@@ -24,8 +25,10 @@ class ResponseModel<T> {
   static T? _fromJson<T>(Object? json) {
     var converted;
     if (json is Map<String, dynamic>) {
-      if (json.containsKey('email'))
+      if (json.containsKey('friend'))
         converted = UserModel.fromJson(json);
+      else if (json.containsKey('vehicles'))
+        converted = CraUserModel.fromJson(json);
       else if (json.containsKey('pending')) {
         var pending = json['pending'] as List;
         var active = json['active'] as List;
@@ -37,8 +40,7 @@ class ResponseModel<T> {
         };
       } else if (json.containsKey('participants')) {
         converted = LobbyModel.fromJson(json);
-      }
-      else if(json.containsKey('redirUrl'))
+      } else if (json.containsKey('redirUrl'))
         converted = json['redirUrl'] as String;
       return converted as T;
     } else if (json is List<dynamic>) {

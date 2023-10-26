@@ -4,6 +4,7 @@ import 'package:joiner_1/components/user/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
+import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
@@ -15,14 +16,13 @@ import 'package:joiner_1/widgets/atoms/participant_atom.dart';
 import 'package:joiner_1/widgets/molecules/lobby_invitation_mole.dart';
 import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
 import 'package:joiner_1/widgets/molecules/poll_item_mole.dart';
-import '../models/user_model.dart';
 
 class UserController {
   static late String _userId = FFAppState().pref!.getString('userId')!;
 
   // Login user
-  static Future<UserModel?> loginUser(String email, String password) async {
-    UserModel? user;
+  static Future<User?> loginUser(String email, String password) async {
+    User? user;
     await apiService.loginUser({'email': email, 'password': password}).then(
       (response) {
         if (response.code == HttpStatus.ok) {

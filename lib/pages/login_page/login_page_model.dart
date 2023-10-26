@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/models/user_model.dart';
+import 'package:joiner_1/models/helpers/user.dart';
 import 'package:provider/provider.dart';
-
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +38,7 @@ class LoginPageModel extends FlutterFlowModel {
   Future<void> loginUser(BuildContext context) async {
     setRoutes(context);
     FFAppState appState = context.read<FFAppState>();
-    UserModel? currentUser;
+    User? currentUser;
     if (appState.isCra) {
       currentUser = await CraController.loginCra(
           textController1.text, textController2.text, appState);

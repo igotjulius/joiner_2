@@ -1,3 +1,5 @@
+import 'package:joiner_1/models/user_model.dart';
+
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -34,7 +36,7 @@ class _AccountWidgetState extends State<AccountWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _model.currentUser = context.watch<FFAppState>().currentUser;
+    _model.currentUser = context.watch<FFAppState>().currentUser as UserModel;
 
     return Scaffold(
       key: scaffoldKey,

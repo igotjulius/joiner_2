@@ -1,19 +1,17 @@
+import 'package:joiner_1/models/helpers/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
 @JsonSerializable()
-class UserModel {
+class UserModel extends User {
   @JsonKey(
     includeFromJson: true,
     includeToJson: false,
     name: '_id',
   )
   final String? id;
-  final String? firstName;
-  final String? lastName;
-  final String? email;
-  final String? password;
+  final String? firstName, lastName, email;
   final List<Map<String, String>>? friends;
 
   const UserModel({
@@ -21,9 +19,13 @@ class UserModel {
     this.firstName,
     this.lastName,
     this.email,
-    this.password,
     this.friends,
-  });
+  }) : super(
+          id: id,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+        );
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
   Map<String, dynamic> toJson() => _$UserModelToJson(this);

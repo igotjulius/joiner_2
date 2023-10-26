@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
+import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
@@ -27,7 +28,7 @@ abstract class ApiService {
   // User Api's
   // Login user
   @POST('user/login')
-  Future<ResponseModel<dynamic>> loginUser(
+  Future<ResponseModel<User>> loginUser(
     @Body() Map<String, String> map, {
     @Header('Content-Type') String contentType = 'application/json',
   });
@@ -160,7 +161,7 @@ abstract class ApiService {
   // Register user
   @POST('user/register')
   Future<String> registerUser(
-    @Body() UserModel nUser, {
+    @Body() Map<String, String> nUser, {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
@@ -197,7 +198,7 @@ abstract class ApiService {
   // CRA API's
   // Login CRA
   @POST('cra/login')
-  Future<ResponseModel<dynamic>> loginCra(
+  Future<ResponseModel<User>> loginCra(
     @Body() Map<String, dynamic> map, {
     @Header('Content-Type') String contentType = 'application/json',
   });

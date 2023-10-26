@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:joiner_1/components/cra/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/rental_model.dart';
-import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import '../models/car_model.dart';
@@ -12,9 +11,9 @@ class CraController {
   static late String _craUserId = FFAppState().pref!.getString('userId')!;
 
   // Login CRA
-  static Future<UserModel?> loginCra(
+  static Future<User?> loginCra(
       String email, String password, FFAppState appState) async {
-    UserModel? user;
+    User? user;
     await apiService.loginCra({'email': email, 'password': password}).then(
       (response) {
         if (response.code == HttpStatus.ok) {

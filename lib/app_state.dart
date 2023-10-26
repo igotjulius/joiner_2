@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:joiner_1/models/cra_user_model.dart';
+import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,13 +16,20 @@ class FFAppState extends ChangeNotifier {
 
   Future initializePersistedState() async {
     pref = await SharedPreferences.getInstance();
-    if (pref!.getString('userId') != null) {
-      _currentUser = new UserModel(
-        id: pref!.getString('userId'),
-        firstName: pref!.getString('firstName'),
-        lastName: pref!.getString('lastName'),
-        email: pref!.getString('email'),
-      );
+    if (pref!.getBool('isCra') != null) {
+      pref!.getBool('isCra')!
+          ? _currentUser = new CraUserModel(
+              id: pref!.getString('userId'),
+              firstName: pref!.getString('firstName'),
+              lastName: pref!.getString('lastName'),
+              email: pref!.getString('email'),
+            )
+          : _currentUser = new UserModel(
+              id: pref!.getString('userId'),
+              firstName: pref!.getString('firstName'),
+              lastName: pref!.getString('lastName'),
+              email: pref!.getString('email'),
+            );
     }
   }
 
@@ -29,9 +38,9 @@ class FFAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  UserModel? _currentUser;
-  UserModel? get currentUser => _currentUser;
-  void setCurrentUser(UserModel? currentUser) {
+  User? _currentUser;
+  User? get currentUser => _currentUser;
+  void setCurrentUser(User? currentUser) {
     _currentUser = currentUser;
 
     if (_currentUser != null) {
@@ -39,6 +48,7 @@ class FFAppState extends ChangeNotifier {
       pref!.setString('firstName', currentUser.firstName!);
       pref!.setString('lastName', currentUser.lastName!);
       pref!.setString('email', currentUser.email!);
+      pref!.setBool('isCra', _isCra);
     }
 
     notifyListeners();

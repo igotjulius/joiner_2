@@ -1,4 +1,3 @@
-import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'sign_up_form_model.dart';
 export 'sign_up_form_model.dart';
-import 'package:intl/intl.dart';
 
 class SignUpFormWidget extends StatefulWidget {
   const SignUpFormWidget({Key? key}) : super(key: key);
@@ -50,12 +48,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
     context.watch<FFAppState>();
 
     FutureBuilder<String> _signUp() {
-      final user = UserModel(
-        firstName: _model.textController1.text,
-        lastName: _model.textController2.text,
-        email: _model.textController3.text,
-        password: _model.textController4.text,
-      );
+      final user = {'firstName': _model.textController1.text};
       return FutureBuilder(
         future: apiService.registerUser(user),
         builder: (context, snapshot) {
@@ -415,12 +408,6 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               ),
               FFButtonWidget(
                 onPressed: () async {
-                  final nUser = UserModel(
-                    firstName: _model.textController1.text,
-                    lastName: _model.textController2.text,
-                    email: _model.textController3.text,
-                    password: _model.textController4.text,
-                  );
                   showDialog(
                     context: context,
                     builder: (context) {
