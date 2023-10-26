@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 
 class RentalInfo extends StatefulWidget {
-  final double? money;
+  final double? amount;
   final int? duration;
   final String? vehicleOwner;
   final String? pickupDate;
@@ -10,7 +10,7 @@ class RentalInfo extends StatefulWidget {
 
   const RentalInfo({
     super.key,
-    this.money,
+    this.amount,
     this.duration,
     this.vehicleOwner,
     this.pickupDate,
@@ -79,7 +79,7 @@ class _RentalInfoState extends State<RentalInfo> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        '₱${widget.money}',
+                        '₱${widget.amount}',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

@@ -17,6 +17,7 @@ class FFAppState extends ChangeNotifier {
   Future initializePersistedState() async {
     pref = await SharedPreferences.getInstance();
     if (pref!.getBool('isCra') != null) {
+      setIsCra(pref!.getBool('isCra')!);
       pref!.getBool('isCra')!
           ? _currentUser = new CraUserModel(
               id: pref!.getString('userId'),

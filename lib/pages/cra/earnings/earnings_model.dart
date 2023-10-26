@@ -36,6 +36,7 @@ class EarningsModel extends FlutterFlowModel {
               },
               child: CRARentalInfo(
                 name: rental.renterName,
+                date: rental.startRental.toString(),
                 duration: rental.duration,
                 amount: rental.price,
               ),

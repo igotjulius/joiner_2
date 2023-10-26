@@ -3,7 +3,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'login_page_model.dart';
 export 'login_page_model.dart';
 
@@ -36,7 +35,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final appState = context.watch<FFAppState>();
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -267,8 +265,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
-                                    appState.setIsCra(_model.isCra);
-                                    _model.loginUser(context);
+                                    await _model.loginUser(context);
                                   },
                                   text: 'Login',
                                   options: FFButtonOptions(

@@ -36,9 +36,10 @@ class LoginPageModel extends FlutterFlowModel {
 
   /// Action blocks are added here.
   Future<void> loginUser(BuildContext context) async {
-    setRoutes(context);
     FFAppState appState = context.read<FFAppState>();
     User? currentUser;
+    appState.setIsCra(isCra);
+    AppStateNotifier.instance.setRoutes();
     if (appState.isCra) {
       currentUser = await CraController.loginCra(
           textController1.text, textController2.text, appState);
@@ -47,11 +48,6 @@ class LoginPageModel extends FlutterFlowModel {
           textController1.text, textController2.text);
     }
     if (currentUser != null) appState.setCurrentUser(currentUser);
-  }
-
-  void setRoutes(BuildContext context) {
-    AppStateNotifier navState = context.read<AppStateNotifier>();
-    navState.setRoutes(isCra);
   }
 
   /// Additional helper methods are added here.

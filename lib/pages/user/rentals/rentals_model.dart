@@ -1,7 +1,7 @@
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
-import 'package:joiner_1/widgets/atoms/rental_info.dart';
+import 'package:joiner_1/widgets/atoms/user_rental_info.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +39,7 @@ class RentalsModel extends FlutterFlowModel {
                 itemBuilder: (context, index) {
                   RentalModel rental = result[index];
                   return RentalInfo(
-                    money: rental.price,
+                    amount: rental.price,
                     duration: rental.duration,
                     vehicleOwner: rental.vehicleOwner,
                     pickupDate: rental.startRental.toString(),

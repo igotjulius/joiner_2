@@ -14,7 +14,9 @@ export 'serialization_util.dart';
 const kTransitionInfoKey = '__transition_info__';
 
 class AppStateNotifier extends ChangeNotifier {
-  AppStateNotifier._();
+  AppStateNotifier._() {
+    setRoutes();
+  }
 
   static AppStateNotifier? _instance;
   static AppStateNotifier get instance => _instance ??= AppStateNotifier._();
@@ -28,14 +30,15 @@ class AppStateNotifier extends ChangeNotifier {
 
   List<FFRoute> _routes = baseRoute();
   List<FFRoute> get routes => _routes;
-  void setRoutes(bool isCra) {
-    if (isCra) {
-      _routes = baseRoute();
+  void setRoutes() {
+    final appState = FFAppState();
+    _routes = baseRoute();
+    if (appState.isCra) {
       _routes.addAll(craRoutes());
     } else {
-      _routes = baseRoute();
       _routes.addAll(userRoutes());
     }
+
     notifyListeners();
   }
 

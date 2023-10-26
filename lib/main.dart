@@ -20,8 +20,8 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(
-        create: (context) => appState,
+      ChangeNotifierProvider.value(
+        value: appState,
       ),
       ChangeNotifierProvider(
         create: (context) => AppStateNotifier.instance,
@@ -43,6 +43,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Locale? _locale;
   ThemeMode _themeMode = ThemeMode.system;
+  late FFAppState _appState;
+  late AppStateNotifier _appStateNotifier;
 
   @override
   void initState() {
@@ -59,8 +61,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final appState = context.watch<FFAppState>();
-    final _appStateNotifier = Provider.of<AppStateNotifier>(context);
+    _appState = context.watch<FFAppState>();
+    _appStateNotifier = Provider.of<AppStateNotifier>(context);
     return MaterialApp.router(
       title: 'Joiner 1',
       localizationsDelegates: [
@@ -85,7 +87,7 @@ class _MyAppState extends State<MyApp> {
             .map((r) => r.toRoute(_appStateNotifier))
             .toList(),
         redirect: (context, state) {
-          return _appStateNotifier.redirectState(context, state, appState);
+          return _appStateNotifier.redirectState(context, state, _appState);
         },
       ),
       debugShowCheckedModeBanner: false,
