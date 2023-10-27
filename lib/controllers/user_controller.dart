@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:js_interop';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
@@ -116,9 +117,9 @@ class UserController {
 
   // Create message
   static Future<void> createMessage(MessageModel message, BuildContext context,
-      String lobbyId, String conversationId) async {
+      String userId, String lobbyId, String conversationId) async {
     await apiService
-        .createMessage(message, _userId, lobbyId, conversationId)
+        .createMessage(message, userId, lobbyId, conversationId)
         .catchError((error) {
       showDialog(
         context: context,
@@ -131,9 +132,9 @@ class UserController {
 
   // Get conversation
   static FutureBuilder<ResponseModel<List<MessageModel>?>> getConversation(
-      String lobbyId, String conversationId) {
+      String userId, String lobbyId, String conversationId) {
     return FutureBuilder(
-      future: apiService.getConversation(_userId, lobbyId, conversationId),
+      future: apiService.getConversation(userId, lobbyId, conversationId),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<MessageModel>? result = snapshot.data!.data;
@@ -144,20 +145,43 @@ class UserController {
           return ListView.builder(
             itemCount: result.length,
             itemBuilder: (context, index) {
+              MessageModel message = result[index];
+              bool isUserMessage = _userId == message.creatorId;
               return Align(
-                alignment: Alignment.bottomRight,
+                alignment: isUserMessage
+                    ? Alignment.bottomRight
+                    : Alignment.bottomLeft,
                 child: Container(
-                  margin: EdgeInsets.only(right: 10, bottom: 7, top: 5),
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      result[index].message!,
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  margin: EdgeInsets.only(
+                    right: isUserMessage ? 10 : 0,
+                    left: isUserMessage ? 0 : 10,
+                    bottom: 7,
+                    top: 5,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 3 ,bottom: 3),
+                        child: Text(
+                          isUserMessage ? '' : result[index].creator!,
+                          style: TextStyle(color: Colors.grey , fontSize: 12),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: isUserMessage ? Colors.blue : Colors.grey,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          result[index].message!,
+                          style: TextStyle(
+                              color:
+                                  isUserMessage ? Colors.white : Colors.black),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
