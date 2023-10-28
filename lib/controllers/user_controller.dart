@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:js_interop';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/car_item_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
@@ -20,6 +19,11 @@ import 'package:joiner_1/widgets/molecules/poll_item_mole.dart';
 
 class UserController {
   static late String _userId = FFAppState().pref!.getString('userId')!;
+
+  // Register user
+  static Future<void> registerUser(Map<String, String> nUser) async {
+    await apiService.registerUser(nUser);
+  }
 
   // Login user
   static Future<User?> loginUser(String email, String password) async {
@@ -162,10 +166,10 @@ class UserController {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 3 ,bottom: 3),
+                        padding: EdgeInsets.only(left: 3, bottom: 3),
                         child: Text(
                           isUserMessage ? '' : result[index].creator!,
-                          style: TextStyle(color: Colors.grey , fontSize: 12),
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                       ),
                       Container(

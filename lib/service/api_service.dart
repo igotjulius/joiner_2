@@ -15,8 +15,8 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-// const String serverUrl = 'http://localhost:443/';
-const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -26,6 +26,13 @@ abstract class ApiService {
   factory ApiService(Dio dio) = _ApiService;
 
   // User Api's
+  // Register user
+  @POST('user/register')
+  Future<String> registerUser(
+    @Body() Map<String, String> nUser, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
   // Login user
   @POST('user/login')
   Future<ResponseModel<User>> loginUser(
@@ -158,13 +165,6 @@ abstract class ApiService {
   @GET('user/{userId}/profile')
   Future<UserModel> getAccount(@Path('userId') String userId);
 
-  // Register user
-  @POST('user/register')
-  Future<String> registerUser(
-    @Body() Map<String, String> nUser, {
-    @Header('Content-Type') String contentType = 'application/json',
-  });
-
   // Get Poll
   @GET('user/{userId}/lobby/{lobbyId}/poll')
   Future<List<PollModel>> getPoll(
@@ -196,6 +196,13 @@ abstract class ApiService {
   });
 
   // CRA API's
+  // Register CRA
+  @POST('cra/register')
+  Future<void> registerCra(
+    @Body() Map<String, String> map, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
   // Login CRA
   @POST('cra/login')
   Future<ResponseModel<User>> loginCra(

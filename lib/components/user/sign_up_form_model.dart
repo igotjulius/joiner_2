@@ -20,6 +20,8 @@ class SignUpFormModel extends FlutterFlowModel {
   TextEditingController? textController5;
   String? Function(BuildContext, String?)? textController5Validator;
 
+  TabController? tabController;
+
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {}
@@ -30,6 +32,7 @@ class SignUpFormModel extends FlutterFlowModel {
     textController3?.dispose();
     textController4?.dispose();
     textController5?.dispose();
+    tabController?.dispose();
   }
 
   /// Action blocks are added here.

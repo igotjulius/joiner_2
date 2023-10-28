@@ -11,6 +11,7 @@ class CustomTextInput extends StatefulWidget {
   final TextInputType? keyboardType;
   final TextInputFormatter inputFormatters;
   final bool enabled;
+  final bool obscureText;
 
   CustomTextInput({
     super.key,
@@ -21,6 +22,7 @@ class CustomTextInput extends StatefulWidget {
     this.keyboardType,
     TextInputFormatter? inputFormatters,
     this.enabled = true,
+    this.obscureText = false,
   }) : inputFormatters =
             inputFormatters ?? FilteringTextInputFormatter.singleLineFormatter;
 
@@ -53,6 +55,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
               validator: widget.validator.asValidator(context),
               keyboardType: widget.keyboardType,
               enabled: widget.enabled,
+              obscureText: widget.obscureText,
               inputFormatters: [
                 widget.inputFormatters,
               ],

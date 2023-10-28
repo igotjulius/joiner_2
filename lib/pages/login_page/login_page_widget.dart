@@ -1,4 +1,3 @@
-import 'package:joiner_1/components/user/sign_up_form_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -313,26 +312,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     focusColor: Colors.transparent,
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (context) {
-                                          return GestureDetector(
-                                            onTap: () => FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode),
-                                            child: Padding(
-                                              padding: MediaQuery.of(context)
-                                                  .viewInsets,
-                                              child: SingleChildScrollView(
-                                                child: SignUpFormWidget(),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ).then((value) => setState(() {}));
+                                    onTap: () {
+                                      context.pushNamed('Sign Up');
                                     },
                                     child: Text(
                                       'Join now!',

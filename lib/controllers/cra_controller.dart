@@ -10,6 +10,11 @@ import '../models/car_model.dart';
 class CraController {
   static late String _craUserId = FFAppState().pref!.getString('userId')!;
 
+  // Register CRA
+  static Future<void> registerCra(Map<String, String> nUser) async {
+    await apiService.registerCra(nUser);
+  }
+
   // Login CRA
   static Future<User?> loginCra(
       String email, String password, FFAppState appState) async {
