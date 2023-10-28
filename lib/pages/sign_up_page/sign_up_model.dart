@@ -25,7 +25,7 @@ class SignUpPageModel extends FlutterFlowModel {
   Future signUp() async {
     if (tabController?.index == 0) {
       final nUser = {
-        'firstname': userModel.fNameController.text,
+        'firstName': userModel.fNameController.text,
         'lastName': userModel.lNameController.text,
         'email': userModel.emailController.text,
         'password': userModel.passwordController.text,
@@ -33,7 +33,7 @@ class SignUpPageModel extends FlutterFlowModel {
       await UserController.registerUser(nUser);
     } else {
       final nUser = {
-        'firstname': craModel.fNameController.text,
+        'firstName': craModel.fNameController.text,
         'lastName': craModel.lNameController.text,
         'email': craModel.emailController.text,
         'address': craModel.addressController.text,

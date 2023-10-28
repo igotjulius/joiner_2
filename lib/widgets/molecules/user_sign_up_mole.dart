@@ -10,16 +10,41 @@ class UserSignUpMole extends StatefulWidget {
 }
 
 class _UserSignUpMoleState extends State<UserSignUpMole> {
+  late UserSignUpMoleModel _model;
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => UserSignUpMoleModel());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          CustomTextInput(label: 'First name'),
-          CustomTextInput(label: 'Last name'),
-          CustomTextInput(label: 'Email'),
-          CustomTextInput(label: 'Password'),
-          CustomTextInput(label: 'Confirm password'),
+          CustomTextInput(
+            label: 'First name',
+            controller: _model.fNameController,
+          ),
+          CustomTextInput(
+            label: 'Last name',
+            controller: _model.lNameController,
+          ),
+          CustomTextInput(
+            label: 'Email',
+            controller: _model.emailController,
+          ),
+          CustomTextInput(
+            label: 'Password',
+            controller: _model.passwordController,
+            obscureText: true,
+          ),
+          CustomTextInput(
+            label: 'Confirm password',
+            controller: _model.confirmPassController,
+            obscureText: true,
+          ),
         ],
       ),
     );
