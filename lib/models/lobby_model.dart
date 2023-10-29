@@ -1,3 +1,4 @@
+import 'package:joiner_1/components/user/poll_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'lobby_model.g.dart';
@@ -11,21 +12,28 @@ class LobbyModel {
   final String? id;
   final String? title;
   final String? description;
+  final String? destination;
+  final String? meetingPlace;
   final DateTime? startDate;
   final DateTime? endDate;
   final List<String>? participants;
   final Map<String, double>? budget;
+  final List<PollModel>? poll;
   final String? conversation;
 
-  const LobbyModel(
-      {this.id,
-      this.title,
-      this.description,
-      this.startDate,
-      this.endDate,
-      this.participants,
-      this.budget,
-      this.conversation});
+  const LobbyModel({
+    this.id,
+    this.title,
+    this.description,
+    this.destination,
+    this.meetingPlace,
+    this.startDate,
+    this.endDate,
+    this.participants,
+    this.budget,
+    this.poll,
+    this.conversation,
+  });
 
   factory LobbyModel.fromJson(Map<String, dynamic> json) =>
       _$LobbyModelFromJson(json);

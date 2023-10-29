@@ -1,19 +1,19 @@
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/poll_model.dart';
-
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'survey_poll_model.dart';
+
 export 'survey_poll_model.dart';
 
 class SurveyPollWidget extends StatefulWidget {
   final String? lobbyId;
   final Function? callback;
-  const SurveyPollWidget(this.callback, this.lobbyId, {Key? key}) : super(key: key);
+  const SurveyPollWidget(this.callback, this.lobbyId, {Key? key})
+      : super(key: key);
 
   @override
   _SurveyPollWidgetState createState() => _SurveyPollWidgetState();
@@ -142,21 +142,33 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
               ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
-                child: ListView.builder( scrollDirection: Axis.vertical,
-        shrinkWrap: true,itemCount: _model.choices!.length, itemBuilder: ((context, index) {
-                  return TextField(controller: _model.choices![index]);
-                }),),
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _model.choices!.length,
+                  itemBuilder: ((context, index) {
+                    return TextField(controller: _model.choices![index]);
+                  }),
+                ),
               ),
-              FFButtonWidget(text: 'Add Choice', onPressed: (){
-                setState(() { });
-              }, options: FFButtonOptions()),
+              FFButtonWidget(
+                  text: 'Add Choice',
+                  onPressed: () {
+                    setState(() {});
+                  },
+                  options: FFButtonOptions()),
               FFButtonWidget(
                 onPressed: () async {
                   List<String> choices = [];
-                  _model.choices!.forEach((element) => choices.add(element.text));
-                   UserController.postPoll(PollModel(question: _model.textController1.text, choices: choices), widget.lobbyId!);
-                   context.pop();
-                   widget.callback!(() {});
+                  _model.choices!
+                      .forEach((element) => choices.add(element.text));
+                  UserController.postPoll(
+                      PollModel(
+                          question: _model.textController1.text,
+                          choices: choices),
+                      widget.lobbyId!);
+                  context.pop();
+                  widget.callback!(() {});
                 },
                 text: 'Create',
                 icon: Icon(
@@ -166,7 +178,8 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                 options: FFButtonOptions(
                   height: 40.0,
                   padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 16.0, 0.0),
-                  iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                  iconPadding:
+                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   color: FlutterFlowTheme.of(context).primary,
                   textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                         fontFamily: 'Roboto Flex',

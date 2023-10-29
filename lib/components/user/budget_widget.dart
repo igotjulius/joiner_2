@@ -1,24 +1,22 @@
-import 'package:joiner_1/components/user/add_budget_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'budget_graph_model.dart';
-export 'budget_graph_model.dart';
+import 'budget_model.dart';
+export 'budget_model.dart';
 
-class BudgetGraphWidget extends StatefulWidget {
+class BudgetWidget extends StatefulWidget {
   final Map<String, double>? budget;
   final String? lobbyId;
-  const BudgetGraphWidget({Key? key, this.budget, this.lobbyId})
-      : super(key: key);
+  const BudgetWidget({Key? key, this.budget, this.lobbyId}) : super(key: key);
 
   @override
-  _BudgetGraphWidgetState createState() => _BudgetGraphWidgetState();
+  _BudgetWidgetState createState() => _BudgetWidgetState();
 }
 
-class _BudgetGraphWidgetState extends State<BudgetGraphWidget> {
-  late BudgetGraphModel _model;
+class _BudgetWidgetState extends State<BudgetWidget> {
+  late BudgetModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -29,7 +27,7 @@ class _BudgetGraphWidgetState extends State<BudgetGraphWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => BudgetGraphModel());
+    _model = createModel(context, () => BudgetModel());
     _model.keys = widget.budget?.keys.toList();
     _model.budget = widget.budget;
   }

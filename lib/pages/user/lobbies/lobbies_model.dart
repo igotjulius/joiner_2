@@ -1,6 +1,3 @@
-import 'package:joiner_1/components/user/empty_lobby_model.dart';
-import 'package:joiner_1/components/user/filled_lobby_model.dart';
-
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 

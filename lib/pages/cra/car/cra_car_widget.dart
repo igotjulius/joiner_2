@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/add_car_widget.dart';
-import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';

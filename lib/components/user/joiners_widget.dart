@@ -1,5 +1,4 @@
 import 'package:joiner_1/components/user/invite_participants_widget.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';

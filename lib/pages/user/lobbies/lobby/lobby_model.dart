@@ -1,6 +1,7 @@
-import 'package:joiner_1/components/user/budget_graph_model.dart';
+import 'package:joiner_1/components/user/budget_model.dart';
 import 'package:joiner_1/components/user/chat_model.dart';
 import 'package:joiner_1/components/user/joiners_model.dart';
+import 'package:joiner_1/components/user/lobby_dashboard_model.dart';
 import 'package:joiner_1/components/user/poll_model.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart' as ModelLobby;
@@ -16,10 +17,12 @@ class LobbyModel extends FlutterFlowModel {
   int get tabBarCurrentIndex =>
       tabBarController != null ? tabBarController!.index : 0;
 
+  // Model for Lobby Dashboard component
+  late LobbyDashboardModel lobbyDashboardModel;
   // Model for Chat component.
   late ChatModel chatModel;
   // Model for BudgetGraph component.
-  late BudgetGraphModel budgetGraphModel;
+  late BudgetModel budgetGraphModel;
   // Model for Poll component.
   late PollModel pollModel;
   // Model for Joiners component.
@@ -30,8 +33,9 @@ class LobbyModel extends FlutterFlowModel {
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {
+    lobbyDashboardModel = createModel(context, () => LobbyDashboardModel());
     chatModel = createModel(context, () => ChatModel());
-    budgetGraphModel = createModel(context, () => BudgetGraphModel());
+    budgetGraphModel = createModel(context, () => BudgetModel());
     pollModel = createModel(context, () => PollModel());
     joinersModel = createModel(context, () => JoinersModel());
   }

@@ -3,7 +3,6 @@ import 'package:joiner_1/components/user/car_item_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
-import 'package:joiner_1/pages/user/car_booking/car_booking_widget.dart';
 
 class CarItemWidget extends StatefulWidget {
   final CarModel? car;
@@ -29,7 +28,8 @@ class _CarItemWidgetState extends State<CarItemWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        context.pushNamed('Booking', extra: {'licensePlate': _model.car!.licensePlate});
+        context.pushNamed('Booking',
+            extra: {'licensePlate': _model.car!.licensePlate});
       },
       child: Container(
         clipBehavior: Clip.antiAlias,

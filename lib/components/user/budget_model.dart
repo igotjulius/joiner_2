@@ -3,7 +3,7 @@ import '../../widgets/atoms/budget_category.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
-class BudgetGraphModel extends FlutterFlowModel {
+class BudgetModel extends FlutterFlowModel {
   /// Initialization and disposal methods.
   List<String>? keys;
   Map<String, double>? budget;

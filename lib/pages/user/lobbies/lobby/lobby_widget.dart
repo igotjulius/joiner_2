@@ -1,6 +1,7 @@
-import 'package:joiner_1/components/user/budget_graph_widget.dart';
+import 'package:joiner_1/components/user/budget_widget.dart';
 import 'package:joiner_1/components/user/chat_widget.dart';
 import 'package:joiner_1/components/user/joiners_widget.dart';
+import 'package:joiner_1/components/user/lobby_dashboard.dart';
 import 'package:joiner_1/components/user/poll_widget.dart';
 import 'package:joiner_1/widgets/molecules/widget_trip_details.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -15,7 +16,7 @@ export 'lobby_model.dart';
 class LobbyWidget extends StatefulWidget {
   final ModelLobby.LobbyModel? currentLobby;
   final String? lobbyId;
- 
+
   LobbyWidget({Key? key, this.currentLobby, this.lobbyId}) : super(key: key);
 
   @override
@@ -35,7 +36,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
 
     _model.tabBarController = TabController(
       vsync: this,
-      length: 4,
+      length: 5,
       initialIndex: 0,
     );
     _model.currentLobby = widget.currentLobby;
@@ -58,7 +59,6 @@ class _LobbyWidgetState extends State<LobbyWidget>
 
   @override
   Widget build(BuildContext context) {
-    
     context.watch<FFAppState>();
     if (_model.currentLobby == null) {
       _model.fetchLobby(widget.lobbyId!);
@@ -164,6 +164,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                     Align(
                       alignment: Alignment(0.0, 0),
                       child: TabBar(
+                        // isScrollable: true,
                         labelColor:
                             FlutterFlowTheme.of(context).secondaryBackground,
                         unselectedLabelColor:
@@ -178,18 +179,11 @@ class _LobbyWidgetState extends State<LobbyWidget>
                         indicatorColor:
                             FlutterFlowTheme.of(context).secondaryBackground,
                         tabs: [
-                          Tab(
-                            text: 'Chat',
-                          ),
-                          Tab(
-                            text: 'Resources',
-                          ),
-                          Tab(
-                            text: 'Poll',
-                          ),
-                          Tab(
-                            text: 'Joiners',
-                          ),
+                          Tab(text: 'Dashboard'),
+                          Tab(text: 'Chat'),
+                          Tab(text: 'Resources'),
+                          Tab(text: 'Poll'),
+                          Tab(text: 'Joiners'),
                         ],
                         controller: _model.tabBarController,
                         onTap: (value) => setState(() {}),
@@ -200,15 +194,25 @@ class _LobbyWidgetState extends State<LobbyWidget>
                         controller: _model.tabBarController,
                         children: [
                           wrapWithModel(
+                            model: _model.lobbyDashboardModel,
+                            child: LobbyDashboardWidget(
+                              lobbyId: widget.lobbyId,
+                            ),
+                            updateCallback: () => setState(() {}),
+                          ),
+                          wrapWithModel(
                             model: _model.chatModel,
                             updateCallback: () => setState(() {}),
-                            child: ChatWidget(setState, _model.currentLobby!.id,
-                                _model.currentLobby!.conversation),
+                            child: ChatWidget(
+                              setState,
+                              _model.currentLobby!.id,
+                              _model.currentLobby!.conversation,
+                            ),
                           ),
                           wrapWithModel(
                             model: _model.budgetGraphModel,
                             updateCallback: () => setState(() {}),
-                            child: BudgetGraphWidget(
+                            child: BudgetWidget(
                               budget: _model.currentLobby!.budget,
                             ),
                           ),
