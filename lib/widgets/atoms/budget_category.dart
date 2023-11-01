@@ -4,14 +4,10 @@ import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 class BudgetCategoryWidget extends StatelessWidget {
   final String? label;
   final double? amount;
-  final IconData? prefixIcon;
-  final IconData? suffixIcon;
   const BudgetCategoryWidget({
     super.key,
     this.label,
     this.amount,
-    this.prefixIcon,
-    this.suffixIcon,
   });
 
   @override
@@ -30,7 +26,6 @@ class BudgetCategoryWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(prefixIcon),
                 Text(label!),
               ].divide(
                 SizedBox(
@@ -41,7 +36,6 @@ class BudgetCategoryWidget extends StatelessWidget {
             Row(
               children: [
                 Text("₱$amount"),
-                Icon(suffixIcon),
               ].divide(
                 SizedBox(
                   width: 8,

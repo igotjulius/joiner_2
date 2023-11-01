@@ -15,7 +15,6 @@ import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/widgets/atoms/participant_atom.dart';
 import 'package:joiner_1/widgets/molecules/lobby_invitation_mole.dart';
 import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
-import 'package:joiner_1/widgets/molecules/poll_item_mole.dart';
 
 class UserController {
   static late String _userId = FFAppState().pref!.getString('userId')!;
@@ -50,6 +49,7 @@ class UserController {
             final Map<String, List<LobbyModel>> result = snapshot.data!.data!;
             // final activeLobbies = result['active']!;
             final {'active': activeLobbies, 'pending': pendingLobbies} = result;
+
             return Column(
               children: [
                 if (pendingLobbies.length != 0)
@@ -201,34 +201,36 @@ class UserController {
   }
 
   // Get all poll of a lobby
-  static FutureBuilder<List<PollModel>> getPoll(
-      Function callback, String lobbyId) {
-    return FutureBuilder(
-        future: apiService.getPoll(_userId, lobbyId),
-        builder: ((context, snapshot) {
-          if (snapshot.hasData) {
-            List<PollModel> polls = snapshot.data!;
-            return ListView.builder(
-              itemCount: polls.length,
-              itemBuilder: (context, index) {
-                return PollItemMolecule(callback,
-                    poll: polls[index], lobby: lobbyId);
-              },
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        }));
+  static Future<List<PollModel>?> getPoll(String lobbyId) async {
+    final response = await apiService.getPoll(_userId, lobbyId);
+    return response.data;
   }
 
   // Add/create a poll of a lobby
-  static void postPoll(PollModel poll, String lobbyId) {
-    apiService.postPoll(poll, _userId, lobbyId);
+  static Future<List<PollModel>?> postPoll(
+      PollModel poll, String lobbyId) async {
+    final response = await apiService.postPoll(poll, _userId, lobbyId);
+    return response.data;
+  }
+
+  // Vote to a poll
+  static Future<PollModel> votePoll(String choice, String lobbyId) async {
+    final response =
+        await apiService.votePoll({'title': choice}, _userId, lobbyId);
+    return response.data!;
+  }
+
+  // Close corresponding poll
+  static Future<PollModel> closePoll(String lobbyId, String pollId) async {
+    final response = await apiService.closePoll(_userId, lobbyId, pollId);
+    return response.data!;
   }
 
   // Delete corresponding poll
-  static void deletePoll(String lobbyId, String pollId) {
-    apiService.deletePoll(_userId, lobbyId, pollId);
+  static Future<List<PollModel>?> deletePoll(
+      String lobbyId, String pollId) async {
+    final response = await apiService.deletePoll(_userId, lobbyId, pollId);
+    return response.data;
   }
 
   // Add/create a budget to a lobby

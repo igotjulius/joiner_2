@@ -72,7 +72,7 @@ class _BudgetWidgetState extends State<BudgetWidget> {
             ),
             Flexible(
               fit: FlexFit.loose,
-              child: _model.showBudget(),
+              child: _model.showBudget(widget.lobbyId!),
             ),
           ],
         ),

@@ -2,7 +2,7 @@ import 'package:joiner_1/components/user/budget_model.dart';
 import 'package:joiner_1/components/user/chat_model.dart';
 import 'package:joiner_1/components/user/joiners_model.dart';
 import 'package:joiner_1/components/user/lobby_dashboard_model.dart';
-import 'package:joiner_1/components/user/poll_model.dart';
+import 'package:joiner_1/components/user/poll_item_model.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart' as ModelLobby;
 import '/flutter_flow/flutter_flow_util.dart';
@@ -24,11 +24,11 @@ class LobbyModel extends FlutterFlowModel {
   // Model for BudgetGraph component.
   late BudgetModel budgetGraphModel;
   // Model for Poll component.
-  late PollModel pollModel;
+  late PollItemModel pollModel;
   // Model for Joiners component.
   late JoinersModel joinersModel;
 
-  late ModelLobby.LobbyModel? currentLobby;
+  ModelLobby.LobbyModel? currentLobby;
 
   /// Initialization and disposal methods.
 
@@ -36,7 +36,7 @@ class LobbyModel extends FlutterFlowModel {
     lobbyDashboardModel = createModel(context, () => LobbyDashboardModel());
     chatModel = createModel(context, () => ChatModel());
     budgetGraphModel = createModel(context, () => BudgetModel());
-    pollModel = createModel(context, () => PollModel());
+    pollModel = createModel(context, () => PollItemModel());
     joinersModel = createModel(context, () => JoinersModel());
   }
 
@@ -50,8 +50,8 @@ class LobbyModel extends FlutterFlowModel {
   }
 
   /// Action blocks are added here.
-  Future<ModelLobby.LobbyModel?> fetchLobby(String lobbyId) {
-    return UserController.getLobby(lobbyId);
+  Future<ModelLobby.LobbyModel?> fetchLobby(String lobbyId) async {
+    return await UserController.getLobby(lobbyId);
   }
 
   /// Additional helper methods are added here.

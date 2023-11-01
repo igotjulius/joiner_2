@@ -3,6 +3,7 @@ import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
+import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -38,10 +39,12 @@ class ResponseModel<T> {
           'active':
               active.map((element) => LobbyModel.fromJson(element)).toList()
         };
-      } else if (json.containsKey('participants')) {
+      } else if (json.containsKey('participants'))
         converted = LobbyModel.fromJson(json);
-      } else if (json.containsKey('redirUrl'))
+      else if (json.containsKey('redirUrl'))
         converted = json['redirUrl'] as String;
+      else if (json.containsKey('question'))
+        converted = PollModel.fromJson(json);
       return converted as T;
     } else if (json is List<dynamic>) {
       if (json.isEmpty) {
@@ -68,7 +71,10 @@ class ResponseModel<T> {
                   'status': element['status'] as String,
                 })
             .toList();
+      } else if (data.containsKey('question')) {
+        converted = json.map((element) => PollModel.fromJson(element)).toList();
       }
+
       return converted as T;
     } else if (json == null) {
       return json as T;

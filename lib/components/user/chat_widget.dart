@@ -56,8 +56,8 @@ class _ChatWidgetState extends State<ChatWidget> {
       ),
       child: Column(children: [
         Expanded(
-            child: UserController.getConversation(
-                appState.currentUser!.id! ,widget.lobbyId!, widget.conversationId!)),
+            child: UserController.getConversation(appState.currentUser!.id!,
+                widget.lobbyId!, widget.conversationId!)),
         Material(
           color: Colors.transparent,
           elevation: 0.0,
@@ -127,18 +127,20 @@ class _ChatWidgetState extends State<ChatWidget> {
                     onPressed: () async {
                       String mssg = _model.textController.text.trim();
                       if (mssg.isNotEmpty) {
-                        print(appState.currentUser!.id!);
                         final message = MessageModel(
                           creatorId: appState.currentUser!.id,
                           creator: appState.currentUser!.firstName,
                           message: mssg,
                         );
-                        await UserController.createMessage(message, context, appState.currentUser!.id!,
-                            widget.lobbyId!, widget.conversationId!);
+                        await UserController.createMessage(
+                            message,
+                            context,
+                            appState.currentUser!.id!,
+                            widget.lobbyId!,
+                            widget.conversationId!);
                         widget.callback(() {});
                         _model.textController!.clear();
-                      }
-                      else
+                      } else
                         print(appState.currentUser!.id);
                     },
                     text: 'SEND',

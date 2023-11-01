@@ -1,5 +1,3 @@
-import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/models/poll_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -11,9 +9,10 @@ export 'survey_poll_model.dart';
 
 class SurveyPollWidget extends StatefulWidget {
   final String? lobbyId;
-  final Function? callback;
-  const SurveyPollWidget(this.callback, this.lobbyId, {Key? key})
-      : super(key: key);
+  const SurveyPollWidget({
+    Key? key,
+    this.lobbyId,
+  }) : super(key: key);
 
   @override
   _SurveyPollWidgetState createState() => _SurveyPollWidgetState();
@@ -158,17 +157,10 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                   },
                   options: FFButtonOptions()),
               FFButtonWidget(
+                showLoadingIndicator: false,
                 onPressed: () async {
-                  List<String> choices = [];
-                  _model.choices!
-                      .forEach((element) => choices.add(element.text));
-                  UserController.postPoll(
-                      PollModel(
-                          question: _model.textController1.text,
-                          choices: choices),
-                      widget.lobbyId!);
+                  await _model.createPoll(widget.lobbyId!);
                   context.pop();
-                  widget.callback!(() {});
                 },
                 text: 'Create',
                 icon: Icon(

@@ -51,35 +51,38 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.of(context).primary,
         automaticallyImplyLeading: false,
-        title: Column(children: [
-          Align(
-            alignment: Alignment(0, 0),
-            child: TabBar(
-              labelColor: FlutterFlowTheme.of(context).secondaryBackground,
-              unselectedLabelColor:
-                  FlutterFlowTheme.of(context).primaryBackground,
-              labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
-                    fontFamily: 'Open Sans',
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.bold,
+        title: Column(
+          children: [
+            Align(
+              alignment: Alignment(0, 0),
+              child: TabBar(
+                labelColor: FlutterFlowTheme.of(context).secondaryBackground,
+                unselectedLabelColor:
+                    FlutterFlowTheme.of(context).primaryBackground,
+                labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
+                      fontFamily: 'Open Sans',
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                unselectedLabelStyle: TextStyle(),
+                indicatorColor:
+                    FlutterFlowTheme.of(context).secondaryBackground,
+                tabs: [
+                  Tab(
+                    text: 'Lobby',
                   ),
-              unselectedLabelStyle: TextStyle(),
-              indicatorColor: FlutterFlowTheme.of(context).secondaryBackground,
-              tabs: [
-                Tab(
-                  text: 'Lobby',
-                ),
-                Tab(
-                  text: 'Discover trips',
-                ),
-              ],
-              controller:
-                  TabController(length: 2, vsync: this, initialIndex: 0),
-              // create a local tabcontroller
-              onTap: (value) => setState(() {}),
+                  Tab(
+                    text: 'Discover trips',
+                  ),
+                ],
+                controller:
+                    TabController(length: 2, vsync: this, initialIndex: 0),
+                // create a local tabcontroller
+                onTap: (value) => setState(() {}),
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
         actions: [],
         centerTitle: false,
         elevation: 2.0,

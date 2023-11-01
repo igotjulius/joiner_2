@@ -165,23 +165,42 @@ abstract class ApiService {
   @GET('user/{userId}/profile')
   Future<UserModel> getAccount(@Path('userId') String userId);
 
-  // Get Poll
+  // Get all Polls
   @GET('user/{userId}/lobby/{lobbyId}/poll')
-  Future<List<PollModel>> getPoll(
-      @Path('userId') String userId, @Path('lobbyId') String lobbyId);
+  Future<ResponseModel<List<PollModel>>> getPoll(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
 
-  //Post Poll
+  // Post Poll
   @POST('user/{userId}/lobby/{lobbyId}/poll')
-  Future<void> postPoll(
+  Future<ResponseModel<List<PollModel>>> postPoll(
     @Body() PollModel poll,
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId, {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
-  // Delete poll
+  // Vote to a poll
+  @PUT('user/{userId}/lobby/{lobbyId}/poll')
+  Future<ResponseModel<PollModel>> votePoll(
+    @Body() Map<String, String> choice,
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Close a poll
+  @PUT('user/{userId}/lobby/{lobbyId}/poll/{pollId}')
+  Future<ResponseModel<PollModel>> closePoll(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+    @Path('pollId') String pollId,
+  );
+
+  // Delete a poll
   @DELETE('user/{userId}/lobby/{lobbyId}/poll/{pollId}')
-  Future<void> deletePoll(
+  Future<ResponseModel<List<PollModel>>> deletePoll(
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
     @Path('pollId') String pollId,

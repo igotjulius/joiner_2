@@ -1,3 +1,6 @@
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/poll_model.dart';
+
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +28,17 @@ class SurveyPollModel extends FlutterFlowModel {
   }
 
   /// Action blocks are added here.
+  Future<List<PollModel>?> createPoll(String lobbyId) async {
+    List<String> choices = [];
+    this.choices!.forEach((element) => choices.add(element.text));
+    return UserController.postPoll(
+      PollModel(
+        question: textController1.text,
+        choices: choices,
+      ),
+      lobbyId,
+    );
+  }
 
   /// Additional helper methods are added here.
 }

@@ -4,13 +4,15 @@ import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 class PollChoices extends StatelessWidget {
   final String? choice;
   final int? count;
-  const PollChoices({super.key, this.choice, this.count});
+  final Color? color;
+  const PollChoices({super.key, this.choice, this.count, this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
+        color: color,
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Padding(

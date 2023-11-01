@@ -1,4 +1,4 @@
-import 'package:joiner_1/components/user/poll_model.dart';
+import 'package:joiner_1/models/poll_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'lobby_model.g.dart';
