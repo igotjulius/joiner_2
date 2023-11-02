@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/components/user/poll_item_model.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/widgets/atoms/poll_choices.dart';
-import 'package:provider/provider.dart';
 
 class PollMolecule extends StatefulWidget {
   final PollModel? poll;
@@ -34,7 +32,6 @@ class _PollMoleculeState extends State<PollMolecule> {
 
   @override
   Widget build(BuildContext context) {
-    _model.poll = context.watch<PollStateNotifier>().polls?[widget.index!];
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -75,25 +72,12 @@ class _PollMoleculeState extends State<PollMolecule> {
                       absorbing: !_model.poll!.isOpen!,
                       child: Material(
                         child: InkWell(
-                          onTap: () {
-                            if (_model.selectedIndex == index) {
-                              _model.selectedIndex = null;
-                            } else {
-                              _model.selectedIndex = index;
-                            }
-                            _model
-                                .votePoll(
-                                  _model.poll?.choices![
-                                      _model.selectedIndex == null
-                                          ? index
-                                          : _model.selectedIndex!]['title'],
-                                  widget.lobbyId!,
-                                )
-                                .then((value) => setState(() {
-                                      Provider.of<PollStateNotifier>(context,
-                                              listen: false)
-                                          .getPoll();
-                                    }));
+                          onTap: () async {
+                            await _model.votePoll(
+                              index,
+                              widget.lobbyId!,
+                            );
+                            setState(() {});
                           },
                           child: PollChoices(
                             choice: _model.poll?.choices![index]['title'],
@@ -124,12 +108,7 @@ class _PollMoleculeState extends State<PollMolecule> {
                           size: 24.0,
                         ),
                         onPressed: () async {
-                          _model.deletePoll(widget.lobbyId!).then((value) {
-                            value ??= [];
-                            Provider.of<PollStateNotifier>(context,
-                                    listen: false)
-                                .setPoll(value);
-                          });
+                          _model.deletePoll(widget.lobbyId!);
                         },
                       ),
                       TextButton(
@@ -137,8 +116,6 @@ class _PollMoleculeState extends State<PollMolecule> {
                           _model
                               .closePoll(widget.lobbyId!)
                               .then((_) => setState(() {}));
-                          Provider.of<PollStateNotifier>(context, listen: false)
-                              .getPoll();
                         },
                         child: Text(_model.poll!.isOpen!
                             ? 'Close poll'
@@ -177,22 +154,57 @@ class PollMoleModel extends FlutterFlowModel {
   void dispose() {}
 
   // Vote to a poll
-  Future<void> votePoll(String choice, String lobbyId) async {
-    poll = await UserController.votePoll(choice, lobbyId);
+  Future<void> votePoll(int index, String lobbyId) async {
+    selectedIndex == index ? selectedIndex = null : selectedIndex = index;
+    var {'title': title, 'voters': voters as List} = poll?.choices![
+        selectedIndex == null ? index : selectedIndex!]; // Selected choice
+    if (hasVoted()) {
+      if (voters.any((voter) => voter == FFAppState().currentUser?.id)) {
+        voters.remove(FFAppState().currentUser?.id);
+      } else {
+        removeVote();
+        voters.add(FFAppState().currentUser?.id);
+      }
+    } else {
+      voters.add(FFAppState().currentUser?.id);
+    }
+
+    await UserController.votePoll(title, lobbyId);
     count();
+  }
+
+  void removeVote() {
+    var choices = poll?.choices;
+    for (int i = 0; i < choices!.length; i++) {
+      final voters = choices[i]['voters'] as List;
+      voters.remove(FFAppState().currentUser!.id);
+    }
   }
 
   // Count voters
   void count() {
-    counts = poll!.choices!.map((e) => (e['voters'] as List).length).toList();
-    for (int i = 0; i < counts.length; i++) {
-      var element = poll!.choices![i];
-      if ((element['voters'] as List)
-          .any((element) => element == FFAppState().currentUser!.id)) {
+    final choices = poll!.choices;
+    counts = choices!.map((e) => (e['voters'] as List).length).toList();
+    for (int i = 0; i < choices.length; i++) {
+      final voters = choices[i]['voters'] as List;
+      if (voters.any((voter) => voter == FFAppState().currentUser?.id)) {
         selectedIndex = i;
         break;
       }
     }
+  }
+
+  // Check if user has voted
+  bool hasVoted() {
+    bool alreadyVoted = false;
+    final choices = poll?.choices;
+    for (int i = 0; i < choices!.length; i++) {
+      final voters = choices[i]['voters'] as List;
+      alreadyVoted =
+          voters.any((voter) => voter == FFAppState().currentUser!.id);
+      if (alreadyVoted) break;
+    }
+    return alreadyVoted;
   }
 
   // Close a poll

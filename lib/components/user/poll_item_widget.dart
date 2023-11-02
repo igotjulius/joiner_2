@@ -1,5 +1,4 @@
 import 'package:joiner_1/components/user/survey_poll_widget.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/widgets/molecules/poll_mole.dart';
@@ -36,8 +35,7 @@ class _PollItemWidgetState extends State<PollItemWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PollItemModel());
-    _model.pollStateNotifier =
-        PollStateNotifier(lobbyId: widget.lobbyId, polls: widget.polls);
+    _model.polls = widget.polls;
   }
 
   @override
@@ -50,60 +48,53 @@ class _PollItemWidgetState extends State<PollItemWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
-    return ChangeNotifierProvider.value(
-        value: _model.pollStateNotifier,
-        builder: (context, child) {
-          context.watch<PollStateNotifier>();
-          return Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).secondaryBackground,
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: FlutterFlowTheme.of(context).secondaryBackground,
+      ),
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Poll'),
+                FFButtonWidget(
+                  text: 'Add',
+                  options: FFButtonOptions(height: 40),
+                  onPressed: () {
+                    showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return SurveyPollWidget(lobbyId: widget.lobbyId!);
+                      },
+                    );
+                  },
+                ),
+              ],
             ),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Poll'),
-                      FFButtonWidget(
-                        text: 'Add',
-                        options: FFButtonOptions(height: 40),
-                        onPressed: () {
-                          showDialog<bool>(
-                            context: context,
-                            builder: (context) {
-                              return SurveyPollWidget(lobbyId: widget.lobbyId!);
-                            },
-                          ).then(
-                              (value) => _model.pollStateNotifier?.getPoll());
-                        },
-                      ),
-                    ],
-                  ),
-                  Flexible(
-                    child: _model.pollStateNotifier?.polls == null ||
-                            _model.pollStateNotifier!.polls!.isEmpty
-                        ? Text('empty')
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: _model.pollStateNotifier!.polls?.length,
-                            itemBuilder: (context, index) {
-                              return PollMolecule(
-                                poll: _model.pollStateNotifier!.polls?[index],
-                                lobbyId: _model.pollStateNotifier?.lobbyId,
-                                index: index,
-                              );
-                            },
-                          ),
-                  ),
-                ].divide(SizedBox(height: 10.0)),
-              ),
+            Flexible(
+              child: _model.polls == null || _model.polls!.isEmpty
+                  ? Text('empty')
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _model.polls?.length,
+                      itemBuilder: (context, index) {
+                        return PollMolecule(
+                          poll: _model.polls?[index],
+                          lobbyId: widget.lobbyId,
+                          index: index,
+                        );
+                      },
+                    ),
             ),
-          );
-        });
+          ].divide(SizedBox(height: 10.0)),
+        ),
+      ),
+    );
   }
 }

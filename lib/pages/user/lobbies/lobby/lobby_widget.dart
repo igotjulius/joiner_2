@@ -44,7 +44,6 @@ class _LobbyWidgetState extends State<LobbyWidget>
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
