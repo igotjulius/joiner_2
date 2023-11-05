@@ -19,14 +19,16 @@ class BudgetModel extends FlutterFlowModel {
     return FutureBuilder(
       future: UserController.getLobby(lobbyId),
       builder: (context, snapshot) {
+        print(snapshot.data);
         if (!snapshot.hasData)
           return Center(
             child: CircularProgressIndicator(),
-          );
-
+          ); 
+        else if (budget?.keys == null)
+          return Text("No Budget Plans yet.");
+        else  
         budget = snapshot.data?.budget;
         keys = budget?.keys.toList();
-
         return ListView.builder(
           itemCount: keys!.length,
           itemBuilder: (context, index) {

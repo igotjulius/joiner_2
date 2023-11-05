@@ -112,6 +112,9 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
+            if(_model.currentLobby!.budget?.keys == null || _model.currentLobby!.budget?.values == null)
+                Text("No Budget Plans yet")
+            else  
             ListView.separated(
                 shrinkWrap: true,
                 itemCount: _model.currentLobby!.budget!.length,
@@ -137,7 +140,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
     );
   }
 
-  Widget polls() {
+ Widget polls() {
     return Card(
       child: Container(
         width: double.infinity,

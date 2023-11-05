@@ -15,8 +15,8 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-const String serverUrl = 'http://localhost:443/';
-// const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+// const String serverUrl = 'http://localhost:443/';
+const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
