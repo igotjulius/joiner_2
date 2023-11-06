@@ -7,6 +7,8 @@ class ActiveLobbyMolecule extends StatelessWidget {
   ActiveLobbyMolecule(this.lobbies, {super.key});
   late final List<LobbyModel> lobbies;
 
+  final DateFormat dateFormat = DateFormat('yyyy/MM/dd');
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -111,7 +113,7 @@ class ActiveLobbyMolecule extends StatelessWidget {
                             ),
                             Text(
                               lobbies[index].startDate != null
-                                  ? "${lobbies[index].startDate!} - ${lobbies[index].startDate!}"
+                                  ? "${dateFormat.format(lobbies[index].startDate!)} - ${dateFormat.format(lobbies[index].endDate!)}"
                                   : '-',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium

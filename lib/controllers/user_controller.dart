@@ -99,7 +99,9 @@ class UserController {
       LobbyModel lobby, BuildContext context) async {
     await apiService.createLobby(lobby, _userId).then(
       (response) {
-        showDialog(
+        showSnackbar(context, response.message!);
+        context.goNamed('VirtualLobby');
+       /* showDialog(
           context: context,
           builder: (context) {
             return Dialog(
@@ -115,7 +117,7 @@ class UserController {
             );
           },
         );
-      },
+      */},
     );
   }
 
