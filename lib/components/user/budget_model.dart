@@ -19,7 +19,6 @@ class BudgetModel extends FlutterFlowModel {
     return FutureBuilder(
       future: UserController.getLobby(lobbyId),
       builder: (context, snapshot) {
-        print(snapshot.data);
         if (!snapshot.hasData)
           return Center(
             child: CircularProgressIndicator(),
