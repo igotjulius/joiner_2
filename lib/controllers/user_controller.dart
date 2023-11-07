@@ -101,7 +101,7 @@ class UserController {
       (response) {
         showSnackbar(context, response.message!);
         context.goNamed('VirtualLobby');
-       /* showDialog(
+        /* showDialog(
           context: context,
           builder: (context) {
             return Dialog(
@@ -117,8 +117,14 @@ class UserController {
             );
           },
         );
-      */},
+      */
+      },
     );
+  }
+
+  // Delete specific lobby
+  static Future<void> deleteLobby(String lobbyId) async {
+    await apiService.deleteLobby(_userId, lobbyId);
   }
 
   // Create message

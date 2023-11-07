@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/lobby_model.dart';
@@ -36,14 +37,10 @@ class ActiveLobbyMolecule extends StatelessWidget {
                       actions: [
                         TextButton(
                           onPressed: () async {
-                            // await showDialog(
-                            //   context: context,
-                            //   builder: (context) {
-                            //     return _deleteLobby(lobbies[index].id!);
-                            //   },
-                            // );
-                            // _deleteLobby(lobbies[index].id!);
-                            Navigator.pop(context);
+                            await UserController.deleteLobby(
+                                lobbies[index].id!);
+                            showSnackbar(context, 'Lobby Deleted');
+                            context.pop();
                           },
                           child: Text('Yes'),
                         ),
