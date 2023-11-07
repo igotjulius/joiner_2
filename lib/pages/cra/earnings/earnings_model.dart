@@ -15,10 +15,6 @@ class EarningsModel extends FlutterFlowModel {
     return FutureBuilder(
       future: CraController.getCraRentals(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData)
-          return Center(
-            child: CircularProgressIndicator(),
-          );
         List<RentalModel>? rentals = snapshot.data;
         if (rentals == null)
           return Center(
