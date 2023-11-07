@@ -60,6 +60,12 @@ abstract class ApiService {
     @Path('lobbyId') String lobbyId,
   );
 
+  @DELETE('user/{userId}/lobby/{lobbyId}')
+  Future<void> deleteLobby(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
+
   // Create message
   @POST('user/{userId}/lobby/{lobbyId}/conversation/{conversationId}/message')
   Future<void> createMessage(
