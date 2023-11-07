@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/service/api_service.dart';
+import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class CarItemWidget extends StatefulWidget {
   final CarModel car;
@@ -13,14 +15,77 @@ class CarItemWidget extends StatefulWidget {
 }
 
 class _CarItemWidgetState extends State<CarItemWidget> {
+ String? selectedAvailability;
+
+
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
         showDialog(
           context: context,
-          builder: (context) =>
-              CraController.editAvailability(widget.car.licensePlate!),
+          builder: (context) {
+            return Dialog(
+              child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Center(
+              child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   Radio<String>(
+                   value: 'Available',
+                   groupValue: selectedAvailability,
+                   onChanged: (value) {
+                    setState(() {
+                      selectedAvailability = value!;
+                    });
+                   },
+                   ),
+                   Text('Available'),
+                   Radio<String>(
+                   value: 'Not Available',
+                   groupValue: selectedAvailability,
+                   onChanged: (value) {
+                    setState(() {
+                      selectedAvailability = value!;
+                    });
+                   },
+                   ),
+                   Text('Not Available'),
+                 ],
+                ),
+               SizedBox(height: 16), 
+              CustomTextInput(
+              label: 'License Plate'
+              ),
+               SizedBox(height: 16), 
+              CustomTextInput(
+                label: 'Vehicle Type'
+              ),
+               SizedBox(height: 16), 
+              CustomTextInput(
+                label: 'Price'
+              ),
+               SizedBox(height: 16), 
+              FFButtonWidget(
+                onPressed: () {
+                  print('');
+                },
+                text: 'Edit',
+                options: 
+                FFButtonOptions(
+                  height: 40,
+                ),
+              )
+              ]
+              ),
+              )
+              )
+            );
+          }
         );
         setState(() {});
       },
