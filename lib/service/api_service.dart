@@ -133,6 +133,13 @@ abstract class ApiService {
     @Path('participantId') String participantId,
   );
 
+  // Leave from a lobby
+  @POST('user/{userId}/lobby/{lobbyId}/leave')
+  Future<void> leaveLobby(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
+
   // Accept an invite to join a lobby
   @POST('user/{userId}/invitation/accept')
   Future<void> acceptLobbyInvitation(

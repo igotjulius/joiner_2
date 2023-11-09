@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/invite_participants_model.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
-import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 
 class InviteParticipantsWidget extends StatefulWidget {
