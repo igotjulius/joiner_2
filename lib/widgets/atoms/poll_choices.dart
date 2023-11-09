@@ -30,7 +30,7 @@ class PollChoices extends StatelessWidget {
                   ),
             ),
             Text(
-              "${count} votes",
+              "$count votes",
               style: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: 'Roboto Flex',
                     fontSize: 16.0,
