@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/lobby_dashboard_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/poll_model.dart';
+import 'package:provider/provider.dart';
 
 class LobbyDashboardWidget extends StatefulWidget {
   final String? lobbyId;
@@ -21,8 +22,11 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
     _model.fetchLobby(widget.lobbyId!);
   }
 
+final DateFormat dateFormat = DateFormat('MMMM dd, yyyy');
+
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<FFAppState>();
     return Container(
       padding: EdgeInsets.all(20),
       color: Colors.white,
@@ -36,10 +40,9 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                 children: [
                   Text("${_model.currentLobby?.title}"),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Host: Peter Parker'),
-                      Text('Meeting place: LLC'),
+                      Text('Host: '),
+                      Text(appState.currentUser!.firstName! + ' ' + appState.currentUser!.lastName!, style: TextStyle(fontWeight: FontWeight.bold),),
                     ],
                   ),
                   Divider(),
@@ -69,35 +72,28 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Meeting Place'),
-                Text('LLC'),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Meeting Time'),
-                Text('9:00 AM'),
+                Text(_model.currentLobby!.meetingPlace == null ? 'No Meeting Place' : _model.currentLobby!.meetingPlace!, style: TextStyle(fontWeight: FontWeight.bold),),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Destination'),
-                Text('Moalboal Cebu'),
+                Text(_model.currentLobby!.destination == null ? 'No Destination' : _model.currentLobby!.destination!, style: TextStyle(fontWeight: FontWeight.bold),),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Planned Date'),
-                Text('Oct. 1, 2023'),
+                Text(_model.currentLobby!.startDate == null ? 'No Planned Date' : dateFormat.format(_model.currentLobby!.startDate!), style: TextStyle(fontWeight: FontWeight.bold),),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Budget'),
-                Text('Min. 100 / person'),
+                Text(_model.currentLobby!.budget == null ? 'No Budget' : "₱" + _model.totalBudget().toString() , style: TextStyle(fontWeight: FontWeight.bold),)
               ],
             ),
           ],

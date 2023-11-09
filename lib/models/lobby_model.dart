@@ -1,3 +1,4 @@
+import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -16,7 +17,7 @@ class LobbyModel {
   final String? meetingPlace;
   final DateTime? startDate;
   final DateTime? endDate;
-  final List<String>? participants;
+  final List<ParticipantModel>? participants;
   final Map<String, double>? budget;
   final List<PollModel>? poll;
   final String? conversation;

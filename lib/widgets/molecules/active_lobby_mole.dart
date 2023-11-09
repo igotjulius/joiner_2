@@ -7,7 +7,7 @@ class ActiveLobbyMolecule extends StatelessWidget {
   ActiveLobbyMolecule(this.lobbies, {super.key});
   late final List<LobbyModel> lobbies;
 
-  final DateFormat dateFormat = DateFormat('yyyy/MM/dd');
+  final DateFormat dateFormat = DateFormat('MM/dd/yyyy');
 
   @override
   Widget build(BuildContext context) {

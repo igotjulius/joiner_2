@@ -2,6 +2,8 @@ import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 class LobbiesModel extends FlutterFlowModel {
+
+  TabController? tabController;
   ///  State fields for stateful widgets in this page.
 
   /// Initialization and disposal methods.

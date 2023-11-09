@@ -1,3 +1,5 @@
+import 'package:joiner_1/widgets/atoms/promos_list.dart';
+
 import '../../../controllers/user_controller.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -23,6 +25,8 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => LobbiesModel());
+    _model.tabController =
+        TabController(length: 2, vsync: this, initialIndex: 0);
   }
 
   @override
@@ -69,15 +73,13 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
                     FlutterFlowTheme.of(context).secondaryBackground,
                 tabs: [
                   Tab(
-                    text: 'Lobby',
+                    text: 'Promos',
                   ),
                   Tab(
-                    text: 'Discover trips',
+                    text: 'Lobbies',
                   ),
                 ],
-                controller:
-                    TabController(length: 2, vsync: this, initialIndex: 0),
-                // create a local tabcontroller
+                controller: _model.tabController,
                 onTap: (value) => setState(() {}),
               ),
             ),
@@ -87,9 +89,18 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
         centerTitle: false,
         elevation: 2.0,
       ),
-      body: SafeArea(
-        top: true,
-        child: Column(
+      body: TabBarView(controller: _model.tabController, children: [
+        Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+                child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+              child: PromosList(),
+            )),
+          ],
+        ),
+        Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
@@ -100,7 +111,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
             ),
           ],
         ),
-      ),
+      ]),
     );
   }
 }

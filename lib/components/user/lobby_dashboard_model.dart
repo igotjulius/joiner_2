@@ -16,4 +16,13 @@ class LobbyDashboardModel extends FlutterFlowModel {
     currentLobby = await UserController.getLobby(lobbyId);
     updatePage(() {});
   }
+
+  double totalBudget (){
+    double total = 0;
+    currentLobby!.budget!.forEach((key, value) {
+      total += value;
+     });
+
+     return total;
+  }
 }

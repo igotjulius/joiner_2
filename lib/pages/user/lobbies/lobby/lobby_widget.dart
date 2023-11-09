@@ -23,6 +23,8 @@ class LobbyWidget extends StatefulWidget {
   _LobbyWidgetState createState() => _LobbyWidgetState();
 }
 
+final DateFormat dateFormat = DateFormat('MM/dd/yyyy');
+
 class _LobbyWidgetState extends State<LobbyWidget>
     with TickerProviderStateMixin {
   late LobbyModel _model;
@@ -97,7 +99,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                         ? (_model.currentLobby!.startDate == null
                             ? 'Date undecided'
                             : "${_model.currentLobby!.startDate.toString()}")
-                        : "${_model.currentLobby!.startDate.toString()} - ${_model.currentLobby!.endDate.toString()}",
+                        : "${dateFormat.format(_model.currentLobby!.startDate!)} - ${dateFormat.format(_model.currentLobby!.endDate!)}",
                     //'Date',
                     style: FlutterFlowTheme.of(context).headlineMedium.override(
                           fontFamily: 'Roboto Flex',
