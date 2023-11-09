@@ -1,9 +1,9 @@
-import '../../../controllers/user_controller.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'lobbies_model.dart';
+
 export 'lobbies_model.dart';
 
 class LobbiesWidget extends StatefulWidget {
@@ -34,7 +34,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
 
   @override
   Widget build(BuildContext context) {
-    final appState = context.watch<FFAppState>();
+    context.watch<FFAppState>();
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -95,7 +95,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
             Expanded(
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-                child: UserController.userLobbies(appState),
+                child: _model.getUserLobbies(),
               ),
             ),
           ],

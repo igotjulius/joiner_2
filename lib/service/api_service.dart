@@ -15,8 +15,8 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-const String serverUrl = 'http://10.0.2.2:443/'; // For mobile
-// const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'http://10.0.2.2:443/'; // For mobile
+const String serverUrl = 'http://localhost:443/';
 // const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
@@ -124,6 +124,14 @@ abstract class ApiService {
     @Path('lobbyId') String lobbyId, {
     @Header('Content-Type') String contentType = 'application/json',
   });
+
+  // Remove a participant from the lobby
+  @DELETE('user/{userId}/lobby/{lobbyId}/participant/{participantId}')
+  Future<void> removeParticipant(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+    @Path('participantId') String participantId,
+  );
 
   // Accept an invite to join a lobby
   @POST('user/{userId}/invitation/accept')

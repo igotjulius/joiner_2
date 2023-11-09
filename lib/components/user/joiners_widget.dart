@@ -1,5 +1,6 @@
 import 'package:joiner_1/components/user/invite_participants_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
+import 'package:joiner_1/models/lobby_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _JoinersWidgetState extends State<JoinersWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => JoinersModel());
+    _model.currentLobby = Provider.of<LobbyModel>(context, listen: false);
   }
 
   @override
@@ -60,10 +62,15 @@ class _JoinersWidgetState extends State<JoinersWidget> {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => InviteParticipantsWidget(
-                        lobbyId: widget.lobbyId,
-                      ),
+                      builder: (context) {
+                        return InviteParticipantsWidget(
+                          participants: _model.participants,
+                          lobbyId: widget.lobbyId,
+                          rebuildParent: _model.updatePage,
+                        );
+                      },
                     );
+                    setState(() {});
                   },
                   options: FFButtonOptions(height: 40),
                 ),
