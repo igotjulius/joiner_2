@@ -222,6 +222,11 @@ class UserController {
     await apiService.removeParticipant(_userId, lobbyId, participantId);
   }
 
+  // Leave from a lobby
+  static Future<void> leaveLobby(String lobbyId) async {
+    await apiService.leaveLobby(_userId, lobbyId);
+  }
+
   // Accept invitation to join a lobby
   static Future<void> acceptLobbyInvitation(String lobbyId) async {
     await apiService.acceptLobbyInvitation({'lobbyId': lobbyId}, _userId);

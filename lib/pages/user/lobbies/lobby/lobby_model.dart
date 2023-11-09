@@ -54,5 +54,9 @@ class LobbyModel extends FlutterFlowModel {
     return await UserController.getLobby(lobbyId);
   }
 
+  void leaveLobby(String lobbyId) async {
+    await UserController.leaveLobby(lobbyId);
+  }
+
   /// Additional helper methods are added here.
 }
