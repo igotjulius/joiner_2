@@ -21,6 +21,8 @@ class LobbyWidget extends StatefulWidget {
   _LobbyWidgetState createState() => _LobbyWidgetState();
 }
 
+final DateFormat dateFormat = DateFormat('MM/dd/yyyy');
+
 class _LobbyWidgetState extends State<LobbyWidget>
     with TickerProviderStateMixin {
   late LobbyModel _model;

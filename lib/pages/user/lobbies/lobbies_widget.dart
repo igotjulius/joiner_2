@@ -1,3 +1,6 @@
+import 'package:joiner_1/widgets/atoms/promos_list.dart';
+
+import '../../../controllers/user_controller.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +26,8 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => LobbiesModel());
+    _model.tabController =
+        TabController(length: 2, vsync: this, initialIndex: 0);
   }
 
   @override
@@ -51,36 +56,52 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.of(context).primary,
         automaticallyImplyLeading: false,
-        toolbarHeight: 0,
-        bottom: TabBar(
-          labelColor: FlutterFlowTheme.of(context).secondaryBackground,
-          unselectedLabelColor: FlutterFlowTheme.of(context).primaryBackground,
-          labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
-                fontFamily: 'Open Sans',
-                fontSize: 12.0,
-                fontWeight: FontWeight.bold,
+        title: Column(
+          children: [
+            Align(
+              alignment: Alignment(0, 0),
+              child: TabBar(
+                labelColor: FlutterFlowTheme.of(context).secondaryBackground,
+                unselectedLabelColor:
+                    FlutterFlowTheme.of(context).primaryBackground,
+                labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
+                      fontFamily: 'Open Sans',
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                unselectedLabelStyle: TextStyle(),
+                indicatorColor:
+                    FlutterFlowTheme.of(context).secondaryBackground,
+                tabs: [
+                  Tab(
+                    text: 'Promos',
+                  ),
+                  Tab(
+                    text: 'Lobbies',
+                  ),
+                ],
+                controller: _model.tabController,
+                onTap: (value) => setState(() {}),
               ),
-          unselectedLabelStyle: TextStyle(),
-          indicatorColor: FlutterFlowTheme.of(context).secondaryBackground,
-          tabs: [
-            Tab(
-              text: 'Lobby',
-            ),
-            Tab(
-              text: 'Discover trips',
             ),
           ],
-          controller: TabController(length: 2, vsync: this, initialIndex: 0),
-          // create a local tabcontroller
-          onTap: (value) => setState(() {}),
         ),
         actions: [],
         centerTitle: false,
         elevation: 2.0,
       ),
-      body: SafeArea(
-        top: true,
-        child: Column(
+      body: TabBarView(controller: _model.tabController, children: [
+        Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+                child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+              child: PromosList(),
+            )),
+          ],
+        ),
+        Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
@@ -91,7 +112,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
             ),
           ],
         ),
-      ),
+      ]),
     );
   }
 }
