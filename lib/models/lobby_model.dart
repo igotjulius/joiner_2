@@ -11,6 +11,7 @@ class LobbyModel {
     includeFromJson: true,
   )
   final String? id;
+  final String? hostId;
   final String? title;
   final String? description;
   final String? destination;
@@ -24,6 +25,7 @@ class LobbyModel {
 
   const LobbyModel({
     this.id,
+    this.hostId,
     this.title,
     this.description,
     this.destination,

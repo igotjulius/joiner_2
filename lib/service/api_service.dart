@@ -15,6 +15,7 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
+// const String serverUrl = 'http://10.0.2.2:443/'; // For mobile
 // const String serverUrl = 'http://localhost:443/';
 const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
@@ -56,6 +57,12 @@ abstract class ApiService {
   // Fetch specific lobby
   @GET('user/{userId}/lobby/{lobbyId}')
   Future<ResponseModel<LobbyModel>> getLobby(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
+
+  @DELETE('user/{userId}/lobby/{lobbyId}')
+  Future<void> deleteLobby(
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
   );
@@ -117,6 +124,21 @@ abstract class ApiService {
     @Path('lobbyId') String lobbyId, {
     @Header('Content-Type') String contentType = 'application/json',
   });
+
+  // Remove a participant from the lobby
+  @DELETE('user/{userId}/lobby/{lobbyId}/participant/{participantId}')
+  Future<void> removeParticipant(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+    @Path('participantId') String participantId,
+  );
+
+  // Leave from a lobby
+  @POST('user/{userId}/lobby/{lobbyId}/leave')
+  Future<void> leaveLobby(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
 
   // Accept an invite to join a lobby
   @POST('user/{userId}/invitation/accept')
@@ -247,6 +269,7 @@ abstract class ApiService {
   // Edit car availability
   @PUT('cra/{craUserId}/car/{licensePlate}')
   Future<ResponseModel> editAvailability(
+    @Body() CarModel car,
     @Path('licensePlate') String licensePlate,
   );
 

@@ -4,6 +4,10 @@ part 'participant_model.g.dart';
 
 @JsonSerializable()
 class ParticipantModel {
+  @JsonKey(
+    name: '_id',
+  )
+  final String? id;
   final String? userId;
   final String? name;
   final String? joinStatus;
@@ -11,6 +15,7 @@ class ParticipantModel {
   final List? pledges;
 
   const ParticipantModel({
+    this.id,
     this.userId,
     this.name,
     this.joinStatus,

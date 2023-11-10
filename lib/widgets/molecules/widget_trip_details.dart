@@ -80,10 +80,10 @@ class _WidgetTripDetailsState extends State<WidgetTripDetails> {
             ),
             FFButtonWidget(
               onPressed: () async {
-                final updatedLobby = LobbyModel(
-                  id: widget.currentLobby.id,
-                  title: _titleController.text,
-                );
+                // final updatedLobby = LobbyModel(
+                //   id: widget.currentLobby.id,
+                //   title: _titleController.text,
+                // );
                 // await apiService.updateLobby(updatedLobby);
               },
               text: 'Save',

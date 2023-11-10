@@ -12,9 +12,6 @@ import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
-import 'package:joiner_1/widgets/atoms/participant_atom.dart';
-import 'package:joiner_1/widgets/molecules/lobby_invitation_mole.dart';
-import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
 
 class UserController {
   static late String _userId = FFAppState().pref!.getString('userId')!;
@@ -39,50 +36,9 @@ class UserController {
   }
 
   // Fetch user lobbies
-  static FutureBuilder<ResponseModel<Map<String, List<LobbyModel>>>>
-      userLobbies(FFAppState appState) {
-    return FutureBuilder(
-      future: apiService.getLobbies(_userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data!.code == HttpStatus.ok) {
-            final Map<String, List<LobbyModel>> result = snapshot.data!.data!;
-            // final activeLobbies = result['active']!;
-            final {'active': activeLobbies, 'pending': pendingLobbies} = result;
-
-            return Column(
-              children: [
-                if (pendingLobbies.length != 0)
-                  Column(
-                    children: [
-                      Text('Invitations'),
-                      LobbyInvitationMolecule(lobbies: pendingLobbies),
-                    ],
-                  ),
-                Column(
-                  children: [
-                    activeLobbies.length == 0
-                        ? Text('No active lobbies')
-                        : ActiveLobbyMolecule(activeLobbies),
-                  ],
-                ),
-              ],
-            );
-          } else {
-            return Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Text(snapshot.data!.message!),
-                ),
-              ],
-            );
-          }
-        } else
-          return Center(child: CircularProgressIndicator());
-      },
-    );
+  static Future<ResponseModel<Map<String, List<LobbyModel>>>>
+      getLobbies() async {
+    return await apiService.getLobbies(_userId);
   }
 
   // Fetch specific lobby
@@ -101,7 +57,7 @@ class UserController {
       (response) {
         showSnackbar(context, response.message!);
         context.goNamed('VirtualLobby');
-       /* showDialog(
+        /* showDialog(
           context: context,
           builder: (context) {
             return Dialog(
@@ -117,8 +73,14 @@ class UserController {
             );
           },
         );
-      */},
+      */
+      },
     );
+  }
+
+  // Delete specific lobby
+  static Future<void> deleteLobby(String lobbyId) async {
+    await apiService.deleteLobby(_userId, lobbyId);
   }
 
   // Create message
@@ -243,34 +205,26 @@ class UserController {
   }
 
   // Fetch participants of a lobby
-  static FutureBuilder<ResponseModel<List<ParticipantModel>>> getParticipants(
+  static Future<ResponseModel<List<ParticipantModel>>> getParticipants(
       String lobbyId) {
-    return FutureBuilder(
-      future: apiService.getParticipants(_userId, lobbyId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final result = snapshot.data!.data;
-          return ListView.builder(
-              shrinkWrap: true,
-              itemCount: result!.length,
-              itemBuilder: (context, index) {
-                return ParticipantAtom(
-                  name: result[index].name,
-                  suffixLabel: result[index].joinStatus,
-                );
-              });
-        } else
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-      },
-    );
+    return apiService.getParticipants(_userId, lobbyId);
   }
 
   // Invite participant/s to a lobby
   static Future<void> inviteParticipants(
       List<ParticipantModel> participants, String lobbyId) async {
     await apiService.inviteParticipants(participants, _userId, lobbyId);
+  }
+
+  // Remove participant from the lobby
+  static Future<void> removeParticipant(
+      String lobbyId, String participantId) async {
+    await apiService.removeParticipant(_userId, lobbyId, participantId);
+  }
+
+  // Leave from a lobby
+  static Future<void> leaveLobby(String lobbyId) async {
+    await apiService.leaveLobby(_userId, lobbyId);
   }
 
   // Accept invitation to join a lobby

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/widgets/atoms/participant_atom.dart';
 import 'package:joiner_1/models/participant_model.dart';
@@ -9,6 +8,8 @@ import 'package:joiner_1/models/participant_model.dart';
 class InviteParticipantsModel extends FlutterFlowModel {
   List<ParticipantModel>? invitedFriends;
   final String? lobbyId;
+  late List<ParticipantModel>? participants;
+  late Function(Function())? rebuildParent;
 
   InviteParticipantsModel({this.lobbyId});
 
@@ -16,11 +17,10 @@ class InviteParticipantsModel extends FlutterFlowModel {
   void dispose() {}
 
   @override
-  void initState(BuildContext context) {
-    invitedFriends = [];
-  }
+  void initState(BuildContext context) {}
 
-  FutureBuilder<ResponseModel<List<Map<String, String>>>?> friendList() {
+  FutureBuilder<ResponseModel<List<Map<String, String>>>?> friendList(
+      BuildContext context) {
     return FutureBuilder(
       future: UserController.getFriends(),
       builder: (context, snapshot) {
@@ -40,38 +40,32 @@ class InviteParticipantsModel extends FlutterFlowModel {
             if (element['status'] == 'Accepted') friends.add(element);
           },
         );
+        friends = filter(friends);
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Friends'),
-                FFButtonWidget(
-                    text: 'Invite',
-                    onPressed: () {
-                      sendInvitation();
-                    },
-                    options: FFButtonOptions(height: 40)),
-              ],
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: friends.length,
-              itemBuilder: (context, index) {
-                return ParticipantAtom(
-                  name: friends[index]['friendName'],
-                  friendId: friends[index]['friendId'],
-                  showCheckBox: true,
-                  eventCallback: addFriendToInvites,
-                );
-              },
-            ),
-          ],
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: friends.length,
+          itemBuilder: (context, index) {
+            return ParticipantAtom(
+              name: friends[index]['friendName'],
+              userId: friends[index]['friendId'],
+              showCheckBox: true,
+              eventCallback: addFriendToInvites,
+            );
+          },
         );
       },
     );
+  }
+
+  List<Map<String, String>> filter(List<Map<String, String>> friends) {
+    participants?.forEach((participant) {
+      friends.removeWhere((friend) {
+        return friend['friendId'] == participant.userId;
+      });
+    });
+
+    return friends;
   }
 
   void addFriendToInvites(String friendId, String name) {
