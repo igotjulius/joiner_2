@@ -66,7 +66,8 @@ class ResponseModel<T> {
       else if (data.containsKey('friendId')) {
         converted = json
             .map((element) => {
-                  'friendName': element['friendName'] as String,
+                  'firstName': element['firstName'] as String,
+                  'lastName': element['lastName'] as String,
                   'friendId': element['friendId'] as String,
                   'status': element['status'] as String,
                 })

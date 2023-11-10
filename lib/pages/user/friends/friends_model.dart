@@ -35,9 +35,10 @@ class FriendsModel extends FlutterFlowModel {
         List<Map<String, String>> pending = [], accepted = [];
         result.forEach(
           (element) {
-            if (element['status'] == 'Pending')
+            if (element['status'] == 'Accepted')
+              accepted.add(element);
+            else
               pending.add(element);
-            else if (element['status'] == 'Accepted') accepted.add(element);
           },
         );
 
@@ -63,7 +64,7 @@ class FriendsModel extends FlutterFlowModel {
       itemCount: list.length,
       itemBuilder: (context, index) {
         return PendingFriendAtom(
-          name: list[index]['friendName'],
+          name: '${list[index]['firstName']} ${list[index]['lastName']}',
           friendId: list[index]['friendId'],
           eventAction: acceptFriendRequest,
         );
@@ -77,7 +78,7 @@ class FriendsModel extends FlutterFlowModel {
       itemCount: list.length,
       itemBuilder: (context, index) {
         return AcceptedFriendAtom(
-          name: list[index]['friendName'],
+          name: '${list[index]['firstName']} ${list[index]['lastName']}',
         );
       },
     );

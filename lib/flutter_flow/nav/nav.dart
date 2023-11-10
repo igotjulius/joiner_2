@@ -85,11 +85,6 @@ List<FFRoute> userRoutes() {
           builder: ((context, state) => LobbyCreationWidget()),
         ),
         GoRoute(
-          name: 'InviteJoiners',
-          path: 'invite',
-          builder: (context, params) => InviteJoinersWidget(),
-        ),
-        GoRoute(
           name: 'Lobby',
           path: ':lobbyId',
           builder: (context, state) {

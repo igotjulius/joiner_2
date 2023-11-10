@@ -1,6 +1,4 @@
 import 'package:joiner_1/widgets/atoms/promos_list.dart';
-
-import '../../../controllers/user_controller.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -56,35 +54,27 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.of(context).primary,
         automaticallyImplyLeading: false,
-        title: Column(
-          children: [
-            Align(
-              alignment: Alignment(0, 0),
-              child: TabBar(
-                labelColor: FlutterFlowTheme.of(context).secondaryBackground,
-                unselectedLabelColor:
-                    FlutterFlowTheme.of(context).primaryBackground,
-                labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
-                      fontFamily: 'Open Sans',
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                unselectedLabelStyle: TextStyle(),
-                indicatorColor:
-                    FlutterFlowTheme.of(context).secondaryBackground,
-                tabs: [
-                  Tab(
-                    text: 'Promos',
-                  ),
-                  Tab(
-                    text: 'Lobbies',
-                  ),
-                ],
-                controller: _model.tabController,
-                onTap: (value) => setState(() {}),
+        toolbarHeight: 0,
+        bottom: TabBar(
+          labelColor: FlutterFlowTheme.of(context).secondaryBackground,
+          unselectedLabelColor: FlutterFlowTheme.of(context).primaryBackground,
+          labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
+                fontFamily: 'Open Sans',
+                fontSize: 12.0,
+                fontWeight: FontWeight.bold,
               ),
+          unselectedLabelStyle: TextStyle(),
+          indicatorColor: FlutterFlowTheme.of(context).secondaryBackground,
+          tabs: [
+            Tab(
+              text: 'Promos',
+            ),
+            Tab(
+              text: 'Lobbies',
             ),
           ],
+          controller: _model.tabController,
+          onTap: (value) => setState(() {}),
         ),
         actions: [],
         centerTitle: false,

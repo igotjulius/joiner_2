@@ -61,6 +61,7 @@ abstract class ApiService {
     @Path('lobbyId') String lobbyId,
   );
 
+  // Delete a specific lobby
   @DELETE('user/{userId}/lobby/{lobbyId}')
   Future<void> deleteLobby(
     @Path('userId') String userId,

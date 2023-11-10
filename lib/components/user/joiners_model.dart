@@ -32,7 +32,8 @@ class JoinersModel extends FlutterFlowModel {
                   bool showRemove = currentUserId == currentLobby?.hostId &&
                       currentLobby?.hostId != participants?[index].userId;
                   return ParticipantAtom(
-                    name: participants?[index].name,
+                    name:
+                        '${participants?[index].firstName} ${participants?[index].lastName}',
                     userId: participants?[index].id,
                     suffixLabel: participants?[index].joinStatus,
                     showRemoveOption: showRemove,

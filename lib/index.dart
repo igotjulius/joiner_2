@@ -9,5 +9,3 @@ export '/pages/user/friends/friends_widget.dart' show FriendsWidget;
 export '/pages/user/account/account_widget.dart' show AccountWidget;
 export 'pages/user/friends/invite_friend/invite_friend_widget.dart'
     show InviteFriendWidget;
-export 'pages/user/lobbies/invite_joiners/invite_joiners_widget.dart'
-    show InviteJoinersWidget;

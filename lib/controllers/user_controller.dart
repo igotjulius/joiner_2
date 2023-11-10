@@ -57,23 +57,6 @@ class UserController {
       (response) {
         showSnackbar(context, response.message!);
         context.goNamed('VirtualLobby');
-        /* showDialog(
-          context: context,
-          builder: (context) {
-            return Dialog(
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Text(response.message!),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      */
       },
     );
   }

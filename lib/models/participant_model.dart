@@ -9,7 +9,8 @@ class ParticipantModel {
   )
   final String? id;
   final String? userId;
-  final String? name;
+  final String? firstName;
+  final String? lastName;
   final String? joinStatus;
   final String? type;
   final List? pledges;
@@ -17,7 +18,8 @@ class ParticipantModel {
   const ParticipantModel({
     this.id,
     this.userId,
-    this.name,
+    this.firstName,
+    this.lastName,
     this.joinStatus,
     this.type,
     this.pledges,
