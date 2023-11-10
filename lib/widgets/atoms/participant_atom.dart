@@ -5,17 +5,19 @@ import 'package:joiner_1/widgets/atoms/participant_atom_model.dart';
 import 'package:provider/provider.dart';
 
 class ParticipantAtom extends StatefulWidget {
-  final String? name;
+  final String? firstName;
+  final String? lastName;
   final String? userId;
   final bool? showCheckBox;
-  final Function(String, String)? eventCallback;
+  final Function(String, String, String)? eventCallback;
   final String? suffixLabel;
   final bool? showRemoveOption;
   final Function(Function())? rebuildParent;
 
   const ParticipantAtom({
     Key? key,
-    this.name,
+    this.firstName,
+    this.lastName,
     this.userId,
     this.showCheckBox,
     this.eventCallback,
@@ -68,7 +70,7 @@ class _ParticipantAtomState extends State<ParticipantAtom> {
                       SizedBox(width: 12.1),
                       Expanded(
                         child: Text(
-                          widget.name!,
+                          '${widget.firstName!} ${widget.lastName!}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.normal,
@@ -83,7 +85,8 @@ class _ParticipantAtomState extends State<ParticipantAtom> {
                               _model.isChecked = value!;
                               widget.eventCallback!(
                                 _model.friendId!,
-                                widget.name!,
+                                widget.firstName!,
+                                widget.lastName!
                               );
                             });
                           },

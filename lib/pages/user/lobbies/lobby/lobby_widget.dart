@@ -84,8 +84,8 @@ class _LobbyWidgetState extends State<LobbyWidget>
                               _model.currentLobby!.endDate
                           ? (_model.currentLobby!.startDate == null
                               ? 'Date undecided'
-                              : "${_model.currentLobby!.startDate.toString()}")
-                          : "${_model.currentLobby!.startDate.toString()} - ${_model.currentLobby!.endDate.toString()}",
+                              : "${dateFormat.format(_model.currentLobby!.startDate!)}")
+                          : "${dateFormat.format(_model.currentLobby!.startDate!)} - ${dateFormat.format(_model.currentLobby!.endDate!)}",
                       //'Date',
                       style:
                           FlutterFlowTheme.of(context).headlineMedium.override(

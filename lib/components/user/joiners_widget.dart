@@ -51,33 +51,35 @@ class _JoinersWidgetState extends State<JoinersWidget> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Joiners'),
-                FFButtonWidget(
-                  text: 'INVITE',
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return InviteParticipantsWidget(
-                          participants: _model.participants,
-                          lobbyId: widget.lobbyId,
-                          rebuildParent: _model.updatePage,
-                        );
-                      },
-                    );
-                    setState(() {});
-                  },
-                  options: FFButtonOptions(height: 40),
-                ),
-              ],
-            ),
-            _model.getParticipants(widget.lobbyId!),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Joiners'),
+                  FFButtonWidget(
+                    text: 'INVITE',
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return InviteParticipantsWidget(
+                            participants: _model.participants,
+                            lobbyId: widget.lobbyId,
+                            rebuildParent: _model.updatePage,
+                          );
+                        },
+                      );
+                      setState(() {});
+                    },
+                    options: FFButtonOptions(height: 40),
+                  ),
+                ],
+              ),
+              _model.getParticipants(widget.lobbyId!),
+            ],
+          ),
         ),
       ),
     );
