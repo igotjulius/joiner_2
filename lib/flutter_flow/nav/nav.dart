@@ -145,13 +145,6 @@ List<FFRoute> userRoutes() {
       path: '/account',
       builder: (context, params) =>
           params.isEmpty ? NavBarPage(initialPage: 'Account') : AccountWidget(),
-      routes: [
-        GoRoute(
-          name: 'TransactionHistory',
-          path: 'transactions',
-          builder: (context, params) => TransactionHistoryWidget(),
-        ),
-      ],
     ),
   ];
 }

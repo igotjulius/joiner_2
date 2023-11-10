@@ -1,5 +1,3 @@
-import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/models/car_rental_model.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -157,18 +155,23 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                                         size: 24,
                                       ),
                                       onPressed: () async {
-                                        _model.datePicked =
-                                            await showDateRangePicker(
+                                        showDateRangePicker(
                                           context: context,
                                           firstDate: getCurrentTimestamp,
                                           lastDate: DateTime(2050),
-                                        );
-                                        String start = DateFormat('yyyy-MM-dd')
-                                            .format(_model.datePicked!.start);
-                                        String end = DateFormat('yyyy-MM-dd')
-                                            .format(_model.datePicked!.end);
-                                        _model.textController2.text =
-                                            start + " - " + end;
+                                        ).then((value) {
+                                          if (value != null) {
+                                            _model.datePicked = value;
+                                            String start =
+                                                DateFormat('yyyy-MM-dd')
+                                                    .format(value.start);
+                                            String end =
+                                                DateFormat('yyyy-MM-dd')
+                                                    .format(value.end);
+                                            _model.textController2.text =
+                                                start + " - " + end;
+                                          }
+                                        });
                                       },
                                     ),
                                     Expanded(
@@ -232,15 +235,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
             ),
             InkWell(
               onTap: () async {
-                String? redirect;
-                await UserController.postRental(CarRentalModel(
-                        licensePlate: widget.licensePlate,
-                        startRental: _model.datePicked!.start.toString(),
-                        endRental: _model.datePicked!.end.toString(),
-                        duration: _model.datePicked!.duration.inDays))
-                    .then((value) => redirect = value.data);
-                launchURL(redirect!);
-                context.pushNamed('carRentals');
+                _model.bookNow(widget.licensePlate!, context);
               },
               child: Container(
                 width: double.infinity,

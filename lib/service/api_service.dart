@@ -92,14 +92,6 @@ abstract class ApiService {
     @Query('availability') String availability = 'Available',
   });
 
-  // Rent a car
-  @POST('user/{userId}/rent/car')
-  Future<void> bookCar(
-    @Body() Map<String, dynamic> map,
-    @Path('userId') String userId, {
-    @Header('Content-Type') String contentType = 'application/json',
-  });
-
   // Create new budget category
   @POST('user/{userId}/lobby/{lobbyId}/budget')
   Future<void> addBudget(

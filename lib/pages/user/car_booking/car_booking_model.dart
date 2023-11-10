@@ -1,5 +1,7 @@
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/car_rental_model.dart';
 
 class CarBookingModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
@@ -29,6 +31,20 @@ class CarBookingModel extends FlutterFlowModel {
   }
 
   /// Action blocks are added here.
+  void bookNow(String licensePlate, BuildContext context) {
+    var redirect;
+    UserController.postRental(
+      CarRentalModel(
+          licensePlate: licensePlate,
+          startRental: datePicked!.start.toString(),
+          endRental: datePicked!.end.toString(),
+          duration: datePicked!.duration.inDays),
+    ).then((value) {
+      redirect = value.data;
+      launchURL(redirect!);
+      context.pushNamed('CarRentals');
+    });
+  }
 
   /// Additional helper methods are added here.
 }

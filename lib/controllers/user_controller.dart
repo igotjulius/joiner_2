@@ -283,14 +283,6 @@ class UserController {
     );
   }
 
-  // Book corresponding car
-  static Future<void> bookCar(String licensePlate) async {
-    await apiService
-        .bookCar({'licensePlate': licensePlate}, _userId).catchError((error) {
-      print(error);
-    });
-  }
-
   // Users Renting a Car
   static Future<ResponseModel<String>> postRental(
       CarRentalModel carRental) async {
