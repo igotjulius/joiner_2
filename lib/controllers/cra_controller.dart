@@ -37,9 +37,10 @@ class CraController {
   }
 
   // Edit car availability
-  static FutureBuilder<ResponseModel> editAvailability(String licensePlate) {
+  static FutureBuilder<ResponseModel> editAvailability(
+    CarModel car,String licensePlate) {
     return FutureBuilder(
-        future: apiService.editAvailability(licensePlate),
+        future: apiService.editAvailability(car, _craUserId, licensePlate),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Dialog(
@@ -62,4 +63,4 @@ class CraController {
     final res = await apiService.getCraRentals(_craUserId);
     return res.data!;
   }
-}
+}     

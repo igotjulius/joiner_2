@@ -218,9 +218,12 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
-  // Edit car availability
-  @PUT('cra/{craUserId}/car/{licensePlate}')
+
+  //Edit care availability
+  @PUT('cra/{craUserId}/car{licensePlate}')
   Future<ResponseModel> editAvailability(
+    @Body() CarModel car, 
+    @Path('craUserId') String craUserId,
     @Path('licensePlate') String licensePlate,
   );
 

@@ -16,11 +16,11 @@ class CarItemWidget extends StatefulWidget {
 
 class _CarItemWidgetState extends State<CarItemWidget> {
  String? selectedAvailability;
-
-
+TextEditingController? priceInput;
 
   @override
   Widget build(BuildContext context) {
+    priceInput = TextEditingController();
     return InkWell(
       onTap: () async {
         showDialog(
@@ -58,21 +58,16 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                  ],
                 ),
                SizedBox(height: 16), 
-              CustomTextInput(
-              label: 'License Plate'
-              ),
-               SizedBox(height: 16), 
-              CustomTextInput(
-                label: 'Vehicle Type'
-              ),
-               SizedBox(height: 16), 
-              CustomTextInput(
-                label: 'Price'
-              ),
+               
+              CustomTextInput(label: 'Price', controller: priceInput,),
                SizedBox(height: 16), 
               FFButtonWidget(
                 onPressed: () {
-                  print('');
+                  var nCar = CarModel(
+                    availability: selectedAvailability,
+                    price: double.parse(priceInput!.text),
+                  );
+                  CraController.editAvailability(nCar, widget.car.licensePlate!);
                 },
                 text: 'Edit',
                 options: 
