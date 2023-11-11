@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/components/cra/add_car_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
@@ -10,9 +9,7 @@ import 'package:joiner_1/models/car_model.dart';
 import '../../controllers/cra_controller.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../widgets/atoms/text_input.dart';
-import 'dart:typed_data';
 import 'dart:html' as html;
-import 'package:image_picker_web/image_picker_web.dart';
 
 class AddCarModal extends StatefulWidget {
   const AddCarModal({super.key});
@@ -65,7 +62,17 @@ class _AddCarModalState extends State<AddCarModal> {
           child: Center(
             child: Column(
               children: [
-                Text('Register your Vehicle'),
+                Row(
+                  children: [
+                    CloseButton(
+                      onPressed: () async {Navigator.pop(context);},
+                    ),
+                    SizedBox(
+                      width: 85,
+                    ),
+                    Text('Register your Vehicle'),
+                  ],
+                ),
                 GestureDetector(
                   onTap: _pickImage,
                   child: Container(
