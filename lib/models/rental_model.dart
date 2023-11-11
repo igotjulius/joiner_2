@@ -20,6 +20,7 @@ class RentalModel {
   final double? price;
   final String? paymentId;
   final String? paymentStatus;
+  final DateTime? createdAt;
 
   const RentalModel({
     this.id,
@@ -33,6 +34,7 @@ class RentalModel {
     this.price,
     this.paymentId,
     this.paymentStatus,
+    this.createdAt,
   });
 
   factory RentalModel.fromJson(Map<String, dynamic> json) =>
