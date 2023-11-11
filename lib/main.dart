@@ -10,9 +10,14 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'index.dart';
 import 'pages/cra/car/cra_car_widget.dart';
 import 'pages/cra/earnings/earnings_widget.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+   options: DefaultFirebaseOptions.currentPlatform,
+);
   usePathUrlStrategy();
 
   final appState = FFAppState(); // Initialize FFAppState
