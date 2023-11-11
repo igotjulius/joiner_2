@@ -16,8 +16,8 @@ part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
 // const String serverUrl = 'http://10.0.2.2:443/'; // For mobile
-// const String serverUrl = 'http://localhost:443/';
-const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService =
     ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -36,7 +36,7 @@ abstract class ApiService {
 
   // Login user
   @POST('user/login')
-  Future<ResponseModel<User>> loginUser(
+  Future<ResponseModel<User?>> loginUser(
     @Body() Map<String, String> map, {
     @Header('Content-Type') String contentType = 'application/json',
   });

@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
+import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/pages/sign_up_page/sign_up_widget.dart';
-import 'package:joiner_1/pages/user/car_booking/car_booking_widget.dart';
+import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
 import '/index.dart';
 import '/main.dart';
@@ -163,6 +164,14 @@ List<FFRoute> craRoutes() {
       path: '/cars',
       builder: (context, params) =>
           params.isEmpty ? NavBarPage(initialPage: 'Cars') : CraCarWidget(),
+    ),
+    FFRoute(
+      name: 'CraRentals',
+      path: '/craRentals',
+      builder: (context, params) => NavBarPage(
+        initialPage: 'CraRentals',
+        page: CraRentalsWidget(),
+      ),
     ),
     FFRoute(
       name: 'Account',

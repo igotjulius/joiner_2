@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
-import 'package:joiner_1/widgets/atoms/cra_rental_info.dart';
+import 'package:joiner_1/widgets/atoms/cra_transaction_info.dart';
 
 class EarningsModel extends FlutterFlowModel {
   @override
@@ -30,7 +30,7 @@ class EarningsModel extends FlutterFlowModel {
                 // TODO:
                 // Go to Rental Details page
               },
-              child: CRARentalInfo(
+              child: CraTransactionInfo(
                 name: rental.renterName,
                 date: rental.startRental.toString(),
                 duration: rental.duration,

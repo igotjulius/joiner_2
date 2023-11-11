@@ -40,6 +40,7 @@ class LoginPageModel extends FlutterFlowModel {
     User? currentUser;
     appState.setIsCra(isCra);
     AppStateNotifier.instance.setRoutes();
+
     if (appState.isCra) {
       currentUser = await CraController.loginCra(
           textController1.text, textController2.text, appState);

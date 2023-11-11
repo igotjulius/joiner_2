@@ -1,4 +1,5 @@
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
+import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -183,6 +184,7 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       'Earnings': EarningsWidget(),
       'Cars': CraCarWidget(),
+      'CraRentals': CraRentalsWidget(),
       'Account': CraAccountWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
@@ -214,6 +216,11 @@ class _NavBarPageState extends State<NavBarPage> {
           GButton(
             icon: Icons.directions_car,
             text: 'Cars',
+            iconSize: 24.0,
+          ),
+          GButton(
+            icon: Icons.receipt_rounded,
+            text: 'Rentals',
             iconSize: 24.0,
           ),
           GButton(

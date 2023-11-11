@@ -118,7 +118,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                     ),
                     wrapWithModel(
                       model: _model.craModel,
-                      child: CRASignUpMole(),
+                      child: CraSignUpMole(),
                       updateCallback: () => setState(() {}),
                     ),
                   ],

@@ -166,7 +166,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget>
                   controller: _model.tabController,
                   children: [
                     UserSignUpMole(),
-                    CRASignUpMole(),
+                    CraSignUpMole(),
                   ],
                 ),
               ),

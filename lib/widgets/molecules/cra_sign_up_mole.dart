@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
-class CRASignUpMole extends StatefulWidget {
-  const CRASignUpMole({super.key});
+class CraSignUpMole extends StatefulWidget {
+  const CraSignUpMole({super.key});
 
   @override
-  State<CRASignUpMole> createState() => _CRASignUpMoleState();
+  State<CraSignUpMole> createState() => _CraSignUpMoleState();
 }
 
-class _CRASignUpMoleState extends State<CRASignUpMole> {
-  late CRASignUpMoleModel _model;
+class _CraSignUpMoleState extends State<CraSignUpMole> {
+  late CraSignUpMoleModel _model;
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CRASignUpMoleModel());
+    _model = createModel(context, () => CraSignUpMoleModel());
   }
 
   @override
@@ -61,7 +61,7 @@ class _CRASignUpMoleState extends State<CRASignUpMole> {
   }
 }
 
-class CRASignUpMoleModel extends FlutterFlowModel {
+class CraSignUpMoleModel extends FlutterFlowModel {
   TextEditingController? fNameController;
   TextEditingController? lNameController;
   TextEditingController? emailController;

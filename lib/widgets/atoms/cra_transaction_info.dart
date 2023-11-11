@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CRARentalInfo extends StatefulWidget {
+class CraTransactionInfo extends StatefulWidget {
   final String? name, date;
   final int? duration;
   final double? amount;
-  const CRARentalInfo({
+  const CraTransactionInfo({
     super.key,
     this.name,
     this.date,
@@ -13,10 +13,10 @@ class CRARentalInfo extends StatefulWidget {
   });
 
   @override
-  State<CRARentalInfo> createState() => _CRARentalInfoState();
+  State<CraTransactionInfo> createState() => _CraTransactionInfoState();
 }
 
-class _CRARentalInfoState extends State<CRARentalInfo> {
+class _CraTransactionInfoState extends State<CraTransactionInfo> {
   @override
   Widget build(BuildContext context) {
     return Container(
