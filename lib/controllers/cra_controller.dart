@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/service/api_service.dart';
-import 'package:joiner_1/utils/generic_response.dart';
 import '../models/car_model.dart';
 
 class CraController {
@@ -31,9 +29,9 @@ class CraController {
   }
 
   // Get all registered cars of corresponding CRA
-  static Future<List<CarModel>> getCraCars() async {
+  static Future<List<CarModel>?> getCraCars() async {
     final res = await apiService.getCraCars(_craUserId);
-    return res.data!;
+    return res.data;
   }
 
   // Register car under corresponding CRA
@@ -42,25 +40,9 @@ class CraController {
   }
 
   // Edit car availability
-  static FutureBuilder<ResponseModel> editAvailability(
-      CarModel car, String licensePlate) {
-    return FutureBuilder(
-        future: apiService.editAvailability(car, _craUserId, licensePlate),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Dialog(
-              child: Center(
-                child: Text(snapshot.data!.message!),
-              ),
-            );
-          } else {
-            return Dialog(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        });
+  static Future<void> editAvailability(
+      CarModel car, String licensePlate) async {
+    await apiService.editAvailability(car, _craUserId, licensePlate);
   }
 
   // Fetch CRA's rentals

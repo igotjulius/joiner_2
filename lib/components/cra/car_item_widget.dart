@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/components/cra/car_item_model.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/models/car_model.dart';
@@ -14,66 +16,73 @@ class CarItemWidget extends StatefulWidget {
 
 class _CarItemWidgetState extends State<CarItemWidget> {
   String? selectedAvailability;
-  String? selectedAvailability;
-  TextEditingController? priceInput;
+  late CarItemModel _model;
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => CarItemModel());
+    _model.priceInput = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
-    priceInput = TextEditingController();
     return InkWell(
-      onTap: () async {
+      onTap: () {
         showDialog(
-            context: context,
-            builder: (context) {
-              return Dialog(
-                  child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Center(
-                        child: Column(children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Radio<String>(
-                                value: 'Available',
-                                groupValue: selectedAvailability,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedAvailability = value!;
-                                  });
-                                },
-                              ),
-                              Text('Available'),
-                              Radio<String>(
-                                value: 'Not Available',
-                                groupValue: selectedAvailability,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedAvailability = value!;
-                                  });
-                                },
-                              ),
-                              Text('Not Available'),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          CustomTextInput(label: 'License Plate'),
-                          SizedBox(height: 16),
-                          CustomTextInput(label: 'Vehicle Type'),
-                          SizedBox(height: 16),
-                          CustomTextInput(label: 'Price'),
-                          SizedBox(height: 16),
-                          FFButtonWidget(
-                            onPressed: () {
-                              print('');
-                            },
-                            text: 'Edit',
-                            options: FFButtonOptions(
-                              height: 40,
-                            ),
-                          )
-                        ]),
-                      )));
-            });
+          context: context,
+          builder: (context) {
+            return Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Center(
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Radio<String>(
+                          value: 'Available',
+                          groupValue: selectedAvailability,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedAvailability = value!;
+                            });
+                          },
+                        ),
+                        Text('Available'),
+                        Radio<String>(
+                          value: 'Not Available',
+                          groupValue: selectedAvailability,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedAvailability = value!;
+                            });
+                          },
+                        ),
+                        Text('Not Available'),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    CustomTextInput(
+                      label: 'Price',
+                      controller: _model.priceInput,
+                    ),
+                    SizedBox(height: 16),
+                    FFButtonWidget(
+                      onPressed: () {
+                        _model.editCar(widget.car.licensePlate!);
+                      },
+                      text: 'Edit',
+                      options: FFButtonOptions(
+                        height: 40,
+                      ),
+                    )
+                  ]),
+                ),
+              ),
+            );
+          },
+        );
         setState(() {});
       },
       child: Container(
@@ -144,6 +153,58 @@ class _CarItemWidgetState extends State<CarItemWidget> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget editDialog() {
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Radio<String>(
+                  value: 'Available',
+                  groupValue: selectedAvailability,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedAvailability = value!;
+                    });
+                  },
+                ),
+                Text('Available'),
+                Radio<String>(
+                  value: 'Not Available',
+                  groupValue: selectedAvailability,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedAvailability = value!;
+                    });
+                  },
+                ),
+                Text('Not Available'),
+              ],
+            ),
+            SizedBox(height: 16),
+            CustomTextInput(
+              label: 'Price',
+              controller: _model.priceInput,
+            ),
+            SizedBox(height: 16),
+            FFButtonWidget(
+              onPressed: () {
+                _model.editCar(widget.car.licensePlate!);
+              },
+              text: 'Edit',
+              options: FFButtonOptions(
+                height: 40,
+              ),
+            )
+          ]),
         ),
       ),
     );

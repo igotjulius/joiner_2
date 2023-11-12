@@ -11,14 +11,10 @@ class CraCarModel extends FlutterFlowModel {
   @override
   void dispose() {}
 
-  FutureBuilder<List<CarModel>> getCars() {
+  FutureBuilder<List<CarModel>?> getCars() {
     return FutureBuilder(
         future: CraController.getCraCars(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
           List<CarModel>? cars = snapshot.data;
           if (cars == null)
             return Center(
