@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "headers": [
+      {
+        "source": "**/*.(png|jpg|jpeg)",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          }
+        ]
+      }
+    ],
+    "public": "public"
+  }
+}

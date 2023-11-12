@@ -1,5 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:joiner_1/components/cra/add_car_model.dart';
@@ -9,7 +10,6 @@ import 'package:joiner_1/models/car_model.dart';
 import '../../controllers/cra_controller.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../widgets/atoms/text_input.dart';
-import 'dart:html' as html;
 
 class AddCarModal extends StatefulWidget {
   const AddCarModal({super.key});
@@ -20,8 +20,9 @@ class AddCarModal extends StatefulWidget {
 
 class _AddCarModalState extends State<AddCarModal> {
   late AddCarModel _model;
-  File? _selectedImage;
-  String? _imageBytes;
+  PlatformFile? pickedImage;
+  UploadTask? uploadTask;
+  String? imageUrl;
 
   @override
   void initState() {
@@ -35,23 +36,37 @@ class _AddCarModalState extends State<AddCarModal> {
   }
 
   Future<void> _pickImage() async {
-    html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-    uploadInput.click();
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
 
-    uploadInput.onChange.listen((event) {
-      final uploadedFile = uploadInput.files!.first;
-      final reader = html.FileReader();
-
-      reader.readAsDataUrl(uploadedFile);
-
-      reader.onLoadEnd.listen((loadEndEvent) {
-        setState(() {
-          _selectedImage = File(uploadedFile.name);
-          _imageBytes = reader.result as String;
-        });
-      });
+    setState(() {
+      pickedImage = result.files.first;
     });
   }
+
+  Future<String?> _uploadImage() async {
+  try {
+    if (pickedImage == null || pickedImage!.bytes == null) {
+      print("Error: Picked image or bytes are null");
+      return null;
+    }
+
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final path = 'images/$fileName.png';
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    final metadata = SettableMetadata(contentType: 'image/png');
+    await ref.putData(pickedImage!.bytes!, metadata);
+
+     return await ref.getDownloadURL();
+  } catch (e) {
+    print('Error uploading image: $e');
+
+    return null;
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +80,13 @@ class _AddCarModalState extends State<AddCarModal> {
                 Row(
                   children: [
                     CloseButton(
-                      onPressed: () async {Navigator.pop(context);},
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
                     ),
-                    SizedBox(
-                      width: 85,
-                    ),
-                    Text('Register your Vehicle'),
                   ],
                 ),
+                Text('Register your Vehicle'),
                 GestureDetector(
                   onTap: _pickImage,
                   child: Container(
@@ -81,12 +95,16 @@ class _AddCarModalState extends State<AddCarModal> {
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black),
                     ),
-                    child: _selectedImage != null
-                        ? Image.memory(
-                            base64.decode(_imageBytes!.split(',').last),
-                            fit: BoxFit.cover,
-                          )
-                        : Icon(Icons.add_photo_alternate),
+                    child: pickedImage != null && pickedImage!.bytes != null
+                        ? Image.memory(pickedImage!.bytes!,
+                            width: double.infinity, fit: BoxFit.fill)
+                        : Container(
+                            child: Text(
+                              'Tap to Upload Image',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            alignment: Alignment(0, 0),
+                          ),
                   ),
                 ),
                 CustomTextInput(
@@ -157,15 +175,22 @@ class _AddCarModalState extends State<AddCarModal> {
                 FFButtonWidget(
                     text: 'Register Car',
                     onPressed: () async {
+                    final imageUrl = await _uploadImage();
+                      if (imageUrl == null) {
+                      SnackBar(content: Text('Image Error'),);
+                      return;
+                    }
                       final car = CarModel(
                         licensePlate: _model.licenseController.text,
                         vehicleType: _model.vehicleTypeController.text,
                         availableStartDate: _model.datePicked!.start,
                         availableEndDate: _model.datePicked!.end,
                         price: double.parse(_model.priceController.text),
+                        photoUrl: imageUrl
                       );
+                      _uploadImage();
                       await CraController.addCar(car);
-                      return Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     options: FFButtonOptions(height: 40.0)),
               ].divide(

@@ -253,7 +253,7 @@ abstract class ApiService {
 
   // Get all cars of corresponding CRA
   @GET('cra/{craUserId}/car')
-  Future<ResponseModel<List<CarModel>>> getCraCars(
+  Future<ResponseModel<List<CarModel?>>> getCraCars(
     @Path('craUserId') String craUserId,
   );
 

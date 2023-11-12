@@ -4,9 +4,6 @@ part 'car_model.g.dart';
 
 @JsonSerializable()
 class CarModel {
-  @JsonKey(
-    name: '_id',
-  )
   final String? licensePlate;
   final String? ownerName;
   final String? ownerId;
@@ -15,6 +12,7 @@ class CarModel {
   final DateTime? availableStartDate;
   final DateTime? availableEndDate;
   final double? price;
+  final String? photoUrl;
 
   const CarModel({
     this.licensePlate,
@@ -25,6 +23,7 @@ class CarModel {
     this.availableStartDate,
     this.availableEndDate,
     this.price,
+    this.photoUrl
   });
 
   factory CarModel.fromJson(Map<String, dynamic> json) =>

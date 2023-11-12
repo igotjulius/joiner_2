@@ -31,7 +31,7 @@ class CraController {
   }
 
   // Get all registered cars of corresponding CRA
-  static Future<List<CarModel>> getCraCars() async {
+  static Future<List<CarModel?>> getCraCars() async {
     final res = await apiService.getCraCars(_craUserId);
     return res.data!;
   }
