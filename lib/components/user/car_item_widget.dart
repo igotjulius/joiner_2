@@ -6,8 +6,7 @@ import 'package:joiner_1/models/car_model.dart';
 
 class CarItemWidget extends StatefulWidget {
   final CarModel? car;
-  final Function callback;
-  const CarItemWidget(this.callback, {super.key, required this.car});
+  const CarItemWidget({super.key, required this.car});
 
   @override
   _CarItemWidgetState createState() => _CarItemWidgetState();
@@ -20,7 +19,6 @@ class _CarItemWidgetState extends State<CarItemWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => CarItemModel());
-
     _model.car = widget.car;
   }
 
@@ -28,8 +26,10 @@ class _CarItemWidgetState extends State<CarItemWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        context.pushNamed('Booking',
-            extra: {'licensePlate': _model.car!.licensePlate});
+        context.pushNamed(
+          'Booking',
+          extra: {'licensePlate': _model.car!.licensePlate},
+        );
       },
       child: Container(
         clipBehavior: Clip.antiAlias,
@@ -73,7 +73,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
               ),
             ),
             Flexible(
-              fit: FlexFit.tight,
+              fit: FlexFit.loose,
               child: Container(
                 color: Color(0xff52b2fa),
                 child: Padding(

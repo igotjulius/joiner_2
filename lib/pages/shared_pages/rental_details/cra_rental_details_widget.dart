@@ -54,10 +54,15 @@ class _RentalDetailsState extends State<RentalDetails> {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Rented by:'),
-                        Text('${widget.rental?.renterName}'),
-                      ],
+                      children: FFAppState().isCra
+                          ? [
+                              Text('Rented by'),
+                              Text('${widget.rental?.renterName}'),
+                            ]
+                          : [
+                              Text('Owned by'),
+                              Text('${widget.rental?.vehicleOwner}'),
+                            ],
                     ),
                   ],
                 ),

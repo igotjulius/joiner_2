@@ -4,9 +4,6 @@ part 'car_model.g.dart';
 
 @JsonSerializable()
 class CarModel {
-  @JsonKey(
-    name: '_id',
-  )
   final String? licensePlate;
   final String? ownerName;
   final String? ownerId;
