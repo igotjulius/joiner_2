@@ -14,9 +14,12 @@ class CarItemWidget extends StatefulWidget {
 
 class _CarItemWidgetState extends State<CarItemWidget> {
   String? selectedAvailability;
+  String? selectedAvailability;
+  TextEditingController? priceInput;
 
   @override
   Widget build(BuildContext context) {
+    priceInput = TextEditingController();
     return InkWell(
       onTap: () async {
         showDialog(
@@ -34,7 +37,6 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                                 value: 'Available',
                                 groupValue: selectedAvailability,
                                 onChanged: (value) {
-                                  print(value);
                                   setState(() {
                                     selectedAvailability = value!;
                                   });
