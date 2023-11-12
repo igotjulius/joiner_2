@@ -1,5 +1,6 @@
 // Export pages
-export 'pages/login_page/login_page_widget.dart' show LoginPageWidget;
+export 'pages/shared_pages/login_page/login_page_widget.dart'
+    show LoginPageWidget;
 export 'pages/user/lobbies/lobbies_widget.dart' show LobbiesWidget;
 export 'pages/user/lobbies/lobby_creation/lobby_creation_widget.dart'
     show LobbyCreationWidget;

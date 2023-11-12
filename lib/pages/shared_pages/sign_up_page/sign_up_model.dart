@@ -8,12 +8,12 @@ import 'package:joiner_1/widgets/molecules/user_sign_up_mole.dart';
 class SignUpPageModel extends FlutterFlowModel {
   TabController? tabController;
 
-  late CRASignUpMoleModel craModel;
+  late CraSignUpMoleModel craModel;
   late UserSignUpMoleModel userModel;
 
   @override
   void initState(BuildContext context) {
-    craModel = createModel(context, () => CRASignUpMoleModel());
+    craModel = createModel(context, () => CraSignUpMoleModel());
     userModel = createModel(context, () => UserSignUpMoleModel());
   }
 

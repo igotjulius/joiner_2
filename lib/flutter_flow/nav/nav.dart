@@ -1,9 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
-import 'package:joiner_1/pages/sign_up_page/sign_up_widget.dart';
-import 'package:joiner_1/pages/user/car_booking/car_booking_widget.dart';
+import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
+import 'package:joiner_1/pages/shared_pages/rental_details/cra_rental_details_widget.dart';
+import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
+import 'package:joiner_1/pages/user/rentals/car_booking/cancelled/cancelled_widget.dart';
+import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
+import 'package:joiner_1/pages/user/rentals/car_booking/success/success_widget.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
 import '/index.dart';
 import '/main.dart';
@@ -108,18 +113,38 @@ List<FFRoute> userRoutes() {
             ),
       routes: [
         GoRoute(
-            name: 'Listings',
-            path: 'listings',
-            builder: (context, params) => ListingsWidget(),
-            routes: [
-              GoRoute(
-                  name: 'Booking',
-                  path: 'booking',
-                  builder: (context, state) {
-                    String obj = state.extraMap['licensePlate'] as String;
-                    return CarBookingWidget(licensePlate: obj);
-                  })
-            ]),
+          name: 'Listings',
+          path: 'listings',
+          builder: (context, params) => ListingsWidget(),
+        ),
+        GoRoute(
+          name: 'Booking',
+          path: 'booking',
+          builder: (context, state) {
+            String obj = state.extraMap['licensePlate'] as String;
+            return CarBookingWidget(licensePlate: obj);
+          },
+        ),
+        GoRoute(
+          name: 'RentalDetails',
+          path: 'rentalDetails',
+          builder: (context, state) {
+            final RentalModel rental = state.extraMap['rental'] as RentalModel;
+            return RentalDetails(
+              rental: rental,
+            );
+          },
+        ),
+        GoRoute(
+          name: 'PaymentSuccess',
+          path: 'success',
+          builder: (context, state) => SuccessWidget(),
+        ),
+        GoRoute(
+          name: 'CancelledPayment',
+          path: 'cancelled',
+          builder: (context, state) => CancelledWidget(),
+        ),
       ],
     ),
     FFRoute(
@@ -158,6 +183,26 @@ List<FFRoute> craRoutes() {
       path: '/cars',
       builder: (context, params) =>
           params.isEmpty ? NavBarPage(initialPage: 'Cars') : CraCarWidget(),
+    ),
+    FFRoute(
+      name: 'CraRentals',
+      path: '/craRentals',
+      builder: (context, params) => NavBarPage(
+        initialPage: 'CraRentals',
+        page: CraRentalsWidget(),
+      ),
+      routes: [
+        GoRoute(
+          name: 'RentalDetails',
+          path: 'rentalDetails',
+          builder: (context, state) {
+            final RentalModel rental = state.extraMap['rental'] as RentalModel;
+            return RentalDetails(
+              rental: rental,
+            );
+          },
+        ),
+      ],
     ),
     FFRoute(
       name: 'Account',

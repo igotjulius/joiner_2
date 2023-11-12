@@ -1,5 +1,3 @@
-import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_model.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -40,6 +38,19 @@ class _ListingsWidgetState extends State<ListingsWidget> {
     context.watch<FFAppState>();
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        title: Text(
+          'Rent a Car',
+          style: FlutterFlowTheme.of(context).headlineMedium.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      ),
       body: SafeArea(
         top: true,
         child: Padding(
@@ -48,10 +59,7 @@ class _ListingsWidgetState extends State<ListingsWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: UserController.getAvailableCars(setState),
-                ),
+                _model.getAvailableCars(setState),
               ].divide(
                 SizedBox(
                   height: 20,
@@ -61,30 +69,6 @@ class _ListingsWidgetState extends State<ListingsWidget> {
           ),
         ),
       ),
-      appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-          automaticallyImplyLeading: false,
-          leading: FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30,
-            borderWidth: 1,
-            buttonSize: 54,
-            icon: Icon(
-              Icons.arrow_back_rounded,
-              color: FlutterFlowTheme.of(context).secondaryText,
-              size: 24,
-            ),
-            onPressed: () async {
-              context.pop();
-            },
-          ),
-          title: Text(
-                  'Rent a Car',
-                  style: FlutterFlowTheme.of(context).headlineMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-        ),
     );
   }
 }

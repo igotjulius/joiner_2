@@ -8,7 +8,8 @@
         android:label="Joiner 1"
         tools:replace="android:label"
         android:icon="@mipmap/ic_launcher"
-        android:requestLegacyExternalStorage="true">
+        android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".MainActivity"
@@ -45,7 +46,9 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="joiner1" android:host="joiner1.com" />
+                <data android:scheme="https" android:host="com.mycompany.joiner1" />
+                <data android:scheme="http" />
+                <!-- <data android:scheme="https" android:host="capstone-joiner.com" /> -->
             </intent-filter>
 
         </activity>

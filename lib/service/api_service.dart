@@ -36,7 +36,7 @@ abstract class ApiService {
 
   // Login user
   @POST('user/login')
-  Future<ResponseModel<User>> loginUser(
+  Future<ResponseModel<User?>> loginUser(
     @Body() Map<String, String> map, {
     @Header('Content-Type') String contentType = 'application/json',
   });

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
-import 'package:joiner_1/pages/sign_up_page/sign_up_model.dart';
+import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_model.dart';
 import 'package:joiner_1/widgets/molecules/cra_sign_up_mole.dart';
 import 'package:joiner_1/widgets/molecules/user_sign_up_mole.dart';
 
@@ -118,7 +118,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                     ),
                     wrapWithModel(
                       model: _model.craModel,
-                      child: CRASignUpMole(),
+                      child: CraSignUpMole(),
                       updateCallback: () => setState(() {}),
                     ),
                   ],
