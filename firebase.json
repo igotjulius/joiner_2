@@ -1,16 +1,13 @@
 {
   "hosting": {
-    "headers": [
-      {
-        "source": "**/*.(png|jpg|jpeg)",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "*"
-          }
-        ]
-      }
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
     ],
-    "public": "public"
+    "frameworksBackend": {
+      "region": "us-central1"
+    }
   }
 }
