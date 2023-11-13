@@ -20,15 +20,12 @@ class CraCarModel extends FlutterFlowModel {
             return Center(
               child: Text('No registered cars'),
             );
-          double width = MediaQuery.of(context).size.width;
-          return GridView.extent(
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            maxCrossAxisExtent: width / 2,
-            children: List.generate(
-              cars.length,
-              (i) => CarItemWidget(car: cars[i]),
-            ),
+
+          return ListView.builder(
+            itemCount: cars.length,
+            itemBuilder: (context, index) {
+              return CarItemWidget(car: cars[index]);
+            },
           );
         });
   }

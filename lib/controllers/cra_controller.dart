@@ -46,8 +46,8 @@ class CraController {
   }
 
   // Fetch CRA's rentals
-  static Future<List<RentalModel>> getCraRentals() async {
+  static Future<List<RentalModel>?> getCraRentals() async {
     final res = await apiService.getCraRentals(_craUserId);
-    return res.data!;
+    return res.data;
   }
 }

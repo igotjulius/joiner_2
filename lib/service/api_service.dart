@@ -269,7 +269,7 @@ abstract class ApiService {
 
   // Fetch Cra's rentals
   @GET('cra/{craUserId}/rent')
-  Future<ResponseModel<List<RentalModel>>> getCraRentals(
+  Future<ResponseModel<List<RentalModel>?>> getCraRentals(
     @Path('craUserId') String craUserId,
   );
 

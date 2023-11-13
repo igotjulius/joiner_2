@@ -114,8 +114,12 @@ class _CarItemWidgetState extends State<CarItemWidget> {
               padding: const EdgeInsets.all(10),
               child: CachedNetworkImage(
                 imageUrl: widget.car.photoUrl!,
-                errorWidget: (context, url, error) => Icon(Icons.error, color: Colors.red,),
-                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
                 width: 130.0,
                 height: 80.0,
                 fit: BoxFit.fill,
@@ -152,12 +156,13 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                       ],
                     ),
                     SizedBox(
-                          height: 10,
-                        ),
+                      height: 10,
+                    ),
                     Row(
                       children: [
                         Text("Plate Number: "),
-                        Text("${widget.car.licensePlate}", style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text("${widget.car.licensePlate}",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ],

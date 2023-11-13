@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/widgets/atoms/user_rental_info.dart';
@@ -13,14 +11,10 @@ class CraRentalsModel extends FlutterFlowModel {
   @override
   void dispose() {}
 
-  FutureBuilder<List<RentalModel>> getCraRentals() {
+  FutureBuilder<List<RentalModel>?> getCraRentals() {
     return FutureBuilder(
       future: CraController.getCraRentals(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData)
-          return Center(
-            child: CircularProgressIndicator(),
-          );
         final rentals = snapshot.data;
         if (rentals == null)
           return Center(

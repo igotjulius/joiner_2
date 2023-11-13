@@ -11,7 +11,7 @@ class EarningsModel extends FlutterFlowModel {
   @override
   void dispose() {}
 
-  FutureBuilder<List<RentalModel>> getCraRentals() {
+  FutureBuilder<List<RentalModel>?> getCraRentals() {
     return FutureBuilder(
       future: CraController.getCraRentals(),
       builder: (context, snapshot) {
