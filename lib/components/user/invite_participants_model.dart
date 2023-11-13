@@ -47,8 +47,8 @@ class InviteParticipantsModel extends FlutterFlowModel {
           itemCount: friends.length,
           itemBuilder: (context, index) {
             return ParticipantAtom(
-              name:
-                  '${friends[index]['firstName']} ${friends[index]['lastName']}',
+              firstName: friends[index]['firstName'],
+              lastName: friends[index]['lastName'],
               userId: friends[index]['friendId'],
               showCheckBox: true,
               eventCallback: addFriendToInvites,
@@ -69,11 +69,9 @@ class InviteParticipantsModel extends FlutterFlowModel {
     return friends;
   }
 
-  void addFriendToInvites(String friendId, String name) {
+  void addFriendToInvites(String friendId, String firstName, String lastName) {
     invitedFriends!.add(new ParticipantModel(
-      userId: friendId,
-      firstName: name,
-    ));
+        userId: friendId, firstName: firstName, lastName: lastName));
   }
 
   void sendInvitation() async {

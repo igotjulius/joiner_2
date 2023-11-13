@@ -5,6 +5,7 @@ import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CarItemWidget extends StatefulWidget {
   final CarModel car;
@@ -111,11 +112,13 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Image.asset(
-                'assets/images/car.png',
-                width: 114.0,
+              child: CachedNetworkImage(
+                imageUrl: widget.car.photoUrl!,
+                errorWidget: (context, url, error) => Icon(Icons.error, color: Colors.red,),
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                width: 130.0,
                 height: 80.0,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
             Padding(
@@ -146,6 +149,15 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                           width: 4,
                         ),
                         Text('/ day'),
+                      ],
+                    ),
+                    SizedBox(
+                          height: 10,
+                        ),
+                    Row(
+                      children: [
+                        Text("Plate Number: "),
+                        Text("${widget.car.licensePlate}", style: TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ],

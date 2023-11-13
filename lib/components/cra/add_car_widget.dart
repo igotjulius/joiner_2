@@ -1,3 +1,6 @@
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:joiner_1/components/cra/add_car_model.dart';
@@ -17,6 +20,9 @@ class AddCarModal extends StatefulWidget {
 
 class _AddCarModalState extends State<AddCarModal> {
   late AddCarModel _model;
+  PlatformFile? pickedImage;
+  UploadTask? uploadTask;
+  String? imageUrl;
 
   @override
   void initState() {
@@ -29,99 +35,168 @@ class _AddCarModalState extends State<AddCarModal> {
     _model.priceController ??= TextEditingController();
   }
 
+  Future<void> _pickImage() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    setState(() {
+      pickedImage = result.files.first;
+    });
+  }
+
+  Future<String?> _uploadImage() async {
+  try {
+    if (pickedImage == null || pickedImage!.bytes == null) {
+      print("Error: Picked image or bytes are null");
+      return null;
+    }
+
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final path = 'images/$fileName.png';
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    final metadata = SettableMetadata(contentType: 'image/png');
+    await ref.putData(pickedImage!.bytes!, metadata);
+
+     return await ref.getDownloadURL();
+  } catch (e) {
+    print('Error uploading image: $e');
+
+    return null;
+  }
+}
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Center(
-          child: Column(
-            children: [
-              Text('Register your Vehicle'),
-              SizedBox(
-                height: 10,
-              ),
-              CustomTextInput(
-                label: 'License Plate',
-                controller: _model.licenseController,
-                validator: _model.licenseControllerValidator,
-              ),
-              CustomTextInput(
-                label: 'Vehicle Type',
-                controller: _model.vehicleTypeController,
-                validator: _model.vehicleTypeControllerValidator,
-              ),
-              InkWell(
-                onTap: () async {
-                  _model.datePicked = await showDateRangePicker(
-                    context: context,
-                    firstDate: getCurrentTimestamp,
-                    lastDate: DateTime(2050),
-                  );
-                  if (_model.datePicked != null)
-                    setState(() {
-                      _model.availabilityController.text =
-                          '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
-                    });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(
-                      color: Color(0xff9c9c9c),
+    return SingleChildScrollView(
+      child: Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    CloseButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
                     ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                        child: Icon(
-                          Icons.calendar_today,
-                          color: Color(0xFF52B2FA),
-                          size: 24.0,
-                        ),
-                      ),
-                      Text(
-                        _model.datePicked != null
-                            ? (_model.datePicked!.duration.inDays == 0
-                                ? "${DateFormat('MMM d').format(_model.datePicked!.start)}"
-                                : "${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}")
-                            : '',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Roboto Flex',
-                              fontWeight: FontWeight.w500,
+                  ],
+                ),
+                Text('Register your Vehicle'),
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                    ),
+                    child: pickedImage != null && pickedImage!.bytes != null
+                        ? Image.memory(pickedImage!.bytes!,
+                            width: double.infinity, fit: BoxFit.fill)
+                        : Container(
+                            child: Text(
+                              'Tap to Upload Image',
+                              style: TextStyle(color: Colors.grey),
                             ),
-                      ),
-                    ].divide(SizedBox(width: 10.0)),
+                            alignment: Alignment(0, 0),
+                          ),
                   ),
                 ),
-              ),
-              CustomTextInput(
-                label: 'Price',
-                controller: _model.priceController,
-                validator: _model.priceControllerValidator,
-                keyboardType: TextInputType.number,
-                inputFormatters: FilteringTextInputFormatter.digitsOnly,
-              ),
-              FFButtonWidget(
-                  text: 'Register Car',
-                  onPressed: () async {
-                    final car = CarModel(
-                      licensePlate: _model.licenseController.text,
-                      vehicleType: _model.vehicleTypeController.text,
-                      availableStartDate: _model.datePicked!.start,
-                      availableEndDate: _model.datePicked!.end,
-                      price: double.parse(_model.priceController.text),
+                CustomTextInput(
+                  label: 'License Plate',
+                  controller: _model.licenseController,
+                  validator: _model.licenseControllerValidator,
+                ),
+                CustomTextInput(
+                  label: 'Vehicle Type',
+                  controller: _model.vehicleTypeController,
+                  validator: _model.vehicleTypeControllerValidator,
+                ),
+                InkWell(
+                  onTap: () async {
+                    _model.datePicked = await showDateRangePicker(
+                      context: context,
+                      firstDate: getCurrentTimestamp,
+                      lastDate: DateTime(2050),
                     );
-                    await CraController.addCar(car);
-                    return Navigator.pop(context);
+                    if (_model.datePicked != null)
+                      setState(() {
+                        _model.availabilityController.text =
+                            '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
+                      });
                   },
-                  options: FFButtonOptions(height: 40.0)),
-            ].divide(
-              SizedBox(
-                height: 10,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: Color(0xff9c9c9c),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 10),
+                          child: Icon(
+                            Icons.calendar_today,
+                            color: Color(0xFF52B2FA),
+                            size: 24.0,
+                          ),
+                        ),
+                        Text(
+                          _model.datePicked != null
+                              ? (_model.datePicked!.duration.inDays == 0
+                                  ? "${DateFormat('MMM d').format(_model.datePicked!.start)}"
+                                  : "${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}")
+                              : '',
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Roboto Flex',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                        ),
+                      ].divide(SizedBox(width: 10.0)),
+                    ),
+                  ),
+                ),
+                CustomTextInput(
+                  label: 'Price',
+                  controller: _model.priceController,
+                  validator: _model.priceControllerValidator,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: FilteringTextInputFormatter.digitsOnly,
+                ),
+                FFButtonWidget(
+                    text: 'Register Car',
+                    onPressed: () async {
+                    final imageUrl = await _uploadImage();
+                      if (imageUrl == null) {
+                      SnackBar(content: Text('Image Error'),);
+                      return;
+                    }
+                      final car = CarModel(
+                        licensePlate: _model.licenseController.text,
+                        vehicleType: _model.vehicleTypeController.text,
+                        availableStartDate: _model.datePicked!.start,
+                        availableEndDate: _model.datePicked!.end,
+                        price: double.parse(_model.priceController.text),
+                        photoUrl: imageUrl
+                      );
+                      _uploadImage();
+                      await CraController.addCar(car);
+                      Navigator.pop(context);
+                    },
+                    options: FFButtonOptions(height: 40.0)),
+              ].divide(
+                SizedBox(
+                  height: 10,
+                ),
               ),
             ),
           ),

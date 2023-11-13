@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/lobby_dashboard_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/poll_model.dart';
-import 'package:provider/provider.dart';
 
 class LobbyDashboardWidget extends StatefulWidget {
   final String? lobbyId;
@@ -22,11 +21,10 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
     _model.fetchLobby(widget.lobbyId!);
   }
 
-final DateFormat dateFormat = DateFormat('MMMM dd, yyyy');
+  final DateFormat dateFormat = DateFormat('MMMM dd, yyyy');
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<FFAppState>();
     return Container(
       padding: EdgeInsets.all(20),
       color: Colors.white,
@@ -38,11 +36,32 @@ final DateFormat dateFormat = DateFormat('MMMM dd, yyyy');
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("${_model.currentLobby?.title}"),
+                  Text(
+                    "${_model.currentLobby?.title}",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   Row(
                     children: [
                       Text('Host: '),
-                      Text(appState.currentUser!.firstName! + ' ' + appState.currentUser!.lastName!, style: TextStyle(fontWeight: FontWeight.bold),),
+                      Text(
+                        _model.hostParticipant(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Joiners: '),
+                      Text(
+                        _model
+                            .getAllParticipants()
+                            .map((participant) => '${participant.firstName} ${participant.lastName}')
+                            .join(', '),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                   Divider(),
@@ -72,28 +91,48 @@ final DateFormat dateFormat = DateFormat('MMMM dd, yyyy');
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Meeting Place'),
-                Text(_model.currentLobby!.meetingPlace == null ? 'No Meeting Place' : _model.currentLobby!.meetingPlace!, style: TextStyle(fontWeight: FontWeight.bold),),
+                Text(
+                  _model.currentLobby!.meetingPlace == null
+                      ? 'No Meeting Place'
+                      : _model.currentLobby!.meetingPlace!,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Destination'),
-                Text(_model.currentLobby!.destination == null ? 'No Destination' : _model.currentLobby!.destination!, style: TextStyle(fontWeight: FontWeight.bold),),
+                Text(
+                  _model.currentLobby!.destination == null
+                      ? 'No Destination'
+                      : _model.currentLobby!.destination!,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Planned Date'),
-                Text(_model.currentLobby!.startDate == null ? 'No Planned Date' : dateFormat.format(_model.currentLobby!.startDate!), style: TextStyle(fontWeight: FontWeight.bold),),
+                Text(
+                  _model.currentLobby!.startDate == null
+                      ? 'No Planned Date'
+                      : dateFormat.format(_model.currentLobby!.startDate!),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Budget'),
-                Text(_model.currentLobby!.budget == null ? 'No Budget' : "₱" + _model.totalBudget().toString() , style: TextStyle(fontWeight: FontWeight.bold),)
+                Text(
+                  _model.currentLobby!.budget == null
+                      ? 'No Budget'
+                      : "₱" + _model.totalBudget().toString(),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
               ],
             ),
           ],
@@ -108,35 +147,36 @@ final DateFormat dateFormat = DateFormat('MMMM dd, yyyy');
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
-            if(_model.currentLobby!.budget?.keys == null || _model.currentLobby!.budget?.values == null)
-                Text("No Budget Plans yet")
-            else  
-            ListView.separated(
-                shrinkWrap: true,
-                itemCount: _model.currentLobby!.budget!.length,
-                separatorBuilder: (context, index) => Divider(
-                      height: 10,
-                    ),
-                itemBuilder: (context, index) {
-                  List<String> budgetCategories =
-                      _model.currentLobby!.budget!.keys.toList();
-                  List<double> budgetExpenses =
-                      _model.currentLobby!.budget!.values.toList();
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("${budgetCategories[index]}"),
-                      Text("₱${budgetExpenses[index]}"),
-                    ],
-                  );
-                })
+            if (_model.currentLobby!.budget?.keys == null ||
+                _model.currentLobby!.budget?.values == null)
+              Text("No Budget Plans yet")
+            else
+              ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: _model.currentLobby!.budget!.length,
+                  separatorBuilder: (context, index) => Divider(
+                        height: 10,
+                      ),
+                  itemBuilder: (context, index) {
+                    List<String> budgetCategories =
+                        _model.currentLobby!.budget!.keys.toList();
+                    List<double> budgetExpenses =
+                        _model.currentLobby!.budget!.values.toList();
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("${budgetCategories[index]}"),
+                        Text("₱${budgetExpenses[index]}"),
+                      ],
+                    );
+                  })
           ],
         ),
       ),
     );
   }
 
- Widget polls() {
+  Widget polls() {
     return Card(
       child: Container(
         width: double.infinity,

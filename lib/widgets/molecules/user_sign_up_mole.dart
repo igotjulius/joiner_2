@@ -20,32 +20,34 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          CustomTextInput(
-            label: 'First name',
-            controller: _model.fNameController,
-          ),
-          CustomTextInput(
-            label: 'Last name',
-            controller: _model.lNameController,
-          ),
-          CustomTextInput(
-            label: 'Email',
-            controller: _model.emailController,
-          ),
-          CustomTextInput(
-            label: 'Password',
-            controller: _model.passwordController,
-            obscureText: true,
-          ),
-          CustomTextInput(
-            label: 'Confirm password',
-            controller: _model.confirmPassController,
-            obscureText: true,
-          ),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        child: Column(
+          children: [
+            CustomTextInput(
+              label: 'First name',
+              controller: _model.fNameController,
+            ),
+            CustomTextInput(
+              label: 'Last name',
+              controller: _model.lNameController,
+            ),
+            CustomTextInput(
+              label: 'Email',
+              controller: _model.emailController,
+            ),
+            CustomTextInput(
+              label: 'Password',
+              controller: _model.passwordController,
+              obscureText: true,
+            ),
+            CustomTextInput(
+              label: 'Confirm password',
+              controller: _model.confirmPassController,
+              obscureText: true,
+            ),
+          ],
+        ),
       ),
     );
   }

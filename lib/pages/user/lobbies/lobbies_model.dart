@@ -28,23 +28,25 @@ class LobbiesModel extends FlutterFlowModel {
           // final activeLobbies = result['active']!;
           final {'active': activeLobbies, 'pending': pendingLobbies} = result;
 
-          return Column(
-            children: [
-              if (pendingLobbies.length != 0)
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                if (pendingLobbies.length != 0)
+                  Column(
+                    children: [
+                      Text('Invitations'),
+                      LobbyInvitationMolecule(lobbies: pendingLobbies),
+                    ],
+                  ),
                 Column(
                   children: [
-                    Text('Invitations'),
-                    LobbyInvitationMolecule(lobbies: pendingLobbies),
+                    activeLobbies.length == 0
+                        ? Text('No active lobbies')
+                        : ActiveLobbyMolecule(activeLobbies),
                   ],
                 ),
-              Column(
-                children: [
-                  activeLobbies.length == 0
-                      ? Text('No active lobbies')
-                      : ActiveLobbyMolecule(activeLobbies),
-                ],
-              ),
-            ],
+              ],
+            ),
           );
         } else
           return Center(child: CircularProgressIndicator());

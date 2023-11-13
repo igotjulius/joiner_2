@@ -45,12 +45,12 @@ class FriendsModel extends FlutterFlowModel {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Friend Requests'),
             pendingFriends(pending),
             SizedBox(
               height: 40,
             ),
-            Text('Friends'),
+            Text('Friends',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             acceptedFriends(accepted),
           ],
         );
@@ -63,10 +63,16 @@ class FriendsModel extends FlutterFlowModel {
       shrinkWrap: true,
       itemCount: list.length,
       itemBuilder: (context, index) {
-        return PendingFriendAtom(
-          name: '${list[index]['firstName']} ${list[index]['lastName']}',
-          friendId: list[index]['friendId'],
-          eventAction: acceptFriendRequest,
+        return Column(
+          children: [
+            Text('Friend Request/s',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            PendingFriendAtom(
+              name: '${list[index]['firstName']} ${list[index]['lastName']}',
+              friendId: list[index]['friendId'],
+              eventAction: acceptFriendRequest,
+            ),
+          ],
         );
       },
     );
