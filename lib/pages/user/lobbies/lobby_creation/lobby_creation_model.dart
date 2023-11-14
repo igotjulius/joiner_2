@@ -17,16 +17,16 @@ class LobbyCreationModel extends FlutterFlowModel {
 
   // State field(s) for TextField widget.
   TextEditingController? titleInput;
-  String? Function(BuildContext, String?)? titleInputValidator;
+  String? Function(String?)? titleInputValidator;
   // State field(s) for TextField widget.
   TextEditingController? descInput;
-  String? Function(BuildContext, String?)? descInputValidator;
+  String? Function(String?)? descInputValidator;
   // State field(s) for TextField widget.
   TextEditingController? budgetInput;
-  String? Function(BuildContext, String?)? budgetInputValidator;
+  String? Function(String?)? budgetInputValidator;
   // State field(s) for TextField widget.
   TextEditingController? meetingInput;
-  String? Function(BuildContext, String?)? meetingInputValidator;
+  String? Function(String?)? meetingInputValidator;
 
   /// Initialization and disposal methods.
 

@@ -15,6 +15,7 @@ class SignUpPageWidget extends StatefulWidget {
 
 class _SignUpPageWidgetState extends State<SignUpPageWidget>
     with TickerProviderStateMixin {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late SignUpPageModel _model;
 
   @override
@@ -29,83 +30,80 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(0.0),
-            bottomRight: Radius.circular(0.0),
-            topLeft: Radius.circular(24.0),
-            topRight: Radius.circular(24.0),
-          ),
-        ),
         child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+          padding: EdgeInsetsDirectional.all(20),
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Become a Joiner',
-                          style: FlutterFlowTheme.of(context)
-                              .headlineSmall
-                              .override(
-                                fontFamily: 'Open Sans',
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        TextButton(
-                          child: Text(
-                            'Login',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .copyWith(
-                                  color: FlutterFlowTheme.of(context).primary,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Become a Joiner',
+                        style:
+                            FlutterFlowTheme.of(context).headlineSmall.override(
+                                  fontFamily: 'Open Sans',
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
+                      ),
+                      Text(
+                        'Just fill in all the details.',
+                        style:
+                            FlutterFlowTheme.of(context).headlineSmall.override(
+                                  fontFamily: 'Open Sans',
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                      ),
+                    ],
+                  ),
+                  TextButton(
+                    child: Text(
+                      'Login',
+                      style: FlutterFlowTheme.of(context).bodyMedium.copyWith(
+                            color: FlutterFlowTheme.of(context).primary,
                           ),
-                          onPressed: () {
-                            context.goNamed('Login');
-                          },
-                        ),
-                      ],
+                    ),
+                    onPressed: () {
+                      context.goNamed('Login');
+                    },
+                  ),
+                ],
+              ),
+              Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.blue,
+                  ),
+                ),
+                child: TabBar(
+                  splashBorderRadius: BorderRadius.circular(20),
+                  labelPadding: EdgeInsets.symmetric(vertical: 8),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.blue[300],
+                  indicator: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  controller: _model.tabController,
+                  onTap: (value) {
+                    _model.tabController?.index = value;
+                  },
+                  tabs: [
+                    Text(
+                      'Joiner',
                     ),
                     Text(
-                      'Just fill in all the details.',
-                      style:
-                          FlutterFlowTheme.of(context).headlineSmall.override(
-                                fontFamily: 'Open Sans',
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.normal,
-                              ),
+                      'Rent your car',
                     ),
                   ],
                 ),
-              ),
-              TabBar(
-                controller: _model.tabController,
-                onTap: (value) {
-                  _model.tabController?.index = value;
-                },
-                tabs: [
-                  Text(
-                    'Joiner',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    'Rent your car',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
               ),
               Expanded(
                 child: TabBarView(
@@ -113,7 +111,9 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                   children: [
                     wrapWithModel(
                       model: _model.userModel,
-                      child: UserSignUpMole(),
+                      child: UserSignUpMole(
+                        formKey: formKey,
+                      ),
                       updateCallback: () => setState(() {}),
                     ),
                     wrapWithModel(
@@ -124,40 +124,109 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                   ],
                 ),
               ),
-              FFButtonWidget(
-                onPressed: () {
-                  _model.signUp();
-                },
-                text: 'Sign Up',
-                options: FFButtonOptions(
-                  height: 40.0,
-                  padding: EdgeInsetsDirectional.fromSTEB(40.0, 0.0, 40.0, 0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: FlutterFlowTheme.of(context).primary,
-                  textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                        fontFamily: 'Roboto Flex',
-                        color: Colors.white,
-                      ),
-                  elevation: 3.0,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              Text(
-                'By signing up you accept Joiner’s Terms of Use and Privacy Policy.',
-                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                      fontFamily: 'Roboto Flex',
-                      fontSize: 12.0,
-                      fontStyle: FontStyle.italic,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      'By signing up you accept Joiner’s Terms of Use and Privacy Policy.',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Roboto Flex',
+                            fontSize: 12.0,
+                            fontStyle: FontStyle.italic,
+                          ),
                     ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.fromLTRB(20, 16, 20, 16),
+                    ),
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.transparent,
+                            behavior: SnackBarBehavior.floating,
+                            elevation: 4,
+                            padding: EdgeInsets.zero,
+                            content: ClipPath(
+                              clipper: ShapeBorderClipper(
+                                shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              child: Container(
+                                height: 56,
+                                decoration: BoxDecoration(
+                                  color: Colors.green[600],
+                                ),
+                                child: Center(child: Text('Form submitted')),
+                              ),
+                            ),
+                          ),
+                        );
+                        // _model.signUp();
+                      }
+                    },
+                    child: Text('Sign Up'),
+                  ),
+                ],
               ),
-            ].divide(SizedBox(height: 20.0)).addToEnd(SizedBox(height: 20.0)),
+            ].divide(SizedBox(
+              height: 20,
+            )),
           ),
         ),
+      ),
+    );
+  }
+
+  FFButtonWidget newMethod(BuildContext context) {
+    return FFButtonWidget(
+      onPressed: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+        if (formKey.currentState!.validate()) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.transparent,
+              behavior: SnackBarBehavior.floating,
+              elevation: 4,
+              padding: EdgeInsets.zero,
+              content: ClipPath(
+                clipper: ShapeBorderClipper(
+                  shape: ContinuousRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: Colors.green[600],
+                  ),
+                  child: Center(child: Text('Form submitted')),
+                ),
+              ),
+            ),
+          );
+          // _model.signUp();
+        }
+      },
+      text: 'Sign Up',
+      options: FFButtonOptions(
+        height: 40.0,
+        padding: EdgeInsetsDirectional.fromSTEB(40.0, 0.0, 40.0, 0.0),
+        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+        color: FlutterFlowTheme.of(context).primary,
+        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+              fontFamily: 'Roboto Flex',
+              color: Colors.white,
+            ),
+        elevation: 3.0,
+        borderSide: BorderSide(
+          color: Colors.transparent,
+          width: 1.0,
+        ),
+        borderRadius: BorderRadius.circular(8.0),
       ),
     );
   }

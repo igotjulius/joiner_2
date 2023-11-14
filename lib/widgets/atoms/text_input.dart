@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 
 class CustomTextInput extends StatefulWidget {
   final String? initialValue;
   final String label;
   final TextEditingController? controller;
-  final String? Function(BuildContext, String?)? validator;
+  final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final TextInputFormatter inputFormatters;
   final bool enabled;
@@ -52,7 +51,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
             TextFormField(
               initialValue: widget.initialValue,
               controller: widget.controller,
-              validator: widget.validator.asValidator(context),
+              validator: widget.validator,
               keyboardType: widget.keyboardType,
               enabled: widget.enabled,
               obscureText: widget.obscureText,
@@ -61,6 +60,11 @@ class _CustomTextInputState extends State<CustomTextInput> {
               ],
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.redAccent,
+                  ),
+                ),
               ),
             ),
           ],

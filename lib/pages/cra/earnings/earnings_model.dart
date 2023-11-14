@@ -25,17 +25,11 @@ class EarningsModel extends FlutterFlowModel {
           itemCount: rentals.length,
           itemBuilder: (context, index) {
             final rental = rentals[index];
-            return InkWell(
-              onTap: () {
-                // TODO:
-                // Go to Rental Details page
-              },
-              child: CraTransactionInfo(
-                name: rental.renterName,
-                date: rental.startRental.toString(),
-                duration: rental.duration,
-                amount: rental.price,
-              ),
+            return CraTransactionInfo(
+              name: rental.renterName,
+              date: rental.startRental.toString(),
+              duration: rental.duration,
+              amount: rental.price,
             );
           },
         );

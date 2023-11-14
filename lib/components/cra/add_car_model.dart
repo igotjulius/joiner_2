@@ -1,7 +1,6 @@
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
-
 class AddCarModel extends FlutterFlowModel {
   /// Initialization and disposal methods.
 
@@ -9,16 +8,16 @@ class AddCarModel extends FlutterFlowModel {
 
   // State field(s) for TextField widget.
   TextEditingController? licenseController;
-  String? Function(BuildContext, String?)? licenseControllerValidator;
+  String? Function(String?)? licenseControllerValidator;
   // State field(s) for TextField widget.
   TextEditingController? vehicleTypeController;
-  String? Function(BuildContext, String?)? vehicleTypeControllerValidator;
+  String? Function(String?)? vehicleTypeControllerValidator;
   // State field(s) for TextField widget.
   TextEditingController? availabilityController;
-  String? Function(BuildContext, String?)? availabilityControllerValidator;
+  String? Function(String?)? availabilityControllerValidator;
   // State field(s) for TextField widget.
   TextEditingController? priceController;
-  String? Function(BuildContext, String?)? priceControllerValidator;
+  String? Function(String?)? priceControllerValidator;
 
   void initState(BuildContext context) {}
 
@@ -28,6 +27,7 @@ class AddCarModel extends FlutterFlowModel {
     availabilityController?.dispose();
     priceController?.dispose();
   }
+
   /// Action blocks are added here.
 
   /// Additional helper methods are added here.

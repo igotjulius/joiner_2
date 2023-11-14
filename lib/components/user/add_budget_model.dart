@@ -4,9 +4,9 @@ import 'package:joiner_1/controllers/user_controller.dart';
 
 class AddBudgetModel extends FlutterFlowModel {
   TextEditingController? labelController;
-  String? Function(BuildContext, String?)? labelValidator;
+  String? Function(String?)? labelValidator;
   TextEditingController? amountController;
-  String? Function(BuildContext, String?)? amountValidator;
+  String? Function(String?)? amountValidator;
 
   @override
   void dispose() {

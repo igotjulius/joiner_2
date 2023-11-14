@@ -3,7 +3,8 @@ import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class UserSignUpMole extends StatefulWidget {
-  const UserSignUpMole({super.key});
+  final GlobalKey<FormState> formKey;
+  UserSignUpMole({super.key, required this.formKey});
 
   @override
   State<UserSignUpMole> createState() => _UserSignUpMoleState();
@@ -20,33 +21,42 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        child: Column(
-          children: [
-            CustomTextInput(
-              label: 'First name',
-              controller: _model.fNameController,
-            ),
-            CustomTextInput(
-              label: 'Last name',
-              controller: _model.lNameController,
-            ),
-            CustomTextInput(
-              label: 'Email',
-              controller: _model.emailController,
-            ),
-            CustomTextInput(
-              label: 'Password',
-              controller: _model.passwordController,
-              obscureText: true,
-            ),
-            CustomTextInput(
-              label: 'Confirm password',
-              controller: _model.confirmPassController,
-              obscureText: true,
-            ),
-          ],
+    return Container(
+      child: Form(
+        key: widget.formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomTextInput(
+                label: 'First name',
+                controller: _model.fNameController,
+                validator: _model.checkEmpty,
+              ),
+              CustomTextInput(
+                label: 'Last name',
+                controller: _model.lNameController,
+                validator: _model.checkEmpty,
+              ),
+              CustomTextInput(
+                label: 'Email',
+                controller: _model.emailController,
+                validator: _model.validateEmail,
+              ),
+              CustomTextInput(
+                label: 'Password',
+                controller: _model.passwordController,
+                obscureText: true,
+                validator: _model.checkEmpty,
+              ),
+              CustomTextInput(
+                label: 'Confirm password',
+                controller: _model.confirmPassController,
+                obscureText: true,
+                validator: _model.confirmPassword,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -71,4 +81,29 @@ class UserSignUpMoleModel extends FlutterFlowModel {
 
   @override
   void dispose() {}
+
+  String? checkEmpty(String? value) {
+    if (value == null || value.trim().isEmpty)
+      return 'Field should not be empty';
+    else
+      return null;
+  }
+
+  String? confirmPassword(String? value) {
+    final trimmed = checkEmpty(value);
+    if (trimmed != null) return trimmed;
+    if (value != passwordController?.text) return 'Passwords don\'t match';
+    return null;
+  }
+
+  String? validateEmail(String? value) {
+    final trimmed = checkEmpty(value);
+    if (trimmed != null) return trimmed;
+    if (RegExp(
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(value!))
+      return null;
+    else
+      return 'Email address is not supported.';
+  }
 }
