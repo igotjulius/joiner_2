@@ -1,4 +1,3 @@
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +44,6 @@ class _PledgeResourceWidgetState extends State<PledgeResourceWidget> {
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(0.0),
           bottomRight: Radius.circular(0.0),
@@ -62,10 +60,6 @@ class _PledgeResourceWidgetState extends State<PledgeResourceWidget> {
               alignment: AlignmentDirectional(-1.0, 0.0),
               child: Text(
                 'Pledge a resource',
-                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                      fontFamily: 'Roboto Flex',
-                      fontWeight: FontWeight.w600,
-                    ),
               ),
             ),
             Padding(
@@ -75,44 +69,33 @@ class _PledgeResourceWidgetState extends State<PledgeResourceWidget> {
                 autofocus: true,
                 obscureText: false,
                 decoration: InputDecoration(
-                  labelStyle: FlutterFlowTheme.of(context).labelMedium,
                   hintText: 'Share something...',
-                  hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                        fontFamily: 'Roboto Flex',
-                        fontStyle: FontStyle.italic,
-                      ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).accent4,
                       width: 2.0,
                     ),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).primary,
                       width: 2.0,
                     ),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   errorBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
                       width: 2.0,
                     ),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   focusedErrorBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
                       width: 2.0,
                     ),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   filled: true,
-                  fillColor: FlutterFlowTheme.of(context).alternate,
                 ),
-                style: FlutterFlowTheme.of(context).bodyMedium,
                 validator: _model.textControllerValidator.asValidator(context),
               ),
             ),
@@ -130,12 +113,6 @@ class _PledgeResourceWidgetState extends State<PledgeResourceWidget> {
                 height: 40.0,
                 padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 24.0, 0.0),
                 iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                color: FlutterFlowTheme.of(context).primary,
-                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                      fontFamily: 'Roboto Flex',
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
                 elevation: 3.0,
                 borderSide: BorderSide(
                   color: Colors.transparent,

@@ -1,6 +1,4 @@
 import 'package:joiner_1/models/user_model.dart';
-
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +38,6 @@ class _AccountWidgetState extends State<AccountWidget> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       body: SafeArea(
         top: true,
         child: Container(
@@ -75,8 +72,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                               child: Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
                                   borderRadius: BorderRadius.only(
                                     bottomLeft: Radius.circular(0.0),
                                     bottomRight: Radius.circular(0.0),
@@ -97,20 +92,8 @@ class _AccountWidgetState extends State<AccountWidget> {
                                         children: [
                                           Text(
                                             "${_model.currentUser?.firstName} ${_model.currentUser?.lastName?[0]}.",
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'Open Sans',
-                                                  fontSize: 20.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
                                           ),
                                           Container(
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryBackground,
-                                            ),
                                             child: InkWell(
                                               splashColor: Colors.transparent,
                                               focusColor: Colors.transparent,
@@ -133,22 +116,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                 children: [
                                                   Text(
                                                     'Edit Profile',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                            fontFamily:
-                                                                'Open Sans',
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryText,
-                                                            fontSize: 12.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline),
                                                   ),
                                                 ],
                                               ),
@@ -158,8 +125,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                       ),
                                       Divider(
                                         thickness: 1.0,
-                                        color: FlutterFlowTheme.of(context)
-                                            .accent3,
                                       ),
                                       Column(
                                         mainAxisSize: MainAxisSize.max,
@@ -171,13 +136,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                             children: [
                                               Text(
                                                 'First name',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              'Open Sans',
-                                                        ),
                                               ),
                                               Flexible(
                                                 child: Padding(
@@ -189,17 +147,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                     child: Text(
                                                       _model.currentUser!
                                                           .firstName!,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Roboto Flex',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .accent4,
-                                                              ),
                                                       textAlign:
                                                           TextAlign.right,
                                                     ),
@@ -215,13 +162,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                             children: [
                                               Text(
                                                 'Last name',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              'Open Sans',
-                                                        ),
                                               ),
                                               Flexible(
                                                 child: Padding(
@@ -232,17 +172,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                     width: 160.0,
                                                     child: Text(
                                                       "${_model.currentUser?.lastName}",
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Roboto Flex',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .accent4,
-                                                              ),
                                                       textAlign:
                                                           TextAlign.right,
                                                     ),
@@ -258,13 +187,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                             children: [
                                               Text(
                                                 'Email',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              'Open Sans',
-                                                        ),
                                               ),
                                               Flexible(
                                                 child: Padding(
@@ -275,17 +197,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                     width: 160.0,
                                                     child: Text(
                                                       "${_model.currentUser?.email}",
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Roboto Flex',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .accent4,
-                                                              ),
                                                       textAlign:
                                                           TextAlign.right,
                                                     ),
@@ -300,8 +211,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                       ),
                                       Divider(
                                         thickness: 1.0,
-                                        color: FlutterFlowTheme.of(context)
-                                            .accent3,
                                       ),
                                       InkWell(
                                         splashColor: Colors.transparent,
@@ -329,14 +238,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                           children: [
                                             Text(
                                               'View Transaction History',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'Open Sans',
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
                                             ),
                                             Padding(
                                               padding: EdgeInsetsDirectional
@@ -344,9 +245,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                       0.0, 10.0, 0.0, 10.0),
                                               child: Icon(
                                                 Icons.arrow_forward_ios,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .accent4,
                                                 size: 24.0,
                                               ),
                                             ),
@@ -355,8 +253,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                       ),
                                       Divider(
                                         thickness: 1.0,
-                                        color: FlutterFlowTheme.of(context)
-                                            .accent3,
                                       ),
                                       FFButtonWidget(
                                         onPressed: () async {
@@ -378,15 +274,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                           iconPadding:
                                               EdgeInsetsDirectional.fromSTEB(
                                                   0.0, 0.0, 0.0, 0.0),
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          textStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .override(
-                                                    fontFamily: 'Roboto Flex',
-                                                    color: Colors.white,
-                                                  ),
                                           elevation: 3.0,
                                           borderSide: BorderSide(
                                             color: Colors.transparent,

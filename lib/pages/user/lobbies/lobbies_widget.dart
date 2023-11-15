@@ -1,5 +1,4 @@
 import 'package:joiner_1/widgets/atoms/promos_list.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -50,21 +49,11 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
         ),
       ),
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primary,
         automaticallyImplyLeading: false,
         toolbarHeight: 0,
         bottom: TabBar(
-          labelColor: FlutterFlowTheme.of(context).secondaryBackground,
-          unselectedLabelColor: FlutterFlowTheme.of(context).primaryBackground,
-          labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
-                fontFamily: 'Open Sans',
-                fontSize: 12.0,
-                fontWeight: FontWeight.bold,
-              ),
           unselectedLabelStyle: TextStyle(),
-          indicatorColor: FlutterFlowTheme.of(context).secondaryBackground,
           tabs: [
             Tab(
               text: 'Promos',

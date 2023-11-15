@@ -1,24 +1,24 @@
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
+import 'package:joiner_1/utils/custom_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'index.dart';
 import 'pages/cra/car/cra_car_widget.dart';
 import 'pages/cra/earnings/earnings_widget.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-   options: DefaultFirebaseOptions.currentPlatform,
-);
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
   usePathUrlStrategy();
 
   final appState = FFAppState(); // Initialize FFAppState
@@ -47,8 +47,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale? _locale;
-  ThemeMode _themeMode = ThemeMode.system;
   late FFAppState _appState;
   late AppStateNotifier _appStateNotifier;
 
@@ -56,14 +54,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
   }
-
-  void setLocale(String language) {
-    setState(() => _locale = createLocale(language));
-  }
-
-  void setThemeMode(ThemeMode mode) => setState(() {
-        _themeMode = mode;
-      });
 
   @override
   Widget build(BuildContext context) {
@@ -77,13 +67,8 @@ class _MyAppState extends State<MyApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: _locale,
       supportedLocales: const [Locale('en', '')],
-      theme: ThemeData(
-        brightness: Brightness.light,
-        scrollbarTheme: ScrollbarThemeData(),
-      ),
-      themeMode: _themeMode,
+      theme: lightTheme,
       routerConfig: GoRouter(
         initialLocation: '/login',
         debugLogDiagnostics: true,
@@ -148,9 +133,6 @@ class _NavBarPageState extends State<NavBarPage> {
           _currentPage = null;
           _currentPageName = tabs.keys.toList()[i];
         }),
-        backgroundColor: Colors.white,
-        color: FlutterFlowTheme.of(context).secondaryText,
-        activeColor: FlutterFlowTheme.of(context).primary,
         tabBackgroundColor: Color(0x00000000),
         tabBorderRadius: 0.0,
         tabMargin: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
@@ -201,9 +183,6 @@ class _NavBarPageState extends State<NavBarPage> {
           _currentPage = null;
           _currentPageName = tabs.keys.toList()[i];
         }),
-        backgroundColor: Colors.white,
-        color: FlutterFlowTheme.of(context).secondaryText,
-        activeColor: FlutterFlowTheme.of(context).primary,
         tabBackgroundColor: Color(0x00000000),
         tabBorderRadius: 0.0,
         tabMargin: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),

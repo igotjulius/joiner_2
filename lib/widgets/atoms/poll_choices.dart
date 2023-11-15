@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 
 class PollChoices extends StatelessWidget {
   final String? choice;
@@ -23,19 +22,9 @@ class PollChoices extends StatelessWidget {
           children: [
             Text(
               choice!,
-              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                    fontFamily: 'Roboto Flex',
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                  ),
             ),
             Text(
               "$count votes",
-              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                    fontFamily: 'Roboto Flex',
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                  ),
             ),
           ],
         ),

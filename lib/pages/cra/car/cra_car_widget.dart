@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/add_car_widget.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_model.dart';
@@ -36,9 +35,6 @@ class _CraCarWidgetState extends State<CraCarWidget> {
                 children: [
                   Text(
                     'Manage Cars',
-                    style: FlutterFlowTheme.of(context)
-                        .titleLarge
-                        .copyWith(fontWeight: FontWeight.bold),
                   ),
                   FFButtonWidget(
                     text: 'Add a Car',

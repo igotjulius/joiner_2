@@ -2,7 +2,6 @@ import 'package:flutter/services.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,9 +46,7 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
           iconTheme: IconThemeData(color: Colors.black),
           automaticallyImplyLeading: true,
           actions: [],
@@ -60,11 +57,6 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
             children: [
               Text(
                 'New Lobby',
-                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontFamily: 'Open Sans',
-                    ),
               ),
               SizedBox(
                 height: 56,
@@ -123,9 +115,6 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                       alignment: Alignment.topLeft,
                       child: Text(
                         'Trip Date',
-                        style: FlutterFlowTheme.of(context)
-                            .bodyMedium
-                            .copyWith(color: Color(0xff7d7d7d)),
                       ),
                     ),
                     SizedBox(
@@ -167,12 +156,6 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                                       ? "${DateFormat('MMM d').format(_model.datePicked!.start)}"
                                       : "${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}")
                                   : '',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Roboto Flex',
-                                    fontWeight: FontWeight.w500,
-                                  ),
                             ),
                           ].divide(SizedBox(width: 10.0)),
                         ),
@@ -194,16 +177,11 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                     ),
                     Text(
                       'Invite Friends',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Roboto Flex',
-                            fontWeight: FontWeight.w500,
-                          ),
                     ),
                   ].divide(SizedBox(width: 10.0)),
                 ),
                 Divider(
                   thickness: 1.0,
-                  color: FlutterFlowTheme.of(context).primary,
                 ),
               ].divide(SizedBox(height: 10.0)),
             ),

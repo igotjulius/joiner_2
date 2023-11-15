@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_model.dart';
@@ -43,30 +42,15 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                     children: [
                       Text(
                         'Become a Joiner',
-                        style:
-                            FlutterFlowTheme.of(context).headlineSmall.override(
-                                  fontFamily: 'Open Sans',
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
                       ),
                       Text(
                         'Just fill in all the details.',
-                        style:
-                            FlutterFlowTheme.of(context).headlineSmall.override(
-                                  fontFamily: 'Open Sans',
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.normal,
-                                ),
                       ),
                     ],
                   ),
                   TextButton(
                     child: Text(
                       'Login',
-                      style: FlutterFlowTheme.of(context).bodyMedium.copyWith(
-                            color: FlutterFlowTheme.of(context).primary,
-                          ),
                     ),
                     onPressed: () {
                       context.goNamed('Login');
@@ -130,11 +114,6 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                   Flexible(
                     child: Text(
                       'By signing up you accept Joiner’s Terms of Use and Privacy Policy.',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Roboto Flex',
-                            fontSize: 12.0,
-                            fontStyle: FontStyle.italic,
-                          ),
                     ),
                   ),
                   ElevatedButton(
@@ -165,7 +144,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                             ),
                           ),
                         );
-                        // _model.signUp();
+                        _model.signUp();
                       }
                     },
                     child: Text('Sign Up'),
@@ -216,11 +195,6 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
         height: 40.0,
         padding: EdgeInsetsDirectional.fromSTEB(40.0, 0.0, 40.0, 0.0),
         iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-        color: FlutterFlowTheme.of(context).primary,
-        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-              fontFamily: 'Roboto Flex',
-              color: Colors.white,
-            ),
         elevation: 3.0,
         borderSide: BorderSide(
           color: Colors.transparent,

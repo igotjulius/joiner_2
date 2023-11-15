@@ -3,7 +3,6 @@ import 'package:joiner_1/components/user/chat_widget.dart';
 import 'package:joiner_1/components/user/joiners_widget.dart';
 import 'package:joiner_1/components/user/lobby_dashboard.dart';
 import 'package:joiner_1/components/user/poll_item_widget.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,9 +57,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
       create: (_) => _model.currentLobby!,
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primary,
           title: Container(
             child: Row(
               mainAxisSize: MainAxisSize.max,
@@ -71,13 +68,6 @@ class _LobbyWidgetState extends State<LobbyWidget>
                   children: [
                     Text(
                       _model.currentLobby!.title!,
-                      // 'Title: ',
-                      style:
-                          FlutterFlowTheme.of(context).headlineMedium.override(
-                                fontFamily: 'Open Sans',
-                                color: Colors.white,
-                                fontSize: 16.0,
-                              ),
                     ),
                     Text(
                       _model.currentLobby!.startDate ==
@@ -86,13 +76,6 @@ class _LobbyWidgetState extends State<LobbyWidget>
                               ? 'Date undecided'
                               : "${dateFormat.format(_model.currentLobby!.startDate!)}")
                           : "${dateFormat.format(_model.currentLobby!.startDate!)} - ${dateFormat.format(_model.currentLobby!.endDate!)}",
-                      //'Date',
-                      style:
-                          FlutterFlowTheme.of(context).headlineMedium.override(
-                                fontFamily: 'Roboto Flex',
-                                color: Colors.white,
-                                fontSize: 12.0,
-                              ),
                     ),
                   ],
                 ),
@@ -106,16 +89,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
           elevation: 0.0,
           bottom: TabBar(
             // isScrollable: true,
-            labelColor: FlutterFlowTheme.of(context).secondaryBackground,
-            unselectedLabelColor:
-                FlutterFlowTheme.of(context).primaryBackground,
-            labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
-                  fontFamily: 'Open Sans',
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.bold,
-                ),
             unselectedLabelStyle: TextStyle(),
-            indicatorColor: FlutterFlowTheme.of(context).secondaryBackground,
             tabs: [
               Tab(text: 'Dashboard'),
               Tab(text: 'Chat'),

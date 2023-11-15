@@ -1,4 +1,3 @@
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_model.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -46,9 +45,6 @@ class _ListingsWidgetState extends State<ListingsWidget> {
         ),
         title: Text(
           'Rent a Car',
-          style: FlutterFlowTheme.of(context).headlineMedium.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
         ),
       ),
       body: SafeArea(

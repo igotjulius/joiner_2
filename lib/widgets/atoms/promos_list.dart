@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 
 class PromosList extends StatelessWidget {
   const PromosList({super.key});
@@ -22,7 +21,6 @@ class PromosList extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 3,
@@ -55,7 +53,6 @@ class PromosList extends StatelessWidget {
                                 EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
                             child: Text(
                               'Car Rentals',
-                              style: FlutterFlowTheme.of(context).headlineSmall,
                             ),
                           ),
                           Padding(
@@ -64,7 +61,6 @@ class PromosList extends StatelessWidget {
                             child: AutoSizeText(
                               'Embark on a journey of freedom and exploration with our premium car rental service. Drive in style and comfort as you navigate through scenic landscapes, making every road a memorable adventure.',
                               textAlign: TextAlign.start,
-                              style: FlutterFlowTheme.of(context).labelMedium,
                             ),
                           ),
                           Padding(
@@ -80,8 +76,6 @@ class PromosList extends StatelessWidget {
                                   child: Text(
                                     '\₱1234/day',
                                     textAlign: TextAlign.end,
-                                    style:
-                                        FlutterFlowTheme.of(context).titleLarge,
                                   ),
                                 ),
                                 Icon(
@@ -102,7 +96,6 @@ class PromosList extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 3,
@@ -135,7 +128,6 @@ class PromosList extends StatelessWidget {
                                 EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
                             child: Text(
                               'Boracay Beach',
-                              style: FlutterFlowTheme.of(context).headlineSmall,
                             ),
                           ),
                           Padding(
@@ -144,7 +136,6 @@ class PromosList extends StatelessWidget {
                             child: AutoSizeText(
                               'Escape to the idyllic shores of Boracay and indulge in a luxurious retreat at our beachfront oasis, the ultimate destination for your tropical paradise getaway.',
                               textAlign: TextAlign.start,
-                              style: FlutterFlowTheme.of(context).labelMedium,
                             ),
                           ),
                           Padding(
@@ -160,8 +151,6 @@ class PromosList extends StatelessWidget {
                                   child: Text(
                                     '\₱999/night',
                                     textAlign: TextAlign.end,
-                                    style:
-                                        FlutterFlowTheme.of(context).titleLarge,
                                   ),
                                 ),
                                 Icon(
@@ -182,7 +171,6 @@ class PromosList extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 3,
@@ -215,7 +203,6 @@ class PromosList extends StatelessWidget {
                                 EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
                             child: Text(
                               'El Nido, Palawan',
-                              style: FlutterFlowTheme.of(context).headlineSmall,
                             ),
                           ),
                           Padding(
@@ -224,7 +211,6 @@ class PromosList extends StatelessWidget {
                             child: AutoSizeText(
                               'Immerse yourself in the tropical paradise of El Nido, Palawan. Indulge in the serenity of our luxurious accommodations, providing the perfect haven for your dream island getaway.',
                               textAlign: TextAlign.start,
-                              style: FlutterFlowTheme.of(context).labelMedium,
                             ),
                           ),
                           Padding(
@@ -240,8 +226,6 @@ class PromosList extends StatelessWidget {
                                   child: Text(
                                     '\₱999/night',
                                     textAlign: TextAlign.end,
-                                    style:
-                                        FlutterFlowTheme.of(context).titleLarge,
                                   ),
                                 ),
                                 Icon(

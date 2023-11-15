@@ -1,4 +1,3 @@
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
@@ -37,14 +36,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       body: SafeArea(
         top: true,
         child: Container(
           width: MediaQuery.sizeOf(context).width * 1.0,
           height: MediaQuery.sizeOf(context).height * 1.0,
           decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).secondaryBackground,
             image: DecorationImage(
               fit: BoxFit.cover,
               image: Image.asset(
@@ -67,14 +64,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                         alignment: AlignmentDirectional(0.0, -1.0),
                         child: Text(
                           'Joiner',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Open Sans',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
                         ),
                       ),
                       Column(
@@ -88,30 +77,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 alignment: AlignmentDirectional(-1.0, 0.0),
                                 child: Text(
                                   'Discover Unseen Beauty',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Open Sans',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        fontSize: 28.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
                                 ),
                               ),
                               Align(
                                 alignment: AlignmentDirectional(-1.0, 0.0),
                                 child: Text(
                                   'Your adventure awaits',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Open Sans',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
                                 ),
                               ),
                             ],
@@ -124,53 +95,31 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Email',
-                                  labelStyle: FlutterFlowTheme.of(context)
-                                      .labelMedium
-                                      .override(
-                                        fontFamily: 'Roboto Flex',
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                      ),
-                                  hintStyle:
-                                      FlutterFlowTheme.of(context).labelMedium,
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
                                       width: 2.0,
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
                                       width: 2.0,
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
                                       width: 2.0,
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
                                       width: 2.0,
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Roboto Flex',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                    ),
                                 validator: _model.textController1Validator
                                     .asValidator(context),
                               ),
@@ -179,53 +128,31 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   labelText: 'Password',
-                                  labelStyle: FlutterFlowTheme.of(context)
-                                      .labelMedium
-                                      .override(
-                                        fontFamily: 'Roboto Flex',
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                      ),
-                                  hintStyle:
-                                      FlutterFlowTheme.of(context).labelMedium,
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
                                       width: 2.0,
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
                                       width: 2.0,
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
                                       width: 2.0,
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
                                       width: 2.0,
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Roboto Flex',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                    ),
                                 validator: _model.textController2Validator
                                     .asValidator(context),
                               ),
@@ -244,15 +171,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 alignment: AlignmentDirectional(-1.0, 0.0),
                                 child: Text(
                                   'Forgot password?',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Open Sans',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
                                 ),
                               ),
                             ].divide(SizedBox(height: 10.0)),
@@ -273,13 +191,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         24.0, 0.0, 24.0, 0.0),
                                     iconPadding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 0.0, 0.0),
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .override(
-                                          fontFamily: 'Roboto Flex',
-                                          color: Colors.white,
-                                        ),
                                     elevation: 3.0,
                                     borderSide: BorderSide(
                                       color: Colors.transparent,
@@ -296,15 +207,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     alignment: AlignmentDirectional(0.0, 0.0),
                                     child: Text(
                                       'Not yet a Joiner?',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Open Sans',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w600,
-                                          ),
                                     ),
                                   ),
                                   InkWell(
@@ -317,15 +219,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     },
                                     child: Text(
                                       'Join now!',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Open Sans',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
                                     ),
                                   ),
                                 ].divide(SizedBox(width: 4.0)),
@@ -338,15 +231,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                         alignment: AlignmentDirectional(0.0, -1.0),
                         child: Text(
                           'Copyright 2023',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'Open Sans',
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
                         ),
                       ),
                     ],

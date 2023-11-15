@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/car_item_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
@@ -104,10 +103,6 @@ class _CarItemWidgetState extends State<CarItemWidget> {
               child: Text(
                 // 'Available',
                 widget.car.availability!,
-                style: FlutterFlowTheme.of(context).labelMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
               ),
             ),
             Padding(
@@ -134,20 +129,11 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                   children: [
                     Text(
                       widget.car.vehicleType!,
-                      style: FlutterFlowTheme.of(context).labelMedium.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
                     ),
                     Row(
                       children: [
                         Text(
                           "₱${widget.car.price}",
-                          style:
-                              FlutterFlowTheme.of(context).labelMedium.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
                         ),
                         SizedBox(
                           width: 4,

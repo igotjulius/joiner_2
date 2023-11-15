@@ -1,4 +1,3 @@
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +35,6 @@ class _FriendsWidgetState extends State<FriendsWidget> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.pushNamed(
@@ -52,16 +50,9 @@ class _FriendsWidgetState extends State<FriendsWidget> {
         child: Icon(Icons.add),
       ),
       appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primary,
         automaticallyImplyLeading: false,
         title: Text(
           'Friends',
-          style: FlutterFlowTheme.of(context).headlineMedium.override(
-                fontFamily: 'Open Sans',
-                color: Colors.white,
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
         ),
         actions: [],
         centerTitle: false,

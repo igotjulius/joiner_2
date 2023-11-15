@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/car_item_model.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 
@@ -58,10 +57,6 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                   children: [
                     Text(
                       "₱${widget.car!.price}",
-                      style: FlutterFlowTheme.of(context).labelLarge.copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
                     ),
                     Text('/ day'),
                   ].divide(
@@ -85,25 +80,12 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                       children: [
                         Text(
                           widget.car!.vehicleType!,
-                          style:
-                              FlutterFlowTheme.of(context).labelLarge.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
                         ),
                         Text(
                           'Automatic',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.copyWith(
-                                    color: Colors.white,
-                                  ),
                         ),
                         Text(
                           '10 Reviews',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.copyWith(
-                                    color: Colors.white,
-                                  ),
                         ),
                       ],
                     ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 
 class CustomTextInput extends StatefulWidget {
   final String? initialValue;
@@ -40,9 +39,6 @@ class _CustomTextInputState extends State<CustomTextInput> {
               alignment: Alignment.topLeft,
               child: Text(
                 widget.label,
-                style: FlutterFlowTheme.of(context)
-                    .bodyMedium
-                    .copyWith(color: Color(0xff7d7d7d)),
               ),
             ),
             SizedBox(

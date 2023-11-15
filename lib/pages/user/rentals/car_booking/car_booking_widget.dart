@@ -1,5 +1,4 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +67,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 5,
@@ -94,7 +92,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                             children: [
                               Text(
                                 'User Driver\'s License ID No.',
-                                style: FlutterFlowTheme.of(context).bodyMedium,
                               ),
                               Padding(
                                 padding:
@@ -106,8 +103,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     hintText: 'ID Number',
-                                    hintStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium,
                                   ),
                                 ),
                               ),
@@ -116,25 +111,17 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                                     EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
                                 child: Text(
                                   'Start Date - End Date of Rental',
-                                  style:
-                                      FlutterFlowTheme.of(context).bodyMedium,
                                 ),
                               ),
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   FlutterFlowIconButton(
-                                    borderColor:
-                                        FlutterFlowTheme.of(context).primary,
                                     borderRadius: 20,
                                     borderWidth: 1,
                                     buttonSize: 40,
-                                    fillColor:
-                                        FlutterFlowTheme.of(context).primary,
                                     icon: Icon(
                                       Icons.calendar_month,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
                                       size: 24,
                                     ),
                                     onPressed: () async {
@@ -167,13 +154,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                                         readOnly: true,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium,
                                           hintText: 'yyyy-mm-dd - yyyy-mm-dd',
-                                          hintStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium,
                                         ),
                                       ),
                                     ),
@@ -185,8 +166,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                                     EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
                                 child: Text(
                                   'Payment',
-                                  style:
-                                      FlutterFlowTheme.of(context).bodyMedium,
                                 ),
                               ),
                               Padding(
@@ -194,15 +173,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                                     10, 10, 0, 0),
                                 child: Text(
                                   'Pending Payment...',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Roboto Flex',
-                                        color: FlutterFlowTheme.of(context)
-                                            .accent2,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FontStyle.italic,
-                                      ),
                                 ),
                               ),
                             ],
@@ -226,7 +196,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                 maxHeight: 70,
               ),
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).primary,
                 boxShadow: [
                   BoxShadow(
                     blurRadius: 4,
@@ -244,10 +213,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               alignment: AlignmentDirectional(0.00, -0.45),
               child: Text(
                 'Book Now',
-                style: FlutterFlowTheme.of(context).headlineSmall.override(
-                      fontFamily: 'Open Sans',
-                      color: Colors.white,
-                    ),
               ),
             ),
           ),

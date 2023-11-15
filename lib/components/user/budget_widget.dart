@@ -1,5 +1,4 @@
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,10 +55,6 @@ class _BudgetWidgetState extends State<BudgetWidget> {
               children: [
                 Text(
                   'Budget',
-                  style: FlutterFlowTheme.of(context).titleMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
                 ),
                 FFButtonWidget(
                   text: 'Add',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 
@@ -66,11 +65,8 @@ class ActiveLobbyMolecule extends StatelessWidget {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
                 borderRadius: BorderRadius.circular(10.0),
-                border: Border.all(
-                  color: FlutterFlowTheme.of(context).accent3,
-                ),
+                border: Border.all(),
               ),
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
@@ -100,25 +96,11 @@ class ActiveLobbyMolecule extends StatelessWidget {
                           children: [
                             Text(
                               lobbies[index].title!,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Roboto Flex',
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
                             ),
                             Text(
                               lobbies[index].startDate != null
                                   ? "${dateFormat.format(lobbies[index].startDate!)} - ${dateFormat.format(lobbies[index].endDate!)}"
                                   : '-',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Roboto Flex',
-                                    color: FlutterFlowTheme.of(context).accent4,
-                                    fontSize: 12.0,
-                                  ),
                             ),
                           ],
                         ),

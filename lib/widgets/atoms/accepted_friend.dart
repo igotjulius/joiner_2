@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 
 class AcceptedFriendAtom extends StatelessWidget {
   final String? name;
@@ -30,10 +29,6 @@ class AcceptedFriendAtom extends StatelessWidget {
         ),
         Text(
           name!,
-          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                fontFamily: 'Roboto Flex',
-                fontSize: 16.0,
-              ),
         ),
       ],
     );

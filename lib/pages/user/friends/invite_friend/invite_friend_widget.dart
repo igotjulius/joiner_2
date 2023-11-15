@@ -1,7 +1,5 @@
 import 'package:joiner_1/controllers/user_controller.dart';
-
 import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +42,7 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -64,12 +60,6 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
           ),
           title: Text(
             'Invite Friend',
-            style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  fontFamily: 'Open Sans',
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
           ),
           actions: [],
           centerTitle: false,
@@ -90,18 +80,9 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
                     children: [
                       Text(
                         'Invite your Friend!',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Open Sans',
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
                       ),
                       Text(
                         'Invite your friend by sending an email to them.',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Roboto Flex',
-                              fontSize: 12.0,
-                            ),
                       ),
                     ],
                   ),
@@ -111,50 +92,39 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
                   children: [
                     Text(
                       'Enter your friend\'s email',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Open Sans',
-                          ),
                     ),
                     TextFormField(
                       controller: _model.textController,
                       autofocus: true,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelStyle: FlutterFlowTheme.of(context).labelMedium,
                         hintText: 'Your friend\'s email..',
-                        hintStyle: FlutterFlowTheme.of(context).labelMedium,
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).accent4,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).primary,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         errorBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).error,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         focusedErrorBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).error,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         filled: true,
-                        fillColor: FlutterFlowTheme.of(context).alternate,
                       ),
-                      style: FlutterFlowTheme.of(context).bodyMedium,
                       validator:
                           _model.textControllerValidator.asValidator(context),
                     ),
@@ -171,13 +141,6 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
                         EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                     iconPadding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: FlutterFlowTheme.of(context).primary,
-                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          fontFamily: 'Open Sans',
-                          color: Colors.white,
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.bold,
-                        ),
                     elevation: 3.0,
                     borderSide: BorderSide(
                       color: Colors.transparent,

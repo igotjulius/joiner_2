@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_icon_button.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_theme.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/widgets/atoms/poll_choices.dart';
@@ -35,11 +34,8 @@ class _PollMoleculeState extends State<PollMolecule> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(
-          color: FlutterFlowTheme.of(context).secondaryText,
-        ),
+        border: Border.all(),
       ),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
@@ -53,11 +49,6 @@ class _PollMoleculeState extends State<PollMolecule> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     _model.poll!.question!,
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Roboto Flex',
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
                   ),
                 ),
                 Divider(
@@ -98,13 +89,11 @@ class _PollMoleculeState extends State<PollMolecule> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       FlutterFlowIconButton(
-                        borderColor: FlutterFlowTheme.of(context).primary,
                         borderRadius: 4.0,
                         borderWidth: 1.0,
                         buttonSize: 40.0,
                         icon: Icon(
                           Icons.delete,
-                          color: FlutterFlowTheme.of(context).primary,
                           size: 24.0,
                         ),
                         onPressed: () async {

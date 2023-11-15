@@ -1,6 +1,5 @@
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/message_model.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
@@ -51,9 +50,6 @@ class _ChatWidgetState extends State<ChatWidget> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
-      ),
       child: Column(children: [
         Expanded(
             child: UserController.getConversation(appState.currentUser!.id!,
@@ -97,15 +93,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                           autofocus: true,
                           obscureText: false,
                           decoration: InputDecoration(
-                            labelStyle:
-                                FlutterFlowTheme.of(context).labelMedium,
                             hintText: 'Enter message..',
-                            hintStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'Roboto Flex',
-                                  fontStyle: FontStyle.italic,
-                                ),
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             errorBorder: InputBorder.none,
@@ -113,7 +101,6 @@ class _ChatWidgetState extends State<ChatWidget> {
                             contentPadding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 10.0),
                           ),
-                          style: FlutterFlowTheme.of(context).bodyMedium,
                           validator: _model.textControllerValidator
                               .asValidator(context),
                         ),
@@ -150,13 +137,6 @@ class _ChatWidgetState extends State<ChatWidget> {
                           EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                       iconPadding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: FlutterFlowTheme.of(context).primary,
-                      textStyle:
-                          FlutterFlowTheme.of(context).titleSmall.override(
-                                fontFamily: 'Roboto Flex',
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
                       elevation: 3.0,
                       borderSide: BorderSide(
                         color: Colors.transparent,

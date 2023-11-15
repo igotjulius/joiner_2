@@ -1,7 +1,6 @@
 import 'package:joiner_1/components/user/invite_participants_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/models/lobby_model.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,9 +45,6 @@ class _JoinersWidgetState extends State<JoinersWidget> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
-      ),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
