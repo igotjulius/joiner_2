@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/components/cra/add_car_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_model.dart';
 
 class CraCarWidget extends StatefulWidget {
@@ -36,15 +34,11 @@ class _CraCarWidgetState extends State<CraCarWidget> {
                   Text(
                     'Manage Cars',
                   ),
-                  FFButtonWidget(
-                    text: 'Add a Car',
+                  FilledButton(
                     onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AddCarModal(),
-                      );
+                      context.pushNamed('RegisterCar');
                     },
-                    options: FFButtonOptions(height: 40.0),
+                    child: Text('Add a car'),
                   ),
                 ],
               ),

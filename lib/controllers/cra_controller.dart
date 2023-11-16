@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/rental_model.dart';
@@ -34,15 +35,58 @@ class CraController {
     return res.data;
   }
 
-  // Register car under corresponding CRA
+  // Fetch a specific car
+  static Future<CarModel?> getCraCar(String licensePlate) async {
+    final res = await apiService.getCraCar(_craUserId, licensePlate);
+    return res.data;
+  }
+
+  // Register car under corresponding CRA - (for online environment)
   static Future<void> addCar(CarModel car) async {
     await apiService.addCar(car, _craUserId).then((result) => print(result));
+  }
+
+  // Register car under corresponding CRA - (for offline environment)
+  static Future<void> registerCar(
+      CarModel car, List<MultipartFile>? images) async {
+    await apiService.registerCar(
+      _craUserId,
+      licensePlate: car.licensePlate!,
+      ownerId: car.ownerId!,
+      ownerName: car.ownerName!,
+      vehicleType: car.vehicleType!,
+      availability: car.availability!,
+      availableStartDate: car.availableStartDate.toString(),
+      availableEndDate: car.availableEndDate.toString(),
+      price: car.price!,
+      files: images,
+    );
   }
 
   // Edit car availability
   static Future<void> editAvailability(
       CarModel car, String licensePlate) async {
     await apiService.editAvailability(car, _craUserId, licensePlate);
+  }
+
+  // Edit car
+  static Future<void> editCar(CarModel car, List<MultipartFile>? images) async {
+    await apiService.editCar(
+      _craUserId,
+      car.licensePlate!,
+      licensePlate: car.licensePlate!,
+      vehicleType: car.vehicleType!,
+      availability: car.availability!,
+      availableStartDate: car.availableStartDate.toString(),
+      availableEndDate: car.availableEndDate.toString(),
+      price: car.price!,
+      files: images,
+    );
+  }
+
+  // Delete a car
+  static Future<void> deleteCar(String licensePlate) async {
+    await apiService.deleteCar(_craUserId, licensePlate);
   }
 
   // Fetch CRA's rentals

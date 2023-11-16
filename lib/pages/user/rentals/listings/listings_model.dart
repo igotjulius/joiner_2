@@ -30,11 +30,7 @@ class ListingsModel extends FlutterFlowModel {
     return FutureBuilder(
       future: UserController.getAvailableCars(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData)
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        if (snapshot.data!.isEmpty)
+        if (snapshot.data == null)
           return Center(
             child: Text('No available cars for today :('),
           );

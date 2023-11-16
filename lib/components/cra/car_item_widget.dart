@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/car_item_model.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
-import 'package:joiner_1/widgets/atoms/text_input.dart';
+import 'package:joiner_1/utils/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CarItemWidget extends StatefulWidget {
@@ -28,62 +27,18 @@ class _CarItemWidgetState extends State<CarItemWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onLongPress: () {
+        _model.deleteCar(widget.car.licensePlate!);
+        setState(() {});
+      },
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Center(
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Radio<String>(
-                          value: 'Available',
-                          groupValue: selectedAvailability,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedAvailability = value!;
-                            });
-                          },
-                        ),
-                        Text('Available'),
-                        Radio<String>(
-                          value: 'Not Available',
-                          groupValue: selectedAvailability,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedAvailability = value!;
-                            });
-                          },
-                        ),
-                        Text('Not Available'),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    CustomTextInput(
-                      label: 'Price',
-                      controller: _model.priceInput,
-                    ),
-                    SizedBox(height: 16),
-                    FFButtonWidget(
-                      onPressed: () {
-                        _model.editCar(widget.car.licensePlate!);
-                      },
-                      text: 'Edit',
-                      options: FFButtonOptions(
-                        height: 40,
-                      ),
-                    )
-                  ]),
-                ),
-              ),
-            );
+        context.pushNamed(
+          'CarDetails',
+          pathParameters: {'licensePlate': widget.car.licensePlate!},
+          extra: <String, dynamic>{
+            'car': widget.car,
           },
         );
-        setState(() {});
       },
       child: Container(
         clipBehavior: Clip.antiAlias,
@@ -108,7 +63,9 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: CachedNetworkImage(
-                imageUrl: widget.car.photoUrl!,
+                imageUrl: environment == 'TEST'
+                    ? getImageUrl(widget.car.ownerId!, widget.car.photoUrl![0])
+                    : widget.car.photoUrl![0],
                 errorWidget: (context, url, error) => Icon(
                   Icons.error,
                   color: Colors.red,
@@ -147,8 +104,10 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                     Row(
                       children: [
                         Text("Plate Number: "),
-                        Text("${widget.car.licensePlate}",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          "${widget.car.licensePlate}",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                   ],
@@ -156,58 +115,6 @@ class _CarItemWidgetState extends State<CarItemWidget> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget editDialog() {
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Center(
-          child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Radio<String>(
-                  value: 'Available',
-                  groupValue: selectedAvailability,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAvailability = value!;
-                    });
-                  },
-                ),
-                Text('Available'),
-                Radio<String>(
-                  value: 'Not Available',
-                  groupValue: selectedAvailability,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAvailability = value!;
-                    });
-                  },
-                ),
-                Text('Not Available'),
-              ],
-            ),
-            SizedBox(height: 16),
-            CustomTextInput(
-              label: 'Price',
-              controller: _model.priceInput,
-            ),
-            SizedBox(height: 16),
-            FFButtonWidget(
-              onPressed: () {
-                _model.editCar(widget.car.licensePlate!);
-              },
-              text: 'Edit',
-              options: FFButtonOptions(
-                height: 40,
-              ),
-            )
-          ]),
         ),
       ),
     );

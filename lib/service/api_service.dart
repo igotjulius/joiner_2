@@ -19,12 +19,12 @@ part 'api_service.g.dart';
 const String serverUrl = 'http://localhost:443/';
 // const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
-final apiService =
-    ApiService(Dio(BaseOptions(contentType: 'application/json')));
+final apiService = ApiService(Dio());
+// ApiService(Dio(BaseOptions(contentType: 'application/json')));
 
 @RestApi(baseUrl: serverUrl)
 abstract class ApiService {
-  factory ApiService(Dio dio) = _ApiService;
+  factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
   // User Api's
   // Register user
@@ -250,6 +250,13 @@ abstract class ApiService {
     @Path('craUserId') String craUserId,
   );
 
+  // Get specific car
+  @GET('cra/{craUserId}/car/{licensePlate}')
+  Future<ResponseModel<CarModel?>> getCraCar(
+    @Path('craUserId') String craUserId,
+    @Path('licensePlate') String licensePlate,
+  );
+
   // CHECK =>
   // Register a car
   @POST('cra/{craUserId}/car')
@@ -271,6 +278,44 @@ abstract class ApiService {
   @GET('cra/{craUserId}/rent')
   Future<ResponseModel<List<RentalModel>?>> getCraRentals(
     @Path('craUserId') String craUserId,
+  );
+
+  // Registering a car and uploading an image
+  @MultiPart()
+  @POST('cra/{craUserId}/register/car')
+  Future<void> registerCar(
+    @Path('craUserId') String craUserId, {
+    @Part() required String licensePlate,
+    @Part() required String ownerId,
+    @Part() required String ownerName,
+    @Part() required String vehicleType,
+    @Part() required String availability,
+    @Part() required String availableStartDate,
+    @Part() required String availableEndDate,
+    @Part() required double price,
+    @Part() List<MultipartFile>? files,
+  });
+
+  // Editing a car
+  @MultiPart()
+  @PUT('cra/{craUserId}/car/{licensePlate}')
+  Future<void> editCar(
+    @Path('craUserId') String craUserId,
+    @Path('licensePlate') String carLicensePlate, {
+    @Part() required String licensePlate,
+    @Part() required String vehicleType,
+    @Part() required String availability,
+    @Part() required String availableStartDate,
+    @Part() required String availableEndDate,
+    @Part() required double price,
+    @Part() List<MultipartFile>? files,
+  });
+
+  // Delete a car
+  @DELETE('cra/{craUserId}/car/{licensePlate}')
+  Future<void> deleteCar(
+    @Path('craUserId') String craUserId,
+    @Path('licensePlate') String licensePlate,
   );
 
   //

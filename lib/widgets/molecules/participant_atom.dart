@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/lobby_model.dart';
-import 'package:joiner_1/widgets/atoms/participant_atom_model.dart';
+import 'package:joiner_1/widgets/molecules/participant_atom_model.dart';
 import 'package:provider/provider.dart';
 
-class ParticipantAtom extends StatefulWidget {
+class ParticipantMole extends StatefulWidget {
   final String? firstName;
   final String? lastName;
   final String? userId;
@@ -14,7 +14,7 @@ class ParticipantAtom extends StatefulWidget {
   final bool? showRemoveOption;
   final Function(Function())? rebuildParent;
 
-  const ParticipantAtom({
+  const ParticipantMole({
     Key? key,
     this.firstName,
     this.lastName,
@@ -27,17 +27,17 @@ class ParticipantAtom extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ParticipantAtomState createState() => _ParticipantAtomState();
+  _ParticipantMoleState createState() => _ParticipantMoleState();
 }
 
-class _ParticipantAtomState extends State<ParticipantAtom> {
-  late ParticipantAtomModel _model;
+class _ParticipantMoleState extends State<ParticipantMole> {
+  late ParticipantModel _model;
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(
-        context, () => ParticipantAtomModel(friendId: widget.userId));
+    _model =
+        createModel(context, () => ParticipantModel(friendId: widget.userId));
     _model.lobbyId = Provider.of<LobbyModel?>(context, listen: false)?.id;
   }
 
@@ -83,11 +83,8 @@ class _ParticipantAtomState extends State<ParticipantAtom> {
                           onChanged: (value) {
                             setState(() {
                               _model.isChecked = value!;
-                              widget.eventCallback!(
-                                _model.friendId!,
-                                widget.firstName!,
-                                widget.lastName!
-                              );
+                              widget.eventCallback!(_model.friendId!,
+                                  widget.firstName!, widget.lastName!);
                             });
                           },
                         ),

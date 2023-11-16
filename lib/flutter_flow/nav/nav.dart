@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
+import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
+import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rental_details/cra_rental_details_widget.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
@@ -183,6 +185,24 @@ List<FFRoute> craRoutes() {
       path: '/cars',
       builder: (context, params) =>
           params.isEmpty ? NavBarPage(initialPage: 'Cars') : CraCarWidget(),
+      routes: [
+        GoRoute(
+          name: 'RegisterCar',
+          path: 'registerCar',
+          builder: (context, state) => AddCarWidget(),
+        ),
+        GoRoute(
+          name: 'CarDetails',
+          path: ':licensePlate',
+          builder: (context, state) {
+            final obj = state.extraMap['car'] ??= null;
+            return EditCarWidget(
+              car: obj,
+              licensePlate: state.pathParameters['licensePlate'],
+            );
+          },
+        ),
+      ],
     ),
     FFRoute(
       name: 'CraRentals',

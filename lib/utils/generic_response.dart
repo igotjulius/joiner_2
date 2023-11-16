@@ -45,6 +45,8 @@ class ResponseModel<T> {
         converted = json['redirUrl'] as String;
       else if (json.containsKey('question'))
         converted = PollModel.fromJson(json);
+      else if (json.containsKey('licensePlate'))
+        converted = CarModel.fromJson(json);
       return converted as T;
     } else if (json is List<dynamic>) {
       if (json.isEmpty) {

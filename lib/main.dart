@@ -24,17 +24,19 @@ void main() async {
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider.value(
-        value: appState,
-      ),
-      ChangeNotifierProvider(
-        create: (context) => AppStateNotifier.instance,
-      ),
-    ],
-    child: MyApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: appState,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AppStateNotifier.instance,
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -68,7 +70,7 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('en', '')],
-      theme: lightTheme,
+      theme: lightTheme(context),
       routerConfig: GoRouter(
         initialLocation: '/login',
         debugLogDiagnostics: true,

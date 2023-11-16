@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/utils/generic_response.dart';
-import 'package:joiner_1/widgets/atoms/participant_atom.dart';
+import 'package:joiner_1/widgets/molecules/participant_atom.dart';
 import 'package:joiner_1/models/participant_model.dart';
 
 class InviteParticipantsModel extends FlutterFlowModel {
@@ -46,7 +46,7 @@ class InviteParticipantsModel extends FlutterFlowModel {
           shrinkWrap: true,
           itemCount: friends.length,
           itemBuilder: (context, index) {
-            return ParticipantAtom(
+            return ParticipantMole(
               firstName: friends[index]['firstName'],
               lastName: friends[index]['lastName'],
               userId: friends[index]['friendId'],
