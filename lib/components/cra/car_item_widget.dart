@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/car_item_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
@@ -7,8 +8,11 @@ import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../flutter_flow/flutter_flow_util.dart';
+
 class CarItemWidget extends StatefulWidget {
   final CarModel car;
+
   const CarItemWidget({super.key, required this.car});
 
   @override
@@ -38,6 +42,26 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                 padding: const EdgeInsets.all(20),
                 child: Center(
                   child: Column(children: [
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: Navigator.of(context).pop,
+                            icon: Icon(Icons.arrow_back)),
+                        Text(
+                          'Edit Car Rental Details',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Padding(padding: EdgeInsets.only(top: 30, bottom: 0)),
+                        Text('Availability',
+                            style: TextStyle(
+                                color: Color(0xFF7D7D7D), fontSize: 14))
+                      ],
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -110,64 +134,88 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                     ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: CachedNetworkImage(
-                imageUrl: widget.car.photoUrl!,
-                errorWidget: (context, url, error) => Icon(
-                  Icons.error,
-                  color: Colors.red,
-                ),
-                placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                width: 130.0,
-                height: 80.0,
-                fit: BoxFit.fill,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.car.vehicleType!,
-                      style: FlutterFlowTheme.of(context).labelMedium.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+            Row(
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(10)),
+                CachedNetworkImage(
+                  imageUrl: widget.car.photoUrl!,
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  width: 150.0,
+                  height: 100.0,
+                  fit: BoxFit.fill,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0), // Adjust the radius as needed
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "₱${widget.car.price}",
-                          style:
-                              FlutterFlowTheme.of(context).labelMedium.copyWith(
+                  ),
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10, top: 30, bottom: 30),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.car.vehicleType!,
+                              style: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
+                                    fontSize: 16
                                   ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  NumberFormat.currency(
+                                    symbol: '₱',
+                                    decimalDigits: 0,
+                                  ).format(widget.car.price),
+                                  style: FlutterFlowTheme.of(context)
+                                      .labelMedium
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 16
+                                      ),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text('/ day'),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Text("Plate Number: "),
+                                Text("${widget.car.licensePlate}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: 4,
-                        ),
-                        Text('/ day'),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Text("Plate Number: "),
-                        Text("${widget.car.licensePlate}",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
+                      ),
                     ),
                   ],
-                ),
-              ),
+                )
+              ],
             ),
           ],
         ),

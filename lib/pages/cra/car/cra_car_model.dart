@@ -21,10 +21,16 @@ class CraCarModel extends FlutterFlowModel {
               child: Text('No registered cars'),
             );
 
-          return ListView.builder(
+          return ListView.separated(
             itemCount: cars.length,
             itemBuilder: (context, index) {
               return CarItemWidget(car: cars[index]);
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 10, // Adjust the height of the separator as needed
+                color: Colors.white, // Adjust the color of the separator as needed
+              );
             },
           );
         });

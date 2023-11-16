@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,9 @@ class _AddCarModalState extends State<AddCarModal> {
   }
 
   Future<void> _pickImage() async {
-    final result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
     if (result == null) return;
 
     setState(() {
@@ -45,26 +49,25 @@ class _AddCarModalState extends State<AddCarModal> {
   }
 
   Future<String?> _uploadImage() async {
-  try {
-    if (pickedImage == null || pickedImage!.bytes == null) {
-      print("Error: Picked image or bytes are null");
+    try {
+      if (pickedImage == null || pickedImage!.path == null) {
+        print("Error: Picked image or bytes are null");
+        return null;
+      }
+
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      final path = 'images/$fileName.png';
+
+      final ref = FirebaseStorage.instance.ref().child(path);
+      final metadata = SettableMetadata(contentType: 'image/png');
+      await ref.putFile(File(pickedImage!.path!), metadata); // Use putFile here
+
+      return await ref.getDownloadURL();
+    } catch (e) {
+      print('Error uploading image: $e');
       return null;
     }
-
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    final path = 'images/$fileName.png';
-
-    final ref = FirebaseStorage.instance.ref().child(path);
-    final metadata = SettableMetadata(contentType: 'image/png');
-    await ref.putData(pickedImage!.bytes!, metadata);
-
-     return await ref.getDownloadURL();
-  } catch (e) {
-    print('Error uploading image: $e');
-
-    return null;
   }
-}
 
 
 
@@ -95,9 +98,17 @@ class _AddCarModalState extends State<AddCarModal> {
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black),
                     ),
-                    child: pickedImage != null && pickedImage!.bytes != null
+                    child: // FOR FLUTTER WEB
+                    /*pickedImage != null && pickedImage!.bytes != null
                         ? Image.memory(pickedImage!.bytes!,
-                            width: double.infinity, fit: BoxFit.fill)
+                            width: double.infinity, fit: BoxFit.fill)*/
+
+                    // FOR FLUTTER MOBILE
+                    pickedImage != null
+                        ? Image.file(
+                              File(pickedImage!.path!),
+                              width: double.infinity,
+                              fit: BoxFit.fill)
                         : Container(
                             child: Text(
                               'Tap to Upload Image',
@@ -173,26 +184,32 @@ class _AddCarModalState extends State<AddCarModal> {
                   inputFormatters: FilteringTextInputFormatter.digitsOnly,
                 ),
                 FFButtonWidget(
-                    text: 'Register Car',
-                    onPressed: () async {
+                  text: 'Register Car',
+                  onPressed: () async {
                     final imageUrl = await _uploadImage();
-                      if (imageUrl == null) {
-                      SnackBar(content: Text('Image Error'),);
+                    if (imageUrl == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Image Error'),
+                        ),
+                      );
                       return;
                     }
-                      final car = CarModel(
-                        licensePlate: _model.licenseController.text,
-                        vehicleType: _model.vehicleTypeController.text,
-                        availableStartDate: _model.datePicked!.start,
-                        availableEndDate: _model.datePicked!.end,
-                        price: double.parse(_model.priceController.text),
-                        photoUrl: imageUrl
-                      );
-                      _uploadImage();
-                      await CraController.addCar(car);
-                      Navigator.pop(context);
-                    },
-                    options: FFButtonOptions(height: 40.0)),
+
+                    final car = CarModel(
+                      licensePlate: _model.licenseController.text,
+                      vehicleType: _model.vehicleTypeController.text,
+                      availableStartDate: _model.datePicked!.start,
+                      availableEndDate: _model.datePicked!.end,
+                      price: double.parse(_model.priceController.text),
+                      photoUrl: imageUrl,
+                    );
+
+                    await CraController.addCar(car);
+                    Navigator.pop(context);
+                  },
+                  options: FFButtonOptions(height: 40.0),
+                ),
               ].divide(
                 SizedBox(
                   height: 10,
