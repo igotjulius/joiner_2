@@ -147,10 +147,9 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                   placeholder: (context, url) => CircularProgressIndicator(),
                   width: 150.0,
                   height: 100.0,
-                  fit: BoxFit.fill,
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0), // Adjust the radius as needed
+                      borderRadius: BorderRadius.circular(8.0),
                       image: DecorationImage(
                         image: imageProvider,
                         fit: BoxFit.fill,

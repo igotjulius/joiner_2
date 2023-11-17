@@ -1,10 +1,11 @@
 
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/components/cra/add_car_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
@@ -22,9 +23,11 @@ class AddCarModal extends StatefulWidget {
 
 class _AddCarModalState extends State<AddCarModal> {
   late AddCarModel _model;
-  PlatformFile? pickedImage;
+  final ImagePicker imagePicker = ImagePicker();
+  List<XFile> imageFileList = [];
   UploadTask? uploadTask;
   String? imageUrl;
+  bool isUploading = false;
 
   @override
   void initState() {
@@ -37,38 +40,51 @@ class _AddCarModalState extends State<AddCarModal> {
     _model.priceController ??= TextEditingController();
   }
 
-  Future<void> _pickImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-    if (result == null) return;
-
-    setState(() {
-      pickedImage = result.files.first;
-    });
-  }
-
-  Future<String?> _uploadImage() async {
-    try {
-      if (pickedImage == null || pickedImage!.path == null) {
-        print("Error: Picked image or bytes are null");
-        return null;
-      }
-
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      final path = 'images/$fileName.png';
-
-      final ref = FirebaseStorage.instance.ref().child(path);
-      final metadata = SettableMetadata(contentType: 'image/png');
-      await ref.putFile(File(pickedImage!.path!), metadata); // Use putFile here
-
-      return await ref.getDownloadURL();
-    } catch (e) {
-      print('Error uploading image: $e');
-      return null;
+  void selectImages() async {
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+    if (selectedImages != null && selectedImages.isNotEmpty) {
+      setState(() {
+        imageFileList.addAll(selectedImages);
+      });
     }
   }
 
+  Future<void> uploadImages() async {
+    List<String> imagePaths = imageFileList.map((image) => image.path).toList();
+    String userId = FFAppState().currentUser?.id.toString() ?? 'unknown_user';
+    String licensePlate = _model.licenseController.text;
+
+    List<String> downloadUrls = await uploadImagesToFirebase(imagePaths, userId, licensePlate);
+  }
+
+  Future<List<String>> uploadImagesToFirebase(List<String> imagePaths, String userId, String licensePlate) async {
+    List<String> downloadUrls = [];
+
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+
+      for (String imagePath in imagePaths) {
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        String path = 'images/$userId/$licensePlate/$fileName.png';
+
+        Reference ref = storage.ref().child(path);
+        File file = File(imagePath);
+
+        final metadata = SettableMetadata(contentType: 'image/png');
+        await ref.putFile(File(file.path), metadata);
+
+        // Get the download URL for each uploaded image
+        String downloadURL = await ref.getDownloadURL();
+        downloadUrls.add(downloadURL);
+        print('Image uploaded. Download URL: $downloadURL');
+      }
+
+      return downloadUrls;
+    } catch (e) {
+      print('Error uploading images: $e');
+      return [];
+    }
+  }
 
 
   @override
@@ -87,36 +103,81 @@ class _AddCarModalState extends State<AddCarModal> {
                         Navigator.pop(context);
                       },
                     ),
+                    Text('Register Car Rental Vehicle', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
                   ],
                 ),
-                Text('Register your Vehicle'),
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: // FOR FLUTTER WEB
-                    /*pickedImage != null && pickedImage!.bytes != null
-                        ? Image.memory(pickedImage!.bytes!,
-                            width: double.infinity, fit: BoxFit.fill)*/
-
-                    // FOR FLUTTER MOBILE
-                    pickedImage != null
-                        ? Image.file(
-                              File(pickedImage!.path!),
-                              width: double.infinity,
-                              fit: BoxFit.fill)
-                        : Container(
-                            child: Text(
-                              'Tap to Upload Image',
-                              style: TextStyle(color: Colors.grey),
+                Column(
+                  children: [
+                    SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: imageFileList.isNotEmpty
+                          ? GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemCount: imageFileList.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Image.file(
+                              File(imageFileList[index].path),
+                              fit: BoxFit.fill,
                             ),
-                            alignment: Alignment(0, 0),
-                          ),
-                  ),
+                          );
+                        },
+                      )
+                          : Container(
+                        child: Text(
+                          'No Image/s Found',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        alignment: Alignment(0, 0),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    MaterialButton(
+                      onPressed: selectImages,
+                      color: Colors.blue,
+                      child: Text('Upload Images', style: TextStyle(color: Colors.white)),
+                    ),
+                    SizedBox(height: 25),
+                    MaterialButton(
+                      onPressed: () async {
+                        if (imageFileList.isEmpty) {
+                          Fluttertoast.showToast(
+                            msg: 'Please select at least one image.',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: Colors.red, // Adjust the background color
+                            textColor: Colors.white, // Adjust the text color
+                            fontSize: 16.0,
+                          );
+                          return;
+                        }
+                        setState(() {
+                          isUploading = true;
+                        });
+
+                        await uploadImages();
+
+                        setState(() {
+                          isUploading = false;
+                        });
+
+                        context.pop();
+                      },
+                      elevation: isUploading? 0 : 2,
+                      color: isUploading? Colors.white : Colors.blue,
+                      child: isUploading
+                          ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      )
+                          : Text('Upload To Firebase', style: TextStyle(color: Colors.white)),
+                    ),
+                  ],
                 ),
                 CustomTextInput(
                   label: 'License Plate',
@@ -186,13 +247,17 @@ class _AddCarModalState extends State<AddCarModal> {
                 FFButtonWidget(
                   text: 'Register Car',
                   onPressed: () async {
-                    final imageUrl = await _uploadImage();
+                    //final imageUrl = await _uploadImage();
                     if (imageUrl == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Image Error'),
-                        ),
-                      );
+                      Fluttertoast.showToast(
+                      msg: 'Please fill up all the fields',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 2,
+                      backgroundColor: Colors.red, // Adjust the background color
+                      textColor: Colors.white, // Adjust the text color
+                      fontSize: 16.0,
+                    );
                       return;
                     }
 
