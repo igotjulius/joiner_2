@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
@@ -226,7 +229,8 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   }
 
   Widget pickedImage(PlatformFile imageFile) {
-    return Image.memory(imageFile.bytes!);
+    if (kIsWeb) return Image.memory(imageFile.bytes!);
+    return Image.file(File(imageFile.path!));
   }
 
   Widget networkImage(String imageUrl) {

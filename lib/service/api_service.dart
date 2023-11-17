@@ -15,8 +15,14 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-// const String serverUrl = 'http://10.0.2.2:443/'; // For mobile
-const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'http://10.0.2.2:443/'; // For mobile emulator run on the host machine
+/*
+  For physical phones, address might change.
+  Run ipconfig from the host machine to configure the ip address of the server.
+  Make sure that the physical phone and host machine are in the same network.
+*/
+const String serverUrl = 'http://192.168.1.5:443/';
+// const String serverUrl = 'http://localhost:443/';
 // const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
 final apiService = ApiService(Dio());

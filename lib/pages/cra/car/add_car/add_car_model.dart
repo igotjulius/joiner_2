@@ -38,8 +38,11 @@ class AddCarModel extends FlutterFlowModel {
   /// Action blocks are added here.
   // Picking files, limits to only 3 images
   Future<String?> pickImage() async {
-    final result = await FilePicker.platform
-        .pickFiles(type: FileType.image, allowMultiple: true);
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.image,
+      withData: true,
+    );
     if (result == null) return null;
     if (result.count > 5) {
       return 'You can only upload upto 5 images at most.';

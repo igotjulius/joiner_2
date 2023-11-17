@@ -63,9 +63,8 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: CachedNetworkImage(
-                imageUrl: environment == 'TEST'
-                    ? getImageUrl(widget.car.ownerId!, widget.car.photoUrl![0])
-                    : widget.car.photoUrl![0],
+                imageUrl:
+                    getImageUrl(widget.car.ownerId!, widget.car.photoUrl![0]),
                 errorWidget: (context, url, error) => Icon(
                   Icons.error,
                   color: Colors.red,

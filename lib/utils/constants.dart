@@ -1,7 +1,13 @@
+import 'package:joiner_1/service/api_service.dart';
+
 export 'constants.dart';
 
-String getImageUrl(String craUserId, String imageUrl) {
-  return 'http://127.0.0.1:443/images/$craUserId/$imageUrl';
-}
-
 const environment = 'TEST';
+const device = 'MOBILE';
+
+String getImageUrl(String craUserId, String imageUrl) {
+  if (environment == 'TEST' && device == 'MOBILE')
+    return '${serverUrl}images/$craUserId/$imageUrl';
+  else
+    return imageUrl;
+}

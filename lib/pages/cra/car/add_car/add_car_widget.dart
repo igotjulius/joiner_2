@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
@@ -199,7 +201,10 @@ class _AddCarWidgetState extends State<AddCarWidget> {
       ),
       itemBuilder: (context, index, viewIndex) {
         final image = _model.pickedFiles![index];
-        return Image.memory(image.bytes!);
+        if (kIsWeb) {
+          return Image.memory(image.bytes!);
+        }
+        return Image.file(File(image.path!));
       },
     );
   }
