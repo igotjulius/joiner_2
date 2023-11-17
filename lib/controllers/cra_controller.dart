@@ -47,9 +47,9 @@ class CraController {
   }
 
   // Register car under corresponding CRA - (for offline environment)
-  static Future<void> registerCar(
+  static Future<String?> registerCar(
       CarModel car, List<MultipartFile>? images) async {
-    await apiService.registerCar(
+    final result = await apiService.registerCar(
       _craUserId,
       licensePlate: car.licensePlate!,
       ownerId: car.ownerId!,
@@ -61,6 +61,10 @@ class CraController {
       price: car.price!,
       files: images,
     );
+    // Return error message if car is already registered by its licenseplate
+    if (result.code == 406) return result.message;
+
+    return null;
   }
 
   // Edit car availability

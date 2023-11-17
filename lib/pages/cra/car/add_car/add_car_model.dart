@@ -48,9 +48,9 @@ class AddCarModel extends FlutterFlowModel {
     return null;
   }
 
-  // If environment is in testing
-  Future<void> registerCar(BuildContext context) async {
-    final converted = await convert(pickedFiles!);
+  // Registering a car
+  FutureBuilder<String?> registerCar() {
+    final converted = convert(pickedFiles!);
     final car = CarModel(
       licensePlate: licenseController.text,
       ownerId: FFAppState().currentUser!.id,
@@ -62,36 +62,45 @@ class AddCarModel extends FlutterFlowModel {
       availableEndDate: datePicked!.end,
       price: double.parse(priceController.text),
     );
-    try {
-      await CraController.registerCar(car, converted);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.transparent,
-          behavior: SnackBarBehavior.floating,
-          elevation: 4,
-          padding: EdgeInsets.zero,
-          content: ClipPath(
-            clipper: ShapeBorderClipper(
-              shape: ContinuousRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+    return FutureBuilder(
+      future: CraController.registerCar(car, converted),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done)
+          return CircularProgressIndicator();
+
+        if (snapshot.data != null)
+          return Column(
+            children: [
+              Image.asset(
+                'assets/images/cancelled-payment.png',
+                height: 60,
+                width: 60,
+              ),
+              Text(
+                  'License plate submitted has already been registered to a car.'),
+            ],
+          );
+        else
+          return Column(
+            children: [
+              Image.asset(
+                'assets/images/successful-payment.png',
+                height: 60,
+                width: 60,
+              ),
+              Text('Car registered into the system.')
+            ].divide(
+              SizedBox(
+                height: 8,
               ),
             ),
-            child: Container(
-              height: 56,
-              decoration: BoxDecoration(
-                color: Colors.green[600],
-              ),
-              child: Center(child: Text('Form submitted')),
-            ),
-          ),
-        ),
-      );
-    }
+          );
+      },
+    );
   }
 
   // Converts picked files to a MultipartFile for sending to the server
-  Future<List<MultipartFile>> convert(List<PlatformFile> files) async {
+  List<MultipartFile> convert(List<PlatformFile> files) {
     final multipartFiles = <MultipartFile>[];
 
     for (final file in files) {

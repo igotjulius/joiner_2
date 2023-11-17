@@ -69,11 +69,36 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                   ),
                   FilledButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate())
-                        _model.registerCar(context);
+                      if (_formKey.currentState!.validate() &&
+                          _model.pickedFiles != null) {
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Container(
+                                height: 400,
+                                width: 400,
+                                child: Center(
+                                  child: _model.registerCar(),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    context.pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                       imagePickerError = _model.pickedFiles == null
                           ? 'Please upload an image of your car'
                           : null;
+
                       setState(() {});
                     },
                     child: Text('Register Car'),

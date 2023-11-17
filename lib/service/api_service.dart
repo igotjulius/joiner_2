@@ -289,7 +289,7 @@ abstract class ApiService {
   // Registering a car and uploading an image
   @MultiPart()
   @POST('cra/{craUserId}/register/car')
-  Future<void> registerCar(
+  Future<ResponseModel> registerCar(
     @Path('craUserId') String craUserId, {
     @Part() required String licensePlate,
     @Part() required String ownerId,
