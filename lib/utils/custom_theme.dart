@@ -8,10 +8,12 @@ ThemeData lightTheme(BuildContext context) {
     brightness: Brightness.light,
     useMaterial3: true,
     fontFamily: 'Roboto',
-    appBarTheme: const AppBarTheme(
-      iconTheme: IconThemeData(color: Colors.white),
-    ),
     colorScheme: lightThemeColors(),
+    primaryColor: lightThemeColors().primary,
+    appBarTheme: AppBarTheme(
+      // iconTheme: IconThemeData(color: Colors.white),
+      backgroundColor: Colors.transparent,
+    ),
     cardTheme: CardTheme(
       shape: ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -32,6 +34,15 @@ ThemeData lightTheme(BuildContext context) {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
+    ),
+    iconTheme: IconThemeData(
+      color: lightThemeColors().primary,
+    ),
+    primaryIconTheme: IconThemeData(
+      color: lightThemeColors().primary,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      prefixIconColor: lightThemeColors().primary,
     ),
   );
 }

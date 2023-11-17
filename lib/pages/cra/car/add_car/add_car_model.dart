@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
+import 'package:joiner_1/utils/utils.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
@@ -15,16 +16,12 @@ class AddCarModel extends FlutterFlowModel {
 
   // State field(s) for TextField widget.
   TextEditingController? licenseController;
-  String? Function(String?)? licenseControllerValidator;
   // State field(s) for TextField widget.
   TextEditingController? vehicleTypeController;
-  String? Function(String?)? vehicleTypeControllerValidator;
   // State field(s) for TextField widget.
   TextEditingController? datesController;
-  String? Function(String?)? datesControllerValidator;
   // State field(s) for TextField widget.
   TextEditingController? priceController;
-  String? Function(String?)? priceControllerValidator;
 
   void initState(BuildContext context) {}
 
@@ -52,7 +49,7 @@ class AddCarModel extends FlutterFlowModel {
   }
 
   // If environment is in testing
-  Future<void> registerCar() async {
+  Future<void> registerCar(BuildContext context) async {
     final converted = await convert(pickedFiles!);
     final car = CarModel(
       licensePlate: licenseController.text,
@@ -65,7 +62,32 @@ class AddCarModel extends FlutterFlowModel {
       availableEndDate: datePicked!.end,
       price: double.parse(priceController.text),
     );
-    await CraController.registerCar(car, converted);
+    try {
+      await CraController.registerCar(car, converted);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.transparent,
+          behavior: SnackBarBehavior.floating,
+          elevation: 4,
+          padding: EdgeInsets.zero,
+          content: ClipPath(
+            clipper: ShapeBorderClipper(
+              shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: Container(
+              height: 56,
+              decoration: BoxDecoration(
+                color: Colors.green[600],
+              ),
+              child: Center(child: Text('Form submitted')),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   // Converts picked files to a MultipartFile for sending to the server
@@ -85,4 +107,20 @@ class AddCarModel extends FlutterFlowModel {
   }
 
   /// Additional helper methods are added here.
+  /// Validators
+  String? licenseValidator(String? value) {
+    return isEmpty(value);
+  }
+
+  String? vehicleTypeValidator(String? value) {
+    return isEmpty(value);
+  }
+
+  String? datesValidator(String? value) {
+    return isEmpty(value);
+  }
+
+  String? priceValidator(String? value) {
+    return isEmpty(value);
+  }
 }

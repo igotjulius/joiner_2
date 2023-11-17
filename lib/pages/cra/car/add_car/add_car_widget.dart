@@ -21,6 +21,8 @@ class _AddCarWidgetState extends State<AddCarWidget> {
   UploadTask? uploadTask;
   String? imageUrl;
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -35,50 +37,51 @@ class _AddCarWidgetState extends State<AddCarWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Register car'),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Center(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    CloseButton(
-                      onPressed: () {
-                        context.pop();
-                      },
-                    ),
-                  ],
-                ),
-                Text('Register your Vehicle'),
-                imagePicker(),
-                CustomTextInput(
-                  label: 'License Plate',
-                  controller: _model.licenseController,
-                  validator: _model.licenseControllerValidator,
-                ),
-                CustomTextInput(
-                  label: 'Vehicle Type',
-                  controller: _model.vehicleTypeController,
-                  validator: _model.vehicleTypeControllerValidator,
-                ),
-                datePicker(context),
-                CustomTextInput(
-                  label: 'Price',
-                  controller: _model.priceController,
-                  validator: _model.priceControllerValidator,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: FilteringTextInputFormatter.digitsOnly,
-                ),
-                FilledButton(
-                  onPressed: () {
-                    _model.registerCar();
-                  },
-                  child: Text('Register Car'),
-                ),
-              ].divide(
-                SizedBox(
-                  height: 10,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  imagePicker(),
+                  CustomTextInput(
+                    label: 'License Plate',
+                    controller: _model.licenseController,
+                    validator: _model.licenseValidator,
+                  ),
+                  CustomTextInput(
+                    label: 'Vehicle Type',
+                    controller: _model.vehicleTypeController,
+                    validator: _model.vehicleTypeValidator,
+                  ),
+                  datePicker(context),
+                  CustomTextInput(
+                    label: 'Price',
+                    controller: _model.priceController,
+                    validator: _model.priceValidator,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: FilteringTextInputFormatter.digitsOnly,
+                  ),
+                  FilledButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate())
+                        _model.registerCar(context);
+                      imagePickerError = _model.pickedFiles == null
+                          ? 'Please upload an image of your car'
+                          : null;
+                      setState(() {});
+                    },
+                    child: Text('Register Car'),
+                  ),
+                ].divide(
+                  SizedBox(
+                    height: 10,
+                  ),
                 ),
               ),
             ),
@@ -90,9 +93,11 @@ class _AddCarWidgetState extends State<AddCarWidget> {
 
   Widget datePicker(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Available Dates'),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text('Available Dates'),
+        ),
         SizedBox(
           height: 4,
         ),
@@ -109,30 +114,26 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                     '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
               });
           },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(width: 0.5),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              // inputDecorationTheme: InputDecorationTheme(
+              //   disabledBorder: OutlineInputBorder(
+              //       borderSide: BorderSide(color: Colors.black)),
+              // ),
+              inputDecorationTheme:
+                  Theme.of(context).inputDecorationTheme.copyWith(
+                        disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                      ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Icon(
-                    Icons.calendar_today,
-                    color: Color(0xFF52B2FA),
-                    size: 24.0,
-                  ),
-                ),
-                Text(
-                  _model.datePicked != null
-                      ? (_model.datePicked!.duration.inDays == 0
-                          ? "${DateFormat('MMM d').format(_model.datePicked!.start)}"
-                          : "${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}")
-                      : '',
-                ),
-              ].divide(SizedBox(width: 10.0)),
+            child: CustomTextInput(
+              controller: _model.datesController,
+              validator: _model.datesValidator,
+              prefixIcon: Icon(
+                Icons.calendar_today_rounded,
+              ),
+              enabled: false,
             ),
           ),
         ),

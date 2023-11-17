@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 
 class CustomTextInput extends StatefulWidget {
   final String? initialValue;
-  final String label;
+  final String? label;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final TextInputFormatter inputFormatters;
   final bool enabled;
   final bool obscureText;
+  final bool readOnly;
+  final Icon? prefixIcon;
 
   CustomTextInput({
     super.key,
     this.initialValue,
-    required this.label,
+    this.label,
     this.controller,
     this.validator,
     this.keyboardType,
     TextInputFormatter? inputFormatters,
     this.enabled = true,
     this.obscureText = false,
+    this.readOnly = false,
+    this.prefixIcon,
   }) : inputFormatters =
             inputFormatters ?? FilteringTextInputFormatter.singleLineFormatter;
 
@@ -35,16 +40,15 @@ class _CustomTextInputState extends State<CustomTextInput> {
       children: <Widget>[
         Column(
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                widget.label,
+            if (widget.label != null)
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  widget.label!,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 4,
-            ),
             TextFormField(
+              readOnly: widget.readOnly,
               initialValue: widget.initialValue,
               controller: widget.controller,
               validator: widget.validator,
@@ -55,6 +59,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
                 widget.inputFormatters,
               ],
               decoration: InputDecoration(
+                prefixIcon: widget.prefixIcon,
                 border: OutlineInputBorder(),
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -63,7 +68,11 @@ class _CustomTextInputState extends State<CustomTextInput> {
                 ),
               ),
             ),
-          ],
+          ].divide(
+            SizedBox(
+              height: 4,
+            ),
+          ),
         ),
       ],
     );
