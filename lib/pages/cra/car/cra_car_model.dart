@@ -13,22 +13,28 @@ class CraCarModel extends FlutterFlowModel {
 
   FutureBuilder<List<CarModel>?> getCars() {
     return FutureBuilder(
-      future: CraController.getCraCars(),
-      builder: (context, snapshot) {
-        List<CarModel>? cars = snapshot.data;
-        if (cars == null)
-          return Center(
-            child: Text('No registered cars'),
-          );
+        future: CraController.getCraCars(),
+        builder: (context, snapshot) {
+          List<CarModel>? cars = snapshot.data;
+          if (cars == null)
+            return Center(
+              child: Text('No registered cars'),
+            );
 
-        return ListView.builder(
-          itemCount: cars.length,
-          itemBuilder: (context, index) {
-            final car = cars[index];
-            return CarItemWidget(car: car);
-          },
-        );
-      },
-    );
+          return ListView.separated(
+            itemCount: cars.length,
+            itemBuilder: (context, index) {
+              final car = cars[index];
+              return CarItemWidget(car: car);
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 10, // Adjust the height of the separator as needed
+                color:
+                    Colors.white, // Adjust the color of the separator as needed
+              );
+            },
+          );
+        });
   }
 }
