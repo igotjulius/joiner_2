@@ -72,29 +72,36 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                       if (_formKey.currentState!.validate() &&
                           _model.pickedFiles != null) {
                         showDialog(
-                          barrierDismissible: false,
                           context: context,
                           builder: (context) {
-                            return AlertDialog(
-                              content: Container(
-                                height: 400,
-                                width: 400,
-                                child: Center(
-                                  child: _model.registerCar(),
+                            return Dialog(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                width: 360,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    _model.registerCar(),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: FilledButton(
+                                        onPressed: () {
+                                          context.pop();
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    context.pop();
-                                  },
-                                  child: Text('OK'),
-                                ),
-                              ],
                             );
                           },
                         );
                       }
+
                       imagePickerError = _model.pickedFiles == null
                           ? 'Please upload an image of your car'
                           : null;

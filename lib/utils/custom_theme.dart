@@ -44,6 +44,11 @@ ThemeData lightTheme(BuildContext context) {
     inputDecorationTheme: InputDecorationTheme(
       prefixIconColor: lightThemeColors().primary,
     ),
+    dialogTheme: DialogTheme(
+      shape: ContinuousRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
   );
 }
 

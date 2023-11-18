@@ -77,8 +77,12 @@ class AddCarModel extends FlutterFlowModel {
                 width: 60,
               ),
               Text(
-                  'License plate submitted has already been registered to a car.'),
-            ],
+                'License plate submitted has already been registered to a car.',
+                textAlign: TextAlign.center,
+              ),
+            ].divide(SizedBox(
+              height: 8,
+            )),
           );
         else
           return Column(
@@ -88,7 +92,10 @@ class AddCarModel extends FlutterFlowModel {
                 height: 60,
                 width: 60,
               ),
-              Text('Car registered into the system.')
+              Text(
+                'Car registered into the system.',
+                textAlign: TextAlign.center,
+              ),
             ].divide(
               SizedBox(
                 height: 8,
