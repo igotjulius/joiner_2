@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/components/cra/car_item_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../flutter_flow/flutter_flow_util.dart';
 
 class CarItemWidget extends StatefulWidget {
   final CarModel car;
@@ -30,123 +27,95 @@ class _CarItemWidgetState extends State<CarItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onLongPress: () {
-        _model.deleteCar(widget.car.licensePlate!);
-        setState(() {});
-      },
-      onTap: () {
-        context.pushNamed(
-          'CarDetails',
-          pathParameters: {'licensePlate': widget.car.licensePlate!},
-          extra: <String, dynamic>{
-            'car': widget.car,
-          },
-        );
-      },
-      child: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          border: Border.all(color: Color(0xff52B2FA)),
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xff52B2FA)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              color: Color(0xff52B2FA),
-              width: double.infinity,
-              padding: EdgeInsets.all(10),
-              child: Text(
-                // 'Available',
-                widget.car.availability!,
-              ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            color: Color(0xff52B2FA),
+            width: double.infinity,
+            padding: EdgeInsets.all(10),
+            child: Text(
+              // 'Available',
+              widget.car.availability!,
             ),
-            Row(
-              children: [
-                Padding(padding: const EdgeInsets.all(10)),
-                CachedNetworkImage(
-                  imageUrl:
-                      getImageUrl(widget.car.ownerId!, widget.car.photoUrl![0]),
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.error,
-                    color: Colors.red,
-                  ),
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  width: 150.0,
-                  height: 100.0,
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.fill,
-                      ),
+          ),
+          Row(
+            children: [
+              Padding(padding: const EdgeInsets.all(10)),
+              CachedNetworkImage(
+                imageUrl: getImageUrl(widget.car.photoUrl![0]),
+                errorWidget: (context, url, error) => Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
+                placeholder: (context, url) => CircularProgressIndicator(),
+                width: 150.0,
+                height: 100.0,
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10, right: 10, top: 30, bottom: 30),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.car.vehicleType!,
-                              style: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontSize: 16),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  NumberFormat.currency(
-                                    symbol: '₱',
-                                    decimalDigits: 0,
-                                  ).format(widget.car.price),
-                                  style: FlutterFlowTheme.of(context)
-                                      .labelMedium
-                                      .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                          fontSize: 16),
-                                ),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text('/ day'),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Text("Plate Number: "),
-                                Text("${widget.car.licensePlate}",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          ],
-                        ),
+              ),
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, top: 30, bottom: 30),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.car.vehicleType!,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                NumberFormat.currency(
+                                  symbol: '₱',
+                                  decimalDigits: 0,
+                                ).format(widget.car.price),
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text('/ day'),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Text("Plate Number: "),
+                              Text("${widget.car.licensePlate}",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                )
-              ],
-            ),
-          ],
-        ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

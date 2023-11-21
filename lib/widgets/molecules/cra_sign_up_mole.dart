@@ -3,7 +3,8 @@ import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class CraSignUpMole extends StatefulWidget {
-  const CraSignUpMole({super.key});
+  final GlobalKey<FormState> formKey;
+  const CraSignUpMole({super.key, required this.formKey});
 
   @override
   State<CraSignUpMole> createState() => _CraSignUpMoleState();
@@ -22,39 +23,42 @@ class _CraSignUpMoleState extends State<CraSignUpMole> {
   Widget build(BuildContext context) {
     return Container(
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            CustomTextInput(
-              label: 'First name',
-              controller: _model.fNameController,
-            ),
-            CustomTextInput(
-              label: 'Last name',
-              controller: _model.lNameController,
-            ),
-            CustomTextInput(
-              label: 'Email',
-              controller: _model.emailController,
-            ),
-            CustomTextInput(
-              label: 'Address',
-              controller: _model.addressController,
-            ),
-            CustomTextInput(
-              label: 'Contact no.',
-              controller: _model.contactController,
-            ),
-            CustomTextInput(
-              label: 'Password',
-              controller: _model.passwordController,
-              obscureText: true,
-            ),
-            CustomTextInput(
-              label: 'Confirm password',
-              controller: _model.confirmPassController,
-              obscureText: true,
-            ),
-          ],
+        child: Form(
+          key: widget.formKey,
+          child: Column(
+            children: [
+              CustomTextInput(
+                label: 'First name',
+                controller: _model.fNameController,
+              ),
+              CustomTextInput(
+                label: 'Last name',
+                controller: _model.lNameController,
+              ),
+              CustomTextInput(
+                label: 'Email',
+                controller: _model.emailController,
+              ),
+              CustomTextInput(
+                label: 'Address',
+                controller: _model.addressController,
+              ),
+              CustomTextInput(
+                label: 'Contact no.',
+                controller: _model.contactController,
+              ),
+              CustomTextInput(
+                label: 'Password',
+                controller: _model.passwordController,
+                obscureText: true,
+              ),
+              CustomTextInput(
+                label: 'Confirm password',
+                controller: _model.confirmPassController,
+                obscureText: true,
+              ),
+            ],
+          ),
         ),
       ),
     );

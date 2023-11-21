@@ -3,8 +3,10 @@ import 'package:http_parser/http_parser.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
+import 'package:joiner_1/utils/image_handler.dart';
+import 'package:joiner_1/utils/utils.dart';
 
 class EditCarModel extends FlutterFlowModel {
   CarModel? car;
@@ -15,7 +17,8 @@ class EditCarModel extends FlutterFlowModel {
   TextEditingController? licenseController;
   TextEditingController? vehicleTypeController;
   TextEditingController? priceController;
-  List<PlatformFile>? pickedFiles;
+  PickedImages? imagePicker;
+  bool? isSuccessful;
 
   @override
   void initState(BuildContext context) {}
@@ -24,7 +27,6 @@ class EditCarModel extends FlutterFlowModel {
   void dispose() {}
 
   void initializeControllers() {
-    datesController ??= TextEditingController();
     availability ??= car!.availability;
     licenseController ??= TextEditingController();
     licenseController!.text = car!.licensePlate!;
@@ -32,21 +34,9 @@ class EditCarModel extends FlutterFlowModel {
     vehicleTypeController!.text = car!.vehicleType!;
     priceController ??= TextEditingController();
     priceController!.text = car!.price.toString();
-    datePicked = DateTimeRange(
-      start: car!.availableStartDate!,
-      end: car!.availableEndDate!,
-    );
-  }
-
-  Future<String?> pickImage() async {
-    final result = await FilePicker.platform
-        .pickFiles(type: FileType.image, allowMultiple: true);
-    if (result == null) return null;
-    if (result.count > 5) {
-      return 'You can only upload upto 5 images at most.';
-    }
-    pickedFiles = result.files;
-    return null;
+    datesController ??= TextEditingController();
+    datesController!.text =
+        '${DateFormat('MMM d').format(car!.availableStartDate!)} - ${DateFormat('MMM d').format(car!.availableEndDate!)}';
   }
 
   // Converts picked files to a MultipartFile for sending to the server
@@ -65,20 +55,68 @@ class EditCarModel extends FlutterFlowModel {
     return multipartFiles;
   }
 
-  Future<void> editCar() async {
-    final car = CarModel(
+  FutureBuilder<String?> editCar() {
+    if (datePicked == null) {
+      datePicked = DateTimeRange(
+        start: car!.availableStartDate!,
+        end: car!.availableEndDate!,
+      );
+    }
+    final uCar = CarModel(
       licensePlate: licenseController!.text,
       vehicleType: vehicleTypeController!.text,
       availability: availability,
-      availableStartDate: datePicked?.start,
-      availableEndDate: datePicked?.end,
+      availableStartDate: datePicked!.start,
+      availableEndDate: datePicked!.end,
       price: double.parse(priceController!.text),
     );
-    final converted = pickedFiles == null ? null : await convert(pickedFiles!);
-    await CraController.editCar(car, converted);
+
+    return FutureBuilder(
+      future: CraController.editCar(uCar, imagePicker!.getImages()),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done)
+          return CircularProgressIndicator();
+
+        isSuccessful = true;
+        return Column(
+          children: [
+            Image.asset(
+              'assets/images/successful-payment.png',
+              height: 60,
+              width: 60,
+            ),
+            Text(
+              'Car details updated.',
+              textAlign: TextAlign.center,
+            ),
+          ].divide(
+            SizedBox(
+              height: 8,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<CarModel?> fetchCar() async {
     return await CraController.getCraCar(licensePlate!);
+  }
+
+  /// Validators
+  String? licenseValidator(String? value) {
+    return isEmpty(value);
+  }
+
+  String? vehicleTypeValidator(String? value) {
+    return isEmpty(value);
+  }
+
+  String? datesValidator(String? value) {
+    return isEmpty(value);
+  }
+
+  String? priceValidator(String? value) {
+    return isEmpty(value);
   }
 }

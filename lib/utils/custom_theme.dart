@@ -48,6 +48,7 @@ ThemeData lightTheme(BuildContext context) {
       shape: ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
+      actionsPadding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
     ),
   );
 }

@@ -20,18 +20,24 @@ class EarningsModel extends FlutterFlowModel {
           return Center(
             child: Text('No rentals for this month'),
           );
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: rentals.length,
-          itemBuilder: (context, index) {
-            final rental = rentals[index];
-            return CraTransactionInfo(
-              name: rental.renterName,
-              date: rental.startRental.toString(),
-              duration: rental.duration,
-              amount: rental.price,
-            );
-          },
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: rentals.length,
+                itemBuilder: (context, index) {
+                  final rental = rentals[index];
+                  return CraTransactionInfo(
+                    name: rental.renterName,
+                    date: rental.startRental.toString(),
+                    duration: rental.duration,
+                    amount: rental.price,
+                  );
+                },
+              ),
+            ],
+          ),
         );
       },
     );

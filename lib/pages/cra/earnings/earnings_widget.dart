@@ -20,38 +20,21 @@ class _EarningsWidgetState extends State<EarningsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Earnings',
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    '6,789.00',
-                  ),
-                  Text(
-                    'earned this month',
-                  ),
-                ].divide(
-                  SizedBox(
-                    width: 10,
-                  ),
-                ),
-              ),
-              _model.getCraRentals(),
-            ].divide(
-              SizedBox(
-                height: 20,
-              ),
-            ),
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Earnings',
+          ),
+          Expanded(
+            child: _model.getCraRentals(),
+          ),
+        ].divide(
+          SizedBox(
+            height: 20,
           ),
         ),
       ),

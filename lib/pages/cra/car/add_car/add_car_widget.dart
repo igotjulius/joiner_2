@@ -4,8 +4,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_model.dart';
+import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class AddCarWidget extends StatefulWidget {
@@ -32,6 +34,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
     _model.vehicleTypeController ??= TextEditingController();
     _model.datesController ??= TextEditingController();
     _model.priceController ??= TextEditingController();
+    _model.imagePicker = PickedImages();
   }
 
   @override
@@ -68,45 +71,44 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                     inputFormatters: FilteringTextInputFormatter.digitsOnly,
                   ),
                   FilledButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate() &&
-                          _model.pickedFiles != null) {
+                          _model.imagePicker!.getImages() != null) {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return Dialog(
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                width: 360,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
+                            return AlertDialog(
+                              contentPadding: EdgeInsets.all(20),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (_model.imagePicker != null)
                                     _model.registerCar(),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: FilledButton(
-                                        onPressed: () {
-                                          context.pop();
-                                        },
-                                        child: Text('OK'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                ],
                               ),
+                              actions: [
+                                FilledButton(
+                                  onPressed: () {
+                                    if (_model.isSuccessful!) {
+                                      _model.imagePicker = null;
+                                      context.goNamed('Cars');
+                                    } else {
+                                      context.pop();
+                                    }
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
                             );
                           },
                         );
                       }
 
-                      imagePickerError = _model.pickedFiles == null
-                          ? 'Please upload an image of your car'
-                          : null;
-
-                      setState(() {});
+                      imagePickerError =
+                          _model.imagePicker!.getImages() == null ||
+                                  _model.imagePicker!.getImages()!.isEmpty
+                              ? 'Please upload an image of your car'
+                              : null;
                     },
                     child: Text('Register Car'),
                   ),
@@ -148,10 +150,6 @@ class _AddCarWidgetState extends State<AddCarWidget> {
           },
           child: Theme(
             data: Theme.of(context).copyWith(
-              // inputDecorationTheme: InputDecorationTheme(
-              //   disabledBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.black)),
-              // ),
               inputDecorationTheme:
                   Theme.of(context).inputDecorationTheme.copyWith(
                         disabledBorder: OutlineInputBorder(
@@ -178,10 +176,10 @@ class _AddCarWidgetState extends State<AddCarWidget> {
       children: [
         InkWell(
           onTap: () async {
-            imagePickerError = await _model.pickImage();
+            imagePickerError = await _model.imagePicker!.selectImages();
             setState(() {});
           },
-          child: _model.pickedFiles != null
+          child: _model.imagePicker!.getImages() != null
               ? imageCarousel()
               : Container(
                   height: 400,
@@ -226,18 +224,19 @@ class _AddCarWidgetState extends State<AddCarWidget> {
 
   CarouselSlider imageCarousel() {
     return CarouselSlider.builder(
-      itemCount: _model.pickedFiles?.length,
+      itemCount: _model.imagePicker!.getImages()!.length,
       options: CarouselOptions(
         height: 400,
         enlargeCenterPage: true,
         enableInfiniteScroll: false,
       ),
       itemBuilder: (context, index, viewIndex) {
-        final image = _model.pickedFiles![index];
+        XFile image = _model.imagePicker!.getImages()![index];
         if (kIsWeb) {
-          return Image.memory(image.bytes!);
+          return Image.network(image.path);
+        } else {
+          return Image.file(File(image.path));
         }
-        return Image.file(File(image.path!));
       },
     );
   }

@@ -5,6 +5,7 @@ import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
+import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rental_details/cra_rental_details_widget.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
@@ -176,9 +177,11 @@ List<FFRoute> craRoutes() {
     FFRoute(
       name: 'Earnings',
       path: '/earnings',
-      builder: (context, params) => NavBarPage(
-        initialPage: 'Earnings',
-      ),
+      builder: (context, params) => params.isEmpty
+          ? NavBarPage(
+              initialPage: 'Earnings',
+            )
+          : EarningsWidget(),
     ),
     FFRoute(
       name: 'Cars',

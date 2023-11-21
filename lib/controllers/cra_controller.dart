@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/service/api_service.dart';
+import 'package:http_parser/http_parser.dart';
 import '../models/car_model.dart';
 
 class CraController {
@@ -41,14 +43,17 @@ class CraController {
     return res.data;
   }
 
-  // Register car under corresponding CRA - (for online environment)
-  static Future<void> addCar(CarModel car) async {
-    await apiService.addCar(car, _craUserId).then((result) => print(result));
-  }
-
-  // Register car under corresponding CRA - (for offline environment)
-  static Future<String?> registerCar(
-      CarModel car, List<MultipartFile>? images) async {
+  // Register car under corresponding CRA
+  static Future<String?> registerCar(CarModel car, List<XFile> images) async {
+    List<MultipartFile> converted = [];
+    for (final image in images) {
+      final multipartFile = MultipartFile.fromBytes(
+        await image.readAsBytes(),
+        filename: image.name,
+        contentType: MediaType('application', 'octet-stream'),
+      );
+      converted.add(multipartFile);
+    }
     final result = await apiService.registerCar(
       _craUserId,
       licensePlate: car.licensePlate!,
@@ -59,7 +64,7 @@ class CraController {
       availableStartDate: car.availableStartDate.toString(),
       availableEndDate: car.availableEndDate.toString(),
       price: car.price!,
-      files: images,
+      files: converted,
     );
     // Return error message if car is already registered by its licenseplate
     if (result.code == 406) return result.message;
@@ -67,15 +72,22 @@ class CraController {
     return null;
   }
 
-  // Edit car availability
-  static Future<void> editAvailability(
-      CarModel car, String licensePlate) async {
-    await apiService.editAvailability(car, _craUserId, licensePlate);
-  }
-
   // Edit car
-  static Future<void> editCar(CarModel car, List<MultipartFile>? images) async {
-    await apiService.editCar(
+  static Future<String?> editCar(CarModel car, List<XFile>? images) async {
+    List<MultipartFile>? converted;
+    if (images != null) {
+      converted = [];
+      for (final image in images) {
+        final multipartFile = MultipartFile.fromBytes(
+          await image.readAsBytes(),
+          filename: image.name,
+          contentType: MediaType('application', 'octet-stream'),
+        );
+        converted.add(multipartFile);
+      }
+    }
+
+    final result = await apiService.editCar(
       _craUserId,
       car.licensePlate!,
       licensePlate: car.licensePlate!,
@@ -84,13 +96,19 @@ class CraController {
       availableStartDate: car.availableStartDate.toString(),
       availableEndDate: car.availableEndDate.toString(),
       price: car.price!,
-      files: images,
+      files: converted,
     );
+
+    // Return error message
+    if (result.code == 406) return result.message;
+
+    return null;
   }
 
   // Delete a car
-  static Future<void> deleteCar(String licensePlate) async {
-    await apiService.deleteCar(_craUserId, licensePlate);
+  static Future<String> deleteCar(String licensePlate) async {
+    final result = await apiService.deleteCar(_craUserId, licensePlate);
+    return result.message!;
   }
 
   // Fetch CRA's rentals

@@ -20,35 +20,32 @@ class _CraCarWidgetState extends State<CraCarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Manage Cars',
-                  ),
-                  FilledButton(
-                    onPressed: () {
-                      context.pushNamed('RegisterCar');
-                    },
-                    child: Text('Add a car'),
-                  ),
-                ],
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Manage Cars',
               ),
-              Container(
-                height: MediaQuery.of(context).size.height,
-                child: _model.getCars(),
+              FilledButton(
+                onPressed: () {
+                  context.pushNamed('RegisterCar');
+                },
+                child: Text('Add a car'),
               ),
-            ].divide(SizedBox(
-              height: 10,
-            )),
+            ],
+          ),
+          Expanded(
+            child: _model.getCars(setState),
+          ),
+        ].divide(
+          SizedBox(
+            height: 20,
           ),
         ),
       ),

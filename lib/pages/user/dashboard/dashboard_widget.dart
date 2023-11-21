@@ -2,9 +2,9 @@ import 'package:joiner_1/widgets/atoms/promos_list.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'lobbies_model.dart';
+import 'dashboard_model.dart';
 
-export 'lobbies_model.dart';
+export 'dashboard_model.dart';
 
 class LobbiesWidget extends StatefulWidget {
   const LobbiesWidget({Key? key}) : super(key: key);

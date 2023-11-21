@@ -1,9 +1,6 @@
-import 'dart:async';
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
+import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +9,8 @@ class AddCarModel extends FlutterFlowModel {
   /// Initialization and disposal methods.
 
   DateTimeRange? datePicked;
-  List<PlatformFile>? pickedFiles;
+  PickedImages? imagePicker;
+  bool? isSuccessful;
 
   // State field(s) for TextField widget.
   TextEditingController? licenseController;
@@ -30,27 +28,12 @@ class AddCarModel extends FlutterFlowModel {
     vehicleTypeController?.dispose();
     datesController?.dispose();
     priceController?.dispose();
+    imagePicker = null;
   }
 
   /// Action blocks are added here.
-  // Picking files, limits to only 3 images
-  Future<String?> pickImage() async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.image,
-      withData: true,
-    );
-    if (result == null) return null;
-    if (result.count > 5) {
-      return 'You can only upload upto 5 images at most.';
-    }
-    pickedFiles = result.files;
-    return null;
-  }
-
   // Registering a car
   FutureBuilder<String?> registerCar() {
-    final converted = convert(pickedFiles!);
     final car = CarModel(
       licensePlate: licenseController.text,
       ownerId: FFAppState().currentUser!.id,
@@ -62,13 +45,15 @@ class AddCarModel extends FlutterFlowModel {
       availableEndDate: datePicked!.end,
       price: double.parse(priceController.text),
     );
+
     return FutureBuilder(
-      future: CraController.registerCar(car, converted),
+      future: CraController.registerCar(car, imagePicker!.getImages()!),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done)
           return CircularProgressIndicator();
 
-        if (snapshot.data != null)
+        if (snapshot.data != null) {
+          isSuccessful = false;
           return Column(
             children: [
               Image.asset(
@@ -80,11 +65,14 @@ class AddCarModel extends FlutterFlowModel {
                 'License plate submitted has already been registered to a car.',
                 textAlign: TextAlign.center,
               ),
-            ].divide(SizedBox(
-              height: 8,
-            )),
+            ].divide(
+              SizedBox(
+                height: 8,
+              ),
+            ),
           );
-        else
+        } else {
+          isSuccessful = true;
           return Column(
             children: [
               Image.asset(
@@ -102,25 +90,53 @@ class AddCarModel extends FlutterFlowModel {
               ),
             ),
           );
+        }
       },
     );
   }
+  /*
+  Future<List<String>> uploadImages() async {
+    List<XFile> images = imagePicker!.getImages()!;
+    String userId = FFAppState().currentUser?.id.toString() ?? 'unknown_user';
+    String licensePlate = licenseController.text;
 
-  // Converts picked files to a MultipartFile for sending to the server
-  List<MultipartFile> convert(List<PlatformFile> files) {
-    final multipartFiles = <MultipartFile>[];
-
-    for (final file in files) {
-      final fileBytes = file.bytes!;
-      final multipartFile = MultipartFile.fromBytes(
-        fileBytes,
-        filename: file.name,
-        contentType: MediaType('application', 'octet-stream'),
-      );
-      multipartFiles.add(multipartFile);
-    }
-    return multipartFiles;
+    return await uploadImagesToFirebase(images, userId, licensePlate);
   }
+
+  Future<List<String>> uploadImagesToFirebase(
+      List<XFile> images, String userId, String licensePlate) async {
+    List<String> downloadUrls = [];
+
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      for (XFile imageFile in images) {
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        String path = 'images/cra/$userId/$licensePlate/$fileName.png';
+
+        Reference ref = storage.ref().child(path);
+
+        final metadata = SettableMetadata(
+          contentType: 'image/png',
+        );
+        if (kIsWeb)
+          await ref.putData(await imageFile.readAsBytes(), metadata);
+        else
+          await ref.putFile(File(imageFile.path), metadata);
+        // await ref.putFile(imageFile, metadata);
+
+        // Get the download URL for each uploaded image
+        String downloadURL = await ref.getDownloadURL();
+        downloadUrls.add(downloadURL);
+        print('Image uploaded. Download URL: $downloadURL');
+      }
+
+      return downloadUrls;
+    } catch (e) {
+      print('Error uploading images: $e');
+      return [];
+    }
+  }
+  */
 
   /// Additional helper methods are added here.
   /// Validators

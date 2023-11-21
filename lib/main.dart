@@ -1,6 +1,7 @@
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -11,14 +12,18 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'index.dart';
 import 'pages/cra/car/cra_car_widget.dart';
 import 'pages/cra/earnings/earnings_widget.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
+  if (environment == 'ONLINE') {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+
   usePathUrlStrategy();
 
   final appState = FFAppState(); // Initialize FFAppState
@@ -178,7 +183,7 @@ class _NavBarPageState extends State<NavBarPage> {
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
     return Scaffold(
-      body: _currentPage ?? tabs[_currentPageName],
+      body: SafeArea(child: _currentPage ?? tabs[_currentPageName]!),
       bottomNavigationBar: GNav(
         selectedIndex: currentIndex,
         onTabChange: (i) => setState(() {

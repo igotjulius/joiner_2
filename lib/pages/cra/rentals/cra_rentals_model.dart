@@ -20,37 +20,45 @@ class CraRentalsModel extends FlutterFlowModel {
           return Center(
             child: Text('No rentals as of the moment'),
           );
-        return ListView.separated(
-          shrinkWrap: true,
-          separatorBuilder: (context, index) {
-            return SizedBox(
-              height: 10,
-            );
-          },
-          itemBuilder: (context, index) {
-            final rental = rentals[index];
-            return Padding(
-              padding: const EdgeInsets.all(10),
-              child: InkWell(
-                onTap: () {
-                  context.pushNamed(
-                    'RentalDetails',
-                    extra: <String, dynamic>{
-                      'rental': rental,
-                    },
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              ListView.separated(
+                shrinkWrap: true,
+                separatorBuilder: (context, index) {
+                  return SizedBox(
+                    height: 10,
                   );
                 },
-                child: RentalInfo(
-                  amount: rental.price,
-                  duration: rental.duration,
-                  vehicleOwner: rental.renterName,
-                  pickupDate: DateFormat('MMM d').format(rental.startRental!),
-                  returnDate: DateFormat('MMM d').format(rental.endRental!),
-                ),
+                itemBuilder: (context, index) {
+                  final rental = rentals[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: InkWell(
+                      onTap: () {
+                        context.pushNamed(
+                          'RentalDetails',
+                          extra: <String, dynamic>{
+                            'rental': rental,
+                          },
+                        );
+                      },
+                      child: RentalInfo(
+                        amount: rental.price,
+                        duration: rental.duration,
+                        vehicleOwner: rental.renterName,
+                        pickupDate:
+                            DateFormat('MMM d').format(rental.startRental!),
+                        returnDate:
+                            DateFormat('MMM d').format(rental.endRental!),
+                      ),
+                    ),
+                  );
+                },
+                itemCount: rentals.length,
               ),
-            );
-          },
-          itemCount: rentals.length,
+            ],
+          ),
         );
       },
     );

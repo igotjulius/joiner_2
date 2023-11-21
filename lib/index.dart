@@ -1,10 +1,10 @@
 // Export pages
 export 'pages/shared_pages/login_page/login_page_widget.dart'
     show LoginPageWidget;
-export 'pages/user/lobbies/lobbies_widget.dart' show LobbiesWidget;
-export 'pages/user/lobbies/lobby_creation/lobby_creation_widget.dart'
+export 'pages/user/dashboard/dashboard_widget.dart' show LobbiesWidget;
+export 'pages/user/dashboard/lobby_creation/lobby_creation_widget.dart'
     show LobbyCreationWidget;
-export 'pages/user/lobbies/lobby/lobby_widget.dart' show LobbyWidget;
+export 'pages/user/dashboard/lobby/lobby_widget.dart' show LobbyWidget;
 export 'pages/user/rentals/rentals_widget.dart' show RentalsWidget;
 export '/pages/user/friends/friends_widget.dart' show FriendsWidget;
 export '/pages/user/account/account_widget.dart' show AccountWidget;

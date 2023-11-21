@@ -1,13 +1,13 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_model.dart';
+import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/info_container.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
@@ -24,6 +24,7 @@ class EditCarWidget extends StatefulWidget {
 class _EditCarWidgetState extends State<EditCarWidget> {
   late EditCarModel _model;
   String? imagePickerError;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
     _model.licensePlate = widget.licensePlate;
     _model.car = widget.car;
     if (_model.car != null) _model.initializeControllers();
+    _model.imagePicker = PickedImages();
   }
 
   @override
@@ -48,7 +50,34 @@ class _EditCarWidgetState extends State<EditCarWidget> {
             padding: const EdgeInsets.only(right: 20),
             child: FilledButton(
               onPressed: () {
-                _model.editCar();
+                if (_formKey.currentState!.validate()) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        contentPadding: EdgeInsets.all(20),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (_model.isSuccessful == null) _model.editCar(),
+                          ],
+                        ),
+                        actions: [
+                          FilledButton(
+                            onPressed: () async {
+                              if (_model.isSuccessful!) {
+                                await CachedNetworkImage.evictFromCache(
+                                    getImageUrl(widget.car!.photoUrl![0]));
+                                context.goNamed('Cars');
+                              }
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               },
               child: Text('Save changes'),
             ),
@@ -64,28 +93,35 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   Widget mainDisplay(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          info(),
-          imagePicker(),
-          availability(),
-          CustomTextInput(
-            label: 'License Plate',
-            controller: _model.licenseController,
-          ),
-          CustomTextInput(
-            label: 'Vehicle Type',
-            controller: _model.vehicleTypeController,
-          ),
-          datePicker(context),
-          CustomTextInput(
-            label: 'Price',
-            controller: _model.priceController,
-          ),
-        ].divide(
-          SizedBox(
-            height: 10,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            info(),
+            imagePicker(),
+            availability(),
+            CustomTextInput(
+              label: 'License Plate',
+              controller: _model.licenseController,
+              validator: _model.licenseValidator,
+              enabled: false,
+            ),
+            CustomTextInput(
+              label: 'Vehicle Type',
+              controller: _model.vehicleTypeController,
+              validator: _model.vehicleTypeValidator,
+            ),
+            datePicker(context),
+            CustomTextInput(
+              label: 'Price',
+              controller: _model.priceController,
+              validator: _model.priceValidator,
+            ),
+          ].divide(
+            SizedBox(
+              height: 10,
+            ),
           ),
         ),
       ),
@@ -171,7 +207,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
         Card(
           child: InkWell(
             onTap: () async {
-              imagePickerError = await _model.pickImage();
+              imagePickerError = await _model.imagePicker!.selectImages();
               setState(() {});
             },
             child: imageCarousel(),
@@ -210,8 +246,9 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   }
 
   Widget imageCarousel() {
-    final images =
-        _model.pickedFiles != null ? _model.pickedFiles : _model.car!.photoUrl;
+    final images = _model.imagePicker!.getImages() != null
+        ? _model.imagePicker!.getImages()
+        : _model.car!.photoUrl;
     return CarouselSlider.builder(
       itemCount: images!.length,
       options: CarouselOptions(
@@ -221,21 +258,21 @@ class _EditCarWidgetState extends State<EditCarWidget> {
       ),
       itemBuilder: (context, index, viewIndex) {
         final image = images[index];
-        return _model.pickedFiles != null
-            ? pickedImage(image as PlatformFile)
+        return _model.imagePicker!.getImages() != null
+            ? pickedImage(image as XFile)
             : networkImage(image as String);
       },
     );
   }
 
-  Widget pickedImage(PlatformFile imageFile) {
-    if (kIsWeb) return Image.memory(imageFile.bytes!);
-    return Image.file(File(imageFile.path!));
+  Widget pickedImage(XFile image) {
+    if (kIsWeb) return Image.network(image.path);
+    return Image.file(File(image.path));
   }
 
   Widget networkImage(String imageUrl) {
     return CachedNetworkImage(
-      imageUrl: getImageUrl(_model.car!.ownerId!, imageUrl),
+      imageUrl: getImageUrl(imageUrl),
       errorWidget: (context, url, error) => Icon(
         Icons.error,
         color: Colors.red,
@@ -248,9 +285,14 @@ class _EditCarWidgetState extends State<EditCarWidget> {
 
   Widget datePicker(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Available Dates'),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text('Available Dates'),
+        ),
+        SizedBox(
+          height: 4,
+        ),
         InkWell(
           onTap: () async {
             _model.datePicked = await showDateRangePicker(
@@ -258,38 +300,31 @@ class _EditCarWidgetState extends State<EditCarWidget> {
               firstDate: getCurrentTimestamp,
               lastDate: DateTime(2050),
             );
-            if (_model.datePicked != null)
+
+            if (_model.datePicked != null) {
               setState(() {
                 _model.datesController.text =
                     '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
               });
+            }
           },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                width: 0.5,
-              ),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              inputDecorationTheme:
+                  Theme.of(context).inputDecorationTheme.copyWith(
+                        disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                      ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Icon(
-                    Icons.calendar_today,
-                    color: Color(0xFF52B2FA),
-                    size: 24.0,
-                  ),
-                ),
-                Text(
-                  _model.datePicked != null
-                      ? (_model.datePicked!.duration.inDays == 0
-                          ? "${DateFormat('MMM d').format(_model.datePicked!.start)}"
-                          : "${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}")
-                      : '',
-                ),
-              ].divide(SizedBox(width: 10.0)),
+            child: CustomTextInput(
+              key: ValueKey(_model.datesController.text),
+              controller: _model.datesController,
+              validator: _model.datesValidator,
+              prefixIcon: Icon(
+                Icons.calendar_today_rounded,
+              ),
+              enabled: false,
             ),
           ),
         ),

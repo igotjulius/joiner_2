@@ -20,16 +20,18 @@ class _CraRentalsWidgetState extends State<CraRentalsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Rentals'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _model.getCraRentals(),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text('Rentals'),
+          ),
+          Expanded(
+            child: _model.getCraRentals(),
+          ),
+        ],
       ),
     );
   }

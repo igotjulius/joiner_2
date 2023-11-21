@@ -21,11 +21,11 @@ part 'api_service.g.dart';
   Run ipconfig from the host machine to configure the ip address of the server.
   Make sure that the physical phone and host machine are in the same network.
 */
-const String serverUrl = 'http://192.168.1.5:443/';
+const String serverUrl = 'http://192.168.1.6:443/';
 // const String serverUrl = 'http://localhost:443/';
 // const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
 
-final apiService = ApiService(Dio());
+final apiService = ApiService(Dio(), baseUrl: serverUrl);
 // ApiService(Dio(BaseOptions(contentType: 'application/json')));
 
 @RestApi(baseUrl: serverUrl)
@@ -263,23 +263,6 @@ abstract class ApiService {
     @Path('licensePlate') String licensePlate,
   );
 
-  // CHECK =>
-  // Register a car
-  @POST('cra/{craUserId}/car')
-  Future<ResponseModel> addCar(
-    @Body() CarModel car,
-    @Path('craUserId') String craUserId, {
-    @Header('Content-Type') String contentType = 'application/json',
-  });
-
-  //Edit car availability
-  @PUT('cra/{craUserId}/car/{licensePlate}')
-  Future<ResponseModel> editAvailability(
-    @Body() CarModel car,
-    @Path('craUserId') String craUserId,
-    @Path('licensePlate') String licensePlate,
-  );
-
   // Fetch Cra's rentals
   @GET('cra/{craUserId}/rent')
   Future<ResponseModel<List<RentalModel>?>> getCraRentals(
@@ -305,7 +288,7 @@ abstract class ApiService {
   // Editing a car
   @MultiPart()
   @PUT('cra/{craUserId}/car/{licensePlate}')
-  Future<void> editCar(
+  Future<ResponseModel> editCar(
     @Path('craUserId') String craUserId,
     @Path('licensePlate') String carLicensePlate, {
     @Part() required String licensePlate,
@@ -319,7 +302,7 @@ abstract class ApiService {
 
   // Delete a car
   @DELETE('cra/{craUserId}/car/{licensePlate}')
-  Future<void> deleteCar(
+  Future<ResponseModel> deleteCar(
     @Path('craUserId') String craUserId,
     @Path('licensePlate') String licensePlate,
   );

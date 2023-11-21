@@ -2,14 +2,13 @@ import 'package:joiner_1/service/api_service.dart';
 
 export 'utils.dart';
 
-const environment = 'TEST';
-const device = 'MOBILE';
+const environment = 'OFFLINE';
 
-String getImageUrl(String craUserId, String imageUrl) {
-  if (environment == 'TEST' && device == 'MOBILE')
-    return '${serverUrl}images/$craUserId/$imageUrl';
-  else
+String getImageUrl(String imageUrl) {
+  if (imageUrl.startsWith('http'))
     return imageUrl;
+  else
+    return '$serverUrl$imageUrl';
 }
 
 String? isEmpty(String? value) {
