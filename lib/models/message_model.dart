@@ -7,8 +7,10 @@ class MessageModel {
   final String? creatorId;
   final String? creator;
   final String? message;
+  final DateTime? createdAt;
 
-  const MessageModel({this.creatorId, this.creator, this.message});
+  const MessageModel(
+      {this.creatorId, this.creator, this.message, this.createdAt});
 
   factory MessageModel.fromJson(Map<String, dynamic> json) =>
       _$MessageModelFromJson(json);

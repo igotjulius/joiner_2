@@ -18,38 +18,40 @@ class LobbyModel extends FlutterFlowModel {
       tabBarController != null ? tabBarController!.index : 0;
 
   // Model for Lobby Dashboard component
-  late LobbyDashboardModel lobbyDashboardModel;
+  LobbyDashboardModel? lobbyDashboardModel;
   // Model for Chat component.
-  late ChatModel chatModel;
+  ChatModel? chatModel;
   // Model for BudgetGraph component.
-  late BudgetModel budgetGraphModel;
+  BudgetModel? budgetModel;
   // Model for Poll component.
-  late PollItemModel pollModel;
+  PollItemModel? pollModel;
   // Model for Joiners component.
-  late JoinersModel joinersModel;
+  JoinersModel? joinersModel;
 
   ModelLobby.LobbyModel? currentLobby;
 
   /// Initialization and disposal methods.
 
-  void initState(BuildContext context) {
-    lobbyDashboardModel = createModel(context, () => LobbyDashboardModel());
-    chatModel = createModel(context, () => ChatModel());
-    budgetGraphModel = createModel(context, () => BudgetModel());
-    pollModel = createModel(context, () => PollItemModel());
-    joinersModel = createModel(context, () => JoinersModel());
-  }
+  void initState(BuildContext context) {}
 
   void dispose() {
     unfocusNode.dispose();
     tabBarController?.dispose();
-    chatModel.dispose();
-    budgetGraphModel.dispose();
-    pollModel.dispose();
-    joinersModel.dispose();
+    chatModel?.dispose();
+    budgetModel?.dispose();
+    pollModel?.dispose();
+    joinersModel?.dispose();
   }
 
   /// Action blocks are added here.
+  void initModel() {
+    lobbyDashboardModel = LobbyDashboardModel();
+    chatModel = ChatModel();
+    budgetModel = BudgetModel();
+    pollModel = PollItemModel();
+    joinersModel = JoinersModel();
+  }
+
   Future<ModelLobby.LobbyModel?> fetchLobby(String lobbyId) async {
     return await UserController.getLobby(lobbyId);
   }

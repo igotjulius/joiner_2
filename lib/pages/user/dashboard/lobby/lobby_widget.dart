@@ -32,6 +32,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => LobbyModel());
+    _model.initModel();
     _model.currentLobby = widget.currentLobby;
     _model.tabBarController = TabController(
       vsync: this,
@@ -105,58 +106,53 @@ class _LobbyWidgetState extends State<LobbyWidget>
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFF52B2FA),
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: TabBarView(
-                        controller: _model.tabBarController,
-                        children: [
-                          wrapWithModel(
-                            model: _model.lobbyDashboardModel,
-                            child: LobbyDashboardWidget(
-                              lobbyId: widget.lobbyId,
-                            ),
-                            updateCallback: () => setState(() {}),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: TabBarView(
+                      controller: _model.tabBarController,
+                      children: [
+                        wrapWithModel(
+                          model: _model.lobbyDashboardModel!,
+                          child: LobbyDashboardWidget(
+                            lobbyId: widget.lobbyId,
                           ),
-                          wrapWithModel(
-                            model: _model.chatModel,
-                            updateCallback: () => setState(() {}),
-                            child: ChatWidget(
-                              setState,
-                              _model.currentLobby!.id,
-                              _model.currentLobby!.conversation,
-                            ),
+                          updateCallback: () => setState(() {}),
+                        ),
+                        wrapWithModel(
+                          model: _model.chatModel!,
+                          updateCallback: () => setState(() {}),
+                          child: ChatWidget(
+                            setState,
+                            _model.currentLobby!.id,
+                            _model.currentLobby!.conversation,
                           ),
-                          wrapWithModel(
-                            model: _model.budgetGraphModel,
-                            updateCallback: () => setState(() {}),
-                            child: BudgetWidget(
-                              lobbyId: widget.lobbyId,
-                              budget: _model.currentLobby!.budget,
-                            ),
+                        ),
+                        wrapWithModel(
+                          model: _model.budgetModel!,
+                          updateCallback: () => setState(() {}),
+                          child: BudgetWidget(
+                            lobbyId: widget.lobbyId,
+                            budget: _model.currentLobby!.budget,
                           ),
-                          wrapWithModel(
-                            model: _model.pollModel,
-                            updateCallback: () => setState(() {}),
-                            child: PollItemWidget(
-                              lobbyId: _model.currentLobby!.id,
-                              polls: _model.currentLobby!.poll,
-                            ),
+                        ),
+                        wrapWithModel(
+                          model: _model.pollModel!,
+                          updateCallback: () => setState(() {}),
+                          child: PollItemWidget(
+                            lobbyId: _model.currentLobby!.id,
+                            polls: _model.currentLobby!.poll,
                           ),
-                          wrapWithModel(
-                            model: _model.joinersModel,
-                            updateCallback: () => setState(() {}),
-                            child: JoinersWidget(_model.currentLobby!.id),
-                          ),
-                        ],
-                      ),
+                        ),
+                        wrapWithModel(
+                          model: _model.joinersModel!,
+                          updateCallback: () => setState(() {}),
+                          child: JoinersWidget(_model.currentLobby!.id),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],

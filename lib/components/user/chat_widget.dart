@@ -1,9 +1,6 @@
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/message_model.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'chat_model.dart';
 
 export 'chat_model.dart';
@@ -12,7 +9,6 @@ class ChatWidget extends StatefulWidget {
   final String? lobbyId;
   final String? conversationId;
   final Function callback;
-  // final String? userId;
   const ChatWidget(this.callback, this.lobbyId, this.conversationId, {Key? key})
       : super(key: key);
 
@@ -20,8 +16,12 @@ class ChatWidget extends StatefulWidget {
   _ChatWidgetState createState() => _ChatWidgetState();
 }
 
-class _ChatWidgetState extends State<ChatWidget> {
+class _ChatWidgetState extends State<ChatWidget>
+    with AutomaticKeepAliveClientMixin {
   late ChatModel _model;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void setState(VoidCallback callback) {
@@ -33,124 +33,139 @@ class _ChatWidgetState extends State<ChatWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => ChatModel());
-
+    _model.scrollController ??= ScrollController();
     _model.textController ??= TextEditingController();
+    _model.streamSocket ??= StreamSocket();
+    _model.initSocket(widget.conversationId!);
   }
 
   @override
   void dispose() {
-    _model.maybeDispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<FFAppState>();
+    super.build(context);
     return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(children: [
-        Expanded(
-            child: UserController.getConversation(appState.currentUser!.id!,
-                widget.lobbyId!, widget.conversationId!)),
-        Material(
-          color: Colors.transparent,
-          elevation: 0.0,
-          child: Container(
-            width: double.infinity,
-            height: 60.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 8.0,
-                  color: Color(0x33000000),
-                  offset: Offset(0.0, 0.0),
-                  spreadRadius: 2.0,
-                )
-              ],
+      padding: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder(
+              stream: _model.streamSocket!.getResponse,
+              builder: (context, snapshot) {
+                print(snapshot.connectionState);
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return Center(child: CircularProgressIndicator());
+
+                if (_model.allMessages.isEmpty)
+                  return Center(
+                    child: Text('Hi there :)'),
+                  );
+
+                return ListView.separated(
+                  reverse: true,
+                  shrinkWrap: true,
+                  itemCount: _model.allMessages.length,
+                  controller: _model.scrollController,
+                  itemBuilder: (context, index) {
+                    final message = _model.allMessages.reversed.toList()[index];
+                    return chatBubble(message);
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      height: 10,
+                    );
+                  },
+                );
+              },
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-                    child: Container(
-                      width: 100.0,
-                      height: 100.0,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFDADADA),
-                        borderRadius: BorderRadius.circular(24.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        child: TextFormField(
-                          controller: _model.textController,
-                          autofocus: true,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            hintText: 'Enter message..',
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            focusedErrorBorder: InputBorder.none,
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 10.0),
-                          ),
-                          validator: _model.textControllerValidator
-                              .asValidator(context),
+          ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _model.textController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Color(0xFFDADADA),
+                        hintText: 'Enter message..',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
-                  child: FFButtonWidget(
-                    onPressed: () async {
-                      String mssg = _model.textController.text.trim();
-                      if (mssg.isNotEmpty) {
-                        final message = MessageModel(
-                          creatorId: appState.currentUser!.id,
-                          creator: appState.currentUser!.firstName,
-                          message: mssg,
-                        );
-                        await UserController.createMessage(
-                            message,
-                            context,
-                            appState.currentUser!.id!,
-                            widget.lobbyId!,
-                            widget.conversationId!);
-                        widget.callback(() {});
-                        _model.textController!.clear();
-                      } else
-                        print(appState.currentUser!.id);
-                    },
-                    text: 'SEND',
-                    options: FFButtonOptions(
-                      height: 40.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      elevation: 3.0,
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+                  SizedBox(
+                    width: 8,
                   ),
-                ),
-              ],
+                  FilledButton(
+                    onPressed: () {
+                      if (_model.textController.text.trim().isNotEmpty) {
+                        _model.sendMessage(widget.conversationId!);
+                        _model.textController.text = '';
+                      }
+                    },
+                    child: Text('SEND'),
+                  ),
+                ],
+              ),
             ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget chatBubble(MessageModel message) {
+    bool isUserMessage = message.creatorId == FFAppState().currentUser!.id;
+    return Column(
+      crossAxisAlignment:
+          isUserMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 8, bottom: 2),
+          child: Row(
+            mainAxisAlignment:
+                isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children: [
+              Text(
+                isUserMessage ? '' : message.creator!,
+                style: TextStyle(color: Colors.grey, fontSize: 12),
+              ),
+              SizedBox(
+                width: 4,
+              ),
+              Text(
+                DateFormat('jm').format(message.createdAt!),
+                style: TextStyle(color: Colors.grey, fontSize: 12),
+              ),
+            ],
           ),
-        )
-      ]),
+        ),
+        Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: isUserMessage ? Colors.blue : Color(0xFFDADADA),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            message.message!,
+            style:
+                TextStyle(color: isUserMessage ? Colors.white : Colors.black),
+          ),
+        ),
+      ],
     );
   }
 }

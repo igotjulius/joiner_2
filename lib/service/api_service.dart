@@ -21,9 +21,9 @@ part 'api_service.g.dart';
   Run ipconfig from the host machine to configure the ip address of the server.
   Make sure that the physical phone and host machine are in the same network.
 */
-const String serverUrl = 'http://192.168.1.6:443/';
+// const String serverUrl = 'http://192.168.137.1:443/';
 // const String serverUrl = 'http://localhost:443/';
-// const String serverUrl = 'https://joiner-backend-v3.onrender.com/';
+const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
 final apiService = ApiService(Dio(), baseUrl: serverUrl);
 // ApiService(Dio(BaseOptions(contentType: 'application/json')));
