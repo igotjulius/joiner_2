@@ -22,11 +22,11 @@ class BudgetModel extends FlutterFlowModel {
         if (!snapshot.hasData)
           return Center(
             child: CircularProgressIndicator(),
-          ); 
+          );
         else if (budget?.keys == null)
-          return Text("No Budget Plans yet.");
-        else  
-        budget = snapshot.data?.budget;
+          return Center(child: Text("No Budget Plans yet."));
+        else
+          budget = snapshot.data?.budget;
         keys = budget?.keys.toList();
         return ListView.builder(
           itemCount: keys!.length,

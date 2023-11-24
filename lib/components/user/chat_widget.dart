@@ -88,20 +88,31 @@ class _ChatWidgetState extends State<ChatWidget>
               child: Row(
                 children: [
                   Expanded(
-                    child: TextFormField(
+                    child: TextField(
                       controller: _model.textController,
                       autofocus: true,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 4,
+                      minLines: 1,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: Color(0xFFDADADA),
+                        fillColor:
+                            Theme.of(context).colorScheme.primaryContainer,
                         hintText: 'Enter message..',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
+                        hintStyle: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
@@ -109,7 +120,10 @@ class _ChatWidgetState extends State<ChatWidget>
                   SizedBox(
                     width: 8,
                   ),
-                  FilledButton(
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                    ),
                     onPressed: () {
                       if (_model.textController.text.trim().isNotEmpty) {
                         _model.sendMessage(widget.conversationId!);

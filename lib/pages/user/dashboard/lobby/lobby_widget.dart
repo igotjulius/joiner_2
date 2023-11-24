@@ -20,7 +20,7 @@ class LobbyWidget extends StatefulWidget {
   _LobbyWidgetState createState() => _LobbyWidgetState();
 }
 
-final DateFormat dateFormat = DateFormat('MM/dd/yyyy');
+final DateFormat dateFormat = DateFormat('MMMM dd');
 
 class _LobbyWidgetState extends State<LobbyWidget>
     with TickerProviderStateMixin {
@@ -69,6 +69,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                   children: [
                     Text(
                       _model.currentLobby!.title!,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     Text(
                       _model.currentLobby!.startDate ==
@@ -77,6 +78,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                               ? 'Date undecided'
                               : "${dateFormat.format(_model.currentLobby!.startDate!)}")
                           : "${dateFormat.format(_model.currentLobby!.startDate!)} - ${dateFormat.format(_model.currentLobby!.endDate!)}",
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ],
                 ),
@@ -89,8 +91,6 @@ class _LobbyWidgetState extends State<LobbyWidget>
           centerTitle: false,
           elevation: 0.0,
           bottom: TabBar(
-            // isScrollable: true,
-            unselectedLabelStyle: TextStyle(),
             tabs: [
               Tab(text: 'Dashboard'),
               Tab(text: 'Chat'),

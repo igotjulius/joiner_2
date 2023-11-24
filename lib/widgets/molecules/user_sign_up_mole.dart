@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class UserSignUpMole extends StatefulWidget {
@@ -31,31 +32,35 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
               CustomTextInput(
                 label: 'First name',
                 controller: _model.fNameController,
-                validator: _model.checkEmpty,
+                validator: isEmpty,
               ),
               CustomTextInput(
                 label: 'Last name',
                 controller: _model.lNameController,
-                validator: _model.checkEmpty,
+                validator: isEmpty,
               ),
               CustomTextInput(
                 label: 'Email',
                 controller: _model.emailController,
-                validator: _model.validateEmail,
+                validator: validateEmail,
               ),
               CustomTextInput(
                 label: 'Password',
                 controller: _model.passwordController,
                 obscureText: true,
-                validator: _model.checkEmpty,
+                validator: validatePassword,
               ),
               CustomTextInput(
                 label: 'Confirm password',
                 controller: _model.confirmPassController,
                 obscureText: true,
-                validator: _model.confirmPassword,
+                validator: _model.confirmPass,
               ),
-            ],
+            ].divide(
+              SizedBox(
+                height: 16,
+              ),
+            ),
           ),
         ),
       ),
@@ -80,30 +85,15 @@ class UserSignUpMoleModel extends FlutterFlowModel {
   }
 
   @override
-  void dispose() {}
-
-  String? checkEmpty(String? value) {
-    if (value == null || value.trim().isEmpty)
-      return 'Field should not be empty';
-    else
-      return null;
+  void dispose() {
+    fNameController?.dispose();
+    lNameController?.dispose();
+    emailController?.dispose();
+    passwordController?.dispose();
+    confirmPassController?.dispose();
   }
 
-  String? confirmPassword(String? value) {
-    final trimmed = checkEmpty(value);
-    if (trimmed != null) return trimmed;
-    if (value != passwordController?.text) return 'Passwords don\'t match';
-    return null;
-  }
-
-  String? validateEmail(String? value) {
-    final trimmed = checkEmpty(value);
-    if (trimmed != null) return trimmed;
-    if (RegExp(
-            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(value!))
-      return null;
-    else
-      return 'Email address is not supported.';
+  String? confirmPass(String? value) {
+    return confirmPassword(value, passwordController!);
   }
 }

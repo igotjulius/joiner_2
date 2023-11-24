@@ -134,42 +134,53 @@ class _NavBarPageState extends State<NavBarPage> {
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
     return Scaffold(
       body: _currentPage ?? tabs[_currentPageName],
-      bottomNavigationBar: GNav(
-        selectedIndex: currentIndex,
-        onTabChange: (i) => setState(() {
-          _currentPage = null;
-          _currentPageName = tabs.keys.toList()[i];
-        }),
-        tabBackgroundColor: Color(0x00000000),
-        tabBorderRadius: 0.0,
-        tabMargin: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-        padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-        gap: 0.0,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        duration: Duration(milliseconds: 500),
-        haptic: false,
-        tabs: [
-          GButton(
-            icon: Icons.meeting_room_rounded,
-            text: 'Lobby',
-            iconSize: 24.0,
+      extendBody: true,
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(10),
+        color: Colors.transparent,
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: GNav(
+              selectedIndex: currentIndex,
+              onTabChange: (i) => setState(() {
+                _currentPage = null;
+                _currentPageName = tabs.keys.toList()[i];
+              }),
+              color: Colors.grey,
+              activeColor: Theme.of(context).primaryColor,
+              tabBackgroundColor:
+                  Theme.of(context).colorScheme.primaryContainer,
+              // tabBorderRadius: 12,
+              padding: EdgeInsetsDirectional.all(10),
+              gap: 8,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              duration: Duration(milliseconds: 500),
+              haptic: false,
+              textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color: Theme.of(context).primaryColor,
+                  ),
+              tabs: [
+                GButton(
+                  icon: Icons.meeting_room_rounded,
+                  text: 'Lobby',
+                ),
+                GButton(
+                  icon: Icons.directions_car,
+                  text: 'Rentals',
+                ),
+                GButton(
+                  icon: Icons.people_alt_outlined,
+                  text: 'Friends',
+                ),
+                GButton(
+                  icon: Icons.person_outline,
+                  text: 'Account',
+                )
+              ],
+            ),
           ),
-          GButton(
-            icon: Icons.directions_car,
-            text: 'Rentals',
-            iconSize: 24.0,
-          ),
-          GButton(
-            icon: Icons.people_alt_outlined,
-            text: 'Friends',
-            iconSize: 24.0,
-          ),
-          GButton(
-            icon: Icons.person_outline,
-            text: 'Account',
-            iconSize: 24.0,
-          )
-        ],
+        ),
       ),
     );
   }

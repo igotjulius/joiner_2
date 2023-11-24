@@ -13,6 +13,7 @@ class LobbyDashboardWidget extends StatefulWidget {
 
 class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
   late LobbyDashboardModel _model;
+  late TextStyle _textStyle;
 
   @override
   void initState() {
@@ -25,9 +26,12 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    _textStyle = Theme.of(context)
+        .textTheme
+        .bodyMedium!
+        .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant);
     return Container(
       padding: EdgeInsets.all(20),
-      color: Colors.white,
       child: _model.currentLobby == null
           ? Center(
               child: CircularProgressIndicator(),
@@ -38,38 +42,52 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                 children: [
                   Text(
                     "${_model.currentLobby?.title}",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   Row(
                     children: [
-                      Text('Host: '),
+                      Text(
+                        'Host: ',
+                        style: _textStyle,
+                      ),
                       Text(
                         _model.hostParticipant(),
-                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Text('Joiners: '),
+                      Text(
+                        'Joiners: ',
+                        style: _textStyle,
+                      ),
                       Text(
                         _model
                             .getAllParticipants()
-                            .map((participant) => '${participant.firstName} ${participant.lastName}')
+                            .map((participant) =>
+                                '${participant.firstName} ${participant.lastName}')
                             .join(', '),
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: _textStyle,
                       ),
                     ],
                   ),
-                  Divider(),
-                  Text('Details'),
+                  Divider(
+                    color: Colors.grey[400],
+                  ),
+                  Text(
+                    'Details',
+                    style: _textStyle,
+                  ),
                   lobbyDetails(),
-                  Text('Expenses'),
+                  Text(
+                    'Expenses',
+                    style: _textStyle,
+                  ),
                   expenses(),
-                  Text('Polls'),
+                  Text(
+                    'Polls',
+                    style: _textStyle,
+                  ),
                   polls(),
                 ].divide(
                   SizedBox(
@@ -90,48 +108,56 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Meeting Place'),
+                Text(
+                  'Meeting Place',
+                  style: _textStyle,
+                ),
                 Text(
                   _model.currentLobby!.meetingPlace == null
                       ? 'No Meeting Place'
                       : _model.currentLobby!.meetingPlace!,
-                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Destination'),
+                Text(
+                  'Destination',
+                  style: _textStyle,
+                ),
                 Text(
                   _model.currentLobby!.destination == null
                       ? 'No Destination'
                       : _model.currentLobby!.destination!,
-                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Planned Date'),
+                Text(
+                  'Planned Date',
+                  style: _textStyle,
+                ),
                 Text(
                   _model.currentLobby!.startDate == null
                       ? 'No Planned Date'
                       : dateFormat.format(_model.currentLobby!.startDate!),
-                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Budget'),
+                Text(
+                  'Budget',
+                  style: _textStyle,
+                ),
                 Text(
                   _model.currentLobby!.budget == null
                       ? 'No Budget'
                       : "₱" + _model.totalBudget().toString(),
-                  style: TextStyle(fontWeight: FontWeight.bold),
                 )
               ],
             ),
@@ -149,27 +175,31 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
           children: [
             if (_model.currentLobby!.budget?.keys == null ||
                 _model.currentLobby!.budget?.values == null)
-              Text("No Budget Plans yet")
+              Text(
+                'No Budget Plans yet',
+                style: _textStyle,
+              )
             else
               ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: _model.currentLobby!.budget!.length,
-                  separatorBuilder: (context, index) => Divider(
-                        height: 10,
-                      ),
-                  itemBuilder: (context, index) {
-                    List<String> budgetCategories =
-                        _model.currentLobby!.budget!.keys.toList();
-                    List<double> budgetExpenses =
-                        _model.currentLobby!.budget!.values.toList();
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("${budgetCategories[index]}"),
-                        Text("₱${budgetExpenses[index]}"),
-                      ],
-                    );
-                  })
+                shrinkWrap: true,
+                itemCount: _model.currentLobby!.budget!.length,
+                separatorBuilder: (context, index) => Divider(
+                  height: 10,
+                ),
+                itemBuilder: (context, index) {
+                  // List<String> budgetCategories =
+                  //     _model.currentLobby!.budget!.keys.toList();
+                  // List<double> budgetExpenses =
+                  //     _model.currentLobby!.budget!.values.toList();
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Text("${budgetCategories[index]}"),
+                      // Text("₱${budgetExpenses[index]}"),
+                    ],
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -185,7 +215,10 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
             if (_model.currentLobby!.poll!.length == 0)
               Padding(
                 padding: const EdgeInsets.all(10),
-                child: Text('No polls have been concluded yet.'),
+                child: Text(
+                  'No polls have been concluded yet.',
+                  style: _textStyle,
+                ),
               )
             else
               ListView.separated(
@@ -203,8 +236,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                       children: [
                         Text("${poll.question}"),
                         Text(
-                          // "${highestChoice['title']} : ${highestChoice['count']}"),
-                          "${highestChoice['title']}",
+                          '${highestChoice['title']}',
                         ),
                       ],
                     ),

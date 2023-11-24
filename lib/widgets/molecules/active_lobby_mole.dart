@@ -7,7 +7,7 @@ class ActiveLobbyMolecule extends StatelessWidget {
   ActiveLobbyMolecule(this.lobbies, {super.key});
   late final List<LobbyModel> lobbies;
 
-  final DateFormat dateFormat = DateFormat('MM/dd/yyyy');
+  final DateFormat dateFormat = DateFormat('MMM dd');
 
   @override
   Widget build(BuildContext context) {
@@ -62,49 +62,56 @@ class ActiveLobbyMolecule extends StatelessWidget {
                 },
               );
             },
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                border: Border.all(),
-              ),
+            child: Card(
+              elevation: 4,
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+                padding: EdgeInsetsDirectional.all(10),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          width: 40.0,
-                          height: 40.0,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
+                    Container(
+                      width: 40.0,
+                      height: 40.0,
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        'assets/images/lambug-beach-badian.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            lobbies[index].title!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  fontWeight: FontWeight.w400,
+                                ),
                           ),
-                          child: Image.asset(
-                            'assets/images/lambug-beach-badian.png',
-                            fit: BoxFit.cover,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                lobbies[index].startDate != null
+                                    ? "${dateFormat.format(lobbies[index].startDate!)} - ${dateFormat.format(lobbies[index].endDate!)}"
+                                    : '-',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              Text(
+                                '${lobbies[index].participants!.length} people involved',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                            ],
                           ),
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              lobbies[index].title!,
-                            ),
-                            Text(
-                              lobbies[index].startDate != null
-                                  ? "${dateFormat.format(lobbies[index].startDate!)} - ${dateFormat.format(lobbies[index].endDate!)}"
-                                  : '-',
-                            ),
-                          ],
-                        ),
-                      ].divide(SizedBox(width: 10.0)),
+                        ],
+                      ),
                     ),
                   ],
                 ),

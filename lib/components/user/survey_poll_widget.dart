@@ -1,5 +1,5 @@
+import 'package:joiner_1/widgets/atoms/text_input.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'survey_poll_model.dart';
@@ -59,102 +59,70 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+          padding: EdgeInsetsDirectional.all(20),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                alignment: AlignmentDirectional(-1.0, -1.0),
-                child: Text(
-                  'Create a Poll',
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Create a Poll',
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      icon: Icon(Icons.close_rounded)),
+                ],
+              ),
+              CustomTextInput(
+                label: 'Question',
+                hintText: 'What are you deciding about?',
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextButton(
+                    child: Text('Add a Choice'),
+                    onPressed: () {
+                      setState(() {});
+                    },
+                  ),
+                  ListView.separated(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: _model.choices!.length,
+                    itemBuilder: (context, index) {
+                      return CustomTextInput(
+                          controller: _model.choices![index]);
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        height: 10,
+                      );
+                    },
+                  ),
+                ].divide(
+                  SizedBox(height: 10),
                 ),
               ),
-              Flexible(
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width * 0.5,
-                    child: TextFormField(
-                      controller: _model.textController1,
-                      autofocus: true,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        hintText: 'Survey Question',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        errorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        focusedErrorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        filled: true,
-                        suffixIcon: Icon(
-                          Icons.question_mark_rounded,
-                        ),
+              Spacer(),
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () async {
+                        await _model.createPoll(widget.lobbyId!);
+                        context.pop();
+                      },
+                      label: Text('Create'),
+                      icon: Icon(
+                        Icons.add,
                       ),
-                      validator:
-                          _model.textController1Validator.asValidator(context),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: _model.choices!.length,
-                  itemBuilder: ((context, index) {
-                    return TextField(controller: _model.choices![index]);
-                  }),
-                ),
-              ),
-              FFButtonWidget(
-                  text: 'Add Choice',
-                  onPressed: () {
-                    setState(() {});
-                  },
-                  options: FFButtonOptions()),
-              FFButtonWidget(
-                showLoadingIndicator: false,
-                onPressed: () async {
-                  await _model.createPoll(widget.lobbyId!);
-                  context.pop();
-                },
-                text: 'Create',
-                icon: Icon(
-                  Icons.add,
-                  size: 24.0,
-                ),
-                options: FFButtonOptions(
-                  height: 40.0,
-                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 16.0, 0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  elevation: 3.0,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
+                ],
               ),
             ].divide(SizedBox(height: 20.0)),
           ),

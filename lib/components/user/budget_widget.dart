@@ -1,4 +1,3 @@
-import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,11 +42,10 @@ class _BudgetWidgetState extends State<BudgetWidget> {
     context.watch<FFAppState>();
 
     return Container(
-      width: double.infinity,
-      color: Colors.white,
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -56,17 +54,15 @@ class _BudgetWidgetState extends State<BudgetWidget> {
                 Text(
                   'Budget',
                 ),
-                FFButtonWidget(
-                  text: 'Add',
+                FilledButton.tonal(
+                  child: Text('Add'),
                   onPressed: () {
                     _model.addBudget(context, widget.lobbyId!);
                   },
-                  options: FFButtonOptions(height: 40),
                 ),
               ],
             ),
-            Flexible(
-              fit: FlexFit.loose,
+            Expanded(
               child: _model.showBudget(widget.lobbyId!),
             ),
           ],

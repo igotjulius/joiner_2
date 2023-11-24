@@ -1,5 +1,4 @@
 import 'package:joiner_1/components/user/survey_poll_widget.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/widgets/molecules/poll_mole.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -59,11 +58,10 @@ class _PollItemWidgetState extends State<PollItemWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Poll'),
-                FFButtonWidget(
-                  text: 'Add',
-                  options: FFButtonOptions(height: 40),
+                FilledButton(
+                  child: Text('Add'),
                   onPressed: () {
-                    showDialog<bool>(
+                    showBottomSheet(
                       context: context,
                       builder: (context) {
                         return SurveyPollWidget(lobbyId: widget.lobbyId!);
@@ -75,7 +73,7 @@ class _PollItemWidgetState extends State<PollItemWidget> {
             ),
             Flexible(
               child: _model.polls == null || _model.polls!.isEmpty
-                  ? Text('empty')
+                  ? Center(child: Text('No polls as of the moment.'))
                   : ListView.builder(
                       shrinkWrap: true,
                       itemCount: _model.polls?.length,

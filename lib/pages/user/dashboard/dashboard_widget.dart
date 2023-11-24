@@ -39,21 +39,26 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     context.watch<FFAppState>();
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.goNamed('LobbyCreation');
-        },
-        child: const Icon(
-          Icons.add,
-          size: 32,
-        ),
-      ),
+      floatingActionButton: _model.tabController!.index != 0
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 72),
+              child: FloatingActionButton(
+                onPressed: () {
+                  context.goNamed('LobbyCreation');
+                },
+                child: const Icon(
+                  Icons.add,
+                  size: 32,
+                ),
+              ),
+            )
+          : null,
       key: scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 0,
+        backgroundColor: Color(0xfffafafa),
         bottom: TabBar(
-          unselectedLabelStyle: TextStyle(),
           tabs: [
             Tab(
               text: 'Promos',
@@ -65,33 +70,32 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
           controller: _model.tabController,
           onTap: (value) => setState(() {}),
         ),
-        actions: [],
-        centerTitle: false,
-        elevation: 2.0,
       ),
-      body: TabBarView(controller: _model.tabController, children: [
-        Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-                child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-              child: PromosList(),
-            )),
-          ],
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-                child: _model.getUserLobbies(),
+      body: TabBarView(
+        controller: _model.tabController,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: PromosList(),
               ),
-            ),
-          ],
-        ),
-      ]),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+                  child: _model.getUserLobbies(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

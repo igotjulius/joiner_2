@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_model.dart';
 import 'package:joiner_1/widgets/molecules/cra_sign_up_mole.dart';
 import 'package:joiner_1/widgets/molecules/user_sign_up_mole.dart';
@@ -14,7 +13,8 @@ class SignUpPageWidget extends StatefulWidget {
 
 class _SignUpPageWidgetState extends State<SignUpPageWidget>
     with TickerProviderStateMixin {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> joinerFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> rentFormKey = GlobalKey<FormState>();
   late SignUpPageModel _model;
 
   @override
@@ -37,22 +37,20 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Become a Joiner',
-                      ),
-                      Text(
-                        'Just fill in all the details.',
-                      ),
-                    ],
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Create an Account',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
+                  Spacer(),
                   TextButton(
                     child: Text(
-                      'Login',
+                      'Login Now',
                     ),
                     onPressed: () {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       context.goNamed('Login');
                     },
                   ),
@@ -75,6 +73,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(20),
                   ),
+                  indicatorSize: TabBarIndicatorSize.tab,
                   controller: _model.tabController,
                   onTap: (value) {
                     _model.tabController?.index = value;
@@ -93,19 +92,11 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                 child: TabBarView(
                   controller: _model.tabController,
                   children: [
-                    wrapWithModel(
-                      model: _model.userModel,
-                      child: UserSignUpMole(
-                        formKey: formKey,
-                      ),
-                      updateCallback: () => setState(() {}),
+                    UserSignUpMole(
+                      formKey: joinerFormKey,
                     ),
-                    wrapWithModel(
-                      model: _model.craModel,
-                      child: CraSignUpMole(
-                        formKey: formKey,
-                      ),
-                      updateCallback: () => setState(() {}),
+                    CraSignUpMole(
+                      formKey: rentFormKey,
                     ),
                   ],
                 ),
@@ -114,40 +105,38 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
+                    flex: 5,
                     child: Text(
                       'By signing up you accept Joiner’s Terms of Use and Privacy Policy.',
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
                     ),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.fromLTRB(20, 16, 20, 16),
-                    ),
+                  Spacer(),
+                  FilledButton.tonal(
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Colors.transparent,
-                            behavior: SnackBarBehavior.floating,
-                            elevation: 4,
-                            padding: EdgeInsets.zero,
-                            content: ClipPath(
-                              clipper: ShapeBorderClipper(
-                                shape: ContinuousRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              child: Container(
-                                height: 56,
-                                decoration: BoxDecoration(
-                                  color: Colors.green[600],
-                                ),
-                                child: Center(child: Text('Form submitted')),
-                              ),
-                            ),
-                          ),
-                        );
+                      final form1 = joinerFormKey.currentState != null &&
+                          joinerFormKey.currentState!.validate();
+                      final form2 = rentFormKey.currentState != null &&
+                          rentFormKey.currentState!.validate();
+                      if (form1 || form2) {
                         _model.signUp();
                       }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Form submitted'),
+                          action: SnackBarAction(
+                            label: 'OK',
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                            },
+                          ),
+                          margin:
+                              EdgeInsets.only(right: 20, left: 20, bottom: 80),
+                        ),
+                      );
                     },
                     child: Text('Sign Up'),
                   ),
@@ -158,51 +147,6 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
             )),
           ),
         ),
-      ),
-    );
-  }
-
-  FFButtonWidget newMethod(BuildContext context) {
-    return FFButtonWidget(
-      onPressed: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-        if (formKey.currentState!.validate()) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.transparent,
-              behavior: SnackBarBehavior.floating,
-              elevation: 4,
-              padding: EdgeInsets.zero,
-              content: ClipPath(
-                clipper: ShapeBorderClipper(
-                  shape: ContinuousRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: Container(
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: Colors.green[600],
-                  ),
-                  child: Center(child: Text('Form submitted')),
-                ),
-              ),
-            ),
-          );
-          // _model.signUp();
-        }
-      },
-      text: 'Sign Up',
-      options: FFButtonOptions(
-        height: 40.0,
-        padding: EdgeInsetsDirectional.fromSTEB(40.0, 0.0, 40.0, 0.0),
-        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-        elevation: 3.0,
-        borderSide: BorderSide(
-          color: Colors.transparent,
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(8.0),
       ),
     );
   }
