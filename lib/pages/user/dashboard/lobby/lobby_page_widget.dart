@@ -1,8 +1,8 @@
 import 'package:joiner_1/components/user/budget_widget.dart';
-import 'package:joiner_1/pages/user/dashboard/components/joiners/joiners_widget.dart';
-import 'package:joiner_1/pages/user/dashboard/components/lobby_dashboard/lobby_dashboard.dart';
-import 'package:joiner_1/pages/user/dashboard/components/poll/poll_comp_widget.dart';
-import 'package:joiner_1/pages/user/dashboard/components/chat/chat_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/joiners_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/chat/chat_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -130,22 +130,14 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
                             _model.currentLobby!.conversation,
                           ),
                         ),
-                        wrapWithModel(
-                          model: _model.budgetModel!,
-                          updateCallback: () => setState(() {}),
-                          child: BudgetWidget(
-                            lobbyId: widget.lobbyId,
-                            budget: _model.currentLobby!.budget,
-                          ),
+                        BudgetWidget(
+                          lobbyId: widget.lobbyId,
+                          budget: _model.currentLobby!.budget,
                         ),
                         PollCompWidget(
                           lobbyId: _model.currentLobby!.id,
                         ),
-                        wrapWithModel(
-                          model: _model.joinersModel!,
-                          updateCallback: () => setState(() {}),
-                          child: JoinersWidget(_model.currentLobby!.id),
-                        ),
+                        JoinersWidget(),
                       ],
                     ),
                   ),

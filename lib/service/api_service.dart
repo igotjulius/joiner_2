@@ -176,6 +176,13 @@ abstract class ApiService {
     @Path('friendId') String friendId,
   );
 
+  // Remove friend request
+  @DELETE('user/{userId}/social/{friendId}')
+  Future<ResponseModel> removeFriendRequest(
+    @Path('userId') String userId,
+    @Path('friendId') String friendId,
+  );
+
   // Fetch user's rentals
   @GET('user/{userId}/rent')
   Future<ResponseModel<List<RentalModel>>> getRentals(

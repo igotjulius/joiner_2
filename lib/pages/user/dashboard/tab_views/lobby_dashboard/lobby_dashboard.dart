@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/pages/user/dashboard/components/lobby_dashboard/lobby_dashboard_model.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/poll_model.dart';
 
@@ -26,10 +26,8 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _textStyle = Theme.of(context)
-        .textTheme
-        .bodyMedium!
-        .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant);
+    _textStyle = Theme.of(context).textTheme.titleSmall!;
+    final _textStyleMed = Theme.of(context).textTheme.titleMedium!;
     return Container(
       padding: EdgeInsets.all(20),
       child: _model.currentLobby == null
@@ -48,7 +46,10 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                     children: [
                       Text(
                         'Host: ',
-                        style: _textStyle,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      SizedBox(
+                        width: 8,
                       ),
                       Text(
                         _model.hostParticipant(),
@@ -59,7 +60,10 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                     children: [
                       Text(
                         'Joiners: ',
-                        style: _textStyle,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      SizedBox(
+                        width: 8,
                       ),
                       Text(
                         _model
@@ -67,24 +71,23 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                             .map((participant) =>
                                 '${participant.firstName} ${participant.lastName}')
                             .join(', '),
-                        style: _textStyle,
                       ),
                     ],
                   ),
                   Divider(),
                   Text(
                     'Details',
-                    style: _textStyle,
+                    style: _textStyleMed,
                   ),
                   lobbyDetails(),
                   Text(
                     'Expenses',
-                    style: _textStyle,
+                    style: _textStyleMed,
                   ),
                   expenses(),
                   Text(
                     'Polls',
-                    style: _textStyle,
+                    style: _textStyleMed,
                   ),
                   polls(),
                 ].divide(

@@ -1,4 +1,3 @@
-import '../../../flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,33 +44,32 @@ class _RentalsWidgetState extends State<RentalsWidget> {
         top: true,
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Upcoming Rentals'),
-                    FFButtonWidget(
-                      text: 'Browse Listings',
-                      onPressed: () {
-                        context.pushNamed(
-                          'Listings',
-                          extra: <String, dynamic>{
-                            kTransitionInfoKey: TransitionInfo(
-                              hasTransition: true,
-                              transitionType: PageTransitionType.rightToLeft,
-                            ),
-                          },
-                        );
-                      },
-                      options: FFButtonOptions(height: 40),
-                    ),
-                  ],
-                ),
-                _model.getRentals(),
-              ],
-            ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Upcoming Rentals'),
+                  FilledButton(
+                    child: Text('Browse Listings'),
+                    onPressed: () {
+                      context.pushNamed(
+                        'Listings',
+                        extra: <String, dynamic>{
+                          kTransitionInfoKey: TransitionInfo(
+                            hasTransition: true,
+                            transitionType: PageTransitionType.rightToLeft,
+                          ),
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+              Flexible(
+                child: _model.getRentals(),
+              ),
+            ],
           ),
         ),
       ),

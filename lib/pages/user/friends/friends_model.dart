@@ -1,7 +1,5 @@
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/utils/generic_response.dart';
-import 'package:joiner_1/widgets/atoms/accepted_friend.dart';
-import 'package:joiner_1/widgets/atoms/pending_friend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +16,11 @@ class FriendsModel extends FlutterFlowModel {
   void dispose() {}
 
   /// Action blocks are added here.
-  FutureBuilder<ResponseModel<List<Map<String, String>>>?> friendList() {
+  FutureBuilder<ResponseModel<List<Map<String, String>>>?> friendList(
+    Widget Function(List<Map<String, String>>) pendingFriends,
+    Widget Function(List<Map<String, String>>) acceptedFriends,
+    Widget Function(List<Map<String, String>>) waitingApproval,
+  ) {
     return FutureBuilder(
       future: UserController.getFriends(),
       builder: (context, snapshot) {
@@ -32,67 +34,32 @@ class FriendsModel extends FlutterFlowModel {
             child: Text('Add your friends here'),
           );
 
-        List<Map<String, String>> pending = [], accepted = [];
+        List<Map<String, String>> pending = [], accepted = [], forApproval = [];
         result.forEach(
           (element) {
             if (element['status'] == 'Accepted')
               accepted.add(element);
-            else
+            else if (element['status'] == 'Pending')
               pending.add(element);
+            else
+              forApproval.add(element);
           },
         );
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return ListView(
+          shrinkWrap: true,
           children: [
-            pendingFriends(pending),
+            if (pending.isNotEmpty) pendingFriends(pending),
+            if (forApproval.isNotEmpty) waitingApproval(forApproval),
+            if (accepted.isNotEmpty) acceptedFriends(accepted),
+          ].divide(
             SizedBox(
-              height: 40,
+              height: 20,
             ),
-            Text('Friends',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            acceptedFriends(accepted),
-          ],
+          ),
         );
       },
     );
-  }
-
-  Widget pendingFriends(List<Map<String, String>> list) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            Text('Friend Request/s',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            PendingFriendAtom(
-              name: '${list[index]['firstName']} ${list[index]['lastName']}',
-              friendId: list[index]['friendId'],
-              eventAction: acceptFriendRequest,
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget acceptedFriends(List<Map<String, String>> list) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        return AcceptedFriendAtom(
-          name: '${list[index]['firstName']} ${list[index]['lastName']}',
-        );
-      },
-    );
-  }
-
-  void acceptFriendRequest(String friendId) async {
-    await UserController.acceptFriendRequest(friendId);
-    updateWidget(() {});
   }
 
   /// Additional helper methods are added here.

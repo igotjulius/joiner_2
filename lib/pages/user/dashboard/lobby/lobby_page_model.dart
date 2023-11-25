@@ -1,10 +1,10 @@
 import 'package:joiner_1/components/user/budget_model.dart';
-import 'package:joiner_1/pages/user/dashboard/components/joiners/joiners_model.dart';
-import 'package:joiner_1/pages/user/dashboard/components/lobby_dashboard/lobby_dashboard_model.dart';
-import 'package:joiner_1/pages/user/dashboard/components/poll/poll_comp_model.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/joiners_model.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard_model.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_model.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart' as ModelLobby;
-import 'package:joiner_1/pages/user/dashboard/components/chat/chat_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/chat/chat_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 

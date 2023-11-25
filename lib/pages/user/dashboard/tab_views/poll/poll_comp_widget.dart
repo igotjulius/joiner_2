@@ -1,6 +1,6 @@
-import 'package:joiner_1/pages/user/dashboard/components/poll/modals/survey_poll_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/poll/modals/survey_poll_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
-import 'package:joiner_1/pages/user/dashboard/components/poll/mole/poll_mole.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/poll/mole/poll_mole.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +43,7 @@ class _PollCompWidgetState extends State<PollCompWidget> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<LobbyProvider>();
-    _model.polls = provider.getPolls;
+    _model.polls = provider.polls;
     return Container(
       child: Padding(
         padding: EdgeInsetsDirectional.all(20),

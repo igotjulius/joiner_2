@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
+import 'package:provider/provider.dart';
 
 class UserSignUpMole extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -17,7 +18,7 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => UserSignUpMoleModel());
+    _model = context.read<UserSignUpMoleModel>();
   }
 
   @override

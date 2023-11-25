@@ -30,7 +30,7 @@ class _PollMoleculeState extends State<PollMolecule> {
 
   @override
   Widget build(BuildContext context) {
-    _model.poll = context.watch<LobbyProvider>().getPolls[widget.index!];
+    _model.poll = context.watch<LobbyProvider>().polls[widget.index!];
     _model.count();
     return Card(
       elevation: 2,

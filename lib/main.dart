@@ -151,7 +151,6 @@ class _NavBarPageState extends State<NavBarPage> {
               activeColor: Theme.of(context).primaryColor,
               tabBackgroundColor:
                   Theme.of(context).colorScheme.primaryContainer,
-              // tabBorderRadius: 12,
               padding: EdgeInsetsDirectional.all(10),
               gap: 8,
               mainAxisAlignment: MainAxisAlignment.spaceAround,

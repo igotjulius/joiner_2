@@ -12,10 +12,7 @@ class SignUpPageModel extends FlutterFlowModel {
   late UserSignUpMoleModel userModel;
 
   @override
-  void initState(BuildContext context) {
-    craModel = createModel(context, () => CraSignUpMoleModel());
-    userModel = createModel(context, () => UserSignUpMoleModel());
-  }
+  void initState(BuildContext context) {}
 
   @override
   void dispose() {

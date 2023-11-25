@@ -4,7 +4,6 @@ import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
-import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
@@ -63,87 +62,6 @@ class UserController {
   // Delete specific lobby
   static Future<void> deleteLobby(String lobbyId) async {
     await apiService.deleteLobby(_userId, lobbyId);
-  }
-
-  // Create message
-  static Future<void> createMessage(MessageModel message, BuildContext context,
-      String userId, String lobbyId, String conversationId) async {
-    await apiService
-        .createMessage(message, userId, lobbyId, conversationId)
-        .catchError((error) {
-      showDialog(
-        context: context,
-        builder: (context) => Dialog(
-          child: Text('Message not sent.'),
-        ),
-      );
-    });
-  }
-
-  // Get conversation
-  static FutureBuilder<ResponseModel<List<MessageModel>?>> getConversation(
-      String userId, String lobbyId, String conversationId) {
-    return FutureBuilder(
-      future: apiService.getConversation(userId, lobbyId, conversationId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<MessageModel>? result = snapshot.data!.data;
-          if (result == null)
-            return Center(
-              child: Text('Say hi!'),
-            );
-          return ListView.builder(
-            itemCount: result.length,
-            itemBuilder: (context, index) {
-              MessageModel message = result[index];
-              bool isUserMessage = _userId == message.creatorId;
-              return Align(
-                alignment: isUserMessage
-                    ? Alignment.bottomRight
-                    : Alignment.bottomLeft,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    right: isUserMessage ? 10 : 0,
-                    left: isUserMessage ? 0 : 10,
-                    bottom: 7,
-                    top: 5,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 3, bottom: 3),
-                        child: Text(
-                          isUserMessage ? '' : result[index].creator!,
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: isUserMessage ? Colors.blue : Colors.grey,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          result[index].message!,
-                          style: TextStyle(
-                              color:
-                                  isUserMessage ? Colors.white : Colors.black),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
   }
 
   // Get all poll of a lobby
@@ -218,7 +136,7 @@ class UserController {
     await apiService.declineLobbyInvitation({'lobbyId': lobbyId}, _userId);
   }
 
-  // Invite user a friend
+  // Invite user as a friend
   static Future<void> inviteFriend(String friendEmail) async {
     await apiService.inviteFriend({'email': friendEmail}, _userId);
   }
@@ -231,6 +149,11 @@ class UserController {
   // Accept friend request
   static Future<void> acceptFriendRequest(String friendId) async {
     await apiService.acceptFriendRequest(_userId, friendId);
+  }
+
+  // Remove friend request
+  static Future<void> removeFriendRequest(String friendId) async {
+    await apiService.removeFriendRequest(_userId, friendId);
   }
 
   // Fetch available cars

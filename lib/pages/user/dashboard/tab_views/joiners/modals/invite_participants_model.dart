@@ -7,11 +7,7 @@ import 'package:joiner_1/models/participant_model.dart';
 
 class InviteParticipantsModel extends FlutterFlowModel {
   List<ParticipantModel>? invitedFriends;
-  final String? lobbyId;
-  late List<ParticipantModel>? participants;
-  late Function(Function())? rebuildParent;
-
-  InviteParticipantsModel({this.lobbyId});
+  List<ParticipantModel>? participants;
 
   @override
   void dispose() {}
@@ -60,7 +56,7 @@ class InviteParticipantsModel extends FlutterFlowModel {
   }
 
   List<Map<String, String>> filter(List<Map<String, String>> friends) {
-    participants?.forEach((participant) {
+    participants!.forEach((participant) {
       friends.removeWhere((friend) {
         return friend['friendId'] == participant.userId;
       });
@@ -74,7 +70,7 @@ class InviteParticipantsModel extends FlutterFlowModel {
         userId: friendId, firstName: firstName, lastName: lastName));
   }
 
-  void sendInvitation() async {
-    await UserController.inviteParticipants(invitedFriends!, lobbyId!);
+  void sendInvitation(String lobbyId) async {
+    await UserController.inviteParticipants(invitedFriends!, lobbyId);
   }
 }

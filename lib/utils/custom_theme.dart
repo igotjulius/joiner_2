@@ -31,9 +31,8 @@ ThemeData lightTheme(BuildContext context) {
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        // minimumSize: Size(double.maxFinite, 48),
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        shape: RoundedRectangleBorder(
+        shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
@@ -158,6 +157,11 @@ TextTheme textTheme() {
       fontSize: 14,
     ),
     //For subtitles
+    titleMedium: TextStyle(
+      fontWeight: FontWeight.w500,
+      fontSize: 16,
+      color: Colors.grey,
+    ),
     titleSmall: TextStyle(
       fontWeight: FontWeight.w300,
       fontSize: 14,

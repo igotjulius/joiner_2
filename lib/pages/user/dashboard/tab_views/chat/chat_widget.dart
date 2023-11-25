@@ -55,7 +55,6 @@ class _ChatWidgetState extends State<ChatWidget>
             child: StreamBuilder(
               stream: _model.streamSocket!.getResponse,
               builder: (context, snapshot) {
-                print(snapshot.connectionState);
                 if (snapshot.connectionState == ConnectionState.waiting)
                   return Center(child: CircularProgressIndicator());
 
