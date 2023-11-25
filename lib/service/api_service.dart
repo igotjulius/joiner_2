@@ -195,7 +195,7 @@ abstract class ApiService {
 
   // Post Poll
   @POST('user/{userId}/lobby/{lobbyId}/poll')
-  Future<ResponseModel<List<PollModel>>> postPoll(
+  Future<ResponseModel<PollModel>> postPoll(
     @Body() PollModel poll,
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId, {

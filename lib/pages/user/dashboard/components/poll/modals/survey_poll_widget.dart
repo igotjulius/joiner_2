@@ -1,3 +1,4 @@
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +32,8 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
     super.initState();
     _model = createModel(context, () => SurveyPollModel());
 
-    _model.textController1 ??= TextEditingController();
-    _model.textController2 ??= TextEditingController();
+    _model.questionController ??= TextEditingController();
+    _model.choicesController!.add(TextEditingController());
   }
 
   @override
@@ -45,19 +46,9 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
-    _model.choices!.add(TextEditingController());
 
     return Material(
       child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(0.0),
-            bottomRight: Radius.circular(0.0),
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
-        ),
         child: Padding(
           padding: EdgeInsetsDirectional.all(20),
           child: Column(
@@ -79,6 +70,8 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
               CustomTextInput(
                 label: 'Question',
                 hintText: 'What are you deciding about?',
+                controller: _model.questionController,
+                fillColor: Theme.of(context).colorScheme.primaryContainer,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,16 +79,19 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                   TextButton(
                     child: Text('Add a Choice'),
                     onPressed: () {
-                      setState(() {});
+                      setState(() {
+                        _model.choicesController!.add(TextEditingController());
+                      });
                     },
                   ),
                   ListView.separated(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemCount: _model.choices!.length,
+                    itemCount: _model.choicesController!.length,
                     itemBuilder: (context, index) {
                       return CustomTextInput(
-                          controller: _model.choices![index]);
+                        controller: _model.choicesController![index],
+                      );
                     },
                     separatorBuilder: (context, index) {
                       return SizedBox(
@@ -113,7 +109,9 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: () async {
-                        await _model.createPoll(widget.lobbyId!);
+                        final nPoll = await _model.createPoll(widget.lobbyId!);
+                        Provider.of<LobbyProvider>(context, listen: false)
+                            .addPoll(nPoll!);
                         context.pop();
                       },
                       label: Text('Create'),

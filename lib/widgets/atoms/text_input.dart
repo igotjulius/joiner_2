@@ -14,6 +14,7 @@ class CustomTextInput extends StatefulWidget {
   final bool readOnly;
   final Icon? prefixIcon;
   final String? hintText;
+  final Color? fillColor;
 
   CustomTextInput({
     super.key,
@@ -28,6 +29,7 @@ class CustomTextInput extends StatefulWidget {
     this.readOnly = false,
     this.prefixIcon,
     this.hintText,
+    this.fillColor,
   }) : inputFormatters =
             inputFormatters ?? FilteringTextInputFormatter.singleLineFormatter;
 
@@ -64,6 +66,13 @@ class _CustomTextInputState extends State<CustomTextInput> {
               decoration: InputDecoration(
                 prefixIcon: widget.prefixIcon,
                 hintText: widget.hintText,
+                fillColor: widget.fillColor,
+                filled: widget.fillColor == null ? false : true,
+                enabledBorder: widget.fillColor == null
+                    ? null
+                    : OutlineInputBorder(
+                        borderSide: BorderSide(color: widget.fillColor!),
+                      ),
               ),
               style: Theme.of(context).textTheme.bodySmall,
             ),

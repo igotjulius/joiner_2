@@ -153,10 +153,9 @@ class UserController {
   }
 
   // Add/create a poll of a lobby
-  static Future<List<PollModel>?> postPoll(
-      PollModel poll, String lobbyId) async {
+  static Future<PollModel> postPoll(PollModel poll, String lobbyId) async {
     final response = await apiService.postPoll(poll, _userId, lobbyId);
-    return response.data;
+    return response.data!;
   }
 
   // Vote to a poll

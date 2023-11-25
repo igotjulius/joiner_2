@@ -3,31 +3,30 @@ import 'package:flutter/material.dart';
 class PollChoices extends StatelessWidget {
   final String? choice;
   final int? count;
-  final Color? color;
-  const PollChoices({super.key, this.choice, this.count, this.color});
+  final Color? textColor;
+  const PollChoices({super.key, this.choice, this.count, this.textColor});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 10.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              choice!,
-            ),
-            Text(
-              "$count votes",
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            choice!,
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: textColor,
+                ),
+          ),
+          Text(
+            "$count votes",
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: textColor,
+                ),
+          ),
+        ],
       ),
     );
   }

@@ -47,6 +47,13 @@ ThemeData lightTheme(BuildContext context) {
         ),
       ),
     ),
+    iconButtonTheme: IconButtonThemeData(
+      style: IconButton.styleFrom(
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+    ),
     iconTheme: IconThemeData(
       color: lightThemeColors().primary,
     ),
@@ -96,6 +103,9 @@ ThemeData lightTheme(BuildContext context) {
     ),
     popupMenuTheme: PopupMenuThemeData(
       surfaceTintColor: Colors.transparent,
+    ),
+    dividerTheme: DividerThemeData(
+      color: Colors.grey[400],
     ),
   );
 }

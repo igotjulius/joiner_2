@@ -1,27 +1,25 @@
-import 'package:joiner_1/components/user/survey_poll_widget.dart';
-import 'package:joiner_1/models/poll_model.dart';
-import 'package:joiner_1/widgets/molecules/poll_mole.dart';
+import 'package:joiner_1/pages/user/dashboard/components/poll/modals/survey_poll_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
+import 'package:joiner_1/pages/user/dashboard/components/poll/mole/poll_mole.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'poll_item_model.dart';
-export 'poll_item_model.dart';
+import 'poll_comp_model.dart';
+export 'poll_comp_model.dart';
 
-class PollItemWidget extends StatefulWidget {
+class PollCompWidget extends StatefulWidget {
   final String? lobbyId;
-  final List<PollModel>? polls;
-  const PollItemWidget({
+  const PollCompWidget({
     Key? key,
     this.lobbyId,
-    this.polls,
   });
 
   @override
-  _PollItemWidgetState createState() => _PollItemWidgetState();
+  _PollCompWidgetState createState() => _PollCompWidgetState();
 }
 
-class _PollItemWidgetState extends State<PollItemWidget> {
-  late PollItemModel _model;
+class _PollCompWidgetState extends State<PollCompWidget> {
+  late PollCompModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -32,8 +30,7 @@ class _PollItemWidgetState extends State<PollItemWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => PollItemModel());
-    _model.polls = widget.polls;
+    _model = createModel(context, () => PollCompModel());
   }
 
   @override
@@ -45,14 +42,12 @@ class _PollItemWidgetState extends State<PollItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
+    final provider = context.watch<LobbyProvider>();
+    _model.polls = provider.getPolls;
     return Container(
-      width: double.infinity,
-      height: double.infinity,
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+        padding: EdgeInsetsDirectional.all(20),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,7 +59,9 @@ class _PollItemWidgetState extends State<PollItemWidget> {
                     showBottomSheet(
                       context: context,
                       builder: (context) {
-                        return SurveyPollWidget(lobbyId: widget.lobbyId!);
+                        return SurveyPollWidget(
+                          lobbyId: widget.lobbyId!,
+                        );
                       },
                     );
                   },
@@ -79,7 +76,6 @@ class _PollItemWidgetState extends State<PollItemWidget> {
                       itemCount: _model.polls?.length,
                       itemBuilder: (context, index) {
                         return PollMolecule(
-                          poll: _model.polls?[index],
                           lobbyId: widget.lobbyId,
                           index: index,
                         );

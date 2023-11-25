@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/components/user/lobby_dashboard_model.dart';
+import 'package:joiner_1/pages/user/dashboard/components/lobby_dashboard/lobby_dashboard_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/poll_model.dart';
 
@@ -71,9 +71,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                       ),
                     ],
                   ),
-                  Divider(
-                    color: Colors.grey[400],
-                  ),
+                  Divider(),
                   Text(
                     'Details',
                     style: _textStyle,

@@ -97,7 +97,7 @@ List<FFRoute> userRoutes() {
           path: ':lobbyId',
           builder: (context, state) {
             final obj = state.extraMap['currentLobby'] ??= null;
-            return LobbyWidget(
+            return LobbyPageWidget(
               currentLobby: obj,
               lobbyId: state.pathParameters['lobbyId'],
             );

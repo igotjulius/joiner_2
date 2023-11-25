@@ -1,37 +1,39 @@
 import 'package:joiner_1/components/user/budget_widget.dart';
-import 'package:joiner_1/components/user/chat_widget.dart';
-import 'package:joiner_1/components/user/joiners_widget.dart';
-import 'package:joiner_1/components/user/lobby_dashboard.dart';
-import 'package:joiner_1/components/user/poll_item_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/components/joiners/joiners_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/components/lobby_dashboard/lobby_dashboard.dart';
+import 'package:joiner_1/pages/user/dashboard/components/poll/poll_comp_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/components/chat/chat_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'lobby_model.dart';
+import 'lobby_page_model.dart';
 import 'package:joiner_1/models/lobby_model.dart' as ModelLobby;
-export 'lobby_model.dart';
+export 'lobby_page_model.dart';
 
-class LobbyWidget extends StatefulWidget {
+class LobbyPageWidget extends StatefulWidget {
   final ModelLobby.LobbyModel? currentLobby;
   final String? lobbyId;
 
-  LobbyWidget({Key? key, this.currentLobby, this.lobbyId}) : super(key: key);
+  LobbyPageWidget({Key? key, this.currentLobby, this.lobbyId})
+      : super(key: key);
 
   @override
-  _LobbyWidgetState createState() => _LobbyWidgetState();
+  _LobbyPageWidgetState createState() => _LobbyPageWidgetState();
 }
 
 final DateFormat dateFormat = DateFormat('MMMM dd');
 
-class _LobbyWidgetState extends State<LobbyWidget>
+class _LobbyPageWidgetState extends State<LobbyPageWidget>
     with TickerProviderStateMixin {
-  late LobbyModel _model;
+  late LobbyPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LobbyModel());
+    _model = createModel(context, () => LobbyPageModel());
     _model.initModel();
     _model.currentLobby = widget.currentLobby;
     _model.tabBarController = TabController(
@@ -54,8 +56,8 @@ class _LobbyWidgetState extends State<LobbyWidget>
   }
 
   Widget mainDisplay() {
-    return Provider<ModelLobby.LobbyModel>(
-      create: (_) => _model.currentLobby!,
+    return ChangeNotifierProvider<LobbyProvider>(
+      create: (_) => LobbyProvider(_model.currentLobby!),
       child: Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
@@ -136,13 +138,8 @@ class _LobbyWidgetState extends State<LobbyWidget>
                             budget: _model.currentLobby!.budget,
                           ),
                         ),
-                        wrapWithModel(
-                          model: _model.pollModel!,
-                          updateCallback: () => setState(() {}),
-                          child: PollItemWidget(
-                            lobbyId: _model.currentLobby!.id,
-                            polls: _model.currentLobby!.poll,
-                          ),
+                        PollCompWidget(
+                          lobbyId: _model.currentLobby!.id,
                         ),
                         wrapWithModel(
                           model: _model.joinersModel!,

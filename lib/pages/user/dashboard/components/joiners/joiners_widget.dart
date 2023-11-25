@@ -1,4 +1,4 @@
-import 'package:joiner_1/components/user/invite_participants_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/components/joiners/modals/invite_participants_widget.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import '/flutter_flow/flutter_flow_util.dart';
