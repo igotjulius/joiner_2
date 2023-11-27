@@ -1,5 +1,6 @@
-import 'package:joiner_1/models/car_model.dart';
+ import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
+import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
@@ -47,6 +48,8 @@ class ResponseModel<T> {
         converted = PollModel.fromJson(json);
       else if (json.containsKey('licensePlate'))
         converted = CarModel.fromJson(json);
+      else if (json.containsKey('items'))
+        converted = ExpenseModel.fromJson(json);
       return converted as T;
     } else if (json is List<dynamic>) {
       if (json.isEmpty) {
@@ -92,6 +95,7 @@ class ResponseModel<T> {
   }
 
   factory ResponseModel.fromJson(Map<String, dynamic> json) {
+
     return _$ResponseModelFromJson(json);
   }
   Map<String, dynamic> toJson() => _$ResponseModelToJson(this);

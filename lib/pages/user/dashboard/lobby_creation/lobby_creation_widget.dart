@@ -65,7 +65,8 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                   onPressed: () async {
                     final lobby = LobbyModel(
                       title: _model.titleInput.text,
-                      description: _model.descInput.text,
+                      destination: _model.descInput.text,
+                      meetingPlace: _model.meetingInput.text,
                       startDate: _model.datePicked?.start,
                       endDate: _model.datePicked?.end,
                       participants: [],
@@ -96,13 +97,6 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                   label: 'Destination',
                   controller: _model.descInput,
                   validator: _model.descInputValidator,
-                ),
-                CustomTextInput(
-                  label: 'Budget',
-                  keyboardType: TextInputType.number,
-                  inputFormatters: FilteringTextInputFormatter.digitsOnly,
-                  controller: _model.budgetInput,
-                  validator: _model.budgetInputValidator,
                 ),
                 CustomTextInput(
                   label: 'Meeting Place',
@@ -163,7 +157,7 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                     ),
                   ],
                 ),
-                Row(
+               /* Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
@@ -182,7 +176,7 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                 ),
                 Divider(
                   thickness: 1.0,
-                ),
+                ),*/
               ].divide(SizedBox(height: 10.0)),
             ),
           ),

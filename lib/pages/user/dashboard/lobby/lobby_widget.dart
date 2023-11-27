@@ -132,6 +132,7 @@ class _LobbyWidgetState extends State<LobbyWidget>
                           model: _model.budgetModel!,
                           updateCallback: () => setState(() {}),
                           child: BudgetWidget(
+                            hostId: _model.currentLobby!.hostId,
                             lobbyId: widget.lobbyId,
                             budget: _model.currentLobby!.budget,
                           ),

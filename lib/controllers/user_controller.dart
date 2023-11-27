@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
+import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
@@ -249,5 +250,25 @@ class UserController {
   // Fetch user's rentals
   static Future<ResponseModel<List<RentalModel>>> getRentals() async {
     return await apiService.getRentals(_userId);
+  }
+
+  //Add Expenses
+  static Future<ResponseModel<ExpenseModel>> putExpenses(ExpenseModel expenseModel,String lobbyId) async {
+    return await apiService.putExpenses(expenseModel, _userId, lobbyId);
+  }
+
+  //Get Expenses
+  static Future<ResponseModel<ExpenseModel>> getExpenses(String lobbyId) async {
+    return await apiService.getExpenses(_userId, lobbyId);
+  }
+
+  //HOST Delete Expenses
+  static Future<ResponseModel<ExpenseModel>> deleteExpenses(String lobbyId) async {
+    return await apiService.deleteExpenses(_userId, lobbyId);
+  }
+
+  //HOST Delete SPECIFIC Expense
+  static Future<ResponseModel<ExpenseModel>> deleteSpecificExpense(String lobbyId, String label) async {
+    return await apiService.deleteSpecificExpense(_userId, lobbyId, label);
   }
 }

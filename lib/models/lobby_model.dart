@@ -22,6 +22,7 @@ class LobbyModel {
   final Map<String, double>? budget;
   final List<PollModel>? poll;
   final String? conversation;
+  final Map<String, dynamic>? expense;
 
   const LobbyModel({
     this.id,
@@ -36,6 +37,7 @@ class LobbyModel {
     this.budget,
     this.poll,
     this.conversation,
+    this.expense
   });
 
   factory LobbyModel.fromJson(Map<String, dynamic> json) =>
