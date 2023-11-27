@@ -39,8 +39,7 @@ class LoginPageModel extends FlutterFlowModel {
     late User user;
     appState.setIsCra(isCra);
     AppStateNotifier.instance.setRoutes();
-
-    if (appState.isCra) {
+    if (!appState.isCra) {
       user = UserModel(
         email: emailController.text,
         password: passwordController.text,
@@ -51,7 +50,6 @@ class LoginPageModel extends FlutterFlowModel {
         password: passwordController.text,
       );
     }
-
     final currentUser = await User.loginUser(user);
 
     if (currentUser != null) {

@@ -24,7 +24,8 @@ abstract class User {
 
   static Future<User?> loginUser(User user) async {
     var result;
-    if (user is UserModel) result = await UserController.loginUser(user);
+    result = await UserController.loginUser(user);
+    // if (user is UserModel)
     if (user is CraUserModel) result = await CraController.loginCra(user);
     return result;
   }

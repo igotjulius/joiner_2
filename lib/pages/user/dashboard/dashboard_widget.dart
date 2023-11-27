@@ -75,24 +75,17 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
         controller: _model.tabController,
         children: [
           Column(
-            mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
                 child: PromosList(),
               ),
             ],
           ),
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-                  child: _model.getUserLobbies(),
-                ),
-              ),
-            ],
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: _model.getUserLobbies(),
+            ),
           ),
         ],
       ),

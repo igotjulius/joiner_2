@@ -131,8 +131,8 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
                           ),
                         ),
                         BudgetWidget(
-                          lobbyId: widget.lobbyId,
-                          budget: _model.currentLobby!.budget,
+                          lobbyId: _model.currentLobby!.id,
+                          hostId: _model.currentLobby!.hostId,
                         ),
                         PollCompWidget(
                           lobbyId: _model.currentLobby!.id,

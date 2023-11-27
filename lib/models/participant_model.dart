@@ -1,3 +1,4 @@
+import 'package:joiner_1/models/allocated_budget_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'participant_model.g.dart';
@@ -12,6 +13,7 @@ class ParticipantModel {
   final String? firstName;
   final String? lastName;
   final String? joinStatus;
+  final Map<String, double>? contribution;
   final String? type;
   final List? pledges;
 
@@ -21,6 +23,7 @@ class ParticipantModel {
     this.firstName,
     this.lastName,
     this.joinStatus,
+    this.contribution,
     this.type,
     this.pledges,
   });

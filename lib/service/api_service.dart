@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
+import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
@@ -241,6 +242,37 @@ abstract class ApiService {
     @Path('userId') String userId, {
     @Header('Content-Type') String contentType = 'application/json',
   });
+
+  //Create expenses
+  @PUT('user/{userId}/lobby/{lobbyId}/expense')
+  Future<ResponseModel<ExpenseModel>> putExpenses (
+      @Body() ExpenseModel expense,
+      @Path('userId') String userId,
+      @Path('lobbyId') String lobbyId, {
+        @Header('Content-Type') String contentType = 'application/json'
+      });
+
+  //Get Expenses
+  @GET('user/{userId}/lobby/{lobbyId}/expense')
+  Future<ResponseModel<ExpenseModel>> getExpenses (
+      @Path('userId') String userId,
+      @Path('lobbyId') String lobbyId,
+      );
+
+  //HOST Delete Expenses
+  @DELETE('user/{userId}/lobby/{lobbyId}/expense')
+  Future<ResponseModel<ExpenseModel>> deleteExpenses (
+      @Path('userId') String userId,
+      @Path('lobbyId') String lobbyId,
+      );
+
+  //HOST Delete SPECIFIC Expense
+  @DELETE('user/{userId}/lobby/{lobbyId}/expense/{label}')
+  Future<ResponseModel<ExpenseModel>> deleteSpecificExpense (
+      @Path('userId') String userId,
+      @Path('lobbyId') String lobbyId,
+      @Path('label') String label
+      );
 
   // CRA API's
   // Register CRA

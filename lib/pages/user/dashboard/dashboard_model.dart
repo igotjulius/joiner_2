@@ -7,8 +7,8 @@ import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 class LobbiesModel extends FlutterFlowModel {
-
   TabController? tabController;
+
   ///  State fields for stateful widgets in this page.
 
   /// Initialization and disposal methods.
@@ -28,25 +28,20 @@ class LobbiesModel extends FlutterFlowModel {
           // final activeLobbies = result['active']!;
           final {'active': activeLobbies, 'pending': pendingLobbies} = result;
 
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                if (pendingLobbies.length != 0)
-                  Column(
-                    children: [
-                      Text('Invitations'),
-                      LobbyInvitationMolecule(lobbies: pendingLobbies),
-                    ],
-                  ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (pendingLobbies.length != 0)
                 Column(
                   children: [
-                    activeLobbies.length == 0
-                        ? Text('No active lobbies')
-                        : ActiveLobbyMolecule(activeLobbies),
+                    Text('Invitations'),
+                    LobbyInvitationMolecule(lobbies: pendingLobbies),
                   ],
                 ),
-              ],
-            ),
+              activeLobbies.length == 0
+                  ? Text('No active lobbies')
+                  : ActiveLobbyMolecule(activeLobbies),
+            ],
           );
         } else
           return Center(child: CircularProgressIndicator());

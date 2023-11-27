@@ -5,3 +5,4 @@ build/
 .flutter-plugins*
 *.g.dart
 pubspec.lock
+.idea/

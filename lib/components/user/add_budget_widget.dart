@@ -55,7 +55,7 @@ class _AddBudgetWidgetState extends State<AddBudgetWidget> {
             FFButtonWidget(
               text: 'Add',
               onPressed: () {
-                _model.addBudget(widget.lobbyId!);
+                _model.addExpenses(widget.lobbyId!);
                 context.pop();
               },
               options: FFButtonOptions(height: 40),

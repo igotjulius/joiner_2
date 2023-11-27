@@ -1,5 +1,3 @@
-import 'package:joiner_1/utils/utils.dart';
-
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'login_page_model.dart';
@@ -138,13 +136,14 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                             ),
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                final showFeedback =
-                                    await _model.loginUser(context)
-                                        ? showSuccess('Logging in')
-                                        : showError(
-                                            'User account not found',
-                                            Theme.of(context).colorScheme.error,
-                                          );
+                                // final showFeedback =
+
+                                //         ? showSuccess('Logging in')
+                                //         : showError(
+                                //             'User account not found',
+                                //             Colors.red,
+                                //           );
+                                await _model.loginUser(context);
                               }
                             },
                           ),
