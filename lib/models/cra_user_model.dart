@@ -9,7 +9,9 @@ part 'cra_user_model.g.dart';
 class CraUserModel extends User {
   @JsonKey(name: '_id')
   final String? id;
-  final String? firstName, lastName, email;
+  @JsonKey(includeIfNull: false)
+  final String? password;
+  final String? firstName, lastName, email, contactNo, address;
   final List<CarModel>? vehicles;
   final List<RentalModel>? rentals;
 
@@ -18,6 +20,9 @@ class CraUserModel extends User {
     this.firstName,
     this.lastName,
     this.email,
+    this.password,
+    this.contactNo,
+    this.address,
     this.vehicles,
     this.rentals,
   }) : super(
@@ -25,6 +30,9 @@ class CraUserModel extends User {
           firstName: firstName,
           lastName: lastName,
           email: email,
+          password: password,
+          contactNo: contactNo,
+          address: address,
         );
 
   factory CraUserModel.fromJson(Map<String, dynamic> json) =>

@@ -5,12 +5,10 @@ part 'user_model.g.dart';
 
 @JsonSerializable()
 class UserModel extends User {
-  @JsonKey(
-    includeFromJson: true,
-    includeToJson: false,
-    name: '_id',
-  )
+  @JsonKey(name: '_id')
   final String? id;
+  @JsonKey(includeIfNull: false)
+  final String? password;
   final String? firstName, lastName, email;
   final List<Map<String, String>>? friends;
 
@@ -19,12 +17,14 @@ class UserModel extends User {
     this.firstName,
     this.lastName,
     this.email,
+    this.password,
     this.friends,
   }) : super(
           id: id,
           firstName: firstName,
           lastName: lastName,
           email: email,
+          password: password,
         );
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

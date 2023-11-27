@@ -15,22 +15,25 @@ class UserController {
   static late String _userId = FFAppState().pref!.getString('userId')!;
 
   // Register user
-  static Future<void> registerUser(Map<String, String> nUser) async {
-    await apiService.registerUser(nUser);
+  static Future<String?> registerUser(User nUser) async {
+    final result = await apiService.registerUser(nUser);
+    if (result.code == HttpStatus.created) return null;
+    return result.message;
   }
 
   // Login user
-  static Future<User?> loginUser(String email, String password) async {
-    User? user;
-    await apiService.loginUser({'email': email, 'password': password}).then(
+  static Future<User?> loginUser(User user) async {
+    User? currentUser;
+    await apiService
+        .loginUser({'email': user.email!, 'password': user.password!}).then(
       (response) {
         if (response.code == HttpStatus.ok) {
-          user = response.data;
-          _userId = user!.id!;
+          currentUser = response.data;
+          _userId = currentUser!.id!;
         }
       },
     );
-    return user;
+    return currentUser;
   }
 
   // Fetch user lobbies

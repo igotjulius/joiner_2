@@ -22,8 +22,8 @@ part 'api_service.g.dart';
   Make sure that the physical phone and host machine are in the same network.
 */
 // const String serverUrl = 'http://192.168.137.1:443/';
-// const String serverUrl = 'http://localhost:443/';
-const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
 final apiService = ApiService(Dio(), baseUrl: serverUrl);
 // ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -35,8 +35,8 @@ abstract class ApiService {
   // User Api's
   // Register user
   @POST('user/register')
-  Future<String> registerUser(
-    @Body() Map<String, String> nUser, {
+  Future<ResponseModel> registerUser(
+    @Body() User nUser, {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
@@ -245,8 +245,8 @@ abstract class ApiService {
   // CRA API's
   // Register CRA
   @POST('cra/register')
-  Future<void> registerCra(
-    @Body() Map<String, String> map, {
+  Future<ResponseModel> registerCra(
+    @Body() User nCraUser, {
     @Header('Content-Type') String contentType = 'application/json',
   });
 

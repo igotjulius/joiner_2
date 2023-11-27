@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'package:joiner_1/controllers/cra_controller.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
+import 'package:joiner_1/models/user_model.dart';
+import 'package:joiner_1/utils/utils.dart' as utils;
 import 'package:provider/provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,9 @@ class LoginPageModel extends FlutterFlowModel {
   }
 
   // State field(s) for TextField widget.
-  TextEditingController? textController1;
-  String? Function(BuildContext, String?)? textController1Validator;
+  TextEditingController? emailController;
   // State field(s) for TextField widget.
-  TextEditingController? textController2;
-  String? Function(BuildContext, String?)? textController2Validator;
+  TextEditingController? passwordController;
 
   /// Initialization and disposal methods.co
 
@@ -30,26 +29,44 @@ class LoginPageModel extends FlutterFlowModel {
 
   void dispose() {
     unfocusNode.dispose();
-    textController1?.dispose();
-    textController2?.dispose();
+    emailController?.dispose();
+    passwordController?.dispose();
   }
 
   /// Action blocks are added here.
-  Future<void> loginUser(BuildContext context) async {
+  Future<bool> loginUser(BuildContext context) async {
     FFAppState appState = context.read<FFAppState>();
-    User? currentUser;
+    late User user;
     appState.setIsCra(isCra);
     AppStateNotifier.instance.setRoutes();
 
     if (appState.isCra) {
-      currentUser = await CraController.loginCra(
-          textController1.text, textController2.text, appState);
+      user = UserModel(
+        email: emailController.text,
+        password: passwordController.text,
+      );
     } else {
-      currentUser = await UserController.loginUser(
-          textController1.text, textController2.text);
+      user = CraUserModel(
+        email: emailController.text,
+        password: passwordController.text,
+      );
     }
-    if (currentUser != null) appState.setCurrentUser(currentUser);
+
+    final currentUser = await User.loginUser(user);
+
+    if (currentUser != null) {
+      appState.setCurrentUser(currentUser);
+      return true;
+    }
+    return false;
   }
 
   /// Additional helper methods are added here.
+  String? validateEmail(String? email) {
+    return utils.validateEmail(email);
+  }
+
+  String? validatePassword(String? password) {
+    return utils.isEmpty(password);
+  }
 }

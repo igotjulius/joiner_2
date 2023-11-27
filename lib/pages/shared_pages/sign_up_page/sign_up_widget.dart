@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_model.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/molecules/cra_sign_up_mole.dart';
 import 'package:joiner_1/widgets/molecules/user_sign_up_mole.dart';
 import 'package:provider/provider.dart';
@@ -124,26 +125,20 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                   ),
                   Spacer(),
                   FilledButton.tonal(
-                    onPressed: () {
-                      final form1 = joinerFormKey.currentState!.validate();
+                    onPressed: () async {
+                      final form1 = joinerFormKey.currentState != null &&
+                          joinerFormKey.currentState!.validate();
                       final form2 = rentFormKey.currentState != null &&
                           rentFormKey.currentState!.validate();
                       if (form1 || form2) {
-                        _model.signUp();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Form submitted'),
-                            action: SnackBarAction(
-                              label: 'OK',
-                              onPressed: () {
-                                ScaffoldMessenger.of(context)
-                                    .hideCurrentSnackBar();
-                              },
-                            ),
-                            margin: EdgeInsets.only(
-                                right: 20, left: 20, bottom: 80),
-                          ),
-                        );
+                        final result = await _model.signUp();
+                        final hasError = result != null;
+                        final message =
+                            hasError ? result : 'Registration successful';
+                        ScaffoldMessenger.of(context).showSnackBar(hasError
+                            ? showError(
+                                message, Theme.of(context).colorScheme.error)
+                            : showSuccess(message));
                       }
                     },
                     child: Text('Sign Up'),

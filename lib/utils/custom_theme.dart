@@ -68,6 +68,9 @@ ThemeData lightTheme(BuildContext context) {
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: lightThemeColors().error),
       ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: lightThemeColors().primary),
+      ),
       labelStyle: textTheme().bodySmall!.copyWith(
             color: lightThemeColors().onSurface,
           ),
@@ -85,6 +88,7 @@ ThemeData lightTheme(BuildContext context) {
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       elevation: 4,
+      showCloseIcon: true,
       backgroundColor: lightThemeColors().primary,
       shape: ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(20),

@@ -1,3 +1,5 @@
+import 'package:joiner_1/utils/utils.dart';
+
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'login_page_model.dart';
@@ -14,14 +16,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   late LoginPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => LoginPageModel());
 
-    _model.textController1 ??= TextEditingController();
-    _model.textController2 ??= TextEditingController();
+    _model.emailController ??= TextEditingController();
+    _model.passwordController ??= TextEditingController();
   }
 
   @override
@@ -66,55 +69,57 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        TextFormField(
-                          controller: _model.textController1,
-                          autofocus: true,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                          ),
-                          style: Theme.of(context).textTheme.bodySmall,
-                          validator: _model.textController1Validator
-                              .asValidator(context),
-                        ),
-                        TextFormField(
-                          controller: _model.textController2,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                          ),
-                          style: Theme.of(context).textTheme.bodySmall,
-                          validator: _model.textController2Validator
-                              .asValidator(context),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: _model.isCra,
-                                  side: BorderSide(width: 1),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _model.setIsCra(val!);
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  'Login as Car Rental Agent',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _model.emailController,
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
                             ),
-                            Text(
-                              'Forgot password?',
-                              style: Theme.of(context).textTheme.bodySmall,
+                            style: Theme.of(context).textTheme.bodySmall,
+                            validator: _model.validateEmail,
+                          ),
+                          TextFormField(
+                            controller: _model.passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
                             ),
-                          ],
-                        ),
-                      ].divide(SizedBox(height: 10.0)),
+                            style: Theme.of(context).textTheme.bodySmall,
+                            validator: _model.validatePassword,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: _model.isCra,
+                                    side: BorderSide(width: 1),
+                                    onChanged: (val) {
+                                      setState(() {
+                                        _model.setIsCra(val!);
+                                      });
+                                    },
+                                  ),
+                                  Text(
+                                    'Login as Car Rental Agent',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'Forgot password?',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ].divide(SizedBox(height: 10.0)),
+                      ),
                     ),
                     Column(
                       children: [
@@ -132,7 +137,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   ),
                             ),
                             onPressed: () async {
-                              await _model.loginUser(context);
+                              if (_formKey.currentState!.validate()) {
+                                final showFeedback =
+                                    await _model.loginUser(context)
+                                        ? showSuccess('Logging in')
+                                        : showError(
+                                            'User account not found',
+                                            Theme.of(context).colorScheme.error,
+                                          );
+                              }
                             },
                           ),
                         ),

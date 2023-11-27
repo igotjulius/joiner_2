@@ -12,23 +12,25 @@ class CraController {
   static late String _craUserId = FFAppState().pref!.getString('userId')!;
 
   // Register CRA
-  static Future<void> registerCra(Map<String, String> nUser) async {
-    await apiService.registerCra(nUser);
+  static Future<String?> registerCra(User nUser) async {
+    final result = await apiService.registerCra(nUser);
+    if (result.code == HttpStatus.created) return null;
+    return result.message;
   }
 
   // Login CRA
-  static Future<User?> loginCra(
-      String email, String password, FFAppState appState) async {
-    User? user;
-    await apiService.loginCra({'email': email, 'password': password}).then(
+  static Future<User?> loginCra(User user) async {
+    User? currentUser;
+    await apiService
+        .loginCra({'email': user.email, 'password': user.password}).then(
       (response) {
         if (response.code == HttpStatus.ok) {
-          user = response.data!;
-          _craUserId = user!.id!;
+          currentUser = response.data!;
+          _craUserId = currentUser!.id!;
         }
       },
     );
-    return user;
+    return currentUser;
   }
 
   // Get all registered cars of corresponding CRA
