@@ -72,6 +72,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
         ),
       ),
       body: TabBarView(
+        key: Key('userDashboard'),
         controller: _model.tabController,
         children: [
           Column(
