@@ -108,9 +108,9 @@ class UserController {
   }
 
   // Fetch participants of a lobby
-  static Future<ResponseModel<List<ParticipantModel>>> getParticipants(
-      String lobbyId) {
-    return apiService.getParticipants(_userId, lobbyId);
+  static Future<List<ParticipantModel>> getParticipants(String lobbyId) async {
+    final response = await apiService.getParticipants(_userId, lobbyId);
+    return response.data!;
   }
 
   // Invite participant/s to a lobby
@@ -178,7 +178,8 @@ class UserController {
   }
 
   //Add Expenses
-  static Future<ResponseModel<ExpenseModel>> putExpenses(ExpenseModel expenseModel,String lobbyId) async {
+  static Future<ResponseModel<ExpenseModel>> putExpenses(
+      ExpenseModel expenseModel, String lobbyId) async {
     return await apiService.putExpenses(expenseModel, _userId, lobbyId);
   }
 
@@ -188,12 +189,14 @@ class UserController {
   }
 
   //HOST Delete Expenses
-  static Future<ResponseModel<ExpenseModel>> deleteExpenses(String lobbyId) async {
+  static Future<ResponseModel<ExpenseModel>> deleteExpenses(
+      String lobbyId) async {
     return await apiService.deleteExpenses(_userId, lobbyId);
   }
 
   //HOST Delete SPECIFIC Expense
-  static Future<ResponseModel<ExpenseModel>> deleteSpecificExpense(String lobbyId, String label) async {
+  static Future<ResponseModel<ExpenseModel>> deleteSpecificExpense(
+      String lobbyId, String label) async {
     return await apiService.deleteSpecificExpense(_userId, lobbyId, label);
   }
 }

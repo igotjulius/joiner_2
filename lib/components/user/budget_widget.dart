@@ -1,3 +1,4 @@
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => BudgetModel());
+    _model.fetchParticipants = UserController.getParticipants(widget.lobbyId!);
     _model.tabController = TabController(
       vsync: this,
       length: 2,
@@ -38,7 +40,6 @@ class _BudgetWidgetState extends State<BudgetWidget>
   @override
   void dispose() {
     _model.maybeDispose();
-
     super.dispose();
   }
 

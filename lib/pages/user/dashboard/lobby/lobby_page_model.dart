@@ -3,7 +3,7 @@ import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/joiners_model.da
 import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard_model.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_model.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/models/lobby_model.dart' as ModelLobby;
+import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/chat/chat_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class LobbyPageModel extends FlutterFlowModel {
   // Model for Joiners component.
   JoinersModel? joinersModel;
 
-  ModelLobby.LobbyModel? currentLobby;
+  LobbyModel? currentLobby;
 
   /// Initialization and disposal methods.
 
@@ -52,7 +52,7 @@ class LobbyPageModel extends FlutterFlowModel {
     joinersModel = JoinersModel();
   }
 
-  Future<ModelLobby.LobbyModel?> fetchLobby(String lobbyId) async {
+  Future<LobbyModel?> fetchLobby(String lobbyId) async {
     return await UserController.getLobby(lobbyId);
   }
 

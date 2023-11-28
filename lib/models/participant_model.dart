@@ -1,4 +1,3 @@
-import 'package:joiner_1/models/allocated_budget_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'participant_model.g.dart';

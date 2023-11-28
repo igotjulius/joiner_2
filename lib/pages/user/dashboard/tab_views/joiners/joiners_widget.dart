@@ -1,3 +1,4 @@
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/modals/invite_participants_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -27,6 +28,8 @@ class _JoinersWidgetState extends State<JoinersWidget> {
     super.initState();
     _model = createModel(context, () => JoinersModel());
     _model.currentLobby = context.read<LobbyProvider>().currentLobby;
+    _model.fetchParticipants =
+        UserController.getParticipants(_model.currentLobby!.id!);
   }
 
   @override
@@ -37,8 +40,8 @@ class _JoinersWidgetState extends State<JoinersWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserId = context.watch<FFAppState>().currentUser!.id!;
-    final lobbyProvider = Provider.of<LobbyProvider>(context, listen: false);
+    final currentUserId = context.read<FFAppState>().currentUser!.id!;
+    final lobbyProvider = context.read<LobbyProvider>();
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(20),

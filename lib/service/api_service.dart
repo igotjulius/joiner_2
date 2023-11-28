@@ -245,34 +245,30 @@ abstract class ApiService {
 
   //Create expenses
   @PUT('user/{userId}/lobby/{lobbyId}/expense')
-  Future<ResponseModel<ExpenseModel>> putExpenses (
-      @Body() ExpenseModel expense,
-      @Path('userId') String userId,
-      @Path('lobbyId') String lobbyId, {
-        @Header('Content-Type') String contentType = 'application/json'
-      });
+  Future<ResponseModel<ExpenseModel>> putExpenses(@Body() ExpenseModel expense,
+      @Path('userId') String userId, @Path('lobbyId') String lobbyId,
+      {@Header('Content-Type') String contentType = 'application/json'});
 
   //Get Expenses
   @GET('user/{userId}/lobby/{lobbyId}/expense')
-  Future<ResponseModel<ExpenseModel>> getExpenses (
-      @Path('userId') String userId,
-      @Path('lobbyId') String lobbyId,
-      );
+  Future<ResponseModel<ExpenseModel>> getExpenses(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
 
   //HOST Delete Expenses
   @DELETE('user/{userId}/lobby/{lobbyId}/expense')
-  Future<ResponseModel<ExpenseModel>> deleteExpenses (
-      @Path('userId') String userId,
-      @Path('lobbyId') String lobbyId,
-      );
+  Future<ResponseModel<ExpenseModel>> deleteExpenses(
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
 
   //HOST Delete SPECIFIC Expense
   @DELETE('user/{userId}/lobby/{lobbyId}/expense/{label}')
-  Future<ResponseModel<ExpenseModel>> deleteSpecificExpense (
+  Future<ResponseModel<ExpenseModel>> deleteSpecificExpense(
       @Path('userId') String userId,
       @Path('lobbyId') String lobbyId,
-      @Path('label') String label
-      );
+      @Path('label') String label);
 
   // CRA API's
   // Register CRA

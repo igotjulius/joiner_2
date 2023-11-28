@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +19,6 @@ class AddCarWidget extends StatefulWidget {
 class _AddCarWidgetState extends State<AddCarWidget> {
   late AddCarModel _model;
   String? imagePickerError;
-  UploadTask? uploadTask;
   String? imageUrl;
 
   final _formKey = GlobalKey<FormState>();

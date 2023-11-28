@@ -17,6 +17,7 @@ class BudgetModel extends FlutterFlowModel {
   int get tabBarCurrentIndex =>
       tabController != null ? tabController!.index : 0;
   double? total = 0.0;
+  Future<List<ParticipantModel>>? fetchParticipants;
 
   void initState(BuildContext context) {}
 
@@ -67,31 +68,31 @@ class BudgetModel extends FlutterFlowModel {
     updatePage(() {});
   }
 
-  FutureBuilder<ResponseModel<List<ParticipantModel>>> showBudget(
-      String lobbyId) {
+  FutureBuilder<List<ParticipantModel>> showBudget(String lobbyId) {
     return FutureBuilder(
-      future: UserController.getParticipants(lobbyId),
+      // future: UserController.getParticipants(lobbyId),
+      future: fetchParticipants,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          participants = snapshot.data?.data;
-
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: participants!.length,
-            itemBuilder: (context, index) {
-              if (participants?[index].joinStatus == 'Joined')
-                return ParticipantBudget(
-                  id: participants?[index].id,
-                  participantFname: participants?[index].firstName,
-                  participantLname: participants?[index].lastName,
-                  amount: participants?[index].contribution!['amount'],
-                );
-            },
-          );
-        } else
+        if (snapshot.connectionState != ConnectionState.done)
           return Center(
             child: CircularProgressIndicator(),
           );
+
+        participants = snapshot.data;
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: participants?.length,
+          itemBuilder: (context, index) {
+            if (participants?[index].joinStatus == 'Joined')
+              return ParticipantBudget(
+                id: participants?[index].id,
+                participantFname: participants?[index].firstName,
+                participantLname: participants?[index].lastName,
+                amount: participants?[index].contribution!['amount'],
+              );
+            return null;
+          },
+        );
       },
     );
   }

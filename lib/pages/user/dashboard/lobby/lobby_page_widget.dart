@@ -1,4 +1,5 @@
 import 'package:joiner_1/components/user/budget_widget.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/joiners_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_widget.dart';
@@ -8,11 +9,11 @@ import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'lobby_page_model.dart';
-import 'package:joiner_1/models/lobby_model.dart' as ModelLobby;
+import 'package:joiner_1/models/lobby_model.dart';
 export 'lobby_page_model.dart';
 
 class LobbyPageWidget extends StatefulWidget {
-  final ModelLobby.LobbyModel? currentLobby;
+  final LobbyModel? currentLobby;
   final String? lobbyId;
 
   LobbyPageWidget({Key? key, this.currentLobby, this.lobbyId})
@@ -27,6 +28,7 @@ final DateFormat dateFormat = DateFormat('MMMM dd');
 class _LobbyPageWidgetState extends State<LobbyPageWidget>
     with TickerProviderStateMixin {
   late LobbyPageModel _model;
+  Future<LobbyModel?>? fetchLobby;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -36,6 +38,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     _model = createModel(context, () => LobbyPageModel());
     _model.initModel();
     _model.currentLobby = widget.currentLobby;
+    fetchLobby = UserController.getLobby(widget.lobbyId!);
     _model.tabBarController = TabController(
       vsync: this,
       length: 5,
@@ -51,8 +54,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-    return fetchLobby();
+    return displayLobby();
   }
 
   Widget mainDisplay() {
@@ -150,9 +152,9 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     );
   }
 
-  FutureBuilder<ModelLobby.LobbyModel?> fetchLobby() {
+  FutureBuilder<LobbyModel?> displayLobby() {
     return FutureBuilder(
-      future: _model.fetchLobby(widget.lobbyId!),
+      future: fetchLobby,
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(
@@ -170,9 +172,8 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
         switch (value) {
           case 0:
             {
-              _model.leaveLobby(widget.lobbyId!);
-              setState(() {});
               context.pop();
+              _model.leaveLobby(widget.lobbyId!);
             }
         }
       },

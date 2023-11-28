@@ -30,8 +30,8 @@ class LobbyDashboardModel extends FlutterFlowModel {
   String hostParticipant() {
     String host = '';
     currentLobby!.participants!.forEach((element) {
-      if (element.type!.toString() == 'Host') 
-         host = '${element.firstName} ${element.lastName}';
+      if (element.type!.toString() == 'Host')
+        host = '${element.firstName} ${element.lastName}';
     });
 
     return host;
