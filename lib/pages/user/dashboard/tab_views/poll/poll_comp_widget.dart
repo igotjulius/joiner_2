@@ -44,45 +44,50 @@ class _PollCompWidgetState extends State<PollCompWidget> {
   Widget build(BuildContext context) {
     final provider = context.watch<LobbyProvider>();
     _model.polls = provider.polls;
-    return Container(
-      child: Padding(
-        padding: EdgeInsetsDirectional.all(20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Poll'),
-                FilledButton(
-                  child: Text('Add'),
-                  onPressed: () {
-                    showBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return SurveyPollWidget(
-                          lobbyId: widget.lobbyId!,
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
-            Flexible(
-              child: _model.polls == null || _model.polls!.isEmpty
-                  ? Center(child: Text('No polls as of the moment.'))
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _model.polls?.length,
-                      itemBuilder: (context, index) {
-                        return PollMolecule(
-                          lobbyId: widget.lobbyId,
-                          index: index,
-                        );
-                      },
-                    ),
-            ),
-          ].divide(SizedBox(height: 10.0)),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Container(
+        child: Padding(
+          padding: EdgeInsetsDirectional.all(20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Poll'),
+                  FilledButton(
+                    child: Text('Add'),
+                    onPressed: () {
+                      showBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return SurveyPollWidget(
+                            lobbyId: widget.lobbyId!,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+              Flexible(
+                child: _model.polls == null || _model.polls!.isEmpty
+                    ? Center(child: Text('No polls as of the moment.'))
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _model.polls?.length,
+                        itemBuilder: (context, index) {
+                          return PollMolecule(
+                            lobbyId: widget.lobbyId,
+                            index: index,
+                          );
+                        },
+                      ),
+              ),
+            ].divide(SizedBox(height: 10.0)),
+          ),
         ),
       ),
     );

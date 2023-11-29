@@ -58,7 +58,7 @@ class _FriendsWidgetState extends State<FriendsWidget> {
               context: context,
               builder: (context) {
                 return Dialog(
-                  surfaceTintColor: Colors.white,
+                  surfaceTintColor: Colors.grey,
                   insetPadding: EdgeInsets.zero,
                   child: InviteFriendWidget(
                     parentSetState: setState,

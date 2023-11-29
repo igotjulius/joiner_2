@@ -49,93 +49,98 @@ class _ChatWidgetState extends State<ChatWidget>
     super.build(context);
     return Container(
       padding: EdgeInsets.all(20),
-      child: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder(
-              stream: _model.streamSocket!.getResponse,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting)
-                  return Center(child: CircularProgressIndicator());
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder(
+                stream: _model.streamSocket!.getResponse,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Center(child: CircularProgressIndicator());
 
-                if (_model.allMessages.isEmpty)
-                  return Center(
-                    child: Text('Hi there :)'),
-                  );
-
-                return ListView.separated(
-                  reverse: true,
-                  shrinkWrap: true,
-                  itemCount: _model.allMessages.length,
-                  controller: _model.scrollController,
-                  itemBuilder: (context, index) {
-                    final message = _model.allMessages.reversed.toList()[index];
-                    return chatBubble(message);
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: 10,
+                  if (_model.allMessages.isEmpty)
+                    return Center(
+                      child: Text('Hi there :)'),
                     );
-                  },
-                );
-              },
+
+                  return ListView.separated(
+                    reverse: true,
+                    shrinkWrap: true,
+                    itemCount: _model.allMessages.length,
+                    controller: _model.scrollController,
+                    itemBuilder: (context, index) {
+                      final message = _model.allMessages.reversed.toList()[index];
+                      return chatBubble(message);
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        height: 10,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _model.textController,
-                      autofocus: true,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 4,
-                      minLines: 1,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor:
-                            Theme.of(context).colorScheme.primaryContainer,
-                        hintText: 'Enter message..',
-                        hintStyle: Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .copyWith(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(20),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _model.textController,
+                        autofocus: true,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 4,
+                        minLines: 1,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor:
+                              Theme.of(context).colorScheme.primaryContainer,
+                          hintText: 'Enter message..',
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.transparent,
+                    SizedBox(
+                      width: 8,
                     ),
-                    onPressed: () {
-                      if (_model.textController.text.trim().isNotEmpty) {
-                        _model.sendMessage(widget.conversationId!);
-                        _model.textController.text = '';
-                      }
-                    },
-                    child: Text('SEND'),
-                  ),
-                ],
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                      ),
+                      onPressed: () {
+                        if (_model.textController.text.trim().isNotEmpty) {
+                          _model.sendMessage(widget.conversationId!);
+                          _model.textController.text = '';
+                        }
+                      },
+                      child: Text('SEND'),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

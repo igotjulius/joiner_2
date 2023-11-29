@@ -42,40 +42,45 @@ class _JoinersWidgetState extends State<JoinersWidget> {
   Widget build(BuildContext context) {
     final currentUserId = context.read<FFAppState>().currentUser!.id!;
     final lobbyProvider = context.read<LobbyProvider>();
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Joiners'),
-                FilledButton(
-                  child: Text('Invite'),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) {
-                        return ListenableProvider.value(
-                          value: lobbyProvider,
-                          child: InviteParticipantsWidget(),
-                        );
-                      },
-                    );
-                    setState(() {});
-                  },
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Flexible(
-              child: _model.getParticipants(currentUserId),
-            ),
-          ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Joiners'),
+                  FilledButton(
+                    child: Text('Invite'),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) {
+                          return ListenableProvider.value(
+                            value: lobbyProvider,
+                            child: InviteParticipantsWidget(),
+                          );
+                        },
+                      );
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Flexible(
+                child: _model.getParticipants(currentUserId),
+              ),
+            ],
+          ),
         ),
       ),
     );
