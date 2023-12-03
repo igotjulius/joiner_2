@@ -18,6 +18,11 @@ class CarBookingModel extends FlutterFlowModel {
   String? Function(BuildContext, String?)? textController2Validator;
   DateTimeRange? datePicked;
 
+  BorderSide borderSide = BorderSide(color: Colors.black, width: 1.0);
+  BoxDecoration brokenLines = BoxDecoration(
+    border: Border.all(color: Colors.grey, width: 1.0),
+  );
+
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {}
