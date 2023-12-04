@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +16,7 @@ class CarBookingWidget extends StatefulWidget {
   @override
   _CarBookingWidgetState createState() => _CarBookingWidgetState();
 }
+PlatformFile? pickedFile;
 
 class _CarBookingWidgetState extends State<CarBookingWidget>
     with TickerProviderStateMixin {
@@ -33,6 +38,20 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
     _model.dispose();
 
     super.dispose();
+  }
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+  void unselectFile() {
+    setState(() {
+      pickedFile = null;
+    });
   }
 
   @override
@@ -90,21 +109,53 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'User Driver\'s License ID No.',
+                              Padding(
+                                padding: const EdgeInsets.only(bottom:8.0),
+                                child: Text(
+                                  'Please Upload any Government ID',
+                                ),
+                              ),
+                              Center(
+                                child: Container(
+                                  height: 200,
+                                  width: 300,
+                                  decoration: _model.brokenLines,
+                                  child: Stack(
+                                    children: [
+                                      InkWell(
+                                        onTap: () async {
+                                          await selectFile();
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: pickedFile != null
+                                              ? Image.file(
+                                            File(pickedFile!.path!),
+                                            fit: BoxFit.fill,
+                                            width: double.infinity,
+                                          )
+                                              : Center(child: Text('Tap to Upload')),
+                                        ),
+                                      ),
+                                      if (pickedFile != null)
+                                        Positioned(
+                                          top: 8.0,
+                                          right: 8.0,
+                                          child: IconButton(
+                                            color: Colors.black,
+                                            icon: Icon(Icons.close),
+                                            onPressed: () {
+                                              unselectFile();
+                                            },
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
                               ),
                               Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
-                                child: TextFormField(
-                                  controller: _model.textController1,
-                                  focusNode: _model.textFieldFocusNode1,
-                                  autofocus: true,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    hintText: 'ID Number',
-                                  ),
-                                ),
                               ),
                               Padding(
                                 padding:

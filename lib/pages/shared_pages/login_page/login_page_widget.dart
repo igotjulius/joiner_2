@@ -161,14 +161,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  // TODO: show loading dialog and validate user login
-                                  // final showFeedback =
-
-                                  //         ? showSuccess('Logging in')
-                                  //         : showError(
-                                  //             'User account not found',
-                                  //             Colors.red,
-                                  //           );
                                   await _model.loginUser(context);
                                 }
                               },

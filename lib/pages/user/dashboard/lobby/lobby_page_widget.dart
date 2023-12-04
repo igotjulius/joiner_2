@@ -44,6 +44,11 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
       length: 5,
       initialIndex: 0,
     );
+    _model.tabBarController?.addListener(() {
+      if (_model.tabBarController!.indexIsChanging) {
+      FocusScope.of(context).unfocus();
+    }
+    });
   }
 
   @override
@@ -103,7 +108,9 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
               Tab(text: 'Joiners'),
             ],
             controller: _model.tabBarController,
-            onTap: (value) => setState(() {}),
+            onTap: (value) => setState(() {
+                FocusScope.of(context).unfocus();
+            }),
           ),
         ),
         body: Column(

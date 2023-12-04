@@ -31,123 +31,128 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: Padding(
-          padding: EdgeInsetsDirectional.all(20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      'Create an Account',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ),
-                  Spacer(),
-                  TextButton(
-                    child: Text(
-                      'Login Now',
-                    ),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      context.goNamed('Login');
-                    },
-                  ),
-                ],
-              ),
-              Container(
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.blue,
-                  ),
-                ),
-                child: TabBar(
-                  splashBorderRadius: BorderRadius.circular(20),
-                  labelPadding: EdgeInsets.symmetric(vertical: 8),
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.blue[300],
-                  indicator: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  controller: _model.tabController,
-                  onTap: (value) {
-                    _model.tabController?.index = value;
-                  },
-                  tabs: [
-                    Text(
-                      'Joiner',
-                    ),
-                    Text(
-                      'Rent your car',
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: _model.tabController,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Padding(
+            padding: EdgeInsetsDirectional.all(20),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Provider.value(
-                      value: _model.userModel,
-                      child: UserSignUpMole(
-                        formKey: joinerFormKey,
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'Create an Account',
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
-                    Provider.value(
-                      value: _model.craModel,
-                      child: CraSignUpMole(
-                        formKey: rentFormKey,
+                    Spacer(),
+                    TextButton(
+                      child: Text(
+                        'Login Now',
                       ),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        context.goNamed('Login');
+                      },
                     ),
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 5,
-                    child: Text(
-                      'By signing up you accept Joiner’s Terms of Use and Privacy Policy.',
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            fontStyle: FontStyle.italic,
-                          ),
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.blue,
                     ),
                   ),
-                  Spacer(),
-                  FilledButton.tonal(
-                    onPressed: () async {
-                      final form1 = joinerFormKey.currentState != null &&
-                          joinerFormKey.currentState!.validate();
-                      final form2 = rentFormKey.currentState != null &&
-                          rentFormKey.currentState!.validate();
-                      if (form1 || form2) {
-                        final result = await _model.signUp();
-                        final hasError = result != null;
-                        final message =
-                            hasError ? result : 'Registration successful';
-                        ScaffoldMessenger.of(context).showSnackBar(hasError
-                            ? showError(
-                                message, Theme.of(context).colorScheme.error)
-                            : showSuccess(message));
-                      }
+                  child: TabBar(
+                    splashBorderRadius: BorderRadius.circular(20),
+                    labelPadding: EdgeInsets.symmetric(vertical: 8),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.blue[300],
+                    indicator: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    controller: _model.tabController,
+                    onTap: (value) {
+                      _model.tabController?.index = value;
                     },
-                    child: Text('Sign Up'),
+                    tabs: [
+                      Text(
+                        'Joiner',
+                      ),
+                      Text(
+                        'Rent your car',
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ].divide(SizedBox(
-              height: 20,
-            )),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _model.tabController,
+                    children: [
+                      Provider.value(
+                        value: _model.userModel,
+                        child: UserSignUpMole(
+                          formKey: joinerFormKey,
+                        ),
+                      ),
+                      Provider.value(
+                        value: _model.craModel,
+                        child: CraSignUpMole(
+                          formKey: rentFormKey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      flex: 5,
+                      child: Text(
+                        'By signing up you accept Joiner’s Terms of Use and Privacy Policy.',
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              fontStyle: FontStyle.italic,
+                            ),
+                      ),
+                    ),
+                    Spacer(),
+                    FilledButton.tonal(
+                      onPressed: () async {
+                        final form1 = joinerFormKey.currentState != null &&
+                            joinerFormKey.currentState!.validate();
+                        final form2 = rentFormKey.currentState != null &&
+                            rentFormKey.currentState!.validate();
+                        if (form1 || form2) {
+                          final result = await _model.signUp();
+                          final hasError = result != null;
+                          final message =
+                              hasError ? result : 'Registration successful';
+                          ScaffoldMessenger.of(context).showSnackBar(hasError
+                              ? showError(
+                                  message, Theme.of(context).colorScheme.error)
+                              : showSuccess(message));
+                        }
+                      },
+                      child: Text('Sign Up'),
+                    ),
+                  ],
+                ),
+              ].divide(SizedBox(
+                height: 20,
+              )),
+            ),
           ),
         ),
       ),

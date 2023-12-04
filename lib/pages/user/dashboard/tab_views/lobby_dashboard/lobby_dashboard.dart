@@ -28,75 +28,80 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
   Widget build(BuildContext context) {
     _textStyle = Theme.of(context).textTheme.titleSmall!;
     final _textStyleMed = Theme.of(context).textTheme.titleMedium!;
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: _model.currentLobby == null
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${_model.currentLobby?.title}",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Host: ',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        _model.hostParticipant(),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Joiners: ',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        _model
-                            .getAllParticipants()
-                            .map((participant) =>
-                                '${participant.firstName} ${participant.lastName}')
-                            .join(', '),
-                      ),
-                    ],
-                  ),
-                  Divider(),
-                  Text(
-                    'Details',
-                    style: _textStyleMed,
-                  ),
-                  lobbyDetails(),
-                  Text(
-                    'Expenses',
-                    style: _textStyleMed,
-                  ),
-                  expenses(),
-                  Text(
-                    'Polls',
-                    style: _textStyleMed,
-                  ),
-                  polls(),
-                ].divide(
-                  SizedBox(
-                    height: 10,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Container(
+        padding: EdgeInsets.all(20),
+        child: _model.currentLobby == null
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${_model.currentLobby?.title}",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Host: ',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          _model.hostParticipant(),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Joiners: ',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          _model
+                              .getAllParticipants()
+                              .map((participant) =>
+                                  '${participant.firstName} ${participant.lastName}')
+                              .join(', '),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    Text(
+                      'Details',
+                      style: _textStyleMed,
+                    ),
+                    lobbyDetails(),
+                    Text(
+                      'Expenses',
+                      style: _textStyleMed,
+                    ),
+                    expenses(),
+                    Text(
+                      'Polls',
+                      style: _textStyleMed,
+                    ),
+                    polls(),
+                  ].divide(
+                    SizedBox(
+                      height: 10,
+                    ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 
