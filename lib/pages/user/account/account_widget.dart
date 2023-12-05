@@ -1,6 +1,5 @@
 import 'package:joiner_1/models/user_model.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'account_model.dart';
@@ -44,7 +43,7 @@ class _AccountWidgetState extends State<AccountWidget> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            color: Color(0xFF0B443A),
+            color: Colors.white//Color(0xFF0B443A),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -68,7 +67,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                           children: [
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 40.0, 0.0, 0.0),
+                                  0.0, 110.0, 0.0, 0.0),
                               child: Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
@@ -87,39 +86,17 @@ class _AccountWidgetState extends State<AccountWidget> {
                                     children: [
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
+                                         Image.asset(
+                                            'assets/images/User_05c_(1).png',
+                                            width: 65,
+                                            height: 65,
+                                            fit: BoxFit.fill,
+                                          ),
+                                          SizedBox(width: 20,),
                                           Text(
                                             "${_model.currentUser?.firstName} ${_model.currentUser?.lastName?[0]}.",
-                                          ),
-                                          Container(
-                                            child: InkWell(
-                                              splashColor: Colors.transparent,
-                                              focusColor: Colors.transparent,
-                                              hoverColor: Colors.transparent,
-                                              highlightColor:
-                                                  Colors.transparent,
-                                              onTap: () async {
-                                                if (_model.editMode == true) {
-                                                  setState(() {
-                                                    _model.editMode = false;
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    _model.editMode = true;
-                                                  });
-                                                }
-                                              },
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    'Edit Profile',
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                            style: Theme.of(context).textTheme.displaySmall
                                           ),
                                         ],
                                       ),
@@ -193,13 +170,10 @@ class _AccountWidgetState extends State<AccountWidget> {
                                                   padding: EdgeInsetsDirectional
                                                       .fromSTEB(
                                                           8.0, 0.0, 8.0, 0.0),
-                                                  child: Container(
-                                                    width: 160.0,
-                                                    child: Text(
-                                                      "${_model.currentUser?.email}",
-                                                      textAlign:
-                                                          TextAlign.right,
-                                                    ),
+                                                  child: Text(
+                                                    "${_model.currentUser?.email}",
+                                                    textAlign:
+                                                        TextAlign.right,
                                                   ),
                                                 ),
                                               ),
@@ -218,70 +192,25 @@ class _AccountWidgetState extends State<AccountWidget> {
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
-                                          context.pushNamed(
-                                            'TransactionHistory',
-                                            extra: <String, dynamic>{
-                                              kTransitionInfoKey:
-                                                  TransitionInfo(
-                                                hasTransition: true,
-                                                transitionType:
-                                                    PageTransitionType
-                                                        .rightToLeft,
-                                              ),
-                                            },
-                                          );
-                                        },
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'View Transaction History',
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 10.0, 0.0, 10.0),
-                                              child: Icon(
-                                                Icons.arrow_forward_ios,
-                                                size: 24.0,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Divider(
-                                        thickness: 1.0,
-                                      ),
-                                      FFButtonWidget(
-                                        onPressed: () async {
                                           if (Navigator.of(context).canPop()) {
                                             context.pop();
                                           }
                                           _model.logout(context);
                                         },
-                                        text: 'Logout',
-                                        icon: Icon(
-                                          Icons.exit_to_app_rounded,
-                                          size: 15.0,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Icon(
+                                              Icons.logout,
+                                              size: 30,
+                                            ),
+                                            SizedBox(width: 10,),
+                                            Text('Logout'),
+                                          ],
                                         ),
-                                        options: FFButtonOptions(
-                                          height: 40.0,
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  24.0, 0.0, 24.0, 0.0),
-                                          iconPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          elevation: 3.0,
-                                          borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
+                                      ),
+                                      Divider(
+                                        thickness: 1.0,
                                       ),
                                     ].addToStart(SizedBox(height: 40.0)),
                                   ),
@@ -293,22 +222,9 @@ class _AccountWidgetState extends State<AccountWidget> {
                               child: Container(
                                 width: 72.0,
                                 height: 72.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF0B443A),
-                                  shape: BoxShape.circle,
-                                ),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       2.0, 2.0, 2.0, 2.0),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.asset(
-                                      'assets/images/User_05c_(1).png',
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
                                 ),
                               ),
                             ),

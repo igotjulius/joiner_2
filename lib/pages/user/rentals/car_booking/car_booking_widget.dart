@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:joiner_1/models/car_model.dart';
 
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -10,12 +11,13 @@ import 'car_booking_model.dart';
 export 'car_booking_model.dart';
 
 class CarBookingWidget extends StatefulWidget {
-  final String? licensePlate;
-  const CarBookingWidget({Key? key, this.licensePlate}) : super(key: key);
+  final CarModel? car;
+  const CarBookingWidget({Key? key, this.car}) : super(key: key);
 
   @override
   _CarBookingWidgetState createState() => _CarBookingWidgetState();
 }
+
 PlatformFile? pickedFile;
 
 class _CarBookingWidgetState extends State<CarBookingWidget>
@@ -57,6 +59,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+    double result = double.parse('${widget.car!.price! * (_model.datePicked?.duration.inDays ?? 0)}');
 
     return Scaffold(
       key: scaffoldKey,
@@ -85,21 +88,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                 children: [
                   Container(
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: Color(0x28000000),
-                          offset: Offset(0, 2),
-                        )
-                      ],
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(12),
-                        bottomRight: Radius.circular(12),
-                        topLeft: Radius.circular(0),
-                        topRight: Radius.circular(0),
-                      ),
-                    ),
+
                     child: Stack(
                       children: [
                         Padding(
@@ -158,59 +147,61 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                                     EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
                               ),
                               Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
-                                child: Text(
-                                  'Start Date - End Date of Rental',
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  FlutterFlowIconButton(
-                                    borderRadius: 20,
-                                    borderWidth: 1,
-                                    buttonSize: 40,
-                                    icon: Icon(
-                                      Icons.calendar_month,
-                                      size: 24,
+                                padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Rental Date',
+                                      ),
                                     ),
-                                    onPressed: () async {
-                                      showDateRangePicker(
-                                        context: context,
-                                        firstDate: getCurrentTimestamp,
-                                        lastDate: DateTime(2050),
-                                      ).then((value) {
-                                        if (value != null) {
-                                          _model.datePicked = value;
-                                          String start =
-                                              DateFormat('yyyy-MM-dd')
-                                                  .format(value.start);
-                                          String end = DateFormat('yyyy-MM-dd')
-                                              .format(value.end);
-                                          _model.textController2.text =
-                                              start + " - " + end;
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    InkWell(
+                                      onTap: () async {
+                                        _model.datePicked = await showDateRangePicker(
+                                          context: context,
+                                          firstDate: getCurrentTimestamp,
+                                          lastDate: DateTime(2050),
+                                        );
+                                        if (_model.datePicked != null) {
+                                          setState(() {});
                                         }
-                                      });
-                                    },
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 0, 8, 0),
-                                      child: TextFormField(
-                                        controller: _model.textController2,
-                                        focusNode: _model.textFieldFocusNode2,
-                                        autofocus: true,
-                                        readOnly: true,
-                                        obscureText: false,
-                                        decoration: InputDecoration(
-                                          hintText: 'yyyy-mm-dd - yyyy-mm-dd',
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(4),
+                                          border: Border.all(
+                                            color: Color(0xff9c9c9c),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 12, horizontal: 10),
+                                              child: Icon(
+                                                Icons.calendar_today,
+                                                color: Color(0xFF52B2FA),
+                                                size: 24.0,
+                                              ),
+                                            ),
+                                            Text(
+                                              _model.datePicked != null
+                                                  ? (_model.datePicked!.duration.inDays == 0
+                                                  ? "${DateFormat('MMM d').format(_model.datePicked!.start)}"
+                                                  : "${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}")
+                                                  : 'Start Date - End Date',
+                                            ),
+                                          ].divide(SizedBox(width: 10.0)),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               Padding(
                                 padding:
@@ -222,8 +213,13 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     10, 10, 0, 0),
-                                child: Text(
-                                  'Pending Payment...',
+                                child:
+                                Text(
+                                  NumberFormat.currency(
+                                    symbol: '₱',
+                                    decimalDigits: 2,
+                                  ).format(result),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ],
@@ -238,7 +234,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
           ),
           InkWell(
             onTap: () async {
-              _model.bookNow(widget.licensePlate!, context);
+              _model.bookNow(widget.car!.licensePlate!, context);
             },
             child: Container(
               width: double.infinity,
@@ -249,8 +245,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    blurRadius: 4,
-                    color: Color(0x28000000),
+                    color: Theme.of(context).primaryColor,
                     offset: Offset(0, -2),
                   )
                 ],
@@ -261,9 +256,10 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                   topRight: Radius.circular(16),
                 ),
               ),
-              alignment: AlignmentDirectional(0.00, -0.45),
+              alignment: AlignmentDirectional(0.00, -0.20),
               child: Text(
                 'Book Now',
+                style: Theme.of(context).textTheme.displaySmall!.copyWith(color: Colors.white)
               ),
             ),
           ),

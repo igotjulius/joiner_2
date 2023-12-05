@@ -59,7 +59,10 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
 
   @override
   Widget build(BuildContext context) {
-    return displayLobby();
+    if(_model.currentLobby == null)
+      return displayLobby();
+    else
+      return mainDisplay();
   }
 
   Widget mainDisplay() {

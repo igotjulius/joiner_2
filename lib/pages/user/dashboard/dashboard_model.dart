@@ -43,7 +43,8 @@ class LobbiesModel extends FlutterFlowModel {
                   : ActiveLobbyMolecule(activeLobbies),
             ],
           );
-        } else
+        }
+        else
           return Center(child: CircularProgressIndicator());
       },
     );

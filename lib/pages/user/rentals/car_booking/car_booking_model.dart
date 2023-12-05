@@ -56,10 +56,6 @@ class CarBookingModel extends FlutterFlowModel {
                   ),
                 ).then((value) {
                   redirect = value.data;
-                  launchUrl(
-                    Uri.parse(redirect!),
-                    mode: LaunchMode.externalApplication,
-                  );
                   context.goNamed('CarRentals');
                 });
               },

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
@@ -124,8 +125,8 @@ List<FFRoute> userRoutes() {
           name: 'Booking',
           path: 'booking',
           builder: (context, state) {
-            String obj = state.extraMap['licensePlate'] as String;
-            return CarBookingWidget(licensePlate: obj);
+            CarModel obj = state.extraMap['car'] as CarModel;
+            return CarBookingWidget(car: obj);
           },
         ),
         GoRoute(
