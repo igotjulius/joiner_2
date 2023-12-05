@@ -26,7 +26,7 @@ class ListingsModel extends FlutterFlowModel {
   void dispose() {}
 
   /// Action blocks are added here.
-  FutureBuilder<List<CarModel>> getAvailableCars(Function callback) {
+  FutureBuilder<List<CarModel>> getAvailableCars() {
     return FutureBuilder(
       future: UserController.getAvailableCars(),
       builder: (context, snapshot) {

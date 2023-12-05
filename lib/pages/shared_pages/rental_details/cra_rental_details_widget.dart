@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/components/user/linkable_lobby.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/rental_model.dart';
 
@@ -15,11 +16,30 @@ class _RentalDetailsState extends State<RentalDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        iconTheme: IconThemeData(
-          color: Colors.black,
-        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: TextButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  showDragHandle: true,
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return Wrap(
+                      children: [
+                        LinkableLobby(
+                          rental: widget.rental,
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text('Link to a lobby'),
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -29,40 +49,29 @@ class _RentalDetailsState extends State<RentalDetails> {
             Column(
               children: [
                 Image.asset(
-                  'assets/images/car.png',
-                  height: MediaQuery.of(context).size.height / 4,
+                  'assets/images/successful-payment.png',
+                  height: 200,
+                  width: 200,
                 ),
-                Column(
-                  children: [
-                    Icon(
-                      Icons.check_circle,
-                      color: Colors.teal,
-                    ),
-                    Text('Paid'),
-                    Text('₱${widget.rental?.price}'),
-                  ],
+                SizedBox(
+                  height: 20,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.asset(
-                      'assets/images/User_01c_(1).png',
-                      height: 40,
+                    Text(
+                      'Total',
+                      style: Theme.of(context)
+                          .textTheme
+                          .displaySmall
+                          ?.copyWith(fontWeight: FontWeight.w600),
                     ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: FFAppState().isCra
-                          ? [
-                              Text('Rented by'),
-                              Text('${widget.rental?.renterName}'),
-                            ]
-                          : [
-                              Text('Owned by'),
-                              Text('${widget.rental?.vehicleOwner}'),
-                            ],
+                    Text(
+                      '₱${widget.rental?.price}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .displaySmall
+                          ?.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -75,7 +84,10 @@ class _RentalDetailsState extends State<RentalDetails> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('TRANSACTION ID'),
+                Text(
+                  'Transaction Id',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 Text('${widget.rental?.id}'),
                 SizedBox(
                   height: 10,
@@ -85,7 +97,7 @@ class _RentalDetailsState extends State<RentalDetails> {
             ),
           ].divide(
             SizedBox(
-              height: 10,
+              height: 8,
             ),
           ),
         ),
@@ -104,10 +116,13 @@ class _RentalDetailsState extends State<RentalDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Payment'),
+                Text(
+                  'Payment',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 Row(
                   children: [
                     Text(DateFormat("EEE").format(widget.rental!.createdAt!)),
@@ -131,10 +146,13 @@ class _RentalDetailsState extends State<RentalDetails> {
                 ),
               ],
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Pick-up'),
+                Text(
+                  'Pick-up',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 Row(
                   children: [
                     Text(DateFormat("EEE").format(widget.rental!.startRental!)),
@@ -156,10 +174,13 @@ class _RentalDetailsState extends State<RentalDetails> {
                 ),
               ],
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Return'),
+                Text(
+                  'Return',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 Row(
                   children: [
                     Text(DateFormat("E").format(widget.rental!.endRental!)),

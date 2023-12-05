@@ -32,26 +32,17 @@ class CraRentalsModel extends FlutterFlowModel {
                 },
                 itemBuilder: (context, index) {
                   final rental = rentals[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: InkWell(
-                      onTap: () {
-                        context.pushNamed(
-                          'RentalDetails',
-                          extra: <String, dynamic>{
-                            'rental': rental,
-                          },
-                        );
-                      },
-                      child: RentalInfo(
-                        amount: rental.price,
-                        duration: rental.duration,
-                        vehicleOwner: rental.renterName,
-                        pickupDate:
-                            DateFormat('MMM d').format(rental.startRental!),
-                        returnDate:
-                            DateFormat('MMM d').format(rental.endRental!),
-                      ),
+                  return InkWell(
+                    onTap: () {
+                      context.pushNamed(
+                        'RentalDetails',
+                        extra: <String, dynamic>{
+                          'rental': rental,
+                        },
+                      );
+                    },
+                    child: RentalInfo(
+                      rental: rental,
                     ),
                   );
                 },

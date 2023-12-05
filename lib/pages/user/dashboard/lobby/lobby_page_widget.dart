@@ -28,7 +28,7 @@ final DateFormat dateFormat = DateFormat('MMMM dd');
 class _LobbyPageWidgetState extends State<LobbyPageWidget>
     with TickerProviderStateMixin {
   late LobbyPageModel _model;
-  Future<LobbyModel?>? fetchLobby;
+  Future<LobbyModel?>? _fetchLobby;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -38,7 +38,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     _model = createModel(context, () => LobbyPageModel());
     _model.initModel();
     _model.currentLobby = widget.currentLobby;
-    fetchLobby = UserController.getLobby(widget.lobbyId!);
+    _fetchLobby = UserController.getLobby(widget.lobbyId!);
     _model.tabBarController = TabController(
       vsync: this,
       length: 5,
@@ -46,8 +46,8 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     );
     _model.tabBarController?.addListener(() {
       if (_model.tabBarController!.indexIsChanging) {
-      FocusScope.of(context).unfocus();
-    }
+        FocusScope.of(context).unfocus();
+      }
     });
   }
 
@@ -109,7 +109,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
             ],
             controller: _model.tabBarController,
             onTap: (value) => setState(() {
-                FocusScope.of(context).unfocus();
+              FocusScope.of(context).unfocus();
             }),
           ),
         ),
@@ -161,7 +161,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
 
   FutureBuilder<LobbyModel?> displayLobby() {
     return FutureBuilder(
-      future: fetchLobby,
+      future: _fetchLobby,
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(

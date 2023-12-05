@@ -4,12 +4,21 @@ import 'package:http_parser/http_parser.dart';
 
 class PickedImages {
   List<XFile>? pickedImages;
+  XFile? pickedImage;
   Future<String?> selectImages() async {
     pickedImages = await ImagePicker().pickMultiImage();
     if (pickedImages == null) return null;
     if (pickedImages!.length > 5)
       return 'You can only upload upto 5 images at most.';
     return null;
+  }
+
+  Future<void> selectImage() async {
+    pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+  }
+
+  XFile? getImage() {
+    return pickedImage;
   }
 
   List<XFile>? getImages() {

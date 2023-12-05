@@ -55,12 +55,8 @@ class _ListingsWidgetState extends State<ListingsWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _model.getAvailableCars(setState),
-              ].divide(
-                SizedBox(
-                  height: 20,
-                ),
-              ),
+                _model.getAvailableCars(),
+              ],
             ),
           ),
         ),

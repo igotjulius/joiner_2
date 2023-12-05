@@ -38,22 +38,8 @@ class RentalsModel extends FlutterFlowModel {
                 itemCount: result.length,
                 itemBuilder: (context, index) {
                   RentalModel rental = result[index];
-                  return InkWell(
-                    onTap: () {
-                      context.pushNamed(
-                        'RentalDetails',
-                        extra: <String, dynamic>{
-                          'rental': rental,
-                        },
-                      );
-                    },
-                    child: RentalInfo(
-                      amount: rental.price,
-                      duration: rental.duration,
-                      vehicleOwner: rental.vehicleOwner,
-                      pickupDate: rental.startRental.toString(),
-                      returnDate: rental.endRental.toString(),
-                    ),
+                  return RentalInfo(
+                    rental: rental,
                   );
                 },
               );

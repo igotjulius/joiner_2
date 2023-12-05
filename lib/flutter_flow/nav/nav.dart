@@ -9,9 +9,7 @@ import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rental_details/cra_rental_details_widget.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
-import 'package:joiner_1/pages/user/rentals/car_booking/cancelled/cancelled_widget.dart';
 import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
-import 'package:joiner_1/pages/user/rentals/car_booking/success/success_widget.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
 import '/index.dart';
 import '/main.dart';
@@ -83,9 +81,9 @@ List<FFRoute> baseRoute() {
 List<FFRoute> userRoutes() {
   return [
     FFRoute(
-      name: 'VirtualLobby',
+      name: 'MainDashboard',
       path: '/lobby',
-      builder: (context, params) => NavBarPage(initialPage: 'VirtualLobby'),
+      builder: (context, params) => NavBarPage(initialPage: 'MainDashboard'),
       routes: [
         GoRoute(
           name: 'LobbyCreation',
@@ -137,16 +135,6 @@ List<FFRoute> userRoutes() {
               rental: rental,
             );
           },
-        ),
-        GoRoute(
-          name: 'PaymentSuccess',
-          path: 'success',
-          builder: (context, state) => SuccessWidget(),
-        ),
-        GoRoute(
-          name: 'CancelledPayment',
-          path: 'cancelled',
-          builder: (context, state) => CancelledWidget(),
         ),
       ],
     ),

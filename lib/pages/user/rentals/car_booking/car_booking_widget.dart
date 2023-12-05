@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:joiner_1/utils/image_handler.dart';
 
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -16,6 +19,7 @@ class CarBookingWidget extends StatefulWidget {
   @override
   _CarBookingWidgetState createState() => _CarBookingWidgetState();
 }
+
 PlatformFile? pickedFile;
 
 class _CarBookingWidgetState extends State<CarBookingWidget>
@@ -31,6 +35,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
 
     _model.textController1 ??= TextEditingController();
     _model.textController2 ??= TextEditingController();
+    _model.imagePicker = PickedImages();
   }
 
   @override
@@ -48,6 +53,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
       pickedFile = result.files.first;
     });
   }
+
   void unselectFile() {
     setState(() {
       pickedFile = null;
@@ -100,136 +106,107 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                         topRight: Radius.circular(0),
                       ),
                     ),
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                          child: Column(
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.all(12),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              'Please Upload any Government ID',
+                            ),
+                          ),
+                          Container(
+                            height: 200,
+                            decoration: _model.brokenLines,
+                            child: InkWell(
+                              onTap: () async {
+                                await _model.imagePicker!.selectImage();
+                                setState(() {});
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: _model.imagePicker?.getImage() != null
+                                    ? displayImage()
+                                    : Center(
+                                        child: Text('Tap to Upload'),
+                                      ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
+                            child: Text(
+                              'Start Date - End Date of Rental',
+                            ),
+                          ),
+                          Row(
                             mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom:8.0),
-                                child: Text(
-                                  'Please Upload any Government ID',
+                              FlutterFlowIconButton(
+                                borderRadius: 20,
+                                borderWidth: 1,
+                                buttonSize: 40,
+                                icon: Icon(
+                                  Icons.calendar_month,
+                                  size: 24,
                                 ),
+                                onPressed: () async {
+                                  showDateRangePicker(
+                                    context: context,
+                                    firstDate: getCurrentTimestamp,
+                                    lastDate: DateTime(2050),
+                                  ).then((value) {
+                                    if (value != null) {
+                                      _model.datePicked = value;
+                                      String start = DateFormat('yyyy-MM-dd')
+                                          .format(value.start);
+                                      String end = DateFormat('yyyy-MM-dd')
+                                          .format(value.end);
+                                      _model.textController2.text =
+                                          start + " - " + end;
+                                    }
+                                  });
+                                },
                               ),
-                              Center(
-                                child: Container(
-                                  height: 200,
-                                  width: 300,
-                                  decoration: _model.brokenLines,
-                                  child: Stack(
-                                    children: [
-                                      InkWell(
-                                        onTap: () async {
-                                          await selectFile();
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: pickedFile != null
-                                              ? Image.file(
-                                            File(pickedFile!.path!),
-                                            fit: BoxFit.fill,
-                                            width: double.infinity,
-                                          )
-                                              : Center(child: Text('Tap to Upload')),
-                                        ),
-                                      ),
-                                      if (pickedFile != null)
-                                        Positioned(
-                                          top: 8.0,
-                                          right: 8.0,
-                                          child: IconButton(
-                                            color: Colors.black,
-                                            icon: Icon(Icons.close),
-                                            onPressed: () {
-                                              unselectFile();
-                                            },
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
-                                child: Text(
-                                  'Start Date - End Date of Rental',
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  FlutterFlowIconButton(
-                                    borderRadius: 20,
-                                    borderWidth: 1,
-                                    buttonSize: 40,
-                                    icon: Icon(
-                                      Icons.calendar_month,
-                                      size: 24,
-                                    ),
-                                    onPressed: () async {
-                                      showDateRangePicker(
-                                        context: context,
-                                        firstDate: getCurrentTimestamp,
-                                        lastDate: DateTime(2050),
-                                      ).then((value) {
-                                        if (value != null) {
-                                          _model.datePicked = value;
-                                          String start =
-                                              DateFormat('yyyy-MM-dd')
-                                                  .format(value.start);
-                                          String end = DateFormat('yyyy-MM-dd')
-                                              .format(value.end);
-                                          _model.textController2.text =
-                                              start + " - " + end;
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 0, 8, 0),
-                                      child: TextFormField(
-                                        controller: _model.textController2,
-                                        focusNode: _model.textFieldFocusNode2,
-                                        autofocus: true,
-                                        readOnly: true,
-                                        obscureText: false,
-                                        decoration: InputDecoration(
-                                          hintText: 'yyyy-mm-dd - yyyy-mm-dd',
-                                        ),
-                                      ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8, 0, 8, 0),
+                                  child: TextFormField(
+                                    controller: _model.textController2,
+                                    focusNode: _model.textFieldFocusNode2,
+                                    autofocus: true,
+                                    readOnly: true,
+                                    obscureText: false,
+                                    decoration: InputDecoration(
+                                      hintText: 'yyyy-mm-dd - yyyy-mm-dd',
                                     ),
                                   ),
-                                ],
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
-                                child: Text(
-                                  'Payment',
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    10, 10, 0, 0),
-                                child: Text(
-                                  'Pending Payment...',
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
+                            child: Text(
+                              'Payment',
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(10, 10, 0, 0),
+                            child: Text(
+                              'Pending Payment...',
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -238,7 +215,13 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
           ),
           InkWell(
             onTap: () async {
-              _model.bookNow(widget.licensePlate!, context);
+              _model.bookNow(widget.licensePlate!).then((isSuccess) {
+                if (isSuccess) {
+                  showSnackbar(context, 'Rental success');
+                  context.goNamed('CarRentals');
+                } else
+                  showSnackbar(context, 'Rental failed');
+              });
             },
             child: Container(
               width: double.infinity,
@@ -270,5 +253,18 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
         ],
       ),
     );
+  }
+
+  Widget displayImage() {
+    XFile image = _model.imagePicker!.getImage()!;
+    if (kIsWeb) {
+      return Image.network(
+        image.path,
+      );
+    } else {
+      return Image.file(
+        File(image.path),
+      );
+    }
   }
 }

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
+import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,5 +62,19 @@ class FFAppState extends ChangeNotifier {
   void setIsCra(bool val) {
     _isCra = val;
     notifyListeners();
+  }
+
+  List<LobbyModel>? _activeLobbies;
+  List<LobbyModel>? get activeLobbies => _activeLobbies;
+  void setLinkableLobbies(List<LobbyModel> lobbies) {
+    _activeLobbies = lobbies;
+  }
+
+  Future<void> initLobbies() async {
+    if (_activeLobbies == null) {
+      final response = await UserController.getLobbies();
+      _activeLobbies = response['active'];
+      notifyListeners();
+    }
   }
 }

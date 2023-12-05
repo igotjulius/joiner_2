@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
@@ -11,6 +13,7 @@ import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
+import 'package:http_parser/http_parser.dart';
 
 class UserController {
   static late String _userId = FFAppState().pref!.getString('userId')!;
@@ -38,9 +41,9 @@ class UserController {
   }
 
   // Fetch user lobbies
-  static Future<ResponseModel<Map<String, List<LobbyModel>>>>
-      getLobbies() async {
-    return await apiService.getLobbies(_userId);
+  static Future<Map<String, List<LobbyModel>>> getLobbies() async {
+    final response = await apiService.getLobbies(_userId);
+    return response.data!;
   }
 
   // Fetch specific lobby
@@ -58,7 +61,7 @@ class UserController {
     await apiService.createLobby(lobby, _userId).then(
       (response) {
         showSnackbar(context, response.message!);
-        context.goNamed('VirtualLobby');
+        context.goNamed('MainDashboard');
       },
     );
   }
@@ -167,9 +170,22 @@ class UserController {
   }
 
   // Users Renting a Car
-  static Future<ResponseModel<String>> postRental(
-      CarRentalModel carRental) async {
-    return await apiService.postRental(carRental, _userId);
+  static Future<ResponseModel> postRental(
+      CarRentalModel carRental, XFile image) async {
+    List<MultipartFile> converted = [];
+    converted.add(MultipartFile.fromBytes(
+      await image.readAsBytes(),
+      filename: image.name,
+      contentType: MediaType('application', 'octet-stream'),
+    ));
+    return await apiService.postRental(
+      _userId,
+      licensePlate: carRental.licensePlate!,
+      startRental: carRental.startRental!,
+      endRental: carRental.endRental!,
+      duration: carRental.duration!,
+      files: converted,
+    );
   }
 
   // Fetch user's rentals

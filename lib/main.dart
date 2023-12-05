@@ -120,7 +120,7 @@ class _NavBarPageState extends State<NavBarPage> {
 
   Widget userDashboard() {
     final tabs = {
-      'VirtualLobby': LobbiesWidget(),
+      'MainDashboard': LobbiesWidget(),
       'CarRentals': RentalsWidget(),
       'Friends': FriendsWidget(),
       'Account': AccountWidget(),

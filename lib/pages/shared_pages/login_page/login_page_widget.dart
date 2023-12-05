@@ -100,45 +100,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 style: Theme.of(context).textTheme.bodySmall,
                                 validator: _model.validatePassword,
                               ),
-                              Flexible(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Row(
-                                        children: [
-                                          Checkbox(
-                                            value: _model.isCra,
-                                            onChanged: (val) {
-                                              setState(() {
-                                                _model.setIsCra(val!);
-                                              });
-                                            },
-                                          ),
-                                          Flexible(
-                                            child: Text(
-                                              'Login as Car Rental Agent',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall,
-                                              overflow: TextOverflow.fade,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        'Forgot password?',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
                             ].divide(SizedBox(height: 10.0)),
                           ),
                         ),

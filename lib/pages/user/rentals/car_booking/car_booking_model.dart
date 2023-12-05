@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:joiner_1/utils/image_handler.dart';
 
 class CarBookingModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
@@ -17,6 +19,7 @@ class CarBookingModel extends FlutterFlowModel {
   TextEditingController? textController2;
   String? Function(BuildContext, String?)? textController2Validator;
   DateTimeRange? datePicked;
+  PickedImages? imagePicker;
 
   BorderSide borderSide = BorderSide(color: Colors.black, width: 1.0);
   BoxDecoration brokenLines = BoxDecoration(
@@ -34,41 +37,22 @@ class CarBookingModel extends FlutterFlowModel {
 
     textFieldFocusNode2?.dispose();
     textController2?.dispose();
+    imagePicker = null;
   }
 
   /// Action blocks are added here.
-  void bookNow(String licensePlate, BuildContext context) {
-    var redirect;
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          content: Text('Click next to proceed to the payment page.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                UserController.postRental(
-                  CarRentalModel(
-                    licensePlate: licensePlate,
-                    startRental: datePicked!.start.toString(),
-                    endRental: datePicked!.end.toString(),
-                    duration: datePicked!.duration.inDays,
-                  ),
-                ).then((value) {
-                  redirect = value.data;
-                  launchUrl(
-                    Uri.parse(redirect!),
-                    mode: LaunchMode.externalApplication,
-                  );
-                  context.goNamed('CarRentals');
-                });
-              },
-              child: Text('Next'),
-            ),
-          ],
-        );
-      },
+  Future<bool> bookNow(String licensePlate) async {
+    final rental = CarRentalModel(
+      licensePlate: licensePlate,
+      startRental: datePicked!.start.toString(),
+      endRental: datePicked!.end.toString(),
+      duration: datePicked!.duration.inDays,
     );
+    final result = await UserController.postRental(
+      rental,
+      imagePicker!.getImage()!,
+    );
+    return result.code == HttpStatus.ok ? true : false;
   }
 
   /// Additional helper methods are added here.

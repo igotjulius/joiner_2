@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:joiner_1/models/car_model.dart';
-import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/message_model.dart';
@@ -23,8 +22,8 @@ part 'api_service.g.dart';
   Make sure that the physical phone and host machine are in the same network.
 */
 // const String serverUrl = 'http://192.168.137.1:443/';
-//const String serverUrl = 'http://localhost:443/';
- const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+//  const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
 final apiService = ApiService(Dio(), baseUrl: serverUrl);
 // ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -236,11 +235,22 @@ abstract class ApiService {
   );
 
   // Create Car Rentals
+  // @POST('user/{userId}/rent/car')
+  // Future<ResponseModel<String>> postRental(
+  //   @Body() CarRentalModel carRental,
+  //   @Path('userId') String userId, {
+  //   @Header('Content-Type') String contentType = 'application/json',
+  // });
+
+  @MultiPart()
   @POST('user/{userId}/rent/car')
-  Future<ResponseModel<String>> postRental(
-    @Body() CarRentalModel carRental,
-    @Path('userId') String userId, {
-    @Header('Content-Type') String contentType = 'application/json',
+  Future<ResponseModel> postRental(
+    @Path('userId') String craUserId, {
+    @Part() required String licensePlate,
+    @Part() required String startRental,
+    @Part() required String endRental,
+    @Part() required int duration,
+    @Part() List<MultipartFile>? files,
   });
 
   //Create expenses
