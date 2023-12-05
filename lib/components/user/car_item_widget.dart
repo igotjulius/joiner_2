@@ -27,7 +27,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
       onTap: () async {
         context.pushNamed(
           'Booking',
-          extra: {'licensePlate': _model.car!.licensePlate},
+          extra: {'car': widget.car},
         );
       },
       child: Container(
@@ -40,46 +40,49 @@ class _CarItemWidgetState extends State<CarItemWidget> {
         ),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Image.asset(
-                'assets/images/car.png',
-                width: 114.0,
-                height: 80.0,
-                fit: BoxFit.cover,
-              ),
-            ),
             Align(
               alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Text(
-                      "₱${widget.car!.price}",
-                    ),
-                    Text('/ day'),
-                  ].divide(
-                    SizedBox(
-                      width: 4,
-                    ),
+              child: Container(
+                width: double.infinity,
+                color: Color(0xff52b2fa),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    widget.car!.vehicleType!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
             ),
-            Flexible(
-              fit: FlexFit.loose,
-              child: Container(
-                color: Color(0xff52b2fa),
-                child: Padding(
+            Row(
+              children: [
+                Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
+                  child: Image.network(
+                    widget.car!.photoUrl!.first,
+                    width: 150.0,
+                    height: 100.0,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.car!.vehicleType!,
+                        Row(
+                          children: [
+                            Text(
+                              "₱${widget.car!.price}0",
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                            Text('/ day'),
+                          ].divide(
+                            SizedBox(
+                              width: 4,
+                            ),
+                          ),
                         ),
                         Text(
                           'Automatic',
@@ -91,7 +94,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
           ].divide(SizedBox.shrink()),
         ),

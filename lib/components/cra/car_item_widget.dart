@@ -28,6 +28,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         border: Border.all(color: Color(0xff52B2FA)),
@@ -42,9 +43,17 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             color: Color(0xff52B2FA),
             width: double.infinity,
             padding: EdgeInsets.all(10),
-            child: Text(
-              // 'Available',
-              widget.car.availability!,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${widget.car.licensePlate}",
+                    style:
+                    TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  // 'Available',
+                  widget.car.availability!,
+                ),
+              ],
             ),
           ),
           Row(
@@ -82,6 +91,9 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                           Text(
                             widget.car.vehicleType!,
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             children: [
                               Text(
@@ -89,6 +101,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                                   symbol: '₱',
                                   decimalDigits: 0,
                                 ).format(widget.car.price),
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
                                 width: 4,
@@ -98,14 +111,6 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                           ),
                           SizedBox(
                             height: 10,
-                          ),
-                          Row(
-                            children: [
-                              Text("Plate Number: "),
-                              Text("${widget.car.licensePlate}",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                            ],
                           ),
                         ],
                       ),

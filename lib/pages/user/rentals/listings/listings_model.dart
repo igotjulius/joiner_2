@@ -35,16 +35,17 @@ class ListingsModel extends FlutterFlowModel {
             child: Text('No available cars for today :('),
           );
         final cars = snapshot.data!;
-        double width = MediaQuery.of(context).size.width / 2;
-        return GridView.extent(
+        return ListView.separated(
           shrinkWrap: true,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
-          maxCrossAxisExtent: width,
-          children: List.generate(
-            cars.length,
-            (i) => CarItemWidget(car: cars[i]),
-          ),
+          itemCount: cars.length,
+          itemBuilder: (context, index) {
+            return CarItemWidget(car: cars[index]);
+          },
+          separatorBuilder: (context, index) {
+            return SizedBox(
+              height: 10,
+            );
+          },
         );
       },
     );
