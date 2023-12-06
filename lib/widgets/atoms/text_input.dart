@@ -14,7 +14,9 @@ class CustomTextInput extends StatefulWidget {
   final bool readOnly;
   final Icon? prefixIcon;
   final String? hintText;
+  final String? errorText;
   final Color? fillColor;
+  final void Function(String)? onChanged;
 
   CustomTextInput({
     super.key,
@@ -29,7 +31,9 @@ class CustomTextInput extends StatefulWidget {
     this.readOnly = false,
     this.prefixIcon,
     this.hintText,
+    this.errorText,
     this.fillColor,
+    this.onChanged,
   }) : inputFormatters =
             inputFormatters ?? FilteringTextInputFormatter.singleLineFormatter;
 
@@ -73,8 +77,10 @@ class _CustomTextInputState extends State<CustomTextInput> {
                     : OutlineInputBorder(
                         borderSide: BorderSide(color: widget.fillColor!),
                       ),
+                errorText: widget.errorText,
               ),
               style: Theme.of(context).textTheme.bodySmall,
+              onChanged: widget.onChanged,
             ),
           ].divide(
             SizedBox(

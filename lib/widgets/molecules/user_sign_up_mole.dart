@@ -44,6 +44,11 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
                 label: 'Email',
                 controller: _model.emailController,
                 validator: validateEmail,
+                errorText: _model.emailError,
+                onChanged: (value) {
+                  _model.emailError = null;
+                  setState(() {});
+                },
               ),
               CustomTextInput(
                 label: 'Password',
@@ -75,6 +80,7 @@ class UserSignUpMoleModel extends FlutterFlowModel {
   TextEditingController? emailController;
   TextEditingController? passwordController;
   TextEditingController? confirmPassController;
+  String? emailError;
 
   @override
   void initState(BuildContext context) {

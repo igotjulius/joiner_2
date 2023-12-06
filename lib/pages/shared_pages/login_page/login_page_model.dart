@@ -3,6 +3,7 @@ import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/utils/utils.dart' as utils;
+import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -37,8 +38,7 @@ class LoginPageModel extends FlutterFlowModel {
   Future<bool> loginUser(BuildContext context) async {
     FFAppState appState = context.read<FFAppState>();
     late User user;
-    appState.setIsCra(isCra);
-    AppStateNotifier.instance.setRoutes();
+
     if (!appState.isCra) {
       user = UserModel(
         email: emailController.text,
@@ -53,9 +53,20 @@ class LoginPageModel extends FlutterFlowModel {
     final currentUser = await User.loginUser(user);
 
     if (currentUser != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        showSuccess('Login successful'),
+      );
+      appState.setIsCra(isCra);
+      AppStateNotifier.instance.setRoutes();
       appState.setCurrentUser(currentUser);
       return true;
     }
+    ScaffoldMessenger.of(context).showSnackBar(
+      showError(
+        'Invalid username/password',
+        Theme.of(context).colorScheme.error,
+      ),
+    );
     return false;
   }
 

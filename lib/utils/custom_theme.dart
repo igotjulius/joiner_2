@@ -89,7 +89,6 @@ ThemeData lightTheme(BuildContext context) {
       behavior: SnackBarBehavior.floating,
       elevation: 4,
       showCloseIcon: true,
-      width: 200,
       backgroundColor: lightThemeColors().primary,
       shape: ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(20),

@@ -1,3 +1,5 @@
+import 'package:joiner_1/utils/utils.dart';
+
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'login_page_model.dart';
@@ -12,6 +14,7 @@ class LoginPageWidget extends StatefulWidget {
 
 class _LoginPageWidgetState extends State<LoginPageWidget> {
   late LoginPageModel _model;
+  String? _errorMessage;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
@@ -86,6 +89,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 autofocus: true,
                                 decoration: InputDecoration(
                                   labelText: 'Email',
+                                  errorText: _errorMessage,
                                 ),
                                 style: Theme.of(context).textTheme.bodySmall,
                                 validator: _model.validateEmail,
@@ -96,6 +100,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   labelText: 'Password',
+                                  errorText: _errorMessage,
                                 ),
                                 style: Theme.of(context).textTheme.bodySmall,
                                 validator: _model.validatePassword,
@@ -120,9 +125,17 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       letterSpacing: 3,
                                     ),
                               ),
-                              onPressed: () async {
+                              onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  await _model.loginUser(context);
+                                  showDialogLoading(context);
+                                  _model.loginUser(context).then((value) {
+                                    if (!value)
+                                      _errorMessage =
+                                          'Invalid username/password';
+                                    setState(() {
+                                      context.pop();
+                                    });
+                                  });
                                 }
                               },
                             ),

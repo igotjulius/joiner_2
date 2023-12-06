@@ -82,18 +82,30 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                     ),
                     Spacer(),
                     FilledButton.tonal(
-                      onPressed: () async {
+                      onPressed: () {
                         final form = joinerFormKey.currentState != null &&
                             joinerFormKey.currentState!.validate();
                         if (form) {
-                          final result = await _model.signUp();
-                          final hasError = result != null;
-                          final message =
-                              hasError ? result : 'Registration successful';
-                          ScaffoldMessenger.of(context).showSnackBar(hasError
-                              ? showError(
-                                  message, Theme.of(context).colorScheme.error)
-                              : showSuccess(message));
+                          showDialogLoading(context);
+                          _model.signUp().then(
+                            (value) {
+                              if (value != null) {
+                                context.pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  showError(value,
+                                      Theme.of(context).colorScheme.error),
+                                );
+                                _model.userModel.emailError =
+                                    'Email already in use';
+                                setState(() {});
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  showSuccess('Registration successful'),
+                                );
+                                context.goNamed('Login');
+                              }
+                            },
+                          );
                         }
                       },
                       child: Text('Sign Up'),

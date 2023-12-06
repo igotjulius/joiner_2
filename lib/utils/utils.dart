@@ -57,7 +57,6 @@ String? validateEmail(String? value) {
 SnackBar showSuccess(String message) {
   return SnackBar(
     content: Text(message),
-    margin: EdgeInsets.only(right: 20, left: 20, bottom: 80),
     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
   );
 }
@@ -66,7 +65,17 @@ SnackBar showError(String message, Color errorColor) {
   return SnackBar(
     content: Text(message),
     backgroundColor: errorColor,
-    margin: EdgeInsets.only(right: 20, left: 20, bottom: 80),
     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+  );
+}
+
+Future showDialogLoading(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    },
   );
 }
