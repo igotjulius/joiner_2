@@ -1,4 +1,4 @@
- import 'package:joiner_1/models/car_model.dart';
+import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
@@ -95,7 +95,6 @@ class ResponseModel<T> {
   }
 
   factory ResponseModel.fromJson(Map<String, dynamic> json) {
-
     return _$ResponseModelFromJson(json);
   }
   Map<String, dynamic> toJson() => _$ResponseModelToJson(this);

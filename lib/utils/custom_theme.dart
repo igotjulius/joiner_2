@@ -110,6 +110,10 @@ ThemeData lightTheme(BuildContext context) {
     dividerTheme: DividerThemeData(
       color: Colors.grey[400],
     ),
+    bottomSheetTheme: BottomSheetThemeData(
+      elevation: 4,
+      constraints: BoxConstraints.expand(),
+    ),
   );
 }
 

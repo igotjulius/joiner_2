@@ -59,105 +59,103 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
 
   @override
   Widget build(BuildContext context) {
-    if(_model.currentLobby == null)
+    _model.currentLobby = context.watch<LobbyProvider>().currentLobby;
+    if (_model.currentLobby == null)
       return displayLobby();
     else
       return mainDisplay();
   }
 
   Widget mainDisplay() {
-    return ChangeNotifierProvider<LobbyProvider>(
-      create: (_) => LobbyProvider(_model.currentLobby!),
-      child: Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          title: Container(
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        title: Container(
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _model.currentLobby!.title!,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  Text(
+                    _model.currentLobby!.startDate ==
+                            _model.currentLobby!.endDate
+                        ? (_model.currentLobby!.startDate == null
+                            ? 'Date undecided'
+                            : "${dateFormat.format(_model.currentLobby!.startDate!)}")
+                        : "${dateFormat.format(_model.currentLobby!.startDate!)} - ${dateFormat.format(_model.currentLobby!.endDate!)}",
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          menuOption(),
+        ],
+        centerTitle: false,
+        elevation: 0.0,
+        bottom: TabBar(
+          tabs: [
+            Tab(text: 'Dashboard'),
+            Tab(text: 'Chat'),
+            Tab(text: 'Resources'),
+            Tab(text: 'Poll'),
+            Tab(text: 'Joiners'),
+          ],
+          controller: _model.tabBarController,
+          onTap: (value) => setState(() {
+            FocusScope.of(context).unfocus();
+          }),
+        ),
+      ),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: Column(
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _model.currentLobby!.title!,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    Text(
-                      _model.currentLobby!.startDate ==
-                              _model.currentLobby!.endDate
-                          ? (_model.currentLobby!.startDate == null
-                              ? 'Date undecided'
-                              : "${dateFormat.format(_model.currentLobby!.startDate!)}")
-                          : "${dateFormat.format(_model.currentLobby!.startDate!)} - ${dateFormat.format(_model.currentLobby!.endDate!)}",
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                  ],
+                Expanded(
+                  child: TabBarView(
+                    controller: _model.tabBarController,
+                    children: [
+                      wrapWithModel(
+                        model: _model.lobbyDashboardModel!,
+                        child: LobbyDashboardWidget(
+                          lobbyId: widget.lobbyId,
+                        ),
+                        updateCallback: () => setState(() {}),
+                      ),
+                      wrapWithModel(
+                        model: _model.chatModel!,
+                        updateCallback: () => setState(() {}),
+                        child: ChatWidget(
+                          setState,
+                          _model.currentLobby!.id,
+                          _model.currentLobby!.conversation,
+                        ),
+                      ),
+                      BudgetWidget(
+                        lobbyId: _model.currentLobby!.id,
+                        hostId: _model.currentLobby!.hostId,
+                      ),
+                      PollCompWidget(
+                        lobbyId: _model.currentLobby!.id,
+                      ),
+                      JoinersWidget(),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-          actions: [
-            menuOption(),
-          ],
-          centerTitle: false,
-          elevation: 0.0,
-          bottom: TabBar(
-            tabs: [
-              Tab(text: 'Dashboard'),
-              Tab(text: 'Chat'),
-              Tab(text: 'Resources'),
-              Tab(text: 'Poll'),
-              Tab(text: 'Joiners'),
-            ],
-            controller: _model.tabBarController,
-            onTap: (value) => setState(() {
-              FocusScope.of(context).unfocus();
-            }),
-          ),
-        ),
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: TabBarView(
-                      controller: _model.tabBarController,
-                      children: [
-                        wrapWithModel(
-                          model: _model.lobbyDashboardModel!,
-                          child: LobbyDashboardWidget(
-                            lobbyId: widget.lobbyId,
-                          ),
-                          updateCallback: () => setState(() {}),
-                        ),
-                        wrapWithModel(
-                          model: _model.chatModel!,
-                          updateCallback: () => setState(() {}),
-                          child: ChatWidget(
-                            setState,
-                            _model.currentLobby!.id,
-                            _model.currentLobby!.conversation,
-                          ),
-                        ),
-                        BudgetWidget(
-                          lobbyId: _model.currentLobby!.id,
-                          hostId: _model.currentLobby!.hostId,
-                        ),
-                        PollCompWidget(
-                          lobbyId: _model.currentLobby!.id,
-                        ),
-                        JoinersWidget(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -166,11 +164,13 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     return FutureBuilder(
       future: _fetchLobby,
       builder: (context, snapshot) {
-        if (!snapshot.hasData)
+        if (snapshot.connectionState != ConnectionState.done)
           return Center(
             child: CircularProgressIndicator(),
           );
         _model.currentLobby = snapshot.data;
+        Provider.of<LobbyProvider>(context, listen: false)
+            .setCurrentLobby(_model.currentLobby!);
         return mainDisplay();
       },
     );
@@ -181,10 +181,9 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
       onSelected: (value) {
         switch (value) {
           case 0:
-            {
-              context.pop();
-              _model.leaveLobby(widget.lobbyId!);
-            }
+            context.pop();
+            _model.leaveLobby(widget.lobbyId!);
+            break;
         }
       },
       itemBuilder: (context) => [

@@ -19,7 +19,7 @@ class LobbyCreationModel extends FlutterFlowModel {
   TextEditingController? titleInput;
   String? Function(String?)? titleInputValidator;
   // State field(s) for TextField widget.
-  TextEditingController? descInput;
+  TextEditingController? destInput;
   String? Function(String?)? descInputValidator;
   // State field(s) for TextField widget.
   TextEditingController? budgetInput;
@@ -35,7 +35,7 @@ class LobbyCreationModel extends FlutterFlowModel {
   void dispose() {
     unfocusNode.dispose();
     titleInput?.dispose();
-    descInput?.dispose();
+    destInput?.dispose();
     budgetInput?.dispose();
     meetingInput?.dispose();
   }

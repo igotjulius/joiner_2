@@ -1,5 +1,6 @@
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
     _model = createModel(context, () => LobbyCreationModel());
 
     _model.titleInput ??= TextEditingController();
-    _model.descInput ??= TextEditingController();
+    _model.destInput ??= TextEditingController();
     _model.budgetInput ??= TextEditingController();
     _model.meetingInput ??= TextEditingController();
   }
@@ -64,7 +65,7 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                   onPressed: () async {
                     final lobby = LobbyModel(
                       title: _model.titleInput.text,
-                      destination: _model.descInput.text,
+                      destination: _model.destInput.text,
                       meetingPlace: _model.meetingInput.text,
                       startDate: _model.datePicked?.start,
                       endDate: _model.datePicked?.end,
@@ -90,17 +91,11 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                 CustomTextInput(
                   label: 'Title',
                   controller: _model.titleInput,
-                  validator: _model.titleInputValidator,
+                  validator: isEmpty,
                 ),
                 CustomTextInput(
                   label: 'Destination',
-                  controller: _model.descInput,
-                  validator: _model.descInputValidator,
-                ),
-                CustomTextInput(
-                  label: 'Meeting Place',
-                  controller: _model.meetingInput,
-                  validator: _model.meetingInputValidator,
+                  controller: _model.destInput,
                 ),
                 Column(
                   children: [
@@ -108,6 +103,7 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                       alignment: Alignment.topLeft,
                       child: Text(
                         'Trip Date',
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),
                     SizedBox(
@@ -127,9 +123,7 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: Color(0xff9c9c9c),
-                          ),
+                          border: Border.all(),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
@@ -156,26 +150,6 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                     ),
                   ],
                 ),
-                /* Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(
-                          10.0, 10.0, 10.0, 10.0),
-                      child: Icon(
-                        Icons.add,
-                        color: Color(0xFF52B2FA),
-                        size: 24.0,
-                      ),
-                    ),
-                    Text(
-                      'Invite Friends',
-                    ),
-                  ].divide(SizedBox(width: 10.0)),
-                ),
-                Divider(
-                  thickness: 1.0,
-                ),*/
               ].divide(SizedBox(height: 10.0)),
             ),
           ),

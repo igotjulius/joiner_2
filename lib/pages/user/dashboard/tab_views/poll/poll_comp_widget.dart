@@ -20,6 +20,7 @@ class PollCompWidget extends StatefulWidget {
 
 class _PollCompWidgetState extends State<PollCompWidget> {
   late PollCompModel _model;
+  PersistentBottomSheetController? _controller;
 
   @override
   void setState(VoidCallback callback) {
@@ -35,9 +36,10 @@ class _PollCompWidgetState extends State<PollCompWidget> {
 
   @override
   void dispose() {
-    _model.maybeDispose();
-
     super.dispose();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_controller != null) _controller?.close();
+    });
   }
 
   @override
@@ -60,7 +62,7 @@ class _PollCompWidgetState extends State<PollCompWidget> {
                   FilledButton(
                     child: Text('Add'),
                     onPressed: () {
-                      showBottomSheet(
+                      _controller = showBottomSheet(
                         context: context,
                         builder: (context) {
                           return SurveyPollWidget(

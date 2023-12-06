@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/lobby_model.dart';
@@ -70,11 +69,12 @@ class FFAppState extends ChangeNotifier {
     _activeLobbies = lobbies;
   }
 
-  Future<void> initLobbies() async {
-    if (_activeLobbies == null) {
-      final response = await UserController.getLobbies();
-      _activeLobbies = response['active'];
-      notifyListeners();
+  void updateCachedLobby(LobbyModel uLobby) {
+    for (int i = 0; i < _activeLobbies!.length; i++) {
+      if (_activeLobbies?[i].id == uLobby.id) {
+        _activeLobbies?[i] = uLobby;
+        break;
+      }
     }
   }
 }

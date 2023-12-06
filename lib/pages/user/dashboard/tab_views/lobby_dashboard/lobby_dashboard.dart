@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/pages/user/dashboard/edit_lobby/edit_lobby_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/poll_model.dart';
@@ -14,12 +15,21 @@ class LobbyDashboardWidget extends StatefulWidget {
 class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
   late LobbyDashboardModel _model;
   late TextStyle _textStyle;
+  PersistentBottomSheetController? _controller;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => LobbyDashboardModel());
     _model.fetchLobby(widget.lobbyId!);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_controller != null) _controller?.close();
+    });
   }
 
   final DateFormat dateFormat = DateFormat('MMMM dd, yyyy');
@@ -42,9 +52,27 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "${_model.currentLobby?.title}",
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${_model.currentLobby?.title}",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _controller = showBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return EditLobbyWidget(
+                                  currentLobby: _model.currentLobby,
+                                );
+                              },
+                            );
+                          },
+                          child: Text('Edit details'),
+                        ),
+                      ],
                     ),
                     Row(
                       children: [

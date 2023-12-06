@@ -45,85 +45,82 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return Material(
       child: Container(
-        child: Padding(
-          padding: EdgeInsetsDirectional.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Create a Poll',
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        context.pop();
-                      },
-                      icon: Icon(Icons.close_rounded)),
-                ],
-              ),
-              CustomTextInput(
-                label: 'Question',
-                hintText: 'What are you deciding about?',
-                controller: _model.questionController,
-                fillColor: Theme.of(context).colorScheme.primaryContainer,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextButton(
-                    child: Text('Add a Choice'),
-                    onPressed: () {
-                      setState(() {
-                        _model.choicesController!.add(TextEditingController());
-                      });
-                    },
-                  ),
-                  ListView.separated(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: _model.choicesController!.length,
-                    itemBuilder: (context, index) {
-                      return CustomTextInput(
-                        controller: _model.choicesController![index],
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 10,
-                      );
-                    },
-                  ),
-                ].divide(
-                  SizedBox(height: 10),
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Create a Poll',
                 ),
+                IconButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  icon: Icon(Icons.close_rounded),
+                ),
+              ],
+            ),
+            CustomTextInput(
+              label: 'Question',
+              hintText: 'What are you deciding about?',
+              controller: _model.questionController,
+              fillColor: Theme.of(context).colorScheme.primaryContainer,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  child: Text('Add a Choice'),
+                  onPressed: () {
+                    setState(() {
+                      _model.choicesController!.add(TextEditingController());
+                    });
+                  },
+                ),
+                ListView.separated(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _model.choicesController!.length,
+                  itemBuilder: (context, index) {
+                    return CustomTextInput(
+                      controller: _model.choicesController![index],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      height: 10,
+                    );
+                  },
+                ),
+              ].divide(
+                SizedBox(height: 10),
               ),
-              Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: FilledButton.icon(
-                      onPressed: () async {
-                        final nPoll = await _model.createPoll(widget.lobbyId!);
-                        Provider.of<LobbyProvider>(context, listen: false)
-                            .addPoll(nPoll!);
-                        context.pop();
-                      },
-                      label: Text('Create'),
-                      icon: Icon(
-                        Icons.add,
-                      ),
+            ),
+            Spacer(),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () async {
+                      final nPoll = await _model.createPoll(widget.lobbyId!);
+                      Provider.of<LobbyProvider>(context, listen: false)
+                          .addPoll(nPoll!);
+                      context.pop();
+                    },
+                    label: Text('Create'),
+                    icon: Icon(
+                      Icons.add,
                     ),
                   ),
-                ],
-              ),
-            ].divide(SizedBox(height: 20.0)),
-          ),
+                ),
+              ],
+            ),
+          ].divide(SizedBox(height: 20.0)),
         ),
       ),
     );

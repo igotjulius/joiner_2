@@ -29,7 +29,6 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     super.initState();
     _model = createModel(context, () => LobbiesModel());
     _fetchLobbies = UserController.getLobbies();
-    context.read<FFAppState>().initLobbies();
     _model.tabController =
         TabController(length: 2, vsync: this, initialIndex: 0);
   }
@@ -42,6 +41,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
     return Scaffold(
       floatingActionButton: _model.tabController!.index != 0
           ? Padding(
@@ -107,6 +107,8 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
 
         final Map<String, List<LobbyModel>> result = snapshot.data!;
         final {'active': activeLobbies, 'pending': pendingLobbies} = result;
+
+        context.read<FFAppState>().setLinkableLobbies(activeLobbies);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

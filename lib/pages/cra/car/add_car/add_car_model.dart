@@ -94,49 +94,6 @@ class AddCarModel extends FlutterFlowModel {
       },
     );
   }
-  /*
-  Future<List<String>> uploadImages() async {
-    List<XFile> images = imagePicker!.getImages()!;
-    String userId = FFAppState().currentUser?.id.toString() ?? 'unknown_user';
-    String licensePlate = licenseController.text;
-
-    return await uploadImagesToFirebase(images, userId, licensePlate);
-  }
-
-  Future<List<String>> uploadImagesToFirebase(
-      List<XFile> images, String userId, String licensePlate) async {
-    List<String> downloadUrls = [];
-
-    try {
-      FirebaseStorage storage = FirebaseStorage.instance;
-      for (XFile imageFile in images) {
-        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-        String path = 'images/cra/$userId/$licensePlate/$fileName.png';
-
-        Reference ref = storage.ref().child(path);
-
-        final metadata = SettableMetadata(
-          contentType: 'image/png',
-        );
-        if (kIsWeb)
-          await ref.putData(await imageFile.readAsBytes(), metadata);
-        else
-          await ref.putFile(File(imageFile.path), metadata);
-        // await ref.putFile(imageFile, metadata);
-
-        // Get the download URL for each uploaded image
-        String downloadURL = await ref.getDownloadURL();
-        downloadUrls.add(downloadURL);
-        print('Image uploaded. Download URL: $downloadURL');
-      }
-
-      return downloadUrls;
-    } catch (e) {
-      print('Error uploading images: $e');
-      return [];
-    }
-  }
-  */
 
   /// Additional helper methods are added here.
   /// Validators

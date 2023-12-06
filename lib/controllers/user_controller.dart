@@ -66,6 +66,11 @@ class UserController {
     );
   }
 
+  static Future<LobbyModel?> editLobby(LobbyModel lobby) async {
+    final result = await apiService.editLobby(lobby, _userId, lobby.id!);
+    return result.data;
+  }
+
   // Delete specific lobby
   static Future<void> deleteLobby(String lobbyId) async {
     await apiService.deleteLobby(_userId, lobbyId);

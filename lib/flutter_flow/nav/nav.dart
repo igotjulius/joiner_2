@@ -10,8 +10,10 @@ import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rental_details/cra_rental_details_widget.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
+import 'package:provider/provider.dart';
 import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -96,9 +98,12 @@ List<FFRoute> userRoutes() {
           path: ':lobbyId',
           builder: (context, state) {
             final obj = state.extraMap['currentLobby'] ??= null;
-            return LobbyPageWidget(
-              currentLobby: obj,
-              lobbyId: state.pathParameters['lobbyId'],
+            return ChangeNotifierProvider(
+              create: (_) => LobbyProvider(obj),
+              child: LobbyPageWidget(
+                currentLobby: obj,
+                lobbyId: state.pathParameters['lobbyId'],
+              ),
             );
           },
         ),
