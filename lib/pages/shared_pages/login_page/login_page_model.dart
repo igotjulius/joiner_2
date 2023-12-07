@@ -56,9 +56,7 @@ class LoginPageModel extends FlutterFlowModel {
       ScaffoldMessenger.of(context).showSnackBar(
         showSuccess('Login successful'),
       );
-      appState.setIsCra(isCra);
-      AppStateNotifier.instance.setRoutes();
-      appState.setCurrentUser(currentUser);
+
       return true;
     }
     ScaffoldMessenger.of(context).showSnackBar(

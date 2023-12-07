@@ -126,7 +126,8 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                                     children: [
                                       InkWell(
                                         onTap: () async {
-                                          await selectFile();
+                                          await _model.imagePicker
+                                              ?.selectImage();
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -137,21 +138,10 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                                                   width: double.infinity,
                                                 )
                                               : Center(
-                                                  child: Text('Tap to Upload')),
+                                                  child: Text('Tap to Upload'),
+                                                ),
                                         ),
                                       ),
-                                      if (pickedFile != null)
-                                        Positioned(
-                                          top: 8.0,
-                                          right: 8.0,
-                                          child: IconButton(
-                                            color: Colors.black,
-                                            icon: Icon(Icons.close),
-                                            onPressed: () {
-                                              unselectFile();
-                                            },
-                                          ),
-                                        ),
                                     ],
                                   ),
                                 ),

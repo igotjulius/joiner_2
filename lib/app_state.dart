@@ -51,6 +51,8 @@ class FFAppState extends ChangeNotifier {
       pref!.setString('lastName', currentUser.lastName!);
       pref!.setString('email', currentUser.email!);
       pref!.setBool('isCra', _isCra);
+    } else {
+      pref!.clear();
     }
 
     notifyListeners();

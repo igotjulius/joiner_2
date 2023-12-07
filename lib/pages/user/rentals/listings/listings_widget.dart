@@ -1,7 +1,9 @@
+import 'package:joiner_1/components/cra/car_item_widget.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_model.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ListingsWidget extends StatefulWidget {
   const ListingsWidget({Key? key}) : super(key: key);
@@ -12,17 +14,13 @@ class ListingsWidget extends StatefulWidget {
 
 class _ListingsWidgetState extends State<ListingsWidget> {
   late ListingsModel _model;
-
-  @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-    _model.onUpdate();
-  }
+  Future<List<CarModel>?>? _fetchAvailableCars;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => ListingsModel());
+    _fetchAvailableCars = UserController.getAvailableCars();
   }
 
   @override
@@ -34,8 +32,6 @@ class _ListingsWidgetState extends State<ListingsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -55,12 +51,46 @@ class _ListingsWidgetState extends State<ListingsWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _model.getAvailableCars(),
+                getAvailableCars(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  FutureBuilder<List<CarModel>?> getAvailableCars() {
+    return FutureBuilder(
+      future: _fetchAvailableCars,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        if (snapshot.data == null)
+          return Center(
+            child: Text('No available cars for today :('),
+          );
+        final cars = snapshot.data!;
+        return ListView.separated(
+          shrinkWrap: true,
+          itemCount: cars.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                context.pushNamed('Booking', extra: {'car': cars[index]});
+              },
+              child: CarItemWidget(car: cars[index]),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return SizedBox(
+              height: 10,
+            );
+          },
+        );
+      },
     );
   }
 }

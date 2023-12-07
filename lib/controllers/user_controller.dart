@@ -25,21 +25,6 @@ class UserController {
     return result.message;
   }
 
-  // Login user
-  static Future<User?> loginUser(User user) async {
-    User? currentUser;
-    await apiService
-        .loginUser({'email': user.email!, 'password': user.password!}).then(
-      (response) {
-        if (response.code == HttpStatus.ok) {
-          currentUser = response.data;
-          _userId = currentUser!.id!;
-        }
-      },
-    );
-    return currentUser;
-  }
-
   // Fetch user lobbies
   static Future<Map<String, List<LobbyModel>>> getLobbies() async {
     final response = await apiService.getLobbies(_userId);
@@ -108,13 +93,6 @@ class UserController {
     return response.data;
   }
 
-  // Add/create a budget to a lobby
-  static Future<void> addBudget(
-      String label, double amount, String lobbyId) async {
-    await apiService
-        .addBudget({'label': label, 'amount': amount}, _userId, lobbyId);
-  }
-
   // Fetch participants of a lobby
   static Future<List<ParticipantModel>> getParticipants(String lobbyId) async {
     final response = await apiService.getParticipants(_userId, lobbyId);
@@ -174,7 +152,7 @@ class UserController {
     return response.data!;
   }
 
-  // Users Renting a Car
+  // User Renting a Car
   static Future<ResponseModel> postRental(
       CarRentalModel carRental, XFile image) async {
     List<MultipartFile> converted = [];
@@ -196,6 +174,13 @@ class UserController {
   // Fetch user's rentals
   static Future<ResponseModel<List<RentalModel>>> getRentals() async {
     return await apiService.getRentals(_userId);
+  }
+
+  static Future<bool> linkRentalToLobby(
+      ExpenseModel expense, String lobbyId, String licensePlate) async {
+    final result = await apiService.linkRentalToLobby(
+        expense, _userId, lobbyId, licensePlate);
+    return result.code == HttpStatus.ok ? true : false;
   }
 
   //Add Expenses

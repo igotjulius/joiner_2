@@ -27,7 +27,8 @@ class EditCarModel extends FlutterFlowModel {
   void dispose() {}
 
   void initializeControllers() {
-    availability ??= car!.availability;
+    availability =
+        car!.availability!.isAvailable! ? 'Available' : 'Unavailable';
     licenseController ??= TextEditingController();
     licenseController!.text = car!.licensePlate!;
     vehicleTypeController ??= TextEditingController();
@@ -36,7 +37,7 @@ class EditCarModel extends FlutterFlowModel {
     priceController!.text = car!.price.toString();
     datesController ??= TextEditingController();
     datesController!.text =
-        '${DateFormat('MMM d').format(car!.availableStartDate!)} - ${DateFormat('MMM d').format(car!.availableEndDate!)}';
+        '${DateFormat('MMM d').format(car!.availability!.startDate!)} - ${DateFormat('MMM d').format(car!.availability!.endDate!)}';
   }
 
   // Converts picked files to a MultipartFile for sending to the server
@@ -58,16 +59,18 @@ class EditCarModel extends FlutterFlowModel {
   FutureBuilder<String?> editCar() {
     if (datePicked == null) {
       datePicked = DateTimeRange(
-        start: car!.availableStartDate!,
-        end: car!.availableEndDate!,
+        start: car!.availability!.startDate!,
+        end: car!.availability!.endDate!,
       );
     }
     final uCar = CarModel(
       licensePlate: licenseController!.text,
       vehicleType: vehicleTypeController!.text,
-      availability: availability,
-      availableStartDate: datePicked!.start,
-      availableEndDate: datePicked!.end,
+      availability: CarAvailability(
+        isAvailable: availability == 'Available' ? true : false,
+        startDate: datePicked?.start,
+        endDate: datePicked?.end,
+      ),
       price: double.parse(priceController!.text),
     );
 

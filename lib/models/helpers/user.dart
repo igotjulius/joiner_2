@@ -1,7 +1,10 @@
+import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/flutter_flow/nav/nav.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/user_model.dart';
+import 'package:joiner_1/service/api_service.dart';
 
 abstract class User {
   final String? id, firstName, lastName, email, password, contactNo, address;
@@ -16,18 +19,21 @@ abstract class User {
   });
 
   static Future<String?> registerUser(User nUser) async {
-    var result;
-    if (nUser is UserModel) result = await UserController.registerUser(nUser);
-    if (nUser is CraUserModel) result = await CraController.registerCra(nUser);
-    return result;
+    if (nUser is UserModel) return await UserController.registerUser(nUser);
+    if (nUser is CraUserModel) return await CraController.registerCra(nUser);
+    return null;
   }
 
   static Future<User?> loginUser(User user) async {
-    var result;
-    result = await UserController.loginUser(user);
-    // if (user is UserModel)
-    if (user is CraUserModel) result = await CraController.loginCra(user);
-    return result;
+    final result = await apiService
+        .loginUser({'email': user.email!, 'password': user.password!});
+    if (result.message == 'CraUser')
+      FFAppState().setIsCra(true);
+    else
+      FFAppState().setIsCra(false);
+    AppStateNotifier.instance.setRoutes();
+    FFAppState().setCurrentUser(result.data);
+    return result.data;
   }
 
   Map<String, dynamic> toJson();

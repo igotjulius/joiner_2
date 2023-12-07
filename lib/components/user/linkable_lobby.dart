@@ -4,7 +4,6 @@ import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
-import 'package:joiner_1/utils/generic_response.dart';
 import 'package:provider/provider.dart';
 
 class LinkableLobby extends StatefulWidget {
@@ -61,7 +60,10 @@ class _LinkableLobbyState extends State<LinkableLobby> {
                                       builder: (context) {
                                         return FutureBuilder(
                                           future: _model!.linkRentalToLobby(
-                                              widget.rental!.price!, index),
+                                            widget.rental!.licensePlate!,
+                                            widget.rental!.price!,
+                                            index,
+                                          ),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState !=
                                                 ConnectionState.done)
@@ -155,12 +157,14 @@ class LinkableLobbyModel extends FlutterFlowModel {
   @override
   void dispose() {}
 
-  Future<ResponseModel> linkRentalToLobby(double price, int index) async {
+  Future<bool> linkRentalToLobby(
+      String licensePlate, double price, int index) async {
     final linkedLobby = lobbies![index];
     final expense = ExpenseModel(items: {'Car rental': price});
-    return await UserController.putExpenses(
+    return await UserController.linkRentalToLobby(
       expense,
       linkedLobby.id!,
+      licensePlate,
     );
   }
 }

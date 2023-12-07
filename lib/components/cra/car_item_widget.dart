@@ -47,11 +47,11 @@ class _CarItemWidgetState extends State<CarItemWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("${widget.car.licensePlate}",
-                    style:
-                    TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(
-                  // 'Available',
-                  widget.car.availability!,
+                  widget.car.availability!.isAvailable!
+                      ? 'Available'
+                      : 'Unavailable',
                 ),
               ],
             ),

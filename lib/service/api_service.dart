@@ -22,8 +22,8 @@ part 'api_service.g.dart';
   Make sure that the physical phone and host machine are in the same network.
 */
 // const String serverUrl = 'http://192.168.137.1:443/';
-// const String serverUrl = 'http://localhost:443/';
- const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+//  const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
 final apiService = ApiService(Dio(), baseUrl: serverUrl);
 // ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -40,10 +40,10 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
-  // Login user
-  @POST('user/login')
+  // Login user, could be general user or cra user
+  @POST('login')
   Future<ResponseModel<User?>> loginUser(
-    @Body() Map<String, String> map, {
+    @Body() Map<String, String> credentials, {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
@@ -52,6 +52,15 @@ abstract class ApiService {
   Future<ResponseModel> createLobby(
     @Body() LobbyModel lobby,
     @Path('userId') String userId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
+
+  // Edit lobby
+  @PUT('user/{userId}/lobby/{lobbyId}')
+  Future<ResponseModel<LobbyModel>> editLobby(
+    @Body() LobbyModel lobby,
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId, {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
@@ -97,15 +106,6 @@ abstract class ApiService {
   Future<ResponseModel<List<CarModel>>> getAvailableCars(
     @Path('userId') String userId, {
     @Query('availability') String availability = 'Available',
-  });
-
-  // Create new budget category
-  @POST('user/{userId}/lobby/{lobbyId}/budget')
-  Future<void> addBudget(
-    @Body() Map<String, dynamic> map,
-    @Path('userId') String userId,
-    @Path('lobbyId') String lobbyId, {
-    @Header('Content-Type') String contentType = 'application/json',
   });
 
   // Get all participants
@@ -242,6 +242,7 @@ abstract class ApiService {
   //   @Header('Content-Type') String contentType = 'application/json',
   // });
 
+  // Rent a car
   @MultiPart()
   @POST('user/{userId}/rent/car')
   Future<ResponseModel> postRental(
@@ -252,6 +253,14 @@ abstract class ApiService {
     @Part() required int duration,
     @Part() List<MultipartFile>? files,
   });
+
+  @POST('user/{userId}/lobby/{lobbyId}/expense/{licensePlate}')
+  Future<ResponseModel> linkRentalToLobby(
+    @Body() ExpenseModel expense,
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+    @Path('licensePlate') String licensePlate,
+  );
 
   //Create expenses
   @PUT('user/{userId}/lobby/{lobbyId}/expense')
@@ -323,9 +332,9 @@ abstract class ApiService {
     @Part() required String ownerId,
     @Part() required String ownerName,
     @Part() required String vehicleType,
-    @Part() required String availability,
-    @Part() required String availableStartDate,
-    @Part() required String availableEndDate,
+    @Part() required bool isAvailable,
+    @Part() required String startDate,
+    @Part() required String endDate,
     @Part() required double price,
     @Part() List<MultipartFile>? files,
   });
@@ -338,9 +347,9 @@ abstract class ApiService {
     @Path('licensePlate') String carLicensePlate, {
     @Part() required String licensePlate,
     @Part() required String vehicleType,
-    @Part() required String availability,
-    @Part() required String availableStartDate,
-    @Part() required String availableEndDate,
+    @Part() required bool isAvailable,
+    @Part() required String startDate,
+    @Part() required String endDate,
     @Part() required double price,
     @Part() List<MultipartFile>? files,
   });

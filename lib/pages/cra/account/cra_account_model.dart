@@ -12,9 +12,7 @@ class CraAccountModel extends FlutterFlowModel {
   void dispose() {}
 
   void logout(BuildContext context) {
-    final appState = context.read<FFAppState>();
-    appState.setCurrentUser(null);
-    appState.pref!.clear();
+    context.read<FFAppState>().setCurrentUser(null);
     context.goNamed('Login');
   }
 }

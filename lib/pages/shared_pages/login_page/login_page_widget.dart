@@ -32,6 +32,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   void dispose() {
     super.dispose();
     _model.dispose();
+    _errorMessage = null;
   }
 
   @override
@@ -152,7 +153,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () {
-                                  context.pushNamed('Sign Up');
+                                  setState(() {
+                                    _errorMessage = null;
+                                    _model.emailController?.clear();
+                                    _model.passwordController?.clear();
+                                    context.pushNamed('Sign Up');
+                                  });
                                 },
                                 child: Text(
                                   'Join now!',

@@ -10,6 +10,7 @@ class RentalModel {
     includeToJson: false,
   )
   final String? id;
+  final String? licensePlate;
   final String? vehicleOwner;
   final String? renterUserId;
   final String? renterName;
@@ -24,6 +25,7 @@ class RentalModel {
 
   const RentalModel({
     this.id,
+    this.licensePlate,
     this.vehicleOwner,
     this.renterUserId,
     this.renterName,

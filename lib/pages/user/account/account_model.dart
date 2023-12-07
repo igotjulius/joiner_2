@@ -20,9 +20,7 @@ class AccountModel extends FlutterFlowModel {
 
   /// Action blocks are added here.
   void logout(BuildContext context) {
-    final appState = context.read<FFAppState>();
-    appState.setCurrentUser(null);
-    appState.pref!.clear();
+    context.read<FFAppState>().setCurrentUser(null);
     context.goNamed('Login');
   }
 

@@ -40,9 +40,11 @@ class AddCarModel extends FlutterFlowModel {
       ownerName:
           '${FFAppState().currentUser!.firstName} ${FFAppState().currentUser!.lastName}',
       vehicleType: vehicleTypeController.text,
-      availability: 'Available',
-      availableStartDate: datePicked!.start,
-      availableEndDate: datePicked!.end,
+      availability: CarAvailability(
+        isAvailable: true,
+        startDate: datePicked?.start,
+        endDate: datePicked?.end,
+      ),
       price: double.parse(priceController.text),
     );
 

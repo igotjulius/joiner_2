@@ -18,21 +18,6 @@ class CraController {
     return result.message;
   }
 
-  // Login CRA
-  static Future<User?> loginCra(User user) async {
-    User? currentUser;
-    await apiService
-        .loginCra({'email': user.email, 'password': user.password}).then(
-      (response) {
-        if (response.code == HttpStatus.ok) {
-          currentUser = response.data!;
-          _craUserId = currentUser!.id!;
-        }
-      },
-    );
-    return currentUser;
-  }
-
   // Get all registered cars of corresponding CRA
   static Future<List<CarModel>?> getCraCars() async {
     final res = await apiService.getCraCars(_craUserId);
@@ -62,9 +47,9 @@ class CraController {
       ownerId: car.ownerId!,
       ownerName: car.ownerName!,
       vehicleType: car.vehicleType!,
-      availability: car.availability!,
-      availableStartDate: car.availableStartDate.toString(),
-      availableEndDate: car.availableEndDate.toString(),
+      isAvailable: car.availability!.isAvailable!,
+      startDate: car.availability!.startDate!.toString(),
+      endDate: car.availability!.endDate!.toString(),
       price: car.price!,
       files: converted,
     );
@@ -94,9 +79,9 @@ class CraController {
       car.licensePlate!,
       licensePlate: car.licensePlate!,
       vehicleType: car.vehicleType!,
-      availability: car.availability!,
-      availableStartDate: car.availableStartDate.toString(),
-      availableEndDate: car.availableEndDate.toString(),
+      isAvailable: car.availability!.isAvailable!,
+      startDate: car.availability!.startDate!.toString(),
+      endDate: car.availability!.endDate!.toString(),
       price: car.price!,
       files: converted,
     );
@@ -108,9 +93,9 @@ class CraController {
   }
 
   // Delete a car
-  static Future<String> deleteCar(String licensePlate) async {
+  static Future<bool> deleteCar(String licensePlate) async {
     final result = await apiService.deleteCar(_craUserId, licensePlate);
-    return result.message!;
+    return result.code == HttpStatus.ok ? true : false;
   }
 
   // Fetch CRA's rentals
