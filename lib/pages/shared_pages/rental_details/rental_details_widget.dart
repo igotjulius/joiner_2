@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/components/user/linkable_lobby.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/rental_model.dart';
+import 'package:provider/provider.dart';
 
 class RentalDetails extends StatefulWidget {
   final RentalModel? rental;
@@ -14,32 +15,37 @@ class RentalDetails extends StatefulWidget {
 class _RentalDetailsState extends State<RentalDetails> {
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<FFAppState>();
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: TextButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  showDragHandle: true,
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return Wrap(
-                      children: [
-                        LinkableLobby(
-                          rental: widget.rental,
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Text('Link to a lobby'),
-            ),
-          ),
-        ],
+        actions: appState.isCra
+            ? null
+            : [
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: TextButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        showDragHandle: true,
+                        isScrollControlled: true,
+                        constraints: BoxConstraints.expand(
+                            height: MediaQuery.of(context).size.height * 0.7),
+                        context: context,
+                        builder: (context) {
+                          return Wrap(
+                            children: [
+                              LinkableLobby(
+                                rental: widget.rental,
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Text('Link to a lobby'),
+                  ),
+                ),
+              ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

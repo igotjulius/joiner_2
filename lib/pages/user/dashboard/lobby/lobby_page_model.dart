@@ -1,4 +1,3 @@
-import 'package:joiner_1/components/user/budget_model.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/joiners_model.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard_model.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_model.dart';
@@ -21,8 +20,6 @@ class LobbyPageModel extends FlutterFlowModel {
   LobbyDashboardModel? lobbyDashboardModel;
   // Model for Chat component.
   ChatModel? chatModel;
-  // Model for BudgetGraph component.
-  BudgetModel? budgetModel;
   // Model for Poll component.
   PollCompModel? pollModel;
   // Model for Joiners component.
@@ -38,7 +35,6 @@ class LobbyPageModel extends FlutterFlowModel {
     unfocusNode.dispose();
     tabBarController?.dispose();
     chatModel?.dispose();
-    budgetModel?.dispose();
     pollModel?.dispose();
     joinersModel?.dispose();
   }
@@ -47,7 +43,6 @@ class LobbyPageModel extends FlutterFlowModel {
   void initModel() {
     lobbyDashboardModel = LobbyDashboardModel();
     chatModel = ChatModel();
-    budgetModel = BudgetModel();
     pollModel = PollCompModel();
     joinersModel = JoinersModel();
   }

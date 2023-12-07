@@ -22,8 +22,8 @@ part 'api_service.g.dart';
   Make sure that the physical phone and host machine are in the same network.
 */
 // const String serverUrl = 'http://192.168.137.1:443/';
-const String serverUrl = 'http://localhost:443/';
-//  const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
+// const String serverUrl = 'http://localhost:443/';
+const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
 final apiService = ApiService(Dio(), baseUrl: serverUrl);
 // ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -254,19 +254,22 @@ abstract class ApiService {
     @Part() List<MultipartFile>? files,
   });
 
-  @POST('user/{userId}/lobby/{lobbyId}/expense/{licensePlate}')
+  // Link rental to a lobby
+  @POST('user/{userId}/rent/{lobbyId}')
   Future<ResponseModel> linkRentalToLobby(
-    @Body() ExpenseModel expense,
+    @Body() RentalModel rental,
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
-    @Path('licensePlate') String licensePlate,
   );
 
   //Create expenses
   @PUT('user/{userId}/lobby/{lobbyId}/expense')
-  Future<ResponseModel<ExpenseModel>> putExpenses(@Body() ExpenseModel expense,
-      @Path('userId') String userId, @Path('lobbyId') String lobbyId,
-      {@Header('Content-Type') String contentType = 'application/json'});
+  Future<ResponseModel<ExpenseModel>> putExpenses(
+    @Body() ExpenseModel expense,
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId, {
+    @Header('Content-Type') String contentType = 'application/json',
+  });
 
   //Get Expenses
   @GET('user/{userId}/lobby/{lobbyId}/expense')
@@ -285,9 +288,10 @@ abstract class ApiService {
   //HOST Delete SPECIFIC Expense
   @DELETE('user/{userId}/lobby/{lobbyId}/expense/{label}')
   Future<ResponseModel<ExpenseModel>> deleteSpecificExpense(
-      @Path('userId') String userId,
-      @Path('lobbyId') String lobbyId,
-      @Path('label') String label);
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+    @Path('label') String label,
+  );
 
   // CRA API's
   // Register CRA

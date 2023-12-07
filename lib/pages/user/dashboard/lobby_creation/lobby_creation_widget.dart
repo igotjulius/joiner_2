@@ -66,7 +66,6 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                     final lobby = LobbyModel(
                       title: _model.titleInput.text,
                       destination: _model.destInput.text,
-                      meetingPlace: _model.meetingInput.text,
                       startDate: _model.datePicked?.start,
                       endDate: _model.datePicked?.end,
                       participants: [],

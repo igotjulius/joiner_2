@@ -20,7 +20,7 @@ class LobbyDashboardModel extends FlutterFlowModel {
 
   double totalBudget() {
     double total = 0;
-    currentLobby!.expense!.forEach((key, value) {
+    currentLobby?.expense?.items?.forEach((key, value) {
       total += value;
     });
 

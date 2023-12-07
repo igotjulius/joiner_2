@@ -177,9 +177,12 @@ class UserController {
   }
 
   static Future<bool> linkRentalToLobby(
-      ExpenseModel expense, String lobbyId, String licensePlate) async {
+      RentalModel rental, String lobbyId) async {
     final result = await apiService.linkRentalToLobby(
-        expense, _userId, lobbyId, licensePlate);
+      rental,
+      _userId,
+      lobbyId,
+    );
     return result.code == HttpStatus.ok ? true : false;
   }
 

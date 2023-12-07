@@ -1,10 +1,10 @@
-import 'package:joiner_1/components/user/budget_widget.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/joiners_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/chat/chat_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/resources/budget_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -3,31 +3,31 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
 
 class PickedImages {
-  List<XFile>? pickedImages;
-  XFile? pickedImage;
+  List<XFile>? _pickedImages;
+  XFile? _pickedImage;
   Future<String?> selectImages() async {
-    pickedImages = await ImagePicker().pickMultiImage();
-    if (pickedImages == null) return null;
-    if (pickedImages!.length > 5)
+    _pickedImages = await ImagePicker().pickMultiImage();
+    if (_pickedImages == null) return null;
+    if (_pickedImages!.length > 5)
       return 'You can only upload upto 5 images at most.';
     return null;
   }
 
   Future<void> selectImage() async {
-    pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    _pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
   }
 
   XFile? getImage() {
-    return pickedImage;
+    return _pickedImage;
   }
 
   List<XFile>? getImages() {
-    return pickedImages;
+    return _pickedImages;
   }
 
   Future<List<MultipartFile>> getConvertedImages() async {
     var files = <MultipartFile>[];
-    for (final file in pickedImages!) {
+    for (final file in _pickedImages!) {
       final multipartFile = MultipartFile.fromBytes(
         await file.readAsBytes(),
         filename: file.name,

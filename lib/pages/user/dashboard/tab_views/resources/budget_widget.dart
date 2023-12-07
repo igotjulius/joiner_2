@@ -1,10 +1,13 @@
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/models/expense_model.dart';
+import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/models/participant_model.dart';
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/resources/modals/add_budget_widget.dart';
+import 'package:joiner_1/widgets/atoms/budget_category.dart';
+import 'package:joiner_1/widgets/atoms/participant_budget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'budget_model.dart';
-export 'budget_model.dart';
 
 class BudgetWidget extends StatefulWidget {
   final String? hostId;
@@ -17,20 +20,18 @@ class BudgetWidget extends StatefulWidget {
 
 class _BudgetWidgetState extends State<BudgetWidget>
     with TickerProviderStateMixin {
-  late BudgetModel _model;
-
-  @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-    _model.onUpdate();
-  }
+  LobbyModel? _currentLobby;
+  List<ParticipantModel>? _participants;
+  ExpenseModel? _expense;
+  TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => BudgetModel());
-    _model.fetchParticipants = UserController.getParticipants(widget.lobbyId!);
-    _model.tabController = TabController(
+    _currentLobby = context.read<LobbyProvider>().currentLobby;
+    _participants = _currentLobby?.participants;
+    _expense = _currentLobby?.expense;
+    _tabController = TabController(
       vsync: this,
       length: 2,
       initialIndex: 0,
@@ -38,15 +39,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
   }
 
   @override
-  void dispose() {
-    _model.maybeDispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -72,12 +65,12 @@ class _BudgetWidgetState extends State<BudgetWidget>
                       text: 'Budget',
                     ),
                   ],
-                  controller: _model.tabController,
+                  controller: _tabController,
                 ),
               ),
               Expanded(
                 child: TabBarView(
-                  controller: _model.tabController,
+                  controller: _tabController,
                   children: [
                     SingleChildScrollView(
                       child: Column(
@@ -89,7 +82,11 @@ class _BudgetWidgetState extends State<BudgetWidget>
                               FFButtonWidget(
                                 text: 'Add Expenses',
                                 onPressed: () {
-                                  _model.addBudget(context, widget.lobbyId!);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AddBudgetWidget(
+                                        lobbyId: _currentLobby?.id),
+                                  );
                                 },
                                 options: FFButtonOptions(height: 40),
                               ),
@@ -130,8 +127,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
                                     ],
                                   ),
                                 ),
-                                _model.showExpenses(
-                                    widget.lobbyId!, widget.hostId!),
+                                showExpenses(),
                               ],
                             ),
                           ),
@@ -148,7 +144,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
                           SizedBox(
                             height: 20,
                           ),
-                          Text('Total Expenses: ₱${_model.total}',
+                          Text('Total Expenses: ₱${_expense?.total}',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16)),
                           Padding(
@@ -171,12 +167,13 @@ class _BudgetWidgetState extends State<BudgetWidget>
                                 Text(
                                   'Budgets',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 16),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
                                 ),
                               ],
                             ),
                           ),
-                          _model.showBudget(widget.lobbyId!),
+                          showBudget(),
                         ],
                       ),
                     ),
@@ -187,6 +184,39 @@ class _BudgetWidgetState extends State<BudgetWidget>
           ),
         ),
       ),
+    );
+  }
+
+  Widget showBudget() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: _participants?.length,
+      itemBuilder: (context, index) {
+        if (_participants?[index].joinStatus == 'Joined')
+          return ParticipantBudget(
+            id: _participants?[index].id,
+            participantFname: _participants?[index].firstName,
+            participantLname: _participants?[index].lastName,
+            amount: _participants?[index].contribution!['amount'],
+          );
+        return null;
+      },
+    );
+  }
+
+  Widget showExpenses() {
+    final keys = _expense?.items?.keys.toList();
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: keys!.length,
+      itemBuilder: (context, index) {
+        return BudgetCategoryWidget(
+          hostId: _currentLobby?.hostId,
+          lobbyId: _currentLobby?.id,
+          label: keys[index],
+          amount: _expense?.items?[keys[index]],
+        );
+      },
     );
   }
 }

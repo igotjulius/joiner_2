@@ -116,7 +116,16 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                       'Expenses',
                       style: _textStyleMed,
                     ),
-                    expenses(),
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            expenses(),
+                          ],
+                        ),
+                      ),
+                    ),
                     Text(
                       'Polls',
                       style: _textStyleMed,
@@ -139,20 +148,6 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Meeting Place',
-                  style: _textStyle,
-                ),
-                Text(
-                  _model.currentLobby!.meetingPlace == null
-                      ? 'No Meeting Place'
-                      : _model.currentLobby!.meetingPlace!,
-                ),
-              ],
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -189,9 +184,9 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                   style: _textStyle,
                 ),
                 Text(
-                  _model.currentLobby!.budget == null
+                  _model.currentLobby!.expense == null
                       ? 'No Budget'
-                      : "₱" + _model.totalBudget().toString(),
+                      : '₱${_model.currentLobby?.expense?.total}',
                 )
               ],
             ),
@@ -202,93 +197,79 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
   }
 
   Widget expenses() {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            if (_model.currentLobby!.budget?.keys == null ||
-                _model.currentLobby!.budget?.values == null)
-              Text(
-                'No Budget Plans yet',
-                style: _textStyle,
-              )
-            else
-              ListView.separated(
-                shrinkWrap: true,
-                itemCount: _model.currentLobby!.budget!.length,
-                separatorBuilder: (context, index) => Divider(
-                  height: 10,
-                ),
-                itemBuilder: (context, index) {
-                  // List<String> budgetCategories =
-                  //     _model.currentLobby!.budget!.keys.toList();
-                  // List<double> budgetExpenses =
-                  //     _model.currentLobby!.budget!.values.toList();
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Text("${budgetCategories[index]}"),
-                      // Text("₱${budgetExpenses[index]}"),
-                    ],
-                  );
-                },
-              ),
-          ],
+    if (_model.currentLobby?.expense?.items == null)
+      return Text(
+        'No Budget Plans yet',
+        style: _textStyle,
+      );
+    else {
+      final label = _model.currentLobby?.expense?.items?.keys.toList();
+      final value = _model.currentLobby?.expense?.items?.values.toList();
+      return ListView.separated(
+        shrinkWrap: true,
+        itemCount: _model.currentLobby!.expense!.items!.length,
+        separatorBuilder: (context, index) => Divider(
+          height: 10,
         ),
-      ),
-    );
+        itemBuilder: (context, index) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${label?[index]}"),
+              Text("₱${value?[index]}"),
+            ],
+          );
+        },
+      );
+    }
   }
 
   Widget polls() {
     return Card(
-      child: Container(
-        width: double.infinity,
-        child: Column(
-          children: [
-            if (_model.currentLobby!.poll!.length == 0)
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  'No polls have been concluded yet.',
-                  style: _textStyle,
-                ),
-              )
-            else
-              ListView.separated(
-                shrinkWrap: true,
-                itemCount: _model.currentLobby!.poll!.length,
-                separatorBuilder: (context, index) => Divider(),
-                itemBuilder: (context, index) {
-                  PollModel poll = _model.currentLobby!.poll![index];
-                  var highestChoice = highestCount(poll.choices!);
-
-                  return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("${poll.question}"),
-                        Text(
-                          '${highestChoice['title']}',
-                        ),
-                      ],
-                    ),
-                  );
-                },
+      child: Column(
+        children: [
+          if (_model.currentLobby!.poll!.length == 0)
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                'No polls have been concluded yet.',
+                style: _textStyle,
               ),
-          ],
-        ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              itemCount: _model.currentLobby!.poll!.length,
+              separatorBuilder: (context, index) => Divider(),
+              itemBuilder: (context, index) {
+                PollModel poll = _model.currentLobby!.poll![index];
+                final highestChoice = highestCount(poll.choices!);
+
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("${poll.question}"),
+                      Text(
+                        '${highestChoice['title']} : ${highestChoice['voters'].length}',
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+        ],
       ),
     );
   }
 
   Map<String, dynamic> highestCount(List<dynamic> choices) {
-    Map<String, dynamic> highest = {'title': '', 'count': 0};
+    Map<String, dynamic> highest = {'title': '', 'voters': []};
 
-    // choices.forEach((choice) {
-    //   if (choice['count'] >= highest['count']) highest = choice;
-    // });
+    choices.forEach((choice) {
+      if (choice['voters'].length >= highest['voters'].length) highest = choice;
+    });
     return highest;
   }
 }

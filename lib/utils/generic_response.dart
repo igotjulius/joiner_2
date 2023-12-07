@@ -25,7 +25,6 @@ class ResponseModel<T> {
   ResponseModel({this.code, this.data, this.message});
 
   static T? _fromJson<T>(Object? json) {
-    print(json);
     var converted;
     if (json is Map<String, dynamic>) {
       if (json.containsKey('friends'))

@@ -15,7 +15,6 @@ class CarItemWidget extends StatefulWidget {
 }
 
 class _CarItemWidgetState extends State<CarItemWidget> {
-  String? selectedAvailability;
   late CarItemModel _model;
 
   @override
@@ -49,9 +48,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                 Text("${widget.car.licensePlate}",
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(
-                  widget.car.availability!.isAvailable!
-                      ? 'Available'
-                      : 'Unavailable',
+                  widget.car.isAvailable! ? 'Available' : 'Unavailable',
                 ),
               ],
             ),

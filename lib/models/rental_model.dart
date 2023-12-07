@@ -6,8 +6,6 @@ part 'rental_model.g.dart';
 class RentalModel {
   @JsonKey(
     name: '_id',
-    includeFromJson: true,
-    includeToJson: false,
   )
   final String? id;
   final String? licensePlate;
@@ -19,8 +17,7 @@ class RentalModel {
   final int? duration;
   final String? rentalStatus;
   final double? price;
-  final String? paymentId;
-  final String? paymentStatus;
+  final String? linkedLobbyId;
   final DateTime? createdAt;
 
   const RentalModel({
@@ -34,8 +31,7 @@ class RentalModel {
     this.duration,
     this.rentalStatus,
     this.price,
-    this.paymentId,
-    this.paymentStatus,
+    this.linkedLobbyId,
     this.createdAt,
   });
 

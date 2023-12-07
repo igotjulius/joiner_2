@@ -8,7 +8,7 @@ import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
 import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
-import 'package:joiner_1/pages/shared_pages/rental_details/cra_rental_details_widget.dart';
+import 'package:joiner_1/pages/shared_pages/rental_details/rental_details_widget.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
