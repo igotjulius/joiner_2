@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/components/cra/car_item_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/utils.dart';
@@ -15,13 +14,9 @@ class CarItemWidget extends StatefulWidget {
 }
 
 class _CarItemWidgetState extends State<CarItemWidget> {
-  late CarItemModel _model;
-
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CarItemModel());
-    _model.priceInput = TextEditingController();
   }
 
   @override
@@ -48,7 +43,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                 Text("${widget.car.licensePlate}",
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(
-                  widget.car.isAvailable! ? 'Available' : 'Unavailable',
+                  widget.car.availability!,
                 ),
               ],
             ),

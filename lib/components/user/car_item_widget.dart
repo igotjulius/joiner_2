@@ -1,25 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/components/user/car_item_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 
-class CarItemWidget extends StatefulWidget {
+class CarItemWidget extends StatelessWidget {
   final CarModel? car;
   const CarItemWidget({super.key, required this.car});
-
-  @override
-  _CarItemWidgetState createState() => _CarItemWidgetState();
-}
-
-class _CarItemWidgetState extends State<CarItemWidget> {
-  late CarItemModel _model;
-
-  @override
-  void initState() {
-    super.initState();
-    _model = createModel(context, () => CarItemModel());
-    _model.car = widget.car;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +12,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
       onTap: () async {
         context.pushNamed(
           'Booking',
-          extra: {'car': widget.car},
+          extra: {'car': car},
         );
       },
       child: Container(
@@ -48,7 +33,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
-                    widget.car!.vehicleType!,
+                    car!.vehicleType!,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -59,7 +44,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: Image.network(
-                    widget.car!.photoUrl!.first,
+                    car!.photoUrl!.first,
                     width: 150.0,
                     height: 100.0,
                     fit: BoxFit.fill,
@@ -74,8 +59,9 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                         Row(
                           children: [
                             Text(
-                              "₱${widget.car!.price}0",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                              "₱${car!.price}0",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                             Text('/ day'),
                           ].divide(

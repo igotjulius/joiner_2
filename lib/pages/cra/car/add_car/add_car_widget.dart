@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_model.dart';
 import 'package:joiner_1/utils/image_handler.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class AddCarWidget extends StatefulWidget {
@@ -26,13 +27,18 @@ class _AddCarWidgetState extends State<AddCarWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => AddCarModel());
-
+    _model = AddCarModel();
     _model.licenseController ??= TextEditingController();
     _model.vehicleTypeController ??= TextEditingController();
     _model.datesController ??= TextEditingController();
     _model.priceController ??= TextEditingController();
     _model.imagePicker = PickedImages();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _model.dispose();
   }
 
   @override
@@ -72,41 +78,55 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate() &&
                           _model.imagePicker!.getImages() != null) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              contentPadding: EdgeInsets.all(20),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (_model.imagePicker != null)
-                                    _model.registerCar(),
-                                ],
-                              ),
-                              actions: [
-                                FilledButton(
-                                  onPressed: () {
-                                    if (_model.isSuccessful!) {
-                                      _model.imagePicker = null;
-                                      context.goNamed('Cars');
-                                    } else {
-                                      context.pop();
-                                    }
-                                  },
-                                  child: Text('OK'),
-                                ),
-                              ],
+                        showDialogLoading(context);
+                        _model.register().then((value) {
+                          if (value != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              showError(
+                                  value, Theme.of(context).colorScheme.error),
                             );
-                          },
-                        );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              showSuccess('Car registered successfully'),
+                            );
+                          }
+                          context.pop();
+                        });
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (context) {
+                        //     return AlertDialog(
+                        //       contentPadding: EdgeInsets.all(20),
+                        //       content: Column(
+                        //         mainAxisSize: MainAxisSize.min,
+                        //         children: [
+                        //           if (_model.imagePicker != null)
+                        //             _model.registerCar(),
+                        //         ],
+                        //       ),
+                        //       actions: [
+                        //         FilledButton(
+                        //           onPressed: () {
+                        //             if (_model.isSuccessful!) {
+                        //               _model.imagePicker = null;
+                        //               context.goNamed('Cars');
+                        //             } else {
+                        //               context.pop();
+                        //             }
+                        //           },
+                        //           child: Text('OK'),
+                        //         ),
+                        //       ],
+                        //     );
+                        //   },
+                        // );
                       }
-
                       imagePickerError =
                           _model.imagePicker!.getImages() == null ||
                                   _model.imagePicker!.getImages()!.isEmpty
                               ? 'Please upload an image of your car'
                               : null;
+                      setState(() {});
                     },
                     child: Text('Register Car'),
                   ),
@@ -128,7 +148,10 @@ class _AddCarWidgetState extends State<AddCarWidget> {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Text('Available Dates'),
+          child: Text(
+            'Available Dates',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
         ),
         SizedBox(
           height: 4,

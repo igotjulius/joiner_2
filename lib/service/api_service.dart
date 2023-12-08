@@ -336,7 +336,7 @@ abstract class ApiService {
     @Part() required String ownerId,
     @Part() required String ownerName,
     @Part() required String vehicleType,
-    @Part() required bool isAvailable,
+    @Part() required String availability,
     @Part() required String startDate,
     @Part() required String endDate,
     @Part() required double price,
@@ -351,7 +351,7 @@ abstract class ApiService {
     @Path('licensePlate') String carLicensePlate, {
     @Part() required String licensePlate,
     @Part() required String vehicleType,
-    @Part() required bool isAvailable,
+    @Part() required String availability,
     @Part() required String startDate,
     @Part() required String endDate,
     @Part() required double price,

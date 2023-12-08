@@ -6,37 +6,34 @@ import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/image_handler.dart';
-import 'package:joiner_1/utils/utils.dart';
 
-class EditCarModel extends FlutterFlowModel {
+class EditCarModel {
   CarModel? car;
-  String? licensePlate;
   DateTimeRange? datePicked;
   String? availability;
+  String? vehicleType;
   TextEditingController? datesController;
-  TextEditingController? licenseController;
-  TextEditingController? vehicleTypeController;
   TextEditingController? priceController;
   PickedImages? imagePicker;
-  bool? isSuccessful;
 
-  @override
-  void initState(BuildContext context) {}
-
-  @override
-  void dispose() {}
-
-  void initializeControllers() {
-    availability = car!.isAvailable! ? 'Available' : 'Unavailable';
-    licenseController ??= TextEditingController();
-    licenseController!.text = car!.licensePlate!;
-    vehicleTypeController ??= TextEditingController();
-    vehicleTypeController!.text = car!.vehicleType!;
+  EditCarModel(CarModel _car) {
+    this.car = _car;
+    availability =
+        car?.availability == 'Available' ? 'Available' : 'Unavailable';
+    vehicleType = car?.vehicleType;
     priceController ??= TextEditingController();
-    priceController!.text = car!.price.toString();
+    priceController?.text = car!.price.toString();
     datesController ??= TextEditingController();
-    datesController!.text =
+    datesController?.text =
         '${DateFormat('MMM d').format(car!.startDate!)} - ${DateFormat('MMM d').format(car!.endDate!)}';
+    datePicked = DateTimeRange(start: car!.startDate!, end: car!.endDate!);
+    imagePicker = PickedImages();
+  }
+
+  void dispose() {
+    datesController?.dispose();
+    priceController?.dispose();
+    imagePicker = null;
   }
 
   // Converts picked files to a MultipartFile for sending to the server
@@ -55,7 +52,7 @@ class EditCarModel extends FlutterFlowModel {
     return multipartFiles;
   }
 
-  FutureBuilder<String?> editCar() {
+  Future<String?> editCar() async {
     if (datePicked == null) {
       datePicked = DateTimeRange(
         start: car!.startDate!,
@@ -63,60 +60,14 @@ class EditCarModel extends FlutterFlowModel {
       );
     }
     final uCar = CarModel(
-      licensePlate: licenseController!.text,
-      vehicleType: vehicleTypeController!.text,
-      isAvailable: availability == 'Available' ? true : false,
+      licensePlate: car!.licensePlate!,
+      vehicleType: vehicleType,
+      availability: availability,
       startDate: datePicked?.start,
       endDate: datePicked?.end,
       price: double.parse(priceController!.text),
     );
 
-    return FutureBuilder(
-      future: CraController.editCar(uCar, imagePicker!.getImages()),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done)
-          return CircularProgressIndicator();
-
-        isSuccessful = true;
-        return Column(
-          children: [
-            Image.asset(
-              'assets/images/successful-payment.png',
-              height: 60,
-              width: 60,
-            ),
-            Text(
-              'Car details updated.',
-              textAlign: TextAlign.center,
-            ),
-          ].divide(
-            SizedBox(
-              height: 8,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<CarModel?> fetchCar() async {
-    return await CraController.getCraCar(licensePlate!);
-  }
-
-  /// Validators
-  String? licenseValidator(String? value) {
-    return isEmpty(value);
-  }
-
-  String? vehicleTypeValidator(String? value) {
-    return isEmpty(value);
-  }
-
-  String? datesValidator(String? value) {
-    return isEmpty(value);
-  }
-
-  String? priceValidator(String? value) {
-    return isEmpty(value);
+    return await CraController.editCar(uCar, imagePicker!.getImages());
   }
 }

@@ -195,7 +195,6 @@ List<FFRoute> craRoutes() {
             final obj = state.extraMap['car'] ??= null;
             return EditCarWidget(
               car: obj,
-              licensePlate: state.pathParameters['licensePlate'],
             );
           },
         ),

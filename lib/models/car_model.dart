@@ -8,7 +8,7 @@ class CarModel {
   final String? ownerName;
   final String? ownerId;
   final String? vehicleType;
-  final bool? isAvailable;
+  final String? availability;
   final DateTime? startDate;
   final DateTime? endDate;
   final double? price;
@@ -19,7 +19,7 @@ class CarModel {
     this.ownerId,
     this.ownerName,
     this.vehicleType,
-    this.isAvailable,
+    this.availability,
     this.startDate,
     this.endDate,
     this.price,

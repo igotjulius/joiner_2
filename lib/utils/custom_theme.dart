@@ -114,6 +114,9 @@ ThemeData lightTheme(BuildContext context) {
       elevation: 4,
       constraints: BoxConstraints.expand(),
     ),
+    dropdownMenuTheme: DropdownMenuThemeData(
+      textStyle: textTheme().bodyMedium,
+    ),
   );
 }
 

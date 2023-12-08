@@ -7,15 +7,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_model.dart';
-import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/info_container.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class EditCarWidget extends StatefulWidget {
   final CarModel? car;
-  final String? licensePlate;
-  const EditCarWidget({super.key, this.car, this.licensePlate});
+  const EditCarWidget({super.key, this.car});
 
   @override
   State<EditCarWidget> createState() => _EditCarWidgetState();
@@ -25,15 +23,19 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   late EditCarModel _model;
   String? imagePickerError;
   final _formKey = GlobalKey<FormState>();
+  bool isEnabled = true;
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => EditCarModel());
-    _model.licensePlate = widget.licensePlate;
-    _model.car = widget.car;
-    if (_model.car != null) _model.initializeControllers();
-    _model.imagePicker = PickedImages();
+    _model = EditCarModel(widget.car!);
+    isEnabled = widget.car?.availability == 'On rent' ? false : true;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _model.dispose();
   }
 
   @override
@@ -45,52 +47,44 @@ class _EditCarWidgetState extends State<EditCarWidget> {
           color: Colors.black,
         ),
         title: Text('Details'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: FilledButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        contentPadding: EdgeInsets.all(20),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (_model.isSuccessful == null) _model.editCar(),
-                          ],
-                        ),
-                        actions: [
-                          FilledButton(
-                            onPressed: () async {
-                              if (_model.isSuccessful!) {
-                                await CachedNetworkImage.evictFromCache(
-                                    getImageUrl(widget.car!.photoUrl![0]));
-                                context.goNamed('Cars');
-                              }
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
+        actions: !isEnabled
+            ? null
+            : [
+                Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: FilledButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        showDialogLoading(context);
+                        _model.editCar().then(
+                          (value) {
+                            if (value != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                showError(
+                                    value, Theme.of(context).colorScheme.error),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                showSuccess('Changes saved'),
+                              );
+                            }
+                            context.pop();
+                          },
+                        );
+                      }
                     },
-                  );
-                }
-              },
-              child: Text('Save changes'),
-            ),
-          ),
-        ],
+                    child: Text('Save changes'),
+                  ),
+                ),
+              ],
       ),
       body: SingleChildScrollView(
-        child: widget.car != null ? mainDisplay(context) : fetchCar(),
+        child: mainDisplay(),
       ),
     );
   }
 
-  Widget mainDisplay(BuildContext context) {
+  Widget mainDisplay() {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Form(
@@ -100,24 +94,23 @@ class _EditCarWidgetState extends State<EditCarWidget> {
           children: [
             info(),
             imagePicker(),
-            availability(),
-            CustomTextInput(
-              label: 'License Plate',
-              controller: _model.licenseController,
-              validator: _model.licenseValidator,
-              enabled: false,
+            Text(
+              'License plate',
+              style: Theme.of(context).textTheme.titleSmall,
             ),
-            CustomTextInput(
-              label: 'Vehicle Type',
-              controller: _model.vehicleTypeController,
-              validator: _model.vehicleTypeValidator,
+            Text(
+              _model.car!.licensePlate!,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-            datePicker(context),
-            CustomTextInput(
-              label: 'Price',
-              controller: _model.priceController,
-              validator: _model.priceValidator,
+            Row(
+              children: [
+                availability(),
+                SizedBox(width: 20),
+                vehicleType(),
+              ],
             ),
+            displayPrice(),
+            datePicker(),
           ].divide(
             SizedBox(
               height: 10,
@@ -126,6 +119,29 @@ class _EditCarWidgetState extends State<EditCarWidget> {
         ),
       ),
     );
+  }
+
+  Widget displayPrice() {
+    if (isEnabled) {
+      return CustomTextInput(
+        label: 'Price',
+        controller: _model.priceController,
+        validator: isEmpty,
+      );
+    } else {
+      return Column(
+        children: [
+          Text(
+            'Price',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          Text(
+            _model.car!.price.toString(),
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ],
+      );
+    }
   }
 
   Widget info() {
@@ -146,7 +162,9 @@ class _EditCarWidgetState extends State<EditCarWidget> {
             ),
             Flexible(
               child: Text(
-                'Click the image if you want to upload new set of images.',
+                isEnabled
+                    ? 'Click the image if you want to upload new set of images.'
+                    : 'Vehicles on rent can not be edited.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                     ),
@@ -159,45 +177,68 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   }
 
   Widget availability() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Availability'),
-            DropdownMenu<String>(
-              enableSearch: false,
-              requestFocusOnTap: false,
-              initialSelection: _model.availability,
-              dropdownMenuEntries: <String>['Available', 'Unavailable']
-                  .map((value) => DropdownMenuEntry<String>(
-                        value: value,
-                        label: value,
-                      ))
-                  .toList(),
-              onSelected: (value) {
-                _model.availability = value;
-              },
-            ),
-          ],
+        Text(
+          'Availability',
+          style: Theme.of(context).textTheme.titleSmall,
         ),
+        SizedBox(height: 4),
+        !isEnabled
+            ? Text(
+                _model.car!.availability!,
+                style: Theme.of(context).textTheme.bodyLarge,
+              )
+            : DropdownMenu<String>(
+                enabled: isEnabled,
+                enableSearch: false,
+                requestFocusOnTap: false,
+                initialSelection: _model.availability,
+                dropdownMenuEntries: <String>['Available', 'Unavailable']
+                    .map((value) => DropdownMenuEntry<String>(
+                          value: value,
+                          label: value,
+                        ))
+                    .toList(),
+                onSelected: (value) {
+                  _model.availability = value;
+                },
+              ),
       ],
     );
   }
 
-  FutureBuilder<CarModel?> fetchCar() {
-    return FutureBuilder(
-      future: _model.fetchCar(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData)
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        _model.car = snapshot.data;
-        _model.initializeControllers();
-        return mainDisplay(context);
-      },
+  Widget vehicleType() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Vehicle Type',
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        SizedBox(height: 4),
+        !isEnabled
+            ? Text(
+                _model.car!.vehicleType!,
+                style: Theme.of(context).textTheme.bodyLarge,
+              )
+            : DropdownMenu<String>(
+                enabled: isEnabled,
+                enableSearch: false,
+                requestFocusOnTap: false,
+                initialSelection: _model.vehicleType,
+                dropdownMenuEntries: <String>['Sedan', 'Van', 'SUV']
+                    .map((value) => DropdownMenuEntry<String>(
+                          value: value,
+                          label: value,
+                        ))
+                    .toList(),
+                onSelected: (value) {
+                  _model.vehicleType = value;
+                },
+              ),
+      ],
     );
   }
 
@@ -206,10 +247,13 @@ class _EditCarWidgetState extends State<EditCarWidget> {
       children: [
         Card(
           child: InkWell(
-            onTap: () async {
-              imagePickerError = await _model.imagePicker!.selectImages();
-              setState(() {});
-            },
+            hoverColor: isEnabled ? null : Colors.transparent,
+            onTap: !isEnabled
+                ? null
+                : () async {
+                    imagePickerError = await _model.imagePicker!.selectImages();
+                    setState(() {});
+                  },
             child: imageCarousel(),
           ),
         ),
@@ -283,51 +327,63 @@ class _EditCarWidgetState extends State<EditCarWidget> {
     );
   }
 
-  Widget datePicker(BuildContext context) {
+  Widget datePicker() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Text('Available Dates'),
+          child: Text(
+            'Available Dates',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
         ),
         SizedBox(
           height: 4,
         ),
-        InkWell(
-          onTap: () async {
-            _model.datePicked = await showDateRangePicker(
-              context: context,
-              firstDate: getCurrentTimestamp,
-              lastDate: DateTime(2050),
-            );
+        !isEnabled
+            ? Text(
+                '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}',
+                style: Theme.of(context).textTheme.bodyLarge,
+              )
+            : InkWell(
+                hoverColor: isEnabled ? null : Colors.transparent,
+                onTap: !isEnabled
+                    ? null
+                    : () async {
+                        _model.datePicked = await showDateRangePicker(
+                          context: context,
+                          firstDate: getCurrentTimestamp,
+                          lastDate: DateTime(2050),
+                        );
 
-            if (_model.datePicked != null) {
-              setState(() {
-                _model.datesController.text =
-                    '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
-              });
-            }
-          },
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              inputDecorationTheme:
-                  Theme.of(context).inputDecorationTheme.copyWith(
-                        disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                      ),
-            ),
-            child: CustomTextInput(
-              key: ValueKey(_model.datesController.text),
-              controller: _model.datesController,
-              validator: _model.datesValidator,
-              prefixIcon: Icon(
-                Icons.calendar_today_rounded,
+                        if (_model.datePicked != null) {
+                          setState(() {
+                            _model.datesController.text =
+                                '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
+                          });
+                        }
+                      },
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    inputDecorationTheme:
+                        Theme.of(context).inputDecorationTheme.copyWith(
+                              disabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                  ),
+                  child: CustomTextInput(
+                    key: ValueKey(_model.datesController.text),
+                    controller: _model.datesController,
+                    validator: isEmpty,
+                    prefixIcon: Icon(
+                      Icons.calendar_today_rounded,
+                    ),
+                    enabled: false,
+                  ),
+                ),
               ),
-              enabled: false,
-            ),
-          ),
-        ),
       ],
     );
   }
