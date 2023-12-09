@@ -7,14 +7,7 @@
             "deviceId": "chrome",
             "type": "dart",
             "request": "launch",
-            "args": [
-                "-d",
-                "chrome",
-                "--web-port",
-                "3000",
-                "--web-renderer",
-                 "html"
-            ]
+            "args": ["-d", "chrome", "--web-port", "3000", "--web-renderer", "canvaskit"]
         }
     ]
 }
