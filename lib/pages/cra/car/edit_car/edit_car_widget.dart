@@ -3,8 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:intl/intl.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_model.dart';
 import 'package:joiner_1/utils/utils.dart';
@@ -359,7 +360,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
 
                         if (_model.datePicked != null) {
                           setState(() {
-                            _model.datesController.text =
+                            _model.datesController?.text =
                                 '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
                           });
                         }
@@ -374,7 +375,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                             ),
                   ),
                   child: CustomTextInput(
-                    key: ValueKey(_model.datesController.text),
+                    key: ValueKey(_model.datesController?.text),
                     controller: _model.datesController,
                     validator: isEmpty,
                     prefixIcon: Icon(

@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
-class LoginPageModel extends FlutterFlowModel {
+class LoginPageModel {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
@@ -23,10 +23,6 @@ class LoginPageModel extends FlutterFlowModel {
   TextEditingController? emailController;
   // State field(s) for TextField widget.
   TextEditingController? passwordController;
-
-  /// Initialization and disposal methods.co
-
-  void initState(BuildContext context) {}
 
   void dispose() {
     unfocusNode.dispose();

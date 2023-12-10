@@ -1,4 +1,4 @@
-import 'package:joiner_1/widgets/atoms/promos_list.dart';
+import 'package:joiner_1/pages/user/dashboard/promo_list/promos_list.dart';
 import 'package:provider/provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';

@@ -6,16 +6,14 @@ import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/widgets/molecules/cra_sign_up_mole.dart';
 import 'package:joiner_1/widgets/molecules/user_sign_up_mole.dart';
 
-class SignUpPageModel extends FlutterFlowModel {
+class SignUpPageModel {
   TabController? tabController;
   late UserSignUpMoleModel userModel;
   late CraSignUpMoleModel craModel;
 
-  @override
-  void initState(BuildContext context) {}
-
-  @override
-  void dispose() {}
+  void dispose() {
+    tabController?.dispose();
+  }
 
   Future<String?> signUp() async {
     late User nUser;

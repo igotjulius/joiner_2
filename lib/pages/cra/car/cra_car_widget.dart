@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:joiner_1/components/cra/car_item_widget.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_model.dart';
 import 'package:joiner_1/utils/utils.dart';
@@ -20,7 +20,7 @@ class _CraCarWidgetState extends State<CraCarWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CraCarModel());
+    _model = CraCarModel();
     _fetchCars = CraController.getCraCars();
   }
 

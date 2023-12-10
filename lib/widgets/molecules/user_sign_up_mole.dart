@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +73,7 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
   }
 }
 
-class UserSignUpMoleModel extends FlutterFlowModel {
+class UserSignUpMoleModel {
   TextEditingController? fNameController;
   TextEditingController? lNameController;
   TextEditingController? emailController;
@@ -82,8 +81,7 @@ class UserSignUpMoleModel extends FlutterFlowModel {
   TextEditingController? confirmPassController;
   String? emailError;
 
-  @override
-  void initState(BuildContext context) {
+  void initState() {
     fNameController ??= TextEditingController();
     lNameController ??= TextEditingController();
     emailController ??= TextEditingController();
@@ -91,7 +89,6 @@ class UserSignUpMoleModel extends FlutterFlowModel {
     confirmPassController ??= TextEditingController();
   }
 
-  @override
   void dispose() {
     fNameController?.dispose();
     lNameController?.dispose();

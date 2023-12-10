@@ -16,6 +16,18 @@ class _PromosListState extends State<PromosList> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Still looking?'),
+                TextButton(
+                  onPressed: () {
+                    context.pushNamed('BrowseMap');
+                  },
+                  child: Text('Browse Map'),
+                ),
+              ],
+            ),
             promos(
               'assets/images/car_rental.jpg',
               'Car Rentals',

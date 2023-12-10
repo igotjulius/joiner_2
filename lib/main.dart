@@ -1,4 +1,3 @@
-import 'package:go_router/go_router.dart';
 import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/flutter_flow/nav/nav.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
@@ -9,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-// import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'index.dart';
@@ -24,26 +22,26 @@ void main() async {
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
-  // runApp(
-  //   MultiProvider(
-  //     providers: [
-  //       ChangeNotifierProvider.value(
-  //         value: appState,
-  //       ),
-  //       ChangeNotifierProvider(
-  //         create: (context) => AppStateNotifier.instance,
-  //       ),
-  //     ],
-  //     child: MyApp(),
-  //   ),
-  // );
   runApp(
-    MaterialApp(
-      home: Scaffold(
-        body: MapFeature(),
-      ),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: appState,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AppStateNotifier.instance,
+        ),
+      ],
+      child: MyApp(),
     ),
   );
+  // runApp(
+  //   MaterialApp(
+  //     home: Scaffold(
+  //       body: MapFeature(),
+  //     ),
+  //   ),
+  // );
 }
 
 class MyApp extends StatefulWidget {

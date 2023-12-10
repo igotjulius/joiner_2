@@ -1,6 +1,5 @@
+import 'package:go_router/go_router.dart';
 import 'package:joiner_1/utils/utils.dart';
-
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'login_page_model.dart';
 export 'login_page_model.dart';
@@ -22,7 +21,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LoginPageModel());
+    _model = LoginPageModel();
 
     _model.emailController ??= TextEditingController();
     _model.passwordController ??= TextEditingController();

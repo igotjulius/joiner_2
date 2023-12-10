@@ -25,8 +25,6 @@ class LobbyCreationModel extends FlutterFlowModel {
   TextEditingController? budgetInput;
   String? Function(String?)? budgetInputValidator;
   // State field(s) for TextField widget.
-  TextEditingController? meetingInput;
-  String? Function(String?)? meetingInputValidator;
 
   /// Initialization and disposal methods.
 
@@ -37,7 +35,6 @@ class LobbyCreationModel extends FlutterFlowModel {
     titleInput?.dispose();
     destInput?.dispose();
     budgetInput?.dispose();
-    meetingInput?.dispose();
   }
 
   /// Action blocks are added here.

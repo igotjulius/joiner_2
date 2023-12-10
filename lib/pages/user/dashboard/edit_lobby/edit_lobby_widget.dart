@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/utils/utils.dart';
@@ -211,8 +213,8 @@ class EditLobbyModel {
   Future<LobbyModel?> editLobby() async {
     final uLobby = LobbyModel(
       id: currentLobby?.id,
-      title: titleInput.text,
-      destination: destInput.text,
+      title: titleInput?.text,
+      destination: destInput?.text,
       startDate: datePicked?.start,
       endDate: datePicked?.end,
     );

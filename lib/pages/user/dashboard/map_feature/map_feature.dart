@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:collection/collection.dart';
 
 class MapFeature extends StatefulWidget {
   const MapFeature({super.key});
@@ -14,12 +15,8 @@ class MapFeatureState extends State<MapFeature> {
       'pk.eyJ1Ijoiam9pbmVyIiwiYSI6ImNsbWN6eHpkeTE0dGczZG1iOGZlb2drdnUifQ.7R0izGL1KjW64Un0DeC8Gg';
   MapboxMapController? _mapController;
   String _mapStyle = 'mapbox://styles/joiner/clmemo810014b01r8h9ps0et3';
-  List<Object>? _featureQueryFilter = [
-    "!=",
-    ["get", "type"],
-    "zoo",
-  ];
-  Fill? _selectedFill;
+  String? _featureName;
+  String? _featureType;
 
   void _onMapCreated(MapboxMapController controller) {
     _mapController = controller;
@@ -36,44 +33,16 @@ class MapFeatureState extends State<MapFeature> {
     ));
   }
 
-  void _clearFill() {
-    if (_selectedFill != null) {
-      _mapController!.removeFill(_selectedFill!);
-      setState(() {
-        _selectedFill = null;
-      });
-    }
-  }
-
-  void _drawFill(List<dynamic> features) async {
-    Map<String, dynamic>? feature = features.firstWhereOrNull((f) {
-      return f['geometry']['type'] == 'Polygon';
-    });
-    if (feature != null) {
-      List<List<LatLng>> geometry = feature['geometry']['coordinates']
-          .map(
-              (ll) => ll.map((l) => LatLng(l[1], l[0])).toList().cast<LatLng>())
-          .toList()
-          .cast<List<LatLng>>();
-      Fill fill = await _mapController!.addFill(FillOptions(
-        geometry: geometry,
-        fillColor: "#FF0000",
-        fillOutlineColor: "#FF0000",
-        fillOpacity: 0.6,
-      ));
-      setState(() {
-        _selectedFill = fill;
-      });
-    }
-  }
-
   void _onFeatureClick(Map<String, dynamic> feature) {
     final [longitude, latitude] = feature['geometry']['coordinates'];
     print(feature);
+    _featureName = feature['properties']['name'];
+    _featureType = feature['properties']['type'];
     _mapController!.animateCamera(
       CameraUpdate.newCameraPosition(
+        // lat - value -> offset from top, long + value -> offset from right
         CameraPosition(
-          target: LatLng(latitude, longitude),
+          target: LatLng(latitude, longitude + 0.08),
           zoom: _mapController!.cameraPosition!.zoom,
         ),
       ),
@@ -84,31 +53,66 @@ class MapFeatureState extends State<MapFeature> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanUpdate: (drag) {
-        setState(() {
-          _showSelection = false;
-        });
-      },
-      child: Stack(
-        children: [
-          mapboxMap(),
-          if (_showSelection)
-            Positioned.fill(
-              bottom: -160,
-              child: Align(
-                alignment: Alignment.center,
-                child: Card(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Create a plan and set this as your destination'),
-                    ],
+    return Scaffold(
+      appBar: AppBar(),
+      body: GestureDetector(
+        onPanUpdate: (drag) {
+          setState(() {
+            _showSelection = false;
+          });
+        },
+        child: Stack(
+          children: [
+            mapboxMap(),
+            if (_showSelection)
+              Positioned.fill(
+                bottom: -160,
+                right: -100,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    height: 240,
+                    width: 260,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(_featureName!),
+                            Text(_featureType!),
+                            Text(
+                              'Create a plan',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            Text(
+                              'Set this as your destination',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            SizedBox(
+                              width: double.maxFinite,
+                              child: TextButton(
+                                onPressed: () {
+                                  context.pushNamed('LobbyCreation',
+                                      extra: {'destination': _featureName});
+                                },
+                                child: Text('Create lobby'),
+                              ),
+                            ),
+                          ].divide(
+                            SizedBox(
+                              height: 4,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -130,8 +134,7 @@ class MapFeatureState extends State<MapFeature> {
         List features = await _mapController!
             .queryRenderedFeatures(point, ["poi-label"], null);
 
-        _clearFill();
-        if (features.isEmpty && _featureQueryFilter != null) {
+        if (features.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('QueryRenderedFeatures: No features found!')));
         } else if (features.isNotEmpty) {
@@ -139,7 +142,6 @@ class MapFeatureState extends State<MapFeature> {
             _showSelection = true;
           });
           _onFeatureClick(features[0]);
-          _drawFill(features);
         }
       },
     );

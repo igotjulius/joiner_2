@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +74,7 @@ class _CraSignUpMoleState extends State<CraSignUpMole> {
   }
 }
 
-class CraSignUpMoleModel extends FlutterFlowModel {
+class CraSignUpMoleModel {
   TextEditingController? fNameController;
   TextEditingController? lNameController;
   TextEditingController? emailController;
@@ -84,8 +83,7 @@ class CraSignUpMoleModel extends FlutterFlowModel {
   TextEditingController? passwordController;
   TextEditingController? confirmPassController;
 
-  @override
-  void initState(BuildContext context) {
+  void initState() {
     fNameController ??= TextEditingController();
     lNameController ??= TextEditingController();
     emailController ??= TextEditingController();
@@ -95,7 +93,6 @@ class CraSignUpMoleModel extends FlutterFlowModel {
     confirmPassController ??= TextEditingController();
   }
 
-  @override
   void dispose() {
     fNameController?.dispose();
     lNameController?.dispose();

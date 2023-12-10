@@ -3,8 +3,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:intl/intl.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_model.dart';
 import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
@@ -165,7 +166,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
             );
             if (_model.datePicked != null)
               setState(() {
-                _model.datesController.text =
+                _model.datesController?.text =
                     '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
               });
           },

@@ -1,15 +1,15 @@
+import 'package:intl/intl.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'lobby_creation_model.dart';
 export 'lobby_creation_model.dart';
 
 class LobbyCreationWidget extends StatefulWidget {
-  const LobbyCreationWidget({Key? key}) : super(key: key);
+  final String? destination;
+  const LobbyCreationWidget({Key? key, this.destination}) : super(key: key);
 
   @override
   _LobbyCreationWidgetState createState() => _LobbyCreationWidgetState();
@@ -23,12 +23,11 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LobbyCreationModel());
+    _model = LobbyCreationModel();
 
     _model.titleInput ??= TextEditingController();
-    _model.destInput ??= TextEditingController();
+    _model.destInput ??= TextEditingController(text: widget.destination);
     _model.budgetInput ??= TextEditingController();
-    _model.meetingInput ??= TextEditingController();
   }
 
   @override
@@ -40,8 +39,6 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
@@ -64,8 +61,8 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                   child: Text('CREATE'),
                   onPressed: () async {
                     final lobby = LobbyModel(
-                      title: _model.titleInput.text,
-                      destination: _model.destInput.text,
+                      title: _model.titleInput?.text,
+                      destination: _model.destInput?.text,
                       startDate: _model.datePicked?.start,
                       endDate: _model.datePicked?.end,
                       participants: [],

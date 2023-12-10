@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:go_router/go_router.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/molecules/cra_sign_up_mole.dart';
@@ -22,10 +22,10 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SignUpPageModel());
-    _model.userModel = createModel(context, () => UserSignUpMoleModel());
+    _model = SignUpPageModel();
+    _model.userModel = UserSignUpMoleModel();
     _model.tabController ??= TabController(length: 2, vsync: this);
-    _model.craModel = createModel(context, () => CraSignUpMoleModel());
+    _model.craModel = CraSignUpMoleModel();
   }
 
   @override

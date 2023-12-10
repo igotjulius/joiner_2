@@ -10,6 +10,7 @@ import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rental_details/rental_details_widget.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/map_feature/map_feature.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
@@ -91,7 +92,17 @@ List<FFRoute> userRoutes() {
         GoRoute(
           name: 'LobbyCreation',
           path: 'create',
-          builder: ((context, state) => LobbyCreationWidget()),
+          builder: (context, state) {
+            final selectedDestination = state.extraMap['destination'];
+            return LobbyCreationWidget(
+              destination: selectedDestination,
+            );
+          },
+        ),
+        GoRoute(
+          name: 'BrowseMap',
+          path: 'browseMap',
+          builder: (context, state) => MapFeature(),
         ),
         GoRoute(
           name: 'Lobby',
