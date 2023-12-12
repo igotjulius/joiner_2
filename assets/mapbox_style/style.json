@@ -232,14 +232,7 @@
     "zoom": 14.03,
     "bearing": 0,
     "pitch": 0,
-    "fog": {
-        "range": [2, 20],
-        "color": "hsl(0, 0%, 100%)",
-        "high-color": "hsl(210, 100%, 80%)",
-        "space-color": ["interpolate", ["exponential", 1.2], ["zoom"], 5, "hsl(210, 40%, 30%)", 7, "hsl(210, 100%, 80%)"],
-        "horizon-blend": ["interpolate", ["exponential", 1.2], ["zoom"], 5, 0.02, 7, 0.08],
-        "star-intensity": ["interpolate", ["exponential", 1.2], ["zoom"], 5, 0.1, 7, 0]
-    },
+
     "sources": {
         "composite": {
             "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2,mapbox.mapbox-bathymetry-v2",
@@ -248,7 +241,7 @@
     },
     "sprite": "mapbox://sprites/joiner/clmemo810014b01r8h9ps0et3/6iqitl5z21pbbxxwuij8b59i2",
     "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
-    "projection": { "name": "globe" },
+
     "layers": [
         {
             "id": "land",

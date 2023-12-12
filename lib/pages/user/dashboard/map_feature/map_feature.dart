@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:joiner_1/utils/utils.dart';
 
 class MapFeature extends StatefulWidget {
   const MapFeature({super.key});
@@ -20,6 +21,10 @@ class MapFeatureState extends State<MapFeature> {
   double _maxZoom = 13;
   double _minZoom = 8;
   OfflineRegionDefinition? _offlineRegion;
+  LatLngBounds _region7 = LatLngBounds(
+    southwest: LatLng(9.281254344751304, 122.97505860213238),
+    northeast: LatLng(11.235728708626041, 124.3549413978684),
+  );
 
   @override
   void initState() {
@@ -43,8 +48,8 @@ class MapFeatureState extends State<MapFeature> {
     final [longitude, latitude] = feature['geometry']['coordinates'];
 
     _featureName = feature['properties']['name'];
-    _featureType = feature['properties']['type'];
-    print(_mapController?.cameraPosition?.zoom);
+    _featureType =
+        feature['properties']['type'] ?? feature['properties']['maki'];
     _mapController!.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -53,7 +58,11 @@ class MapFeatureState extends State<MapFeature> {
         ),
       ),
     );
-    showModalBottomSheet(
+    showModal();
+  }
+
+  Future<dynamic> showModal() {
+    return showModalBottomSheet(
       useSafeArea: true,
       context: context,
       builder: (context) {
@@ -71,7 +80,7 @@ class MapFeatureState extends State<MapFeature> {
                     ?.copyWith(fontWeight: FontWeight.w600),
               ),
               Text(
-                _featureType!,
+                _featureType!.toTitleCase(),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(
@@ -102,10 +111,6 @@ class MapFeatureState extends State<MapFeature> {
   }
 
   void _downloadRegion() async {
-    LatLngBounds _region7 = LatLngBounds(
-      southwest: LatLng(9.281254344751304, 122.97505860213238),
-      northeast: LatLng(11.235728708626041, 124.3549413978684),
-    );
     _offlineRegion = OfflineRegionDefinition(
       bounds: _region7,
       mapStyleUrl: _mapStyle,
@@ -115,17 +120,17 @@ class MapFeatureState extends State<MapFeature> {
     // final bounds = _offlineRegion!.bounds;
     // final lat = (bounds.southwest.latitude + bounds.northeast.latitude) / 2;
     // final long = (bounds.southwest.longitude + bounds.northeast.longitude) / 2;
-    await downloadOfflineRegion(_offlineRegion!,
-        accessToken: mapboxAccessToken);
+    try {
+      await downloadOfflineRegion(_offlineRegion!,
+          accessToken: mapboxAccessToken);
+    } catch (error) {
+      print('Error in downloading');
+    }
   }
 
   Widget mapboxMap() {
-    if (_offlineRegion == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
     return MapboxMap(
+      myLocationRenderMode: MyLocationRenderMode.NORMAL,
       styleString: _mapStyle,
       accessToken: mapboxAccessToken,
       onMapCreated: _onMapCreated,
@@ -133,11 +138,18 @@ class MapFeatureState extends State<MapFeature> {
       initialCameraPosition:
           const CameraPosition(target: LatLng(10.26, 123.665), zoom: 8),
       minMaxZoomPreference: MinMaxZoomPreference(8, 13),
-      cameraTargetBounds: CameraTargetBounds(_offlineRegion?.bounds),
+      cameraTargetBounds: CameraTargetBounds(_region7),
       trackCameraPosition: true,
       onMapClick: (point, latLng) async {
-        List features = await _mapController!
-            .queryRenderedFeatures(point, ["poi-label"], null);
+        List features = await _mapController!.queryRenderedFeatures(
+            point,
+            [
+              "poi-label",
+              "natural-point-label",
+              "settlement-major-label",
+              "settlement-minor-label",
+            ],
+            null);
         if (features.isNotEmpty) {
           _onFeatureClick(features[0]);
         }

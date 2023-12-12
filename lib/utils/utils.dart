@@ -31,6 +31,12 @@ String getImageUrl(String imageUrl) {
     return '$serverUrl$imageUrl';
 }
 
+extension StringExtension on String {
+  String toTitleCase() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
+  }
+}
+
 String? isEmpty(String? value) {
   if (value == null || value.trim().isEmpty) return 'Field is empty';
   return null;
