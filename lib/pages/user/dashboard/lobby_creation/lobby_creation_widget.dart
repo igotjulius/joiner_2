@@ -4,8 +4,6 @@ import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:flutter/material.dart';
-import 'lobby_creation_model.dart';
-export 'lobby_creation_model.dart';
 
 class LobbyCreationWidget extends StatefulWidget {
   final String? destination;
@@ -18,7 +16,8 @@ class LobbyCreationWidget extends StatefulWidget {
 class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
   late LobbyCreationModel _model;
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -42,7 +41,7 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
-        key: scaffoldKey,
+        key: _scaffoldKey,
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
           automaticallyImplyLeading: true,
@@ -60,14 +59,16 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                 child: TextButton(
                   child: Text('CREATE'),
                   onPressed: () async {
-                    final lobby = LobbyModel(
-                      title: _model.titleInput?.text,
-                      destination: _model.destInput?.text,
-                      startDate: _model.datePicked?.start,
-                      endDate: _model.datePicked?.end,
-                      participants: [],
-                    );
-                    await UserController.createLobby(lobby, context);
+                    if (_formKey.currentState!.validate()) {
+                      final lobby = LobbyModel(
+                        title: _model.titleInput?.text,
+                        destination: _model.destInput?.text,
+                        startDate: _model.datePicked?.start,
+                        endDate: _model.datePicked?.end,
+                        participants: [],
+                      );
+                      await UserController.createLobby(lobby, context);
+                    }
                   },
                 ),
               )
@@ -78,79 +79,107 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
           padding: const EdgeInsets.all(16.0),
           child: SafeArea(
             top: true,
-            child: ListView(
-              padding: EdgeInsets.zero,
-              primary: false,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              children: [
-                CustomTextInput(
-                  label: 'Title',
-                  controller: _model.titleInput,
-                  validator: isEmpty,
-                ),
-                CustomTextInput(
-                  label: 'Destination',
-                  controller: _model.destInput,
-                ),
-                Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Trip Date',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        _model.datePicked = await showDateRangePicker(
-                          context: context,
-                          firstDate: getCurrentTimestamp,
-                          lastDate: DateTime(2050),
-                        );
-                        if (_model.datePicked != null) {
-                          setState(() {});
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                primary: false,
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                children: [
+                  CustomTextInput(
+                    label: 'Title',
+                    controller: _model.titleInput,
+                    validator: isEmpty,
+                  ),
+                  CustomTextInput(
+                    label: 'Destination',
+                    controller: _model.destInput,
+                  ),
+                  Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Trip Date',
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 10),
-                              child: Icon(
-                                Icons.calendar_today,
-                                color: Color(0xFF52B2FA),
-                                size: 24.0,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          _model.datePicked = await showDateRangePicker(
+                            context: context,
+                            firstDate: getCurrentTimestamp,
+                            lastDate: DateTime(2050),
+                          );
+                          if (_model.datePicked != null) {
+                            setState(() {});
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 10),
+                                child: Icon(
+                                  Icons.calendar_today,
+                                  color: Color(0xFF52B2FA),
+                                  size: 24.0,
+                                ),
                               ),
-                            ),
-                            Text(
-                              _model.datePicked != null
-                                  ? (_model.datePicked!.duration.inDays == 0
-                                      ? "${DateFormat('MMM d').format(_model.datePicked!.start)}"
-                                      : "${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}")
-                                  : '',
-                            ),
-                          ].divide(SizedBox(width: 10.0)),
+                              Text(
+                                _model.datePicked != null
+                                    ? (_model.datePicked!.duration.inDays == 0
+                                        ? "${DateFormat('MMM d').format(_model.datePicked!.start)}"
+                                        : "${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}")
+                                    : '',
+                              ),
+                            ].divide(SizedBox(width: 10.0)),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ].divide(SizedBox(height: 10.0)),
+                    ],
+                  ),
+                ].divide(SizedBox(height: 10.0)),
+              ),
             ),
           ),
         ),
       ),
     );
   }
+}
+
+class LobbyCreationModel {
+  ///  State fields for stateful widgets in this page.
+
+  final unfocusNode = FocusNode();
+  DateTimeRange? datePicked;
+
+  // State field(s) for TextField widget.
+  TextEditingController? titleInput;
+  // State field(s) for TextField widget.
+  TextEditingController? destInput;
+  // State field(s) for TextField widget.
+  TextEditingController? budgetInput;
+
+  void dispose() {
+    unfocusNode.dispose();
+    titleInput?.dispose();
+    destInput?.dispose();
+    budgetInput?.dispose();
+  }
+
+  /// Action blocks are added here.
+
+  /// Additional helper methods are added here.
 }

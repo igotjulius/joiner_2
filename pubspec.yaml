@@ -66,7 +66,6 @@ dependencies:
     fluttertoast: ^8.2.4
     file_picker: ^6.1.1
     mapbox_gl: ^0.16.0
-    flutter_map: ^6.1.0
 
 dev_dependencies:
     flutter_test:
@@ -98,6 +97,7 @@ flutter:
         - assets/lottie_animations/
         - assets/rive_animations/
         - assets/pdfs/
+        - assets/mapbox_style/
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware.

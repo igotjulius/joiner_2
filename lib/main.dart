@@ -2,7 +2,6 @@ import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/flutter_flow/nav/nav.dart';
 import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
-import 'package:joiner_1/pages/user/dashboard/map_feature/map_feature.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -35,13 +34,6 @@ void main() async {
       child: MyApp(),
     ),
   );
-  // runApp(
-  //   MaterialApp(
-  //     home: Scaffold(
-  //       body: MapFeature(),
-  //     ),
-  //   ),
-  // );
 }
 
 class MyApp extends StatefulWidget {

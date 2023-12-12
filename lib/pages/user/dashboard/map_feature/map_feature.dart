@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:joiner_1/utils/utils.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class MapFeature extends StatefulWidget {
@@ -11,23 +10,30 @@ class MapFeature extends StatefulWidget {
 }
 
 class MapFeatureState extends State<MapFeature> {
-  String MAPBOX_ACCESS_TOKEN =
+  String mapboxAccessToken =
       'pk.eyJ1Ijoiam9pbmVyIiwiYSI6ImNsbWN6eHpkeTE0dGczZG1iOGZlb2drdnUifQ.7R0izGL1KjW64Un0DeC8Gg';
   MapboxMapController? _mapController;
-  String _mapStyle = 'mapbox://styles/joiner/clmemo810014b01r8h9ps0et3';
+  // String _mapStyle = 'mapbox://styles/joiner/clmemo810014b01r8h9ps0et3';
+  String _mapStyle = 'assets/mapbox_style/style.json';
   String? _featureName;
   String? _featureType;
+  double _maxZoom = 13;
+  double _minZoom = 8;
+  OfflineRegionDefinition? _offlineRegion;
+
+  @override
+  void initState() {
+    super.initState();
+    _downloadRegion();
+  }
 
   void _onMapCreated(MapboxMapController controller) {
     _mapController = controller;
-    _mapController!.onSymbolTapped.add((argument) {
-      print('FUCKING ${argument.id}');
-    });
   }
 
   void _onStyleLoadedCallback() {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("Style loaded :)"),
+      content: Text("Map loaded"),
       backgroundColor: Theme.of(context).primaryColor,
       duration: Duration(seconds: 1),
     ));
@@ -35,115 +41,116 @@ class MapFeatureState extends State<MapFeature> {
 
   void _onFeatureClick(Map<String, dynamic> feature) {
     final [longitude, latitude] = feature['geometry']['coordinates'];
-    print(feature);
+
     _featureName = feature['properties']['name'];
     _featureType = feature['properties']['type'];
+    print(_mapController?.cameraPosition?.zoom);
     _mapController!.animateCamera(
       CameraUpdate.newCameraPosition(
-        // lat - value -> offset from top, long + value -> offset from right
         CameraPosition(
-          target: LatLng(latitude, longitude + 0.08),
+          target: LatLng(latitude, longitude),
           zoom: _mapController!.cameraPosition!.zoom,
         ),
       ),
     );
+    showModalBottomSheet(
+      useSafeArea: true,
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding:
+              const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 56),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _featureName!,
+                style: Theme.of(context)
+                    .textTheme
+                    .displaySmall
+                    ?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              Text(
+                _featureType!,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Set this as your destination',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: double.maxFinite,
+                child: FilledButton(
+                  onPressed: () {
+                    context.pushNamed('LobbyCreation',
+                        extra: {'destination': _featureName});
+                  },
+                  child: Text('Create lobby'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
-  bool _showSelection = false;
+  void _downloadRegion() async {
+    LatLngBounds _region7 = LatLngBounds(
+      southwest: LatLng(9.281254344751304, 122.97505860213238),
+      northeast: LatLng(11.235728708626041, 124.3549413978684),
+    );
+    _offlineRegion = OfflineRegionDefinition(
+      bounds: _region7,
+      mapStyleUrl: _mapStyle,
+      minZoom: _minZoom,
+      maxZoom: _maxZoom,
+    );
+    // final bounds = _offlineRegion!.bounds;
+    // final lat = (bounds.southwest.latitude + bounds.northeast.latitude) / 2;
+    // final long = (bounds.southwest.longitude + bounds.northeast.longitude) / 2;
+    await downloadOfflineRegion(_offlineRegion!,
+        accessToken: mapboxAccessToken);
+  }
+
+  Widget mapboxMap() {
+    if (_offlineRegion == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return MapboxMap(
+      styleString: _mapStyle,
+      accessToken: mapboxAccessToken,
+      onMapCreated: _onMapCreated,
+      onStyleLoadedCallback: _onStyleLoadedCallback,
+      initialCameraPosition:
+          const CameraPosition(target: LatLng(10.26, 123.665), zoom: 8),
+      minMaxZoomPreference: MinMaxZoomPreference(8, 13),
+      cameraTargetBounds: CameraTargetBounds(_offlineRegion?.bounds),
+      trackCameraPosition: true,
+      onMapClick: (point, latLng) async {
+        List features = await _mapController!
+            .queryRenderedFeatures(point, ["poi-label"], null);
+        if (features.isNotEmpty) {
+          _onFeatureClick(features[0]);
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(),
-      body: GestureDetector(
-        onPanUpdate: (drag) {
-          setState(() {
-            _showSelection = false;
-          });
-        },
-        child: Stack(
-          children: [
-            mapboxMap(),
-            if (_showSelection)
-              Positioned.fill(
-                bottom: -160,
-                right: -100,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: SizedBox(
-                    height: 240,
-                    width: 260,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(_featureName!),
-                            Text(_featureType!),
-                            Text(
-                              'Create a plan',
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                            Text(
-                              'Set this as your destination',
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            SizedBox(
-                              width: double.maxFinite,
-                              child: TextButton(
-                                onPressed: () {
-                                  context.pushNamed('LobbyCreation',
-                                      extra: {'destination': _featureName});
-                                },
-                                child: Text('Create lobby'),
-                              ),
-                            ),
-                          ].divide(
-                            SizedBox(
-                              height: 4,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget mapboxMap() {
-    return MapboxMap(
-      styleString: _mapStyle,
-      accessToken: MAPBOX_ACCESS_TOKEN,
-      onMapCreated: _onMapCreated,
-      initialCameraPosition:
-          const CameraPosition(target: LatLng(10.26, 123.665), zoom: 8),
-      onStyleLoadedCallback: _onStyleLoadedCallback,
-      onMapClick: (point, latLng) async {
-        setState(() {
-          _showSelection = false;
-        });
-        print(
-            "Map click: ${point.x},${point.y}   ${latLng.latitude}/${latLng.longitude}");
-        List features = await _mapController!
-            .queryRenderedFeatures(point, ["poi-label"], null);
-
-        if (features.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('QueryRenderedFeatures: No features found!')));
-        } else if (features.isNotEmpty) {
-          setState(() {
-            _showSelection = true;
-          });
-          _onFeatureClick(features[0]);
-        }
-      },
+      body: mapboxMap(),
     );
   }
 }
