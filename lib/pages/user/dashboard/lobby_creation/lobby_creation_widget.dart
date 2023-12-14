@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
@@ -60,6 +61,7 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                   child: Text('CREATE'),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      showDialogLoading(context);
                       final lobby = LobbyModel(
                         title: _model.titleInput?.text,
                         destination: _model.destInput?.text,
@@ -67,7 +69,23 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                         endDate: _model.datePicked?.end,
                         participants: [],
                       );
-                      await UserController.createLobby(lobby, context);
+                      final result =
+                          await UserController.createLobby(lobby, context);
+                      context.pop();
+                      if (result != null) {
+                        context.goNamed(
+                          'Lobby',
+                          pathParameters: {'lobbyId': result.id!},
+                          extra: {'currentLobby': result},
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          showError(
+                            'Failed to create lobby',
+                            Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                      }
                     }
                   },
                 ),

@@ -10,6 +10,7 @@ import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
+import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/service/api_service.dart';
@@ -41,14 +42,10 @@ class UserController {
   }
 
   // Create lobby
-  static Future<void> createLobby(
+  static Future<LobbyModel?> createLobby(
       LobbyModel lobby, BuildContext context) async {
-    await apiService.createLobby(lobby, _userId).then(
-      (response) {
-        showSnackbar(context, response.message!);
-        context.goNamed('MainDashboard');
-      },
-    );
+    final result = await apiService.createLobby(lobby, _userId);
+    return result.data;
   }
 
   static Future<LobbyModel?> editLobby(LobbyModel lobby) async {
@@ -207,5 +204,21 @@ class UserController {
   static Future<ResponseModel<ExpenseModel>> deleteSpecificExpense(
       String lobbyId, String label) async {
     return await apiService.deleteSpecificExpense(_userId, lobbyId, label);
+  }
+
+  // Edit user profile
+  static Future<UserModel?> editProfile(
+      String firstName, String lastName) async {
+    final request = {'firstName': firstName, 'lastName': lastName};
+    final result = await apiService.editAccount(request, _userId);
+    return result.data;
+  }
+
+  // Change password
+  static Future<ResponseModel> changePassword(
+      String currentPassword, String nPassword) async {
+    final request = {'password': currentPassword, 'newPassword': nPassword};
+    final result = await apiService.changePassword(request, _userId);
+    return result;
   }
 }

@@ -44,16 +44,12 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     context.watch<FFAppState>();
     return Scaffold(
       floatingActionButton: _model.tabController!.index != 0
-          ? Padding(
-              padding: const EdgeInsets.only(bottom: 72),
-              child: FloatingActionButton(
-                onPressed: () {
-                  context.goNamed('LobbyCreation');
-                },
-                child: const Icon(
-                  Icons.add,
-                  size: 32,
-                ),
+          ? FloatingActionButton(
+              onPressed: () {
+                context.goNamed('LobbyCreation');
+              },
+              child: const Icon(
+                Icons.add,
               ),
             )
           : null,

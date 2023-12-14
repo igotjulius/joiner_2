@@ -13,6 +13,10 @@ ThemeData lightTheme(BuildContext context) {
     scaffoldBackgroundColor: lightThemeColors().background,
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
+      titleTextStyle: textTheme().displayMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
     ),
     cardTheme: CardTheme(
       shape: ContinuousRectangleBorder(
@@ -31,7 +35,7 @@ ThemeData lightTheme(BuildContext context) {
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -142,9 +146,13 @@ ColorScheme lightThemeColors() {
 TextTheme textTheme() {
   return const TextTheme(
     // For large texts
-    displayMedium: TextStyle(
+    displayLarge: TextStyle(
       fontWeight: FontWeight.w600,
       fontSize: 56,
+    ),
+    displayMedium: TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 24,
     ),
     // For medium texts
     displaySmall: TextStyle(

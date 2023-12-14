@@ -59,6 +59,7 @@ class _JoinersWidgetState extends State<JoinersWidget> {
                     child: Text('Invite'),
                     onPressed: () {
                       showModalBottomSheet(
+                        useSafeArea: true,
                         isScrollControlled: true,
                         context: context,
                         builder: (context) {

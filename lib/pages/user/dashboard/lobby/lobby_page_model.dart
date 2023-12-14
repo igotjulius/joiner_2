@@ -4,10 +4,9 @@ import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_model.dar
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/chat/chat_widget.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
-class LobbyPageModel extends FlutterFlowModel {
+class LobbyPageModel {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
@@ -28,9 +27,6 @@ class LobbyPageModel extends FlutterFlowModel {
   LobbyModel? currentLobby;
 
   /// Initialization and disposal methods.
-
-  void initState(BuildContext context) {}
-
   void dispose() {
     unfocusNode.dispose();
     tabBarController?.dispose();
@@ -40,8 +36,9 @@ class LobbyPageModel extends FlutterFlowModel {
   }
 
   /// Action blocks are added here.
-  void initModel() {
-    lobbyDashboardModel = LobbyDashboardModel();
+  void initModel(LobbyModel currentLobby) {
+    this.currentLobby = currentLobby;
+    lobbyDashboardModel = LobbyDashboardModel(currentLobby);
     chatModel = ChatModel();
     pollModel = PollCompModel();
     joinersModel = JoinersModel();

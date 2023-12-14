@@ -58,6 +58,12 @@ class FFAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateProfile(User updatedProfile) {
+    _currentUser = updatedProfile;
+    pref!.setString('firstName', updatedProfile.firstName!);
+    pref!.setString('lastName', updatedProfile.lastName!);
+  }
+
   bool _isCra = false;
   bool get isCra => _isCra;
   void setIsCra(bool val) {

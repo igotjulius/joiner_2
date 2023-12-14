@@ -15,7 +15,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   late LoginPageModel _model;
   String? _errorMessage;
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -31,7 +30,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   void dispose() {
     super.dispose();
     _model.dispose();
-    _errorMessage = null;
   }
 
   @override
@@ -40,7 +38,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     final gradient =
         LinearGradient(colors: [colorScheme.primary, colorScheme.tertiary]);
     return Scaffold(
-      key: scaffoldKey,
       body: SafeArea(
         child: GestureDetector(
           onTap: () {
@@ -65,7 +62,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                             ),
                             child: Text(
                               'Plan with ease',
-                              style: Theme.of(context).textTheme.displayMedium,
+                              style: Theme.of(context).textTheme.displayLarge,
                             ),
                           ),
                           Text(
@@ -125,17 +122,18 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       letterSpacing: 3,
                                     ),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   showDialogLoading(context);
-                                  _model.loginUser(context).then((value) {
-                                    if (!value)
+                                  final result =
+                                      await _model.loginUser(context);
+                                  if (!result) {
+                                    context.pop();
+                                    setState(() {
                                       _errorMessage =
                                           'Invalid username/password';
-                                    setState(() {
-                                      context.pop();
                                     });
-                                  });
+                                  }
                                 }
                               },
                             ),
@@ -153,7 +151,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 highlightColor: Colors.transparent,
                                 onTap: () {
                                   setState(() {
-                                    _errorMessage = null;
+                                    // _errorMessage = null;
                                     _model.emailController?.clear();
                                     _model.passwordController?.clear();
                                     context.pushNamed('Sign Up');

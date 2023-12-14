@@ -1,6 +1,5 @@
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'rentals_model.dart';
 export 'rentals_model.dart';
 
@@ -34,38 +33,65 @@ class _RentalsWidgetState extends State<RentalsWidget> {
     super.dispose();
   }
 
+  Widget appBarContent() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('Upcoming Rentals'),
+        FilledButton(
+          child: Text('Browse Listings'),
+          onPressed: () {
+            context.pushNamed(
+              'Listings',
+              extra: <String, dynamic>{
+                kTransitionInfoKey: TransitionInfo(
+                  hasTransition: true,
+                  transitionType: PageTransitionType.rightToLeft,
+                ),
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return Scaffold(
       key: scaffoldKey,
+      appBar: AppBar(
+        title: Text(
+          'Upcoming Rentals',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: FilledButton(
+              child: Text('Listings'),
+              onPressed: () {
+                context.pushNamed(
+                  'Listings',
+                  extra: <String, dynamic>{
+                    kTransitionInfoKey: TransitionInfo(
+                      hasTransition: true,
+                      transitionType: PageTransitionType.rightToLeft,
+                    ),
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
-        top: true,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Upcoming Rentals'),
-                  FilledButton(
-                    child: Text('Browse Listings'),
-                    onPressed: () {
-                      context.pushNamed(
-                        'Listings',
-                        extra: <String, dynamic>{
-                          kTransitionInfoKey: TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.rightToLeft,
-                          ),
-                        },
-                      );
-                    },
-                  ),
-                ],
-              ),
               Flexible(
                 child: _model.getRentals(),
               ),

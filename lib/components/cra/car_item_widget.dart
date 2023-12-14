@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -40,8 +39,12 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${widget.car.licensePlate}",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  "${widget.car.licensePlate}",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
                 Text(
                   widget.car.availability!,
                 ),
@@ -88,12 +91,16 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                           ),
                           Row(
                             children: [
-                              Text(
-                                NumberFormat.currency(
-                                  symbol: '₱',
-                                  decimalDigits: 0,
-                                ).format(widget.car.price),
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                              withCurrency(
+                                Text(
+                                  widget.car.price.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
                               ),
                               SizedBox(
                                 width: 4,

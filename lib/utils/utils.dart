@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/service/api_service.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 export 'utils.dart';
 
@@ -37,6 +38,19 @@ extension StringExtension on String {
   }
 }
 
+Widget withCurrency(Text text) {
+  return Row(
+    children: [
+      Icon(
+        MdiIcons.currencyPhp,
+        color: Colors.black87,
+        size: 14,
+      ),
+      text,
+    ],
+  );
+}
+
 String? isEmpty(String? value) {
   if (value == null || value.trim().isEmpty) return 'Field is empty';
   return null;
@@ -55,16 +69,14 @@ String? validateMobile(String? value) {
 String? validatePassword(String? value) {
   final trimmed = isEmpty(value);
   if (trimmed != null) return trimmed;
-  if (value!.length < 5)
-    return 'Password length must be greater than 6 characters';
+  if (value!.length < 5) return 'Minimum 6 characters';
   return null;
 }
 
-String? confirmPassword(
-    String? value, TextEditingController passwordController) {
+String? confirmPassword(String? value, String? value2) {
   final trimmed = isEmpty(value);
   if (trimmed != null) return trimmed;
-  if (value != passwordController.text) return 'Passwords don\'t match';
+  if (value != value2) return 'Passwords don\'t match';
   return null;
 }
 

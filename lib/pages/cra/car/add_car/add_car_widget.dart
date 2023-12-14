@@ -159,16 +159,18 @@ class _AddCarWidgetState extends State<AddCarWidget> {
         ),
         InkWell(
           onTap: () async {
-            _model.datePicked = await showDateRangePicker(
+            showDateRangePicker(
               context: context,
               firstDate: getCurrentTimestamp,
               lastDate: DateTime(2050),
-            );
-            if (_model.datePicked != null)
-              setState(() {
-                _model.datesController?.text =
-                    '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
-              });
+            ).then((value) {
+              if (value != null) {
+                setState(() {
+                  _model.datesController?.text =
+                      '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
+                });
+              }
+            });
           },
           child: Theme(
             data: Theme.of(context).copyWith(

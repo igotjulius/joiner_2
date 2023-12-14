@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/utils/utils.dart';
 
 class PromosList extends StatefulWidget {
   const PromosList({super.key});
@@ -31,19 +32,19 @@ class _PromosListState extends State<PromosList> {
             promos(
               'assets/images/car_rental.jpg',
               'Car Rentals',
-              '\₱1234/day',
+              '999/day',
               'Embark on a journey of freedom and exploration with our premium car rental service. Drive in style and comfort as you navigate through scenic landscapes, making every road a memorable adventure.',
             ),
             promos(
               'assets/images/Boracay_White_Beach.png',
               'Boracay Beach',
-              '\₱999/night',
+              '999/night',
               'Escape to the idyllic shores of Boracay and indulge in a luxurious retreat at our beachfront oasis, the ultimate destination for your tropical paradise getaway.',
             ),
             promos(
               'assets/images/Palawan.jpg',
               'El Nido, Palawan',
-              '\₱999/night',
+              '999/night',
               'Immerse yourself in the tropical paradise of El Nido, Palawan. Indulge in the serenity of our luxurious accommodations, providing the perfect haven for your dream island getaway.',
             ),
           ].divide(
@@ -88,9 +89,11 @@ class _PromosListState extends State<PromosList> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      price,
-                      textAlign: TextAlign.end,
+                    withCurrency(
+                      Text(
+                        price,
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                     Icon(
                       Icons.chevron_right_rounded,

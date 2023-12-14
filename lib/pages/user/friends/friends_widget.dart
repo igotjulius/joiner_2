@@ -1,10 +1,8 @@
-import 'package:joiner_1/index.dart';
 import 'package:joiner_1/pages/user/friends/components/pending_friend.dart';
 import 'package:joiner_1/pages/user/friends/components/accepted_friend.dart';
 import 'package:joiner_1/pages/user/friends/components/waiting_approval.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'friends_model.dart';
 export 'friends_model.dart';
 
@@ -17,8 +15,7 @@ class FriendsWidget extends StatefulWidget {
 
 class _FriendsWidgetState extends State<FriendsWidget> {
   late FriendsModel _model;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _key = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -28,47 +25,35 @@ class _FriendsWidgetState extends State<FriendsWidget> {
 
   @override
   void dispose() {
-    _model.dispose();
-
     super.dispose();
+    _model.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return Scaffold(
-      key: scaffoldKey,
+      key: _key,
+      appBar: AppBar(
+        title: Text(
+          'Friends',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Flexible(
-              child: _model.friendList(
-                  pendingFriends, acceptedFriends, waitingApproval),
-            ),
+            _model.friendList(pendingFriends, acceptedFriends, waitingApproval),
           ],
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 72),
-        child: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return Dialog(
-                  surfaceTintColor: Colors.grey,
-                  insetPadding: EdgeInsets.zero,
-                  child: InviteFriendWidget(
-                    parentSetState: setState,
-                  ),
-                );
-              },
-            );
-          },
-          child: Icon(Icons.add),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.pushNamed('InviteFriend');
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

@@ -31,139 +31,142 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: EdgeInsetsDirectional.all(20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Create an Account',
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                    Spacer(),
-                    TextButton(
-                      child: Text(
-                        'Login Now',
-                      ),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        context.goNamed('Login');
-                      },
-                    ),
-                  ],
-                ),
-                Container(
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Colors.blue,
-                    ),
-                  ),
-                  child: TabBar(
-                    splashBorderRadius: BorderRadius.circular(20),
-                    labelPadding: EdgeInsets.symmetric(vertical: 8),
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.blue[300],
-                    indicator: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    controller: _model.tabController,
-                    onTap: (value) {
-                      _model.tabController?.index = value;
-                    },
-                    tabs: [
-                      Text(
-                        'Joiner',
-                      ),
-                      Text(
-                        'Rent your car',
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _model.tabController,
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: EdgeInsetsDirectional.all(20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Provider.value(
-                        value: _model.userModel,
-                        child: UserSignUpMole(
-                          formKey: joinerFormKey,
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          'Create an Account',
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),
-                      Provider.value(
-                        value: _model.craModel,
-                        child: CraSignUpMole(
-                          formKey: rentFormKey,
+                      Spacer(),
+                      TextButton(
+                        child: Text(
+                          'Login Now',
                         ),
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          context.goNamed('Login');
+                        },
                       ),
                     ],
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      flex: 5,
-                      child: Text(
-                        'By signing up you accept Joiner\'s Terms of Use and Privacy Policy.',
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              fontStyle: FontStyle.italic,
-                            ),
+                  Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.blue,
                       ),
                     ),
-                    Spacer(),
-                    FilledButton.tonal(
-                      onPressed: () {
-                        final joinerForm = joinerFormKey.currentState != null &&
-                            joinerFormKey.currentState!.validate();
-                        final craForm = rentFormKey.currentState != null &&
-                            rentFormKey.currentState!.validate();
-                        if (joinerForm || craForm) {
-                          showDialogLoading(context);
-                          _model.signUp().then(
-                            (value) {
-                              if (value != null) {
-                                context.pop();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  showError(value,
-                                      Theme.of(context).colorScheme.error),
-                                );
-                                _model.userModel.emailError =
-                                    'Email already in use';
-                                setState(() {});
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  showSuccess('Registration successful'),
-                                );
-                                context.goNamed('Login');
-                              }
-                            },
-                          );
-                        }
+                    child: TabBar(
+                      splashBorderRadius: BorderRadius.circular(20),
+                      labelPadding: EdgeInsets.symmetric(vertical: 8),
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.blue[300],
+                      indicator: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      controller: _model.tabController,
+                      onTap: (value) {
+                        _model.tabController?.index = value;
                       },
-                      child: Text('Sign Up'),
+                      tabs: [
+                        Text(
+                          'Joiner',
+                        ),
+                        Text(
+                          'Rent your car',
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ].divide(SizedBox(
-                height: 20,
-              )),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _model.tabController,
+                      children: [
+                        Provider.value(
+                          value: _model.userModel,
+                          child: UserSignUpMole(
+                            formKey: joinerFormKey,
+                          ),
+                        ),
+                        Provider.value(
+                          value: _model.craModel,
+                          child: CraSignUpMole(
+                            formKey: rentFormKey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        flex: 5,
+                        child: Text(
+                          'By signing up you accept Joiner\'s Terms of Use and Privacy Policy.',
+                          style:
+                              Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                        ),
+                      ),
+                      Spacer(),
+                      FilledButton.tonal(
+                        onPressed: () async {
+                          print(joinerFormKey.currentState?.validate());
+                          final joinerForm =
+                              joinerFormKey.currentState != null &&
+                                  joinerFormKey.currentState!.validate();
+                          final craForm = rentFormKey.currentState != null &&
+                              rentFormKey.currentState!.validate();
+                          if (joinerForm || craForm) {
+                            showDialogLoading(context);
+                            final result = await _model.signUp();
+                            context.pop();
+                            if (result != null) {
+                              context.pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                showError(result,
+                                    Theme.of(context).colorScheme.error),
+                              );
+                              _model.userModel.emailError =
+                                  'Email already in use';
+                              setState(() {});
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                showSuccess('Registration successful'),
+                              );
+                              context.goNamed('Login');
+                            }
+                          }
+                        },
+                        child: Text('Sign Up'),
+                      ),
+                    ],
+                  ),
+                ].divide(SizedBox(
+                  height: 20,
+                )),
+              ),
             ),
           ),
         ),

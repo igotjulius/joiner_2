@@ -18,6 +18,7 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
   void initState() {
     super.initState();
     _model = context.read<UserSignUpMoleModel>();
+    _model.initState();
   }
 
   @override
@@ -98,6 +99,6 @@ class UserSignUpMoleModel {
   }
 
   String? confirmPass(String? value) {
-    return confirmPassword(value, passwordController!);
+    return confirmPassword(value, passwordController!.text);
   }
 }

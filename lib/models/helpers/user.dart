@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
@@ -27,12 +29,14 @@ abstract class User {
   static Future<User?> loginUser(User user) async {
     final result = await apiService
         .loginUser({'email': user.email!, 'password': user.password!});
-    if (result.message == 'CraUser')
-      FFAppState().setIsCra(true);
-    else
-      FFAppState().setIsCra(false);
-    AppStateNotifier.instance.setRoutes();
-    FFAppState().setCurrentUser(result.data);
+    if (result.code == HttpStatus.ok) {
+      if (result.message == 'CraUser')
+        FFAppState().setIsCra(true);
+      else
+        FFAppState().setIsCra(false);
+      AppStateNotifier.instance.setRoutes();
+      FFAppState().setCurrentUser(result.data);
+    }
     return result.data;
   }
 

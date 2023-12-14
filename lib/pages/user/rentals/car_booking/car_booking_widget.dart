@@ -55,9 +55,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
         ),
         title: Text(
           'Requirements for Rental',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         centerTitle: false,
       ),

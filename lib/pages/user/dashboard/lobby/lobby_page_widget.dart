@@ -35,9 +35,8 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LobbyPageModel());
-    _model.initModel();
-    _model.currentLobby = widget.currentLobby;
+    _model = LobbyPageModel();
+    _model.initModel(widget.currentLobby!);
     _fetchLobby = UserController.getLobby(widget.lobbyId!);
     _model.tabBarController = TabController(
       vsync: this,
@@ -125,12 +124,9 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
                   child: TabBarView(
                     controller: _model.tabBarController,
                     children: [
-                      wrapWithModel(
-                        model: _model.lobbyDashboardModel!,
-                        child: LobbyDashboardWidget(
-                          lobbyId: widget.lobbyId,
-                        ),
-                        updateCallback: () => setState(() {}),
+                      LobbyDashboardWidget(
+                        model: _model.lobbyDashboardModel,
+                        lobbyId: widget.lobbyId,
                       ),
                       wrapWithModel(
                         model: _model.chatModel!,

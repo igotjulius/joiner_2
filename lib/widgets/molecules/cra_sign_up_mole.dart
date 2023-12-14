@@ -18,6 +18,7 @@ class _CraSignUpMoleState extends State<CraSignUpMole> {
   void initState() {
     super.initState();
     _model = context.read<CraSignUpMoleModel>();
+    _model.initState();
   }
 
   @override
@@ -104,6 +105,6 @@ class CraSignUpMoleModel {
   }
 
   String? confirmPass(String? value) {
-    return confirmPassword(value, passwordController!);
+    return confirmPassword(value, passwordController!.text);
   }
 }

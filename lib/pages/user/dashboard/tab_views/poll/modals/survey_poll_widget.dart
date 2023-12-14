@@ -101,7 +101,6 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                 SizedBox(height: 10),
               ),
             ),
-            Spacer(),
             Row(
               children: [
                 Expanded(

@@ -15,14 +15,15 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-// const String serverUrl = 'http://10.0.2.2:443/'; // For mobile emulator run on the host machine
+const String serverUrl =
+    'http://10.0.2.2:443/'; // For mobile emulator run on the host machine
 /*
   For physical phones, address might change.
   Run ipconfig from the host machine to configure the ip address of the server.
   Make sure that the physical phone and host machine are in the same network.
 */
 // const String serverUrl = 'http://192.168.137.1:443/';
-const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'http://localhost:443/';
 // const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
 final apiService = ApiService(Dio(), baseUrl: serverUrl);
@@ -49,7 +50,7 @@ abstract class ApiService {
 
   // Create lobby
   @POST('user/{userId}/lobby')
-  Future<ResponseModel> createLobby(
+  Future<ResponseModel<LobbyModel?>> createLobby(
     @Body() LobbyModel lobby,
     @Path('userId') String userId, {
     @Header('Content-Type') String contentType = 'application/json',
@@ -190,8 +191,22 @@ abstract class ApiService {
   );
 
   // Get user profile
-  @GET('user/{userId}/profile')
-  Future<UserModel> getAccount(@Path('userId') String userId);
+  // @GET('user/{userId}/profile')
+  // Future<UserModel> getAccount(@Path('userId') String userId);
+
+  // Edit user profile
+  @POST('user/{userId}/profile')
+  Future<ResponseModel<UserModel>> editAccount(
+    @Body() Map<String, String> request,
+    @Path('userId') String userId,
+  );
+
+  // Change password
+  @POST('user/{userId}/changePassword')
+  Future<ResponseModel> changePassword(
+    @Body() Map<String, String> request,
+    @Path('userId') String userId,
+  );
 
   // Get all Polls
   @GET('user/{userId}/lobby/{lobbyId}/poll')
