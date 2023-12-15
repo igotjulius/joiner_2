@@ -14,7 +14,8 @@ ThemeData lightTheme(BuildContext context) {
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       titleTextStyle: textTheme().displayMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w600,
             color: Colors.black87,
           ),
     ),
@@ -35,10 +36,14 @@ ThemeData lightTheme(BuildContext context) {
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        textStyle: textTheme().bodyMedium?.copyWith(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+            ),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
@@ -65,6 +70,7 @@ ThemeData lightTheme(BuildContext context) {
     ),
     inputDecorationTheme: InputDecorationTheme(
       prefixIconColor: lightThemeColors().primary,
+      suffixIconColor: lightThemeColors().primary,
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: lightThemeColors().primary),
@@ -168,7 +174,7 @@ TextTheme textTheme() {
       fontSize: 18,
     ),
     bodyMedium: TextStyle(
-      fontWeight: FontWeight.w300,
+      fontWeight: FontWeight.w400,
       fontSize: 16,
     ),
     bodySmall: TextStyle(

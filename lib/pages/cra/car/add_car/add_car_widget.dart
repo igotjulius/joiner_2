@@ -42,6 +42,136 @@ class _AddCarWidgetState extends State<AddCarWidget> {
     _model.dispose();
   }
 
+  Widget datePicker() {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            'Available Dates',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.grey),
+          ),
+        ),
+        Expanded(
+          child: InkWell(
+            onTap: () async {
+              showDateRangePicker(
+                context: context,
+                firstDate: getCurrentTimestamp,
+                lastDate: DateTime(2050),
+              ).then((value) {
+                if (value != null) {
+                  setState(() {
+                    _model.datesController?.text =
+                        '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
+                  });
+                }
+              });
+            },
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                inputDecorationTheme:
+                    Theme.of(context).inputDecorationTheme.copyWith(
+                          disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                        ),
+              ),
+              child: CustomTextInput(
+                controller: _model.datesController,
+                validator: _model.datesValidator,
+                suffixIcon: Icon(
+                  Icons.calendar_today_rounded,
+                ),
+                enabled: false,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget imagePicker() {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () async {
+              imagePickerError = await _model.imagePicker!.selectImages();
+              setState(() {});
+            },
+            child: Container(
+              height: 160,
+              child: _model.imagePicker!.getImages() != null &&
+                      _model.imagePicker!.getImages()!.isNotEmpty
+                  ? imageCarousel()
+                  : Center(
+                      child: Text(
+                        'Tap to Upload Image',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+            ),
+          ),
+          if (imagePickerError != null)
+            Container(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.error,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Text(
+                    imagePickerError!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                ],
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  CarouselSlider imageCarousel() {
+    return CarouselSlider.builder(
+      itemCount: _model.imagePicker!.getImages()!.length,
+      options: CarouselOptions(
+        enlargeCenterPage: true,
+        enableInfiniteScroll: false,
+      ),
+      itemBuilder: (context, index, viewIndex) {
+        XFile image = _model.imagePicker!.getImages()![index];
+        if (kIsWeb) {
+          return Image.network(image.path);
+        } else {
+          return Image.file(
+            File(image.path),
+            fit: BoxFit.contain,
+          );
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,23 +187,17 @@ class _AddCarWidgetState extends State<AddCarWidget> {
               child: Column(
                 children: [
                   imagePicker(),
-                  CustomTextInput(
-                    label: 'License Plate',
-                    controller: _model.licenseController,
-                    validator: _model.licenseValidator,
-                  ),
-                  CustomTextInput(
-                    label: 'Vehicle Type',
-                    controller: _model.vehicleTypeController,
-                    validator: _model.vehicleTypeValidator,
-                  ),
-                  datePicker(context),
-                  CustomTextInput(
-                    label: 'Price',
-                    controller: _model.priceController,
-                    validator: _model.priceValidator,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: FilteringTextInputFormatter.digitsOnly,
+                  Column(
+                    children: [
+                      licensePlate(),
+                      vehicleType(),
+                      datePicker(),
+                      price(),
+                    ].divide(
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ),
                   ),
                   FilledButton(
                     onPressed: () async {
@@ -93,34 +217,6 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                           }
                           context.pop();
                         });
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return AlertDialog(
-                        //       contentPadding: EdgeInsets.all(20),
-                        //       content: Column(
-                        //         mainAxisSize: MainAxisSize.min,
-                        //         children: [
-                        //           if (_model.imagePicker != null)
-                        //             _model.registerCar(),
-                        //         ],
-                        //       ),
-                        //       actions: [
-                        //         FilledButton(
-                        //           onPressed: () {
-                        //             if (_model.isSuccessful!) {
-                        //               _model.imagePicker = null;
-                        //               context.goNamed('Cars');
-                        //             } else {
-                        //               context.pop();
-                        //             }
-                        //           },
-                        //           child: Text('OK'),
-                        //         ),
-                        //       ],
-                        //     );
-                        //   },
-                        // );
                       }
                       imagePickerError =
                           _model.imagePicker!.getImages() == null ||
@@ -133,7 +229,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                   ),
                 ].divide(
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                 ),
               ),
@@ -144,124 +240,60 @@ class _AddCarWidgetState extends State<AddCarWidget> {
     );
   }
 
-  Widget datePicker(BuildContext context) {
-    return Column(
+  Widget price() {
+    return CustomTextInput(
+      label: 'Price',
+      labelStyle:
+          Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+      controller: _model.priceController,
+      validator: _model.priceValidator,
+      keyboardType: TextInputType.number,
+      inputFormatters: FilteringTextInputFormatter.digitsOnly,
+      direction: TextInputDirection.row,
+    );
+  }
+
+  Widget licensePlate() {
+    return CustomTextInput(
+      label: 'License Plate',
+      labelStyle:
+          Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+      controller: _model.licenseController,
+      validator: _model.licenseValidator,
+      direction: TextInputDirection.row,
+    );
+  }
+
+  Widget vehicleType() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Align(
-          alignment: Alignment.topLeft,
+        Expanded(
           child: Text(
-            'Available Dates',
-            style: Theme.of(context).textTheme.titleSmall,
+            'Vehicle Type',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.grey),
           ),
         ),
-        SizedBox(
-          height: 4,
-        ),
-        InkWell(
-          onTap: () async {
-            showDateRangePicker(
-              context: context,
-              firstDate: getCurrentTimestamp,
-              lastDate: DateTime(2050),
-            ).then((value) {
-              if (value != null) {
-                setState(() {
-                  _model.datesController?.text =
-                      '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
-                });
-              }
-            });
-          },
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              inputDecorationTheme:
-                  Theme.of(context).inputDecorationTheme.copyWith(
-                        disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                      ),
-            ),
-            child: CustomTextInput(
-              controller: _model.datesController,
-              validator: _model.datesValidator,
-              prefixIcon: Icon(
-                Icons.calendar_today_rounded,
-              ),
-              enabled: false,
-            ),
+        Expanded(
+          child: DropdownMenu<String>(
+            enableSearch: false,
+            requestFocusOnTap: false,
+            dropdownMenuEntries: <String>['Sedan', 'Van', 'SUV']
+                .map((value) => DropdownMenuEntry<String>(
+                      value: value,
+                      label: value,
+                    ))
+                .toList(),
+            onSelected: (value) {
+              // _model.vehicleType = value;
+            },
+            expandedInsets: EdgeInsets.zero,
           ),
         ),
       ],
-    );
-  }
-
-  Widget imagePicker() {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () async {
-            imagePickerError = await _model.imagePicker!.selectImages();
-            setState(() {});
-          },
-          child: _model.imagePicker!.getImages() != null
-              ? imageCarousel()
-              : Container(
-                  height: 400,
-                  child: Text(
-                    'Tap to Upload Image',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  alignment: Alignment(0, 0),
-                ),
-        ),
-        if (imagePickerError != null)
-          Container(
-            padding: EdgeInsets.all(8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.error,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  imagePickerError!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                ),
-              ],
-            ),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Theme.of(context).colorScheme.error,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-      ],
-    );
-  }
-
-  CarouselSlider imageCarousel() {
-    return CarouselSlider.builder(
-      itemCount: _model.imagePicker!.getImages()!.length,
-      options: CarouselOptions(
-        height: 400,
-        enlargeCenterPage: true,
-        enableInfiniteScroll: false,
-      ),
-      itemBuilder: (context, index, viewIndex) {
-        XFile image = _model.imagePicker!.getImages()![index];
-        if (kIsWeb) {
-          return Image.network(image.path);
-        } else {
-          return Image.file(File(image.path));
-        }
-      },
     );
   }
 }

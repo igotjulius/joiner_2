@@ -95,21 +95,20 @@ class _EditCarWidgetState extends State<EditCarWidget> {
           children: [
             info(),
             imagePicker(),
-            Text(
-              'License plate',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            Text(
-              _model.car!.licensePlate!,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                availability(),
-                SizedBox(width: 20),
-                vehicleType(),
+                Text(
+                  'License plate',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                Text(
+                  _model.car!.licensePlate!,
+                ),
               ],
             ),
+            availability(),
+            vehicleType(),
             displayPrice(),
             datePicker(),
           ].divide(
@@ -123,26 +122,29 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   }
 
   Widget displayPrice() {
-    if (isEnabled) {
-      return CustomTextInput(
-        label: 'Price',
-        controller: _model.priceController,
-        validator: isEmpty,
-      );
-    } else {
-      return Column(
-        children: [
-          Text(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Text(
             'Price',
             style: Theme.of(context).textTheme.titleSmall,
           ),
-          Text(
-            _model.car!.price.toString(),
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ],
-      );
-    }
+        ),
+        isEnabled
+            ? Expanded(
+                child: CustomTextInput(
+                  controller: _model.priceController,
+                  validator: isEmpty,
+                  contentPadding: EdgeInsets.all(10),
+                  isDense: true,
+                ),
+              )
+            : Text(
+                _model.car!.price.toString(),
+              ),
+      ],
+    );
   }
 
   Widget info() {
@@ -178,18 +180,19 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   }
 
   Widget availability() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           'Availability',
           style: Theme.of(context).textTheme.titleSmall,
         ),
-        SizedBox(height: 4),
         !isEnabled
             ? Text(
                 _model.car!.availability!,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
               )
             : DropdownMenu<String>(
                 enabled: isEnabled,
@@ -205,14 +208,19 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                 onSelected: (value) {
                   _model.availability = value;
                 },
+                inputDecorationTheme: InputDecorationTheme(
+                  isDense: true,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                  constraints: BoxConstraints.tight(Size.fromHeight(40)),
+                ),
               ),
       ],
     );
   }
 
   Widget vehicleType() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           'Vehicle Type',
@@ -222,24 +230,32 @@ class _EditCarWidgetState extends State<EditCarWidget> {
         !isEnabled
             ? Text(
                 _model.car!.vehicleType!,
-                style: Theme.of(context).textTheme.bodyLarge,
               )
-            : DropdownMenu<String>(
-                enabled: isEnabled,
-                enableSearch: false,
-                requestFocusOnTap: false,
-                initialSelection: _model.vehicleType,
-                dropdownMenuEntries: <String>['Sedan', 'Van', 'SUV']
-                    .map((value) => DropdownMenuEntry<String>(
-                          value: value,
-                          label: value,
-                        ))
-                    .toList(),
-                onSelected: (value) {
-                  _model.vehicleType = value;
-                },
-              ),
+            : dropdownMenu(),
       ],
+    );
+  }
+
+  Widget dropdownMenu() {
+    return DropdownMenu<String>(
+      enabled: isEnabled,
+      enableSearch: false,
+      requestFocusOnTap: false,
+      initialSelection: _model.vehicleType,
+      dropdownMenuEntries: <String>['Sedan', 'Van', 'SUV']
+          .map((value) => DropdownMenuEntry<String>(
+                value: value,
+                label: value,
+              ))
+          .toList(),
+      onSelected: (value) {
+        _model.vehicleType = value;
+      },
+      inputDecorationTheme: InputDecorationTheme(
+        isDense: true,
+        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        constraints: BoxConstraints.tight(Size.fromHeight(40)),
+      ),
     );
   }
 
@@ -329,59 +345,59 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   }
 
   Widget datePicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Align(
-          alignment: Alignment.topLeft,
+        Expanded(
           child: Text(
             'Available Dates',
             style: Theme.of(context).textTheme.titleSmall,
           ),
         ),
-        SizedBox(
-          height: 4,
-        ),
         !isEnabled
             ? Text(
                 '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}',
-                style: Theme.of(context).textTheme.bodyLarge,
               )
-            : InkWell(
-                hoverColor: isEnabled ? null : Colors.transparent,
-                onTap: !isEnabled
-                    ? null
-                    : () async {
-                        _model.datePicked = await showDateRangePicker(
-                          context: context,
-                          firstDate: getCurrentTimestamp,
-                          lastDate: DateTime(2050),
-                        );
+            : Expanded(
+                child: InkWell(
+                  hoverColor: isEnabled ? null : Colors.transparent,
+                  onTap: !isEnabled
+                      ? null
+                      : () async {
+                          _model.datePicked = await showDateRangePicker(
+                            context: context,
+                            firstDate: getCurrentTimestamp,
+                            lastDate: DateTime(2050),
+                          );
 
-                        if (_model.datePicked != null) {
-                          setState(() {
-                            _model.datesController?.text =
-                                '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
-                          });
-                        }
-                      },
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    inputDecorationTheme:
-                        Theme.of(context).inputDecorationTheme.copyWith(
-                              disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
+                          if (_model.datePicked != null) {
+                            setState(() {
+                              _model.datesController?.text =
+                                  '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
+                            });
+                          }
+                        },
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      inputDecorationTheme:
+                          Theme.of(context).inputDecorationTheme.copyWith(
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
                               ),
-                            ),
-                  ),
-                  child: CustomTextInput(
-                    key: ValueKey(_model.datesController?.text),
-                    controller: _model.datesController,
-                    validator: isEmpty,
-                    prefixIcon: Icon(
-                      Icons.calendar_today_rounded,
                     ),
-                    enabled: false,
+                    child: CustomTextInput(
+                      key: ValueKey(_model.datesController?.text),
+                      controller: _model.datesController,
+                      validator: isEmpty,
+                      prefixIcon: Icon(
+                        Icons.calendar_today_rounded,
+                        size: 20,
+                      ),
+                      enabled: false,
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(10),
+                    ),
                   ),
                 ),
               ),

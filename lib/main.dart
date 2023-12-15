@@ -11,7 +11,6 @@ import 'flutter_flow/internationalization.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'index.dart';
 import 'pages/cra/car/cra_car_widget.dart';
-import 'pages/cra/earnings/earnings_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -155,6 +154,7 @@ class _NavBarPageState extends State<NavBarPage> {
               haptic: false,
               textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w600,
                   ),
               tabs: [
                 GButton(
@@ -183,7 +183,6 @@ class _NavBarPageState extends State<NavBarPage> {
 
   Widget craDashboard() {
     final tabs = {
-      'Earnings': EarningsWidget(),
       'Cars': CraCarWidget(),
       'CraRentals': CraRentalsWidget(),
       'Account': CraAccountWidget(),
@@ -191,42 +190,58 @@ class _NavBarPageState extends State<NavBarPage> {
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
     return Scaffold(
       body: SafeArea(child: _currentPage ?? tabs[_currentPageName]!),
-      bottomNavigationBar: GNav(
-        selectedIndex: currentIndex,
-        onTabChange: (i) => setState(() {
-          _currentPage = null;
-          _currentPageName = tabs.keys.toList()[i];
-        }),
-        tabBackgroundColor: Color(0x00000000),
-        tabBorderRadius: 0.0,
-        tabMargin: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-        padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-        gap: 0.0,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        duration: Duration(milliseconds: 500),
-        haptic: false,
-        tabs: [
-          GButton(
-            icon: Icons.attach_money,
-            text: 'Earnings',
-            iconSize: 24.0,
-          ),
-          GButton(
-            icon: Icons.directions_car,
-            text: 'Cars',
-            iconSize: 24.0,
-          ),
-          GButton(
-            icon: Icons.receipt_rounded,
-            text: 'Rentals',
-            iconSize: 24.0,
-          ),
-          GButton(
-            icon: Icons.person,
-            text: 'Account',
-            iconSize: 24.0,
-          ),
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white54,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[300]!,
+              offset: const Offset(
+                0.0,
+                -1.0,
+              ),
+              blurRadius: 10.0,
+              spreadRadius: 2.0,
+            ),
+          ],
+        ),
+        child: GNav(
+          selectedIndex: currentIndex,
+          onTabChange: (i) => setState(() {
+            _currentPage = null;
+            _currentPageName = tabs.keys.toList()[i];
+          }),
+          color: Colors.grey,
+          activeColor: Theme.of(context).primaryColor,
+          tabBackgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          padding: EdgeInsetsDirectional.all(10),
+          gap: 8,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          duration: Duration(milliseconds: 500),
+          haptic: false,
+          tabMargin: EdgeInsets.all(10),
+          textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+          tabs: [
+            GButton(
+              icon: Icons.directions_car,
+              text: 'Cars',
+              iconSize: 24.0,
+            ),
+            GButton(
+              icon: Icons.receipt_rounded,
+              text: 'Rentals',
+              iconSize: 24.0,
+            ),
+            GButton(
+              icon: Icons.person,
+              text: 'Account',
+              iconSize: 24.0,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -36,9 +36,6 @@ class _FriendsWidgetState extends State<FriendsWidget> {
       appBar: AppBar(
         title: Text(
           'Friends',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
         ),
       ),
       body: Padding(

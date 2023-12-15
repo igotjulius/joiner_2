@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 
+enum TextInputDirection { row, column }
+
 class CustomTextInput extends StatefulWidget {
   final String? initialValue;
   final String? label;
@@ -17,6 +19,11 @@ class CustomTextInput extends StatefulWidget {
   final String? errorText;
   final Color? fillColor;
   final void Function(String)? onChanged;
+  final EdgeInsets? contentPadding;
+  final bool? isDense;
+  final TextInputDirection? direction;
+  final Icon? suffixIcon;
+  final TextStyle? labelStyle;
 
   CustomTextInput({
     super.key,
@@ -34,6 +41,11 @@ class CustomTextInput extends StatefulWidget {
     this.errorText,
     this.fillColor,
     this.onChanged,
+    this.contentPadding,
+    this.isDense,
+    this.direction = TextInputDirection.column,
+    this.suffixIcon,
+    this.labelStyle,
   }) : inputFormatters =
             inputFormatters ?? FilteringTextInputFormatter.singleLineFormatter;
 
@@ -42,52 +54,89 @@ class CustomTextInput extends StatefulWidget {
 }
 
 class _CustomTextInputState extends State<CustomTextInput> {
+  Widget onRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Text(
+            widget.label!,
+            style: widget.labelStyle ?? Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
+        Expanded(child: customTextField()),
+      ],
+    );
+  }
+
+  Widget onColumn() {
+    return Column(
+      children: [
+        if (widget.label != null)
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              widget.label!,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+        customTextField(),
+      ].divide(
+        SizedBox(
+          height: 4,
+        ),
+      ),
+    );
+  }
+
+  Widget customTextField() {
+    return TextFormField(
+      readOnly: widget.readOnly,
+      initialValue: widget.initialValue,
+      controller: widget.controller,
+      validator: widget.validator,
+      keyboardType: widget.keyboardType,
+      enabled: widget.enabled,
+      obscureText: widget.obscureText,
+      inputFormatters: [
+        widget.inputFormatters,
+      ],
+      decoration: InputDecoration(
+        prefixIcon: widget.prefixIcon,
+        hintText: widget.hintText,
+        fillColor: widget.fillColor,
+        filled: widget.fillColor == null ? false : true,
+        enabledBorder: widget.fillColor == null
+            ? null
+            : OutlineInputBorder(
+                borderSide: BorderSide(color: widget.fillColor!),
+              ),
+        errorText: widget.errorText,
+        contentPadding: widget.contentPadding,
+        isDense: widget.isDense,
+        suffixIcon: widget.suffixIcon,
+      ),
+      style: Theme.of(context).textTheme.bodySmall,
+      onChanged: widget.onChanged,
+    );
+  }
+
+  Widget content() {
+    switch (widget.direction) {
+      case TextInputDirection.column:
+        return onColumn();
+      case TextInputDirection.row:
+        return onRow();
+      default:
+        return onColumn();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Wrap(
       children: <Widget>[
-        Column(
-          children: [
-            if (widget.label != null)
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  widget.label!,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-              ),
-            TextFormField(
-              readOnly: widget.readOnly,
-              initialValue: widget.initialValue,
-              controller: widget.controller,
-              validator: widget.validator,
-              keyboardType: widget.keyboardType,
-              enabled: widget.enabled,
-              obscureText: widget.obscureText,
-              inputFormatters: [
-                widget.inputFormatters,
-              ],
-              decoration: InputDecoration(
-                prefixIcon: widget.prefixIcon,
-                hintText: widget.hintText,
-                fillColor: widget.fillColor,
-                filled: widget.fillColor == null ? false : true,
-                enabledBorder: widget.fillColor == null
-                    ? null
-                    : OutlineInputBorder(
-                        borderSide: BorderSide(color: widget.fillColor!),
-                      ),
-                errorText: widget.errorText,
-              ),
-              style: Theme.of(context).textTheme.bodySmall,
-              onChanged: widget.onChanged,
-            ),
-          ].divide(
-            SizedBox(
-              height: 4,
-            ),
-          ),
-        ),
+        content(),
       ],
     );
   }

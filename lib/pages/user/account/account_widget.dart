@@ -53,7 +53,9 @@ class _AccountWidgetState extends State<AccountWidget> {
                 ),
                 Text(
                   "${_model.currentUser?.firstName} ${_model.currentUser?.lastName?[0]}.",
-                  style: Theme.of(context).textTheme.displaySmall,
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
                 Spacer(),
                 IconButton(
@@ -64,48 +66,19 @@ class _AccountWidgetState extends State<AccountWidget> {
                 ),
               ],
             ),
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'First name',
-                    ),
-                    Text(
-                      _model.currentUser!.firstName!,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Last name',
-                    ),
-                    Text(
-                      "${_model.currentUser?.lastName}",
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Email',
-                    ),
-                    Text(
-                      "${_model.currentUser?.email}",
-                    ),
-                  ],
-                ),
-              ],
+            details(),
+            SizedBox(
+              height: 20,
             ),
             Column(
               children: [
                 changePassword(),
                 logout(),
-              ],
+              ].divide(
+                SizedBox(
+                  height: 10,
+                ),
+              ),
             ),
           ].divide(
             SizedBox(
@@ -117,8 +90,70 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  Future<dynamic> editDetails() {
-    return showDialog(
+  Widget details() {
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'First name',
+              style: textTheme.titleMedium,
+            ),
+            Text(
+              _model.currentUser!.firstName!,
+              style:
+                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        Divider(
+          indent: 4,
+          endIndent: 4,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Last name',
+              style: textTheme.titleMedium,
+            ),
+            Text(
+              "${_model.currentUser?.lastName}",
+              style:
+                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        Divider(
+          indent: 4,
+          endIndent: 4,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Email',
+              style: textTheme.titleMedium,
+            ),
+            Text(
+              "${_model.currentUser?.email}",
+              style:
+                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ].divide(
+        SizedBox(
+          height: 4,
+        ),
+      ),
+    );
+  }
+
+  void editDetails() {
+    showDialog(
         context: context,
         builder: (context) {
           return Dialog(
@@ -175,8 +210,11 @@ class _AccountWidgetState extends State<AccountWidget> {
   }
 
   Widget changePassword() {
-    return InkWell(
-      onTap: () {
+    return TextButton.icon(
+      style: TextButton.styleFrom(
+        minimumSize: Size.fromHeight(10),
+      ),
+      onPressed: () {
         showDialog(
             context: context,
             builder: (context) {
@@ -238,45 +276,34 @@ class _AccountWidgetState extends State<AccountWidget> {
               });
             });
       },
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          children: [
-            Icon(
-              Icons.lock_reset_rounded,
-              size: 30,
-              color: Colors.black87,
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text('Change password'),
-          ],
+      icon: Icon(Icons.lock_reset_rounded),
+      label: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Change password',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w500,
+              ),
         ),
       ),
     );
   }
 
   Widget logout() {
-    return InkWell(
-      onTap: () {
+    return TextButton.icon(
+      onPressed: () {
         _model.logout(context);
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Icon(
-              Icons.logout,
-              size: 30,
-              color: Colors.black87,
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text('Logout'),
-          ],
+      icon: Icon(Icons.logout),
+      label: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Logout',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w500,
+              ),
         ),
       ),
     );

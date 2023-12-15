@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,93 +15,147 @@ class CarItemWidget extends StatefulWidget {
 }
 
 class _CarItemWidgetState extends State<CarItemWidget> {
+  late CarItemModel _model;
+
   @override
   void initState() {
     super.initState();
+    _model = CarItemModel();
+  }
+
+  void handleLongPress() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Remove'),
+          titlePadding: EdgeInsets.only(left: 20, top: 20, right: 20),
+          contentPadding: EdgeInsets.all(20),
+          content: Text('Are you sure to remove this car?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                showDialogLoading(context);
+                _model.delete(widget.car.licensePlate!).then((value) {
+                  if (value) {
+                    context.pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      showSuccess('Car removed'),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      showError(
+                          'Car removed', Theme.of(context).colorScheme.error),
+                    );
+                  }
+                });
+              },
+              child: Text('Remove'),
+            ),
+            TextButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff52B2FA)),
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
+        border: Border.all(color: Theme.of(context).primaryColor),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            color: Color(0xff52B2FA),
-            width: double.infinity,
-            padding: EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${widget.car.licensePlate}",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                Text(
-                  widget.car.availability!,
-                ),
-              ],
-            ),
-          ),
-          Row(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onLongPress: handleLongPress,
+        onTap: () {
+          context.pushNamed(
+            'CarDetails',
+            pathParameters: {'licensePlate': widget.car.licensePlate!},
+            extra: <String, dynamic>{
+              'car': widget.car,
+            },
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(padding: const EdgeInsets.all(10)),
-              CachedNetworkImage(
-                imageUrl: getImageUrl(widget.car.photoUrl![0]),
-                errorWidget: (context, url, error) => Icon(
-                  Icons.error,
-                  color: Colors.red,
-                ),
-                placeholder: (context, url) => CircularProgressIndicator(),
-                width: 150.0,
-                height: 100.0,
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-              ),
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 30, bottom: 30),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
+                  Text(
+                    "${widget.car.licensePlate}",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  Text(
+                    widget.car.availability!,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+              ),
+              Divider(
+                indent: 4,
+                endIndent: 4,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    Card(
+                      surfaceTintColor:
+                          Theme.of(context).colorScheme.primaryContainer,
+                      child: CachedNetworkImage(
+                        imageUrl: getImageUrl(widget.car.photoUrl![0]),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        width: 150.0,
+                        height: 100.0,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    DefaultTextStyle(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             widget.car.vehicleType!,
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
                           Row(
                             children: [
                               withCurrency(
                                 Text(
                                   widget.car.price.toString(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                      ),
                                 ),
                               ),
                               SizedBox(
@@ -108,19 +164,22 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                               Text('/ day'),
                             ],
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
                         ],
                       ),
-                    ),
-                  ),
-                ],
-              )
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
+  }
+}
+
+class CarItemModel {
+  Future<bool> delete(String licensePlate) async {
+    return await CraController.deleteCar(licensePlate);
   }
 }

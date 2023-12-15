@@ -6,7 +6,6 @@ import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
-import 'package:joiner_1/pages/cra/earnings/earnings_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rental_details/rental_details_widget.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
@@ -59,7 +58,7 @@ class AppStateNotifier extends ChangeNotifier {
         appState.currentUser != null && state.matchedLocation == '/login';
     bool loggingOut =
         appState.currentUser == null && state.matchedLocation == '/account';
-    if (loggingIn) return appState.isCra ? '/earnings' : '/lobby';
+    if (loggingIn) return appState.isCra ? '/cars' : '/lobby';
     if (loggingOut) return '/login';
 
     return null;
@@ -179,15 +178,6 @@ List<FFRoute> userRoutes() {
 
 List<FFRoute> craRoutes() {
   return [
-    FFRoute(
-      name: 'Earnings',
-      path: '/earnings',
-      builder: (context, params) => params.isEmpty
-          ? NavBarPage(
-              initialPage: 'Earnings',
-            )
-          : EarningsWidget(),
-    ),
     FFRoute(
       name: 'Cars',
       path: '/cars',

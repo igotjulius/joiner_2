@@ -101,6 +101,8 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
         centerTitle: false,
         elevation: 0.0,
         bottom: TabBar(
+          tabAlignment: TabAlignment.center,
+          isScrollable: true,
           tabs: [
             Tab(text: 'Dashboard'),
             Tab(text: 'Chat'),

@@ -33,29 +33,6 @@ class _RentalsWidgetState extends State<RentalsWidget> {
     super.dispose();
   }
 
-  Widget appBarContent() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Upcoming Rentals'),
-        FilledButton(
-          child: Text('Browse Listings'),
-          onPressed: () {
-            context.pushNamed(
-              'Listings',
-              extra: <String, dynamic>{
-                kTransitionInfoKey: TransitionInfo(
-                  hasTransition: true,
-                  transitionType: PageTransitionType.rightToLeft,
-                ),
-              },
-            );
-          },
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,9 +40,6 @@ class _RentalsWidgetState extends State<RentalsWidget> {
       appBar: AppBar(
         title: Text(
           'Upcoming Rentals',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
         ),
         actions: [
           Padding(
