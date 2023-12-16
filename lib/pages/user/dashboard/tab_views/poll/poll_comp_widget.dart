@@ -60,7 +60,7 @@ class _PollCompWidgetState extends State<PollCompWidget> {
                 children: [
                   Text('Poll'),
                   FilledButton(
-                    child: Text('Add'),
+                    child: Text('Create'),
                     onPressed: () {
                       _controller = showBottomSheet(
                         context: context,

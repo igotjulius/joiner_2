@@ -8,7 +8,22 @@ class InfoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: child,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.info_outline_rounded,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Flexible(
+            child: child!,
+          ),
+        ],
+      ),
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),

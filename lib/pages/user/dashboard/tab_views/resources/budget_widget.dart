@@ -24,6 +24,14 @@ class _BudgetWidgetState extends State<BudgetWidget>
   List<ParticipantModel>? _participants;
   ExpenseModel? _expense;
   TabController? _tabController;
+  final _tabs = [
+    Tab(
+      text: 'Expenses',
+    ),
+    Tab(
+      text: 'Budget',
+    ),
+  ];
 
   @override
   void initState() {
@@ -33,7 +41,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
     _expense = _currentLobby?.expense;
     _tabController = TabController(
       vsync: this,
-      length: 2,
+      length: _tabs.length,
       initialIndex: 0,
     )..addListener(() => setState(() {}));
   }
@@ -57,14 +65,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
                   unselectedLabelStyle: TextStyle(),
                   labelPadding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
                   padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                  tabs: [
-                    Tab(
-                      text: 'Expenses',
-                    ),
-                    Tab(
-                      text: 'Budget',
-                    ),
-                  ],
+                  tabs: _tabs,
                   controller: _tabController,
                 ),
               ),

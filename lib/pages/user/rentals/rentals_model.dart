@@ -31,7 +31,7 @@ class RentalsModel extends FlutterFlowModel {
         final result = snapshot.data!.data;
         return result == null
             ? Center(
-                child: Text('No upcoming rentals'),
+                child: Text('Empty rentals'),
               )
             : ListView.builder(
                 shrinkWrap: true,

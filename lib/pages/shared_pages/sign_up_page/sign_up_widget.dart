@@ -18,13 +18,21 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
   GlobalKey<FormState> joinerFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> rentFormKey = GlobalKey<FormState>();
   late SignUpPageModel _model;
+  final _tabs = [
+    Tab(
+      text: 'Joiner',
+    ),
+    Tab(
+      text: 'Rent your car',
+    ),
+  ];
 
   @override
   void initState() {
     super.initState();
     _model = SignUpPageModel();
     _model.userModel = UserSignUpMoleModel();
-    _model.tabController ??= TabController(length: 2, vsync: this);
+    _model.tabController ??= TabController(length: _tabs.length, vsync: this);
     _model.craModel = CraSignUpMoleModel();
   }
 
@@ -87,14 +95,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                       onTap: (value) {
                         _model.tabController?.index = value;
                       },
-                      tabs: [
-                        Text(
-                          'Joiner',
-                        ),
-                        Text(
-                          'Rent your car',
-                        ),
-                      ],
+                      tabs: _tabs,
                     ),
                   ),
                   Expanded(

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 
 class CarItemWidget extends StatefulWidget {
   final CarModel car;
@@ -66,23 +68,26 @@ class _CarItemWidgetState extends State<CarItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).primaryColor),
-        borderRadius: BorderRadius.circular(10),
-      ),
+    final isCra = context.watch<FFAppState>().isCra;
+    return Card(
+      surfaceTintColor: Theme.of(context).colorScheme.tertiary,
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
-        onLongPress: handleLongPress,
+        onLongPress: isCra ? handleLongPress : null,
         onTap: () {
-          context.pushNamed(
-            'CarDetails',
-            pathParameters: {'licensePlate': widget.car.licensePlate!},
-            extra: <String, dynamic>{
-              'car': widget.car,
-            },
-          );
+          if (isCra) {
+            context.pushNamed(
+              'CarDetails',
+              pathParameters: {'licensePlate': widget.car.licensePlate!},
+              extra: <String, dynamic>{
+                'car': widget.car,
+              },
+            );
+            return;
+          }
+          if (!isCra) {
+            context.pushNamed('Booking', extra: {'car': widget.car});
+          }
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -96,12 +101,14 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                     "${widget.car.licensePlate}",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                   ),
                   Text(
                     widget.car.availability!,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                   ),
                 ],

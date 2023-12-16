@@ -12,8 +12,6 @@ class LobbyPageModel {
   final unfocusNode = FocusNode();
   // State field(s) for TabBar widget.
   TabController? tabBarController;
-  int get tabBarCurrentIndex =>
-      tabBarController != null ? tabBarController!.index : 0;
 
   // Model for Lobby Dashboard component
   LobbyDashboardModel? lobbyDashboardModel;

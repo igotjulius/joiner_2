@@ -21,6 +21,14 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     with TickerProviderStateMixin {
   late LobbiesModel _model;
   Future<Map<String, List<LobbyModel>>>? _fetchLobbies;
+  final _tabs = [
+    Tab(
+      text: 'Promos',
+    ),
+    Tab(
+      text: 'Lobbies',
+    ),
+  ];
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -30,7 +38,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     _model = createModel(context, () => LobbiesModel());
     _fetchLobbies = UserController.getLobbies();
     _model.tabController =
-        TabController(length: 2, vsync: this, initialIndex: 0);
+        TabController(length: _tabs.length, vsync: this, initialIndex: 0);
   }
 
   @override
@@ -59,14 +67,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
         toolbarHeight: 0,
         backgroundColor: Color(0xfffafafa),
         bottom: TabBar(
-          tabs: [
-            Tab(
-              text: 'Promos',
-            ),
-            Tab(
-              text: 'Lobbies',
-            ),
-          ],
+          tabs: _tabs,
           controller: _model.tabController,
           onTap: (value) => setState(() {}),
         ),

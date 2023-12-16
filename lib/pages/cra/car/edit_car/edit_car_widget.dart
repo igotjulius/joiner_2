@@ -151,31 +151,15 @@ class _EditCarWidgetState extends State<EditCarWidget> {
     return Align(
       alignment: Alignment.center,
       child: InfoContainer(
-        filled: true,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.info_outline_rounded,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            SizedBox(
-              width: 4,
-            ),
-            Flexible(
-              child: Text(
-                isEnabled
-                    ? 'Click the image if you want to upload new set of images.'
-                    : 'Vehicles on rent can not be edited.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-              ),
-            ),
-          ],
-        ),
-      ),
+          filled: true,
+          child: Text(
+            isEnabled
+                ? 'Click the image if you want to upload new set of images.'
+                : 'Vehicles on rent can not be edited.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+          )),
     );
   }
 

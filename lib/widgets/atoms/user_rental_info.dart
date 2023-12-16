@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/rental_model.dart';
+import 'package:joiner_1/utils/utils.dart';
 
 class RentalInfo extends StatefulWidget {
   final RentalModel? rental;
@@ -18,9 +19,7 @@ class _RentalInfoState extends State<RentalInfo> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: ContinuousRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
           context.pushNamed(
@@ -37,12 +36,16 @@ class _RentalInfoState extends State<RentalInfo> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
                 children: [
-                  Text(
-                    '₱${widget.rental?.price}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  withCurrency(
+                    Text(
+                      '${widget.rental?.price}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ),
                   SizedBox(
@@ -54,16 +57,24 @@ class _RentalInfoState extends State<RentalInfo> {
                 ],
               ),
               Divider(
-                height: 30.0,
+                height: 32.0,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Pickup date:',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.w500),
                   ),
                   Text(
                     '${DateFormat('MMM d, y').format(widget.rental!.startRental!)}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
@@ -72,9 +83,17 @@ class _RentalInfoState extends State<RentalInfo> {
                 children: [
                   Text(
                     'Return Date:',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.w500),
                   ),
                   Text(
                     '${DateFormat('MMM d, y').format(widget.rental!.endRental!)}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w500),
                   ),
                 ],
               )

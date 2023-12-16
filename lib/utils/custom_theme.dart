@@ -24,25 +24,25 @@ ThemeData lightTheme(BuildContext context) {
         borderRadius: BorderRadius.circular(20),
       ),
       color: Color(0xffffffff),
-      surfaceTintColor: Color(0xffffffff),
+      // surfaceTintColor: Color(0xffffffff),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(
-          side: BorderSide(),
           borderRadius: BorderRadius.circular(10),
         ),
+        side: BorderSide(color: lightThemeColors().primary),
       ),
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         textStyle: textTheme().bodyMedium?.copyWith(
               fontFamily: 'Poppins',
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
       ),
     ),
@@ -138,14 +138,14 @@ ColorScheme lightThemeColors() {
     onPrimary: Colors.white,
     secondary: Color(0xff33A7FF),
     onSecondary: Colors.white,
-    tertiary: Color(0xffffb400),
+    tertiary: Color(0xff0083FF),
     error: Color(0xffcc0000),
     onError: Colors.white,
     background: Color(0xfff9f9f9),
     onBackground: Colors.black,
     surface: Color(0xfff2f2f2),
     onSurface: Color(0xff101014),
-    onSurfaceVariant: Color(0xff5C6065),
+    onSurfaceVariant: Color(0xff38484F),
   );
 }
 

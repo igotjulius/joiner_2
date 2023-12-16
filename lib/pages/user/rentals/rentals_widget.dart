@@ -39,7 +39,7 @@ class _RentalsWidgetState extends State<RentalsWidget> {
       key: scaffoldKey,
       appBar: AppBar(
         title: Text(
-          'Upcoming Rentals',
+          'Rentals',
         ),
         actions: [
           Padding(

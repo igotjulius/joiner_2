@@ -29,6 +29,13 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     with TickerProviderStateMixin {
   late LobbyPageModel _model;
   Future<LobbyModel?>? _fetchLobby;
+  final _tabs = [
+    Tab(text: 'Dashboard'),
+    Tab(text: 'Chat'),
+    Tab(text: 'Resources'),
+    Tab(text: 'Poll'),
+    Tab(text: 'Joiners'),
+  ];
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -40,7 +47,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     _fetchLobby = UserController.getLobby(widget.lobbyId!);
     _model.tabBarController = TabController(
       vsync: this,
-      length: 5,
+      length: _tabs.length,
       initialIndex: 0,
     );
     _model.tabBarController?.addListener(() {
@@ -103,13 +110,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
         bottom: TabBar(
           tabAlignment: TabAlignment.center,
           isScrollable: true,
-          tabs: [
-            Tab(text: 'Dashboard'),
-            Tab(text: 'Chat'),
-            Tab(text: 'Resources'),
-            Tab(text: 'Poll'),
-            Tab(text: 'Joiners'),
-          ],
+          tabs: _tabs,
           controller: _model.tabBarController,
           onTap: (value) => setState(() {
             FocusScope.of(context).unfocus();

@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/utils/image_handler.dart';
+import 'package:joiner_1/utils/utils.dart';
+import 'package:joiner_1/widgets/atoms/info_container.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'car_booking_model.dart';
-export 'car_booking_model.dart';
 
 class CarBookingWidget extends StatefulWidget {
   final CarModel? car;
@@ -23,222 +26,139 @@ PlatformFile? pickedFile;
 class _CarBookingWidgetState extends State<CarBookingWidget>
     with TickerProviderStateMixin {
   late CarBookingModel _model;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  TabController? _tabController;
+  String? _noImage, _noDates;
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CarBookingModel());
-
-    _model.textController1 ??= TextEditingController();
-    _model.textController2 ??= TextEditingController();
-    _model.imagePicker = PickedImages();
+    _model = CarBookingModel();
+    _model.dates ??= TextEditingController();
+    _model.imagePicker ??= PickedImages();
+    _model.datePicked =
+        DateTimeRange(start: DateTime.now(), end: DateTime.now());
+    _tabController ??= TabController(length: 3, vsync: this, initialIndex: 0);
+    _tabController?.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        iconTheme: IconThemeData(
-          color: Colors.black,
+  Widget uploadId() {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Text(
+          'Please Upload any Government ID',
         ),
-        title: Text(
-          'Requirements for Rental',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        centerTitle: false,
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: Color(0x28000000),
-                          offset: Offset(0, 2),
-                        )
-                      ],
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(12),
-                        bottomRight: Radius.circular(12),
-                        topLeft: Radius.circular(0),
-                        topRight: Radius.circular(0),
+        Expanded(
+          child: SizedBox(
+            height: 300,
+            width: 300,
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: () async {
+                  await _model.imagePicker?.selectImage();
+                  setState(() {
+                    _noImage = null;
+                  });
+                },
+                child: _model.imagePicker?.getImage() != null
+                    ? displayImage()
+                    : Center(
+                        child: Text('Tap to Upload'),
                       ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              'Please Upload any Government ID',
-                            ),
-                          ),
-                          Center(
-                            child: Container(
-                              height: 200,
-                              width: 300,
-                              decoration: _model.brokenLines,
-                              child: InkWell(
-                                onTap: () async {
-                                  await _model.imagePicker?.selectImage();
-                                  setState(() {});
-                                },
-                                child: _model.imagePicker?.getImage() != null
-                                    ? displayImage()
-                                    : Center(
-                                        child: Text('Tap to Upload'),
-                                      ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.symmetric(
-                              horizontal: 8,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.only(top: 30),
-                            child: Text(
-                              'Start Date - End Date of Rental',
-                            ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              FlutterFlowIconButton(
-                                borderRadius: 20,
-                                borderWidth: 1,
-                                buttonSize: 40,
-                                icon: Icon(
-                                  Icons.calendar_month,
-                                  size: 24,
-                                ),
-                                onPressed: () async {
-                                  final checkDate = DateTime.now()
-                                      .isBefore(widget.car!.startDate!);
-                                  showDateRangePicker(
-                                    context: context,
-                                    firstDate: checkDate
-                                        ? widget.car!.startDate!
-                                        : DateTime.now(),
-                                    lastDate: widget.car!.endDate!,
-                                  ).then((value) {
-                                    if (value != null) {
-                                      _model.datePicked = value;
-                                      String start = DateFormat('yyyy-MM-dd')
-                                          .format(value.start);
-                                      String end = DateFormat('yyyy-MM-dd')
-                                          .format(value.end);
-                                      _model.textController2.text =
-                                          start + " - " + end;
-                                    }
-                                  });
-                                },
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      8, 0, 8, 0),
-                                  child: TextFormField(
-                                    controller: _model.textController2,
-                                    focusNode: _model.textFieldFocusNode2,
-                                    autofocus: true,
-                                    readOnly: true,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'yyyy-mm-dd - yyyy-mm-dd',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
-                            child: Text(
-                              'Payment',
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(10, 10, 0, 0),
-                            child: Text(
-                              'Pending Payment...',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
-          InkWell(
-            onTap: () async {
-              _model.bookNow(widget.car!.licensePlate!).then((isSuccess) {
-                if (isSuccess) {
-                  showSnackbar(context, 'Rental success');
-                  context.goNamed('CarRentals');
-                } else
-                  showSnackbar(context, 'Rental failed');
-              });
-            },
-            child: Container(
-              width: double.infinity,
-              height: 100,
-              constraints: BoxConstraints(
-                maxHeight: 70,
-              ),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).primaryColor,
-                    offset: Offset(0, -2),
-                  )
-                ],
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(0),
-                  bottomRight: Radius.circular(0),
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
+        ),
+        if (_noImage != null)
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(
+              _noImage!,
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: theme.colorScheme.error),
+            ),
+          ),
+        SizedBox(
+          height: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Pick dates',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            InkWell(
+              onTap: () async {
+                showDateRangePicker(
+                  context: context,
+                  firstDate:
+                      getCurrentTimestamp.isBefore(widget.car!.startDate!)
+                          ? widget.car!.startDate!
+                          : getCurrentTimestamp,
+                  lastDate: getCurrentTimestamp.isAfter(widget.car!.endDate!)
+                      ? getCurrentTimestamp
+                      : widget.car!.endDate!,
+                ).then((value) {
+                  if (value != null) {
+                    setState(() {
+                      _noDates = null;
+                    });
+                  }
+                  _model.datePicked = value!;
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                      child: Icon(
+                        Icons.calendar_today,
+                        color: Color(0xFF52B2FA),
+                        size: 24.0,
+                      ),
+                    ),
+                    Text(
+                      (_model.datePicked.duration.inDays == 0
+                          ? "${DateFormat('MMM d').format(_model.datePicked.start)}"
+                          : "${DateFormat('MMM d').format(_model.datePicked.start)} - ${DateFormat('MMM d').format(_model.datePicked.end)}"),
+                    ),
+                  ].divide(SizedBox(width: 10.0)),
                 ),
               ),
-              alignment: AlignmentDirectional(0.00, -0.20),
-              child: Text('Book Now',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: Colors.white)),
             ),
-          ),
-        ],
-      ),
+            if (_noDates != null)
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  _noDates!,
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: theme.colorScheme.error),
+                ),
+              ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -254,4 +174,318 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
       );
     }
   }
+
+  Widget additionalDetails() {
+    return Column(
+      children: [
+        InfoContainer(
+          filled: true,
+          child: Text(
+            'Click next to proceed to the payment page',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Start Date',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.grey),
+                    ),
+                    Text(
+                      '${DateFormat('MMM d').format(_model.datePicked.start)}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'End Date',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.grey),
+                    ),
+                    Text(
+                      '${DateFormat('MMM d').format(_model.datePicked.end)}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Duration',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.grey),
+                    ),
+                    Text(
+                      '${_model.datePicked.duration.inDays} day${_model.datePicked.duration.inDays > 1 ? 's' : ''}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Total',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.grey),
+                    ),
+                    withCurrency(
+                      Text(
+                        '${_model.datePicked.duration.inDays * widget.car!.price!}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget waitResponse() {
+    return Column(
+      children: [
+        Text('Confirmation of payment may take some time...'),
+        Text('You can now go back'),
+      ],
+    );
+  }
+
+  Widget navButtons() {
+    return Row(
+      children: [
+        if (_tabController?.index != 0)
+          TextButton(
+            onPressed: () {
+              _tabController?.index--;
+            },
+            child: Text('Back'),
+          ),
+        Spacer(),
+        FilledButton(
+          onPressed: () {
+            if (_model.imagePicker?.getImage() == null)
+              _noImage = 'Please select an image of your valid ID';
+            else if (_model.datePicked.duration.inDays < 1) {
+              _noDates = 'Minimum rent duration is one day';
+            } else if (_noImage == null && _noDates == null)
+              _tabController?.index++;
+            setState(() {});
+          },
+          child: Text('Next'),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Requirements',
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: TabBarView(
+                controller: _tabController,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  uploadId(),
+                  additionalDetails(),
+                  waitResponse(),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 8,
+                  width: 8,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: _tabController?.index == 0
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey[300],
+                  ),
+                ),
+                Container(
+                  height: 8,
+                  width: 8,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: _tabController?.index == 1
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey[300],
+                  ),
+                ),
+                Container(
+                  height: 8,
+                  width: 8,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: _tabController?.index == 2
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey[300],
+                  ),
+                ),
+              ].divide(
+                SizedBox(
+                  width: 4,
+                ),
+              ),
+            ),
+            Expanded(child: navButtons()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  InkWell newMethod2(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        _model.bookNow(widget.car!.licensePlate!).then((isSuccess) {
+          if (isSuccess) {
+            // showSnackbar(context, 'Rental success');
+            context.goNamed('CarRentals');
+          } else {}
+          // showSnackbar(context, 'Rental failed');
+        });
+      },
+      child: Container(
+        width: double.infinity,
+        height: 100,
+        constraints: BoxConstraints(
+          maxHeight: 70,
+        ),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).primaryColor,
+              offset: Offset(0, -2),
+            )
+          ],
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(0),
+            bottomRight: Radius.circular(0),
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+        ),
+        alignment: AlignmentDirectional(0.00, -0.20),
+        child: Text('Book Now',
+            style: Theme.of(context)
+                .textTheme
+                .displaySmall!
+                .copyWith(color: Colors.white)),
+      ),
+    );
+  }
+
+  FlutterFlowIconButton newMethod(BuildContext context) {
+    return FlutterFlowIconButton(
+      borderRadius: 20,
+      borderWidth: 1,
+      buttonSize: 40,
+      icon: Icon(
+        Icons.calendar_month,
+        size: 24,
+      ),
+      onPressed: () async {
+        final checkDate = DateTime.now().isBefore(widget.car!.startDate!);
+        showDateRangePicker(
+          context: context,
+          firstDate: checkDate ? widget.car!.startDate! : DateTime.now(),
+          lastDate: widget.car!.endDate!,
+        ).then((value) {
+          if (value != null) {
+            _model.datePicked = value;
+            String start = DateFormat('yyyy-MM-dd').format(value.start);
+            String end = DateFormat('yyyy-MM-dd').format(value.end);
+            _model.dates?.text = start + " - " + end;
+          }
+        });
+      },
+    );
+  }
+}
+
+class CarBookingModel {
+  late DateTimeRange datePicked;
+  PickedImages? imagePicker;
+  TextEditingController? dates;
+
+  /// Initialization and disposal methods.
+
+  void initState(BuildContext context) {}
+
+  void dispose() {
+    imagePicker = null;
+  }
+
+  /// Action blocks are added here.
+  Future<bool> bookNow(String licensePlate) async {
+    final rental = CarRentalModel(
+      licensePlate: licensePlate,
+      startRental: datePicked.start.toString(),
+      endRental: datePicked.end.toString(),
+      duration: datePicked.duration.inDays,
+    );
+    final result = await UserController.postRental(
+      rental,
+      imagePicker!.getImage()!,
+    );
+    return result.code == HttpStatus.ok ? true : false;
+  }
+
+  /// Additional helper methods are added here.
 }
