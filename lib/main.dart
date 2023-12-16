@@ -1,6 +1,5 @@
 import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/flutter_flow/nav/nav.dart';
-import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
 import 'package:provider/provider.dart';
@@ -185,7 +184,7 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       'Cars': CraCarWidget(),
       'CraRentals': CraRentalsWidget(),
-      'Account': CraAccountWidget(),
+      'Account': AccountWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
     return Scaffold(

@@ -6,6 +6,7 @@ import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:joiner_1/utils/generic_response.dart';
 import '../models/car_model.dart';
 
 class CraController {
@@ -100,7 +101,21 @@ class CraController {
 
   // Fetch CRA's rentals
   static Future<List<RentalModel>?> getCraRentals() async {
-    final res = await apiService.getCraRentals(_craUserId);
-    return res.data;
+    final result = await apiService.getCraRentals(_craUserId);
+    return result.data;
+  }
+
+  // Edit Cra's account
+  static Future<User?> editCraAccount(String firstName, String lastName) async {
+    final result = await apiService.editCraAccount(
+        _craUserId, {'firstName': firstName, 'lastName': lastName});
+    return result.data;
+  }
+
+  // Change Cra's password
+  static Future<ResponseModel> changeCraPassword(
+      String password, String newPassword) async {
+    return await apiService.changeCraPassword(
+        _craUserId, {'password': password, 'newPassword': newPassword});
   }
 }

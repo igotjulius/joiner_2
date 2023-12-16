@@ -190,14 +190,10 @@ abstract class ApiService {
     @Path('userId') String userId,
   );
 
-  // Get user profile
-  // @GET('user/{userId}/profile')
-  // Future<UserModel> getAccount(@Path('userId') String userId);
-
   // Edit user profile
-  @POST('user/{userId}/profile')
+  @POST('user/{userId}/account')
   Future<ResponseModel<UserModel>> editAccount(
-    @Body() Map<String, String> request,
+    @Body() Map<String, String> update,
     @Path('userId') String userId,
   );
 
@@ -337,7 +333,7 @@ abstract class ApiService {
   );
 
   // Fetch Cra's rentals
-  @GET('cra/{craUserId}/rent')
+  @GET('cra/{craUserId}/rentals')
   Future<ResponseModel<List<RentalModel>?>> getCraRentals(
     @Path('craUserId') String craUserId,
   );
@@ -380,5 +376,17 @@ abstract class ApiService {
     @Path('licensePlate') String licensePlate,
   );
 
-  //
+  // Edit cra profile
+  @POST('cra/{craUserId}/account')
+  Future<ResponseModel<User>> editCraAccount(
+    @Path('craUserId') String craUserId,
+    @Body() Map<String, String> update,
+  );
+
+  // Change cra password
+  @POST('cra/{craUserId}/changePassword')
+  Future<ResponseModel> changeCraPassword(
+    @Path('craUserId') String craUserId,
+    @Body() Map<String, String> update,
+  );
 }

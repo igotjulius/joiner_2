@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:joiner_1/components/cra/car_item_widget.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
-import 'package:joiner_1/utils/utils.dart';
 
 class CraCarWidget extends StatefulWidget {
   const CraCarWidget({super.key});
@@ -42,17 +41,8 @@ class _CraCarWidgetState extends State<CraCarWidget> {
   Padding mainBody() {
     return Padding(
       padding: EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: getCars(),
-          ),
-        ].divide(
-          SizedBox(
-            height: 20,
-          ),
-        ),
+      child: Center(
+        child: getCars(),
       ),
     );
   }

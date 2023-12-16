@@ -207,7 +207,7 @@ class UserController {
   }
 
   // Edit user profile
-  static Future<UserModel?> editProfile(
+  static Future<UserModel?> editAccount(
       String firstName, String lastName) async {
     final request = {'firstName': firstName, 'lastName': lastName};
     final result = await apiService.editAccount(request, _userId);
@@ -218,7 +218,6 @@ class UserController {
   static Future<ResponseModel> changePassword(
       String currentPassword, String nPassword) async {
     final request = {'password': currentPassword, 'newPassword': nPassword};
-    final result = await apiService.changePassword(request, _userId);
-    return result;
+    return await apiService.changePassword(request, _userId);
   }
 }

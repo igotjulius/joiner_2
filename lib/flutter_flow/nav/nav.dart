@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
-import 'package:joiner_1/pages/cra/account/cra_account_widget.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
@@ -228,7 +227,7 @@ List<FFRoute> craRoutes() {
           ? NavBarPage(initialPage: 'Account')
           : NavBarPage(
               initialPage: 'Account',
-              page: CraAccountWidget(),
+              page: AccountWidget(),
             ),
     ),
   ];

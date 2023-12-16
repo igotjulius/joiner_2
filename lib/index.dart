@@ -7,6 +7,6 @@ export 'pages/user/dashboard/lobby_creation/lobby_creation_widget.dart'
 export 'pages/user/dashboard/lobby/lobby_page_widget.dart' show LobbyPageWidget;
 export 'pages/user/rentals/rentals_widget.dart' show RentalsWidget;
 export '/pages/user/friends/friends_widget.dart' show FriendsWidget;
-export '/pages/user/account/account_widget.dart' show AccountWidget;
+export 'pages/shared_pages/account/account_widget.dart' show AccountWidget;
 export 'pages/user/friends/invite_friend/invite_friend_widget.dart'
     show InviteFriendWidget;

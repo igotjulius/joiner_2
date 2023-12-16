@@ -1,9 +1,9 @@
 import 'dart:io';
-
 import 'package:go_router/go_router.dart';
 import 'package:joiner_1/app_state.dart';
+import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/models/user_model.dart';
+import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class _AccountWidgetState extends State<AccountWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _model.currentUser = context.watch<FFAppState>().currentUser as UserModel;
+    _model.currentUser = context.watch<FFAppState>().currentUser;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -311,7 +311,7 @@ class _AccountWidgetState extends State<AccountWidget> {
 }
 
 class AccountModel {
-  UserModel? currentUser;
+  User? currentUser;
   TextEditingController? firstNameController;
   TextEditingController? lastNameController;
   TextEditingController? passController;
@@ -333,14 +333,23 @@ class AccountModel {
     errorText = null;
   }
 
-  Future<UserModel?> editProfile() async {
-    return await UserController.editProfile(
-        firstNameController!.text, lastNameController!.text);
+  Future<User?> editProfile() async {
+    final isCra = FFAppState().isCra;
+    if (isCra)
+      return await CraController.editCraAccount(
+          firstNameController!.text, lastNameController!.text);
+    else
+      return await UserController.editAccount(
+          firstNameController!.text, lastNameController!.text);
   }
 
   Future<bool> changePassword() async {
-    final result = await UserController.changePassword(
-        passController!.text, nPassController!.text);
+    final isCra = FFAppState().isCra;
+    final result = isCra
+        ? await CraController.changeCraPassword(
+            passController!.text, nPassController!.text)
+        : await UserController.changePassword(
+            passController!.text, nPassController!.text);
     if (result.code == HttpStatus.ok)
       return true;
     else {
