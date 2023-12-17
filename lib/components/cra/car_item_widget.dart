@@ -86,7 +86,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             return;
           }
           if (!isCra) {
-            context.pushNamed('Booking', extra: {'car': widget.car});
+            context.pushNamed('CarDetails', extra: {'car': widget.car});
           }
         },
         child: Padding(

@@ -133,7 +133,6 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                       Spacer(),
                       FilledButton.tonal(
                         onPressed: () async {
-                          print(joinerFormKey.currentState?.validate());
                           final joinerForm =
                               joinerFormKey.currentState != null &&
                                   joinerFormKey.currentState!.validate();

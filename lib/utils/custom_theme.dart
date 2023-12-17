@@ -127,6 +127,18 @@ ThemeData lightTheme(BuildContext context) {
     dropdownMenuTheme: DropdownMenuThemeData(
       textStyle: textTheme().bodyMedium,
     ),
+    chipTheme: ChipThemeData(
+      backgroundColor: lightThemeColors().primaryContainer,
+      labelStyle: textTheme().bodyMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: lightThemeColors().secondary,
+            fontFamily: 'Poppins',
+          ),
+      side: BorderSide(color: lightThemeColors().secondary),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
   );
 }
 

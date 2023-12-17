@@ -299,6 +299,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                 showDialogLoading(context);
                 final redirUrl =
                     await _model.processPayment(widget.car!.licensePlate!);
+                print(redirUrl);
                 await launchUrl(Uri.parse(redirUrl!),
                     mode: LaunchMode.externalApplication);
                 context.pop();
@@ -325,7 +326,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
 
   @override
   Widget build(BuildContext context) {
-    print(ModalRoute.of(context)?.settings);
     return Scaffold(
       appBar: AppBar(
         title: Text(

@@ -11,6 +11,7 @@ import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/map_feature/map_feature.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
+import 'package:joiner_1/pages/user/rentals/car_details/car_details_widget.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
 import 'package:joiner_1/pages/user/rentals/payment_result/result_widget.dart';
 import 'package:provider/provider.dart';
@@ -122,21 +123,25 @@ List<FFRoute> userRoutes() {
     FFRoute(
       name: 'CarRentals',
       path: '/rentals',
-      builder: (context, params) {
-        print(params.state.location);
-        return params.isEmpty
-            ? NavBarPage(initialPage: 'CarRentals')
-            : NavBarPage(
-                initialPage: 'CarRentals',
-                page: RentalsWidget(),
-              );
-      },
+      builder: (context, params) => params.isEmpty
+          ? NavBarPage(initialPage: 'CarRentals')
+          : NavBarPage(
+              initialPage: 'CarRentals',
+              page: RentalsWidget(),
+            ),
       routes: [
         GoRoute(
           name: 'Listings',
           path: 'listings',
           builder: (context, params) => ListingsWidget(),
         ),
+        GoRoute(
+            name: 'CarDetails',
+            path: 'carDetails',
+            builder: (context, state) {
+              CarModel obj = state.extraMap['car'] as CarModel;
+              return CarDetails(car: obj);
+            }),
         GoRoute(
           name: 'Booking',
           path: 'booking',

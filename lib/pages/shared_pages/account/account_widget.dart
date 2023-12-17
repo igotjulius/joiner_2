@@ -263,7 +263,6 @@ class _AccountWidgetState extends State<AccountWidget> {
                                     setState(() {});
                                   }
                                 }
-                                print(_model.errorText);
                               },
                               child: Text('Change'),
                             ),

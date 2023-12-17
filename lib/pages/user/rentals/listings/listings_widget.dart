@@ -1,7 +1,6 @@
 import 'package:joiner_1/components/cra/car_item_widget.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 class ListingsWidget extends StatefulWidget {
@@ -68,12 +67,7 @@ class _ListingsWidgetState extends State<ListingsWidget> {
             shrinkWrap: true,
             itemCount: cars.length,
             itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  context.pushNamed('Booking', extra: {'car': cars[index]});
-                },
-                child: CarItemWidget(car: cars[index]),
-              );
+              return CarItemWidget(car: cars[index]);
             },
             separatorBuilder: (context, index) {
               return SizedBox(
