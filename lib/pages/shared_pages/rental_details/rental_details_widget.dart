@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/components/user/linkable_lobby.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/rental_model.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class RentalDetails extends StatefulWidget {
@@ -52,34 +54,23 @@ class _RentalDetailsState extends State<RentalDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Image.asset(
-                  'assets/images/successful-payment.png',
-                  height: 200,
-                  width: 200,
+                Text(
+                  'Total',
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall
+                      ?.copyWith(fontWeight: FontWeight.w600),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall
-                          ?.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      '₱${widget.rental?.price}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall
-                          ?.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                  ],
+                withCurrency(
+                  Text(
+                    '${widget.rental?.price}',
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
                 ),
               ],
             ),
@@ -90,16 +81,20 @@ class _RentalDetailsState extends State<RentalDetails> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Transaction Id',
-                  style: Theme.of(context).textTheme.titleMedium,
+                label('Rental Id', widget.rental!.id!),
+                label('Payment Id', widget.rental!.paymentId!),
+                label(
+                  'Payment Status',
+                  widget.rental!.paymentStatus! == 'active'
+                      ? 'Pending payment'
+                      : 'Paid',
                 ),
-                Text('${widget.rental?.id}'),
+                timeline(),
+              ].divide(
                 SizedBox(
                   height: 10,
                 ),
-                timeline(),
-              ],
+              ),
             ),
           ].divide(
             SizedBox(
@@ -108,6 +103,22 @@ class _RentalDetailsState extends State<RentalDetails> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget label(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        SizedBox(
+          height: 4,
+        ),
+        Text(content),
+      ],
     );
   }
 
@@ -126,7 +137,7 @@ class _RentalDetailsState extends State<RentalDetails> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Payment',
+                  'Booked at',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Row(

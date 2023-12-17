@@ -28,9 +28,7 @@ class _CraRentalsWidgetState extends State<CraRentalsWidget> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Center(
-          child: getCraRentals(),
-        ),
+        child: getCraRentals(),
       ),
     );
   }

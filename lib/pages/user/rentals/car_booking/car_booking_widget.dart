@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
@@ -10,8 +9,9 @@ import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/info_container.dart';
-import '/flutter_flow/flutter_flow_icon_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CarBookingWidget extends StatefulWidget {
   final CarModel? car;
@@ -37,7 +37,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
     _model.imagePicker ??= PickedImages();
     _model.datePicked =
         DateTimeRange(start: DateTime.now(), end: DateTime.now());
-    _tabController ??= TabController(length: 3, vsync: this, initialIndex: 0);
+    _tabController ??= TabController(length: 2, vsync: this, initialIndex: 0);
     _tabController?.addListener(() {
       setState(() {});
     });
@@ -281,15 +281,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
     );
   }
 
-  Widget waitResponse() {
-    return Column(
-      children: [
-        Text('Confirmation of payment may take some time...'),
-        Text('You can now go back'),
-      ],
-    );
-  }
-
   Widget navButtons() {
     return Row(
       children: [
@@ -302,13 +293,28 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
           ),
         Spacer(),
         FilledButton(
-          onPressed: () {
+          onPressed: () async {
+            if (_tabController?.index == 1) {
+              try {
+                showDialogLoading(context);
+                final redirUrl =
+                    await _model.processPayment(widget.car!.licensePlate!);
+                await launchUrl(Uri.parse(redirUrl!),
+                    mode: LaunchMode.externalApplication);
+                context.pop();
+              } catch (e) {
+                print(e);
+              }
+
+              return;
+            }
             if (_model.imagePicker?.getImage() == null)
               _noImage = 'Please select an image of your valid ID';
             else if (_model.datePicked.duration.inDays < 1) {
               _noDates = 'Minimum rent duration is one day';
             } else if (_noImage == null && _noDates == null)
               _tabController?.index++;
+
             setState(() {});
           },
           child: Text('Next'),
@@ -319,6 +325,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
 
   @override
   Widget build(BuildContext context) {
+    print(ModalRoute.of(context)?.settings);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -337,7 +344,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                 children: [
                   uploadId(),
                   additionalDetails(),
-                  waitResponse(),
                 ],
               ),
             ),
@@ -389,74 +395,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
       ),
     );
   }
-
-  InkWell newMethod2(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        _model.bookNow(widget.car!.licensePlate!).then((isSuccess) {
-          if (isSuccess) {
-            // showSnackbar(context, 'Rental success');
-            context.goNamed('CarRentals');
-          } else {}
-          // showSnackbar(context, 'Rental failed');
-        });
-      },
-      child: Container(
-        width: double.infinity,
-        height: 100,
-        constraints: BoxConstraints(
-          maxHeight: 70,
-        ),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).primaryColor,
-              offset: Offset(0, -2),
-            )
-          ],
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(0),
-            bottomRight: Radius.circular(0),
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          ),
-        ),
-        alignment: AlignmentDirectional(0.00, -0.20),
-        child: Text('Book Now',
-            style: Theme.of(context)
-                .textTheme
-                .displaySmall!
-                .copyWith(color: Colors.white)),
-      ),
-    );
-  }
-
-  FlutterFlowIconButton newMethod(BuildContext context) {
-    return FlutterFlowIconButton(
-      borderRadius: 20,
-      borderWidth: 1,
-      buttonSize: 40,
-      icon: Icon(
-        Icons.calendar_month,
-        size: 24,
-      ),
-      onPressed: () async {
-        final checkDate = DateTime.now().isBefore(widget.car!.startDate!);
-        showDateRangePicker(
-          context: context,
-          firstDate: checkDate ? widget.car!.startDate! : DateTime.now(),
-          lastDate: widget.car!.endDate!,
-        ).then((value) {
-          if (value != null) {
-            _model.datePicked = value;
-            String start = DateFormat('yyyy-MM-dd').format(value.start);
-            String end = DateFormat('yyyy-MM-dd').format(value.end);
-            _model.dates?.text = start + " - " + end;
-          }
-        });
-      },
-    );
-  }
 }
 
 class CarBookingModel {
@@ -466,14 +404,13 @@ class CarBookingModel {
 
   /// Initialization and disposal methods.
 
-  void initState(BuildContext context) {}
-
   void dispose() {
     imagePicker = null;
+    dates?.dispose();
   }
 
   /// Action blocks are added here.
-  Future<bool> bookNow(String licensePlate) async {
+  Future<String?> processPayment(String licensePlate) async {
     final rental = CarRentalModel(
       licensePlate: licensePlate,
       startRental: datePicked.start.toString(),
@@ -484,7 +421,7 @@ class CarBookingModel {
       rental,
       imagePicker!.getImage()!,
     );
-    return result.code == HttpStatus.ok ? true : false;
+    return result.data;
   }
 
   /// Additional helper methods are added here.

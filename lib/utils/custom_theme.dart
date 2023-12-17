@@ -138,7 +138,7 @@ ColorScheme lightThemeColors() {
     onPrimary: Colors.white,
     secondary: Color(0xff33A7FF),
     onSecondary: Colors.white,
-    tertiary: Color(0xff0083FF),
+    tertiary: Color(0xffffb400),
     error: Color(0xffcc0000),
     onError: Colors.white,
     background: Color(0xfff9f9f9),

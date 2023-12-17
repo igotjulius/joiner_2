@@ -84,6 +84,8 @@ class ResponseModel<T> {
       return converted as T;
     } else if (json == null) {
       return null;
+    } else if (json is String) {
+      return json as T;
     }
     throw ArgumentError.value(json, 'json', 'Cannot handle this JSON payload');
   }

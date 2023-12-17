@@ -15,8 +15,7 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-const String serverUrl =
-    'http://10.0.2.2:443/'; // For mobile emulator run on the host machine
+// const String serverUrl = 'http://10.0.2.2:443/'; // For mobile emulator run on the host machine
 /*
   For physical phones, address might change.
   Run ipconfig from the host machine to configure the ip address of the server.
@@ -24,7 +23,7 @@ const String serverUrl =
 */
 // const String serverUrl = 'http://192.168.137.1:443/';
 // const String serverUrl = 'http://localhost:443/';
-// const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
+const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
 final apiService = ApiService(Dio(), baseUrl: serverUrl);
 // ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -245,18 +244,10 @@ abstract class ApiService {
     @Path('pollId') String pollId,
   );
 
-  // Create Car Rentals
-  // @POST('user/{userId}/rent/car')
-  // Future<ResponseModel<String>> postRental(
-  //   @Body() CarRentalModel carRental,
-  //   @Path('userId') String userId, {
-  //   @Header('Content-Type') String contentType = 'application/json',
-  // });
-
   // Rent a car
   @MultiPart()
   @POST('user/{userId}/rent/car')
-  Future<ResponseModel> postRental(
+  Future<ResponseModel<String>> postRental(
     @Path('userId') String craUserId, {
     @Part() required String licensePlate,
     @Part() required String startRental,

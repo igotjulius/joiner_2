@@ -70,7 +70,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
   Widget build(BuildContext context) {
     final isCra = context.watch<FFAppState>().isCra;
     return Card(
-      surfaceTintColor: Theme.of(context).colorScheme.tertiary,
+      surfaceTintColor: Theme.of(context).colorScheme.secondary,
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
         onLongPress: isCra ? handleLongPress : null,

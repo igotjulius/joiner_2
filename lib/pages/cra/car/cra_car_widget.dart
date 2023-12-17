@@ -41,9 +41,7 @@ class _CraCarWidgetState extends State<CraCarWidget> {
   Padding mainBody() {
     return Padding(
       padding: EdgeInsets.all(20),
-      child: Center(
-        child: getCars(),
-      ),
+      child: getCars(),
     );
   }
 

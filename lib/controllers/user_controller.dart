@@ -150,7 +150,7 @@ class UserController {
   }
 
   // User Renting a Car
-  static Future<ResponseModel> postRental(
+  static Future<ResponseModel<String>> postRental(
       CarRentalModel carRental, XFile image) async {
     List<MultipartFile> converted = [];
     converted.add(MultipartFile.fromBytes(

@@ -12,6 +12,7 @@ import 'package:joiner_1/pages/user/dashboard/map_feature/map_feature.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
+import 'package:joiner_1/pages/user/rentals/payment_result/result_widget.dart';
 import 'package:provider/provider.dart';
 import '/index.dart';
 import '/main.dart';
@@ -121,12 +122,15 @@ List<FFRoute> userRoutes() {
     FFRoute(
       name: 'CarRentals',
       path: '/rentals',
-      builder: (context, params) => params.isEmpty
-          ? NavBarPage(initialPage: 'CarRentals')
-          : NavBarPage(
-              initialPage: 'CarRentals',
-              page: RentalsWidget(),
-            ),
+      builder: (context, params) {
+        print(params.state.location);
+        return params.isEmpty
+            ? NavBarPage(initialPage: 'CarRentals')
+            : NavBarPage(
+                initialPage: 'CarRentals',
+                page: RentalsWidget(),
+              );
+      },
       routes: [
         GoRoute(
           name: 'Listings',
@@ -151,6 +155,19 @@ List<FFRoute> userRoutes() {
             );
           },
         ),
+        GoRoute(
+          name: 'Result',
+          path: ':paymentResult',
+          builder: (context, state) {
+            final result = state.pathParameters['paymentResult'] as String;
+            return ResultWidget(
+              result: result,
+            );
+          },
+        ),
+        GoRoute(
+            path: 'success',
+            builder: (context, state) => ResultWidget(result: 'success')),
       ],
     ),
     FFRoute(

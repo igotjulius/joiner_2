@@ -37,13 +37,13 @@ class _ListingsWidgetState extends State<ListingsWidget> {
         top: true,
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getAvailableCars(),
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: getAvailableCars(),
+              ),
+            ],
           ),
         ),
       ),
@@ -63,22 +63,24 @@ class _ListingsWidgetState extends State<ListingsWidget> {
             child: Text('No available cars for today :('),
           );
         final cars = snapshot.data!;
-        return ListView.separated(
-          shrinkWrap: true,
-          itemCount: cars.length,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                context.pushNamed('Booking', extra: {'car': cars[index]});
-              },
-              child: CarItemWidget(car: cars[index]),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return SizedBox(
-              height: 10,
-            );
-          },
+        return SingleChildScrollView(
+          child: ListView.separated(
+            shrinkWrap: true,
+            itemCount: cars.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  context.pushNamed('Booking', extra: {'car': cars[index]});
+                },
+                child: CarItemWidget(car: cars[index]),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return SizedBox(
+                height: 10,
+              );
+            },
+          ),
         );
       },
     );
