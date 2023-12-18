@@ -1,5 +1,6 @@
 import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/flutter_flow/nav/nav.dart';
+import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +30,8 @@ void main() async {
           create: (context) => AppStateNotifier.instance,
         ),
       ],
-      child: MyApp(),
+      // child: MyApp(),
+      child: MaterialApp(home: Scaffold(body: AddCarWidget())),
     ),
   );
 }

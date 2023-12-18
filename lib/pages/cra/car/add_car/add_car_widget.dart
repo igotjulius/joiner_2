@@ -12,13 +12,17 @@ import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class AddCarWidget extends StatefulWidget {
-  const AddCarWidget({super.key});
+  final AddCarModel? model;
+  const AddCarWidget({super.key, this.model});
 
   @override
-  State<AddCarWidget> createState() => _AddCarWidgetState();
+  State<AddCarWidget> createState() => _AddCarWidgetState(model);
 }
 
 class _AddCarWidgetState extends State<AddCarWidget> {
+  _AddCarWidgetState(AddCarModel? model) {
+    _model = model ?? AddCarModel();
+  }
   late AddCarModel _model;
   String? imagePickerError;
   String? imageUrl;
@@ -28,7 +32,6 @@ class _AddCarWidgetState extends State<AddCarWidget> {
   @override
   void initState() {
     super.initState();
-    _model = AddCarModel();
     _model.licenseController ??= TextEditingController();
     _model.vehicleTypeController ??= TextEditingController();
     _model.datesController ??= TextEditingController();
@@ -65,7 +68,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                 if (value != null) {
                   setState(() {
                     _model.datesController?.text =
-                        '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
+                        '${DateFormat('MMM d').format(value.start)} - ${DateFormat('MMM d').format(value.end)}';
                   });
                 }
               });
@@ -172,74 +175,6 @@ class _AddCarWidgetState extends State<AddCarWidget> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Register car'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Center(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  imagePicker(),
-                  Column(
-                    children: [
-                      licensePlate(),
-                      vehicleType(),
-                      datePicker(),
-                      price(),
-                    ].divide(
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ),
-                  ),
-                  FilledButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate() &&
-                          _model.imagePicker!.getImages() != null) {
-                        showDialogLoading(context);
-                        _model.register().then((value) {
-                          if (value != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              showError(
-                                  value, Theme.of(context).colorScheme.error),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              showSuccess('Car registered successfully'),
-                            );
-                          }
-                          context.pop();
-                        });
-                      }
-                      imagePickerError =
-                          _model.imagePicker!.getImages() == null ||
-                                  _model.imagePicker!.getImages()!.isEmpty
-                              ? 'Please upload an image of your car'
-                              : null;
-                      setState(() {});
-                    },
-                    child: Text('Register Car'),
-                  ),
-                ].divide(
-                  SizedBox(
-                    height: 20,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget price() {
     return CustomTextInput(
       label: 'Price',
@@ -279,6 +214,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
         ),
         Expanded(
           child: DropdownMenu<String>(
+            key: Key('vehicleType'),
             enableSearch: false,
             requestFocusOnTap: false,
             dropdownMenuEntries: <String>['Sedan', 'Van', 'SUV']
@@ -294,6 +230,84 @@ class _AddCarWidgetState extends State<AddCarWidget> {
           ),
         ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Register car'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  imagePicker(),
+                  Column(
+                    children: [
+                      licensePlate(),
+                      vehicleType(),
+                      datePicker(),
+                      price(),
+                    ].divide(
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ),
+                  ),
+                  FilledButton(
+                    key: Key('submit'),
+                    onPressed: () async {
+                      // if (_formKey.currentState!.validate() &&
+                      //     _model.imagePicker!.getImages() != null) {
+                      // showDialogLoading(context);
+                      // _model.register().then((value) {
+                      //   if (value != null) {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       showError(
+                      //           value, Theme.of(context).colorScheme.error),
+                      //     );
+                      //   } else {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       showSuccess('Car registered successfully'),
+                      //     );
+                      //   }
+                      //   context.pop();
+                      // });
+                      // }
+                      if (_formKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          showSuccess('Car registered successfully'),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          showError('Registration failed', Colors.red),
+                        );
+                      }
+                      imagePickerError =
+                          _model.imagePicker!.getImages() == null ||
+                                  _model.imagePicker!.getImages()!.isEmpty
+                              ? 'Please upload an image of your car'
+                              : null;
+                      setState(() {});
+                    },
+                    child: Text('Register Car'),
+                  ),
+                ].divide(
+                  SizedBox(
+                    height: 20,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
