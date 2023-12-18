@@ -36,6 +36,12 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     Tab(text: 'Poll'),
     Tab(text: 'Joiners'),
   ];
+  List<FabController> _fabControllers = [
+    FabController(),
+    FabController(),
+    FabController()
+  ];
+  bool showFab = true;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -67,7 +73,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
   Widget build(BuildContext context) {
     _model.currentLobby = context.watch<LobbyProvider>().currentLobby;
     if (_model.currentLobby == null)
-      return displayLobby();
+      return fetchLobby();
     else
       return mainDisplay();
   }
@@ -75,91 +81,147 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
   Widget mainDisplay() {
     return Scaffold(
       key: scaffoldKey,
-      appBar: AppBar(
-        title: Container(
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
+      appBar: appBar(),
+      body: mainContent(),
+      floatingActionButton: showFab && _model.tabBarController!.index > 1
+          ? Visibility(
+              visible: showFab,
+              child: FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    showFab = false;
+                  });
+                  switch (_model.tabBarController!.index) {
+                    case 2:
+                      _fabControllers[0].onTapHandler!();
+                      _model.budgetModel?.controller?.closed.then((value) {
+                        setState(() {
+                          showFab = true;
+                        });
+                      });
+                      break;
+                    case 3:
+                      _fabControllers[1].onTapHandler!();
+                      _model.pollModel?.controller?.closed.then((value) {
+                        setState(() {
+                          showFab = true;
+                        });
+                      });
+                      break;
+                    case 4:
+                      _fabControllers[2].onTapHandler!();
+                      _model.joinersModel?.controller?.closed.then((value) {
+                        setState(() {
+                          showFab = true;
+                        });
+                      });
+                    default:
+                  }
+                },
+                child: Icon(Icons.add_rounded),
+              ),
+            )
+          : null,
+    );
+  }
+
+  Widget mainContent() {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: Column(
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _model.currentLobby!.title!,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  Text(
-                    _model.currentLobby!.startDate ==
-                            _model.currentLobby!.endDate
-                        ? (_model.currentLobby!.startDate == null
-                            ? 'Date undecided'
-                            : "${dateFormat.format(_model.currentLobby!.startDate!)}")
-                        : "${dateFormat.format(_model.currentLobby!.startDate!)} - ${dateFormat.format(_model.currentLobby!.endDate!)}",
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ],
+              Expanded(
+                child: TabBarView(
+                  controller: _model.tabBarController,
+                  children: [
+                    LobbyDashboardWidget(
+                      model: _model.lobbyDashboardModel,
+                      lobbyId: widget.lobbyId,
+                    ),
+                    wrapWithModel(
+                      model: _model.chatModel!,
+                      updateCallback: () => setState(() {}),
+                      child: ChatWidget(
+                        setState,
+                        _model.currentLobby!.id,
+                        _model.currentLobby!.conversation,
+                      ),
+                    ),
+                    BudgetWidget(
+                      _fabControllers[0],
+                      _model.budgetModel,
+                      _model.currentLobby!.id,
+                      _model.currentLobby!.hostId,
+                    ),
+                    PollCompWidget(
+                      _model.currentLobby!.id,
+                      _fabControllers[1],
+                      _model.pollModel,
+                    ),
+                    JoinersWidget(_fabControllers[2], _model.joinersModel),
+                  ],
+                ),
               ),
             ],
           ),
         ),
-        actions: [
-          menuOption(),
-        ],
-        centerTitle: false,
-        elevation: 0.0,
-        bottom: TabBar(
-          tabAlignment: TabAlignment.center,
-          isScrollable: true,
-          tabs: _tabs,
-          controller: _model.tabBarController,
-          onTap: (value) => setState(() {
-            FocusScope.of(context).unfocus();
-          }),
-        ),
+      ],
+    );
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back_rounded),
+        onPressed: () {
+          context.goNamed('MainDashboard');
+        },
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: Column(
+      title: Container(
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: TabBarView(
-                    controller: _model.tabBarController,
-                    children: [
-                      LobbyDashboardWidget(
-                        model: _model.lobbyDashboardModel,
-                        lobbyId: widget.lobbyId,
-                      ),
-                      wrapWithModel(
-                        model: _model.chatModel!,
-                        updateCallback: () => setState(() {}),
-                        child: ChatWidget(
-                          setState,
-                          _model.currentLobby!.id,
-                          _model.currentLobby!.conversation,
-                        ),
-                      ),
-                      BudgetWidget(
-                        lobbyId: _model.currentLobby!.id,
-                        hostId: _model.currentLobby!.hostId,
-                      ),
-                      PollCompWidget(
-                        lobbyId: _model.currentLobby!.id,
-                      ),
-                      JoinersWidget(),
-                    ],
-                  ),
+                Text(
+                  _model.currentLobby!.title!,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                Text(
+                  _model.currentLobby!.startDate == _model.currentLobby!.endDate
+                      ? (_model.currentLobby!.startDate == null
+                          ? 'Date undecided'
+                          : "${dateFormat.format(_model.currentLobby!.startDate!)}")
+                      : "${dateFormat.format(_model.currentLobby!.startDate!)} - ${dateFormat.format(_model.currentLobby!.endDate!)}",
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+      actions: [
+        menuOption(),
+      ],
+      centerTitle: false,
+      elevation: 0.0,
+      bottom: TabBar(
+        tabAlignment: TabAlignment.center,
+        isScrollable: true,
+        tabs: _tabs,
+        controller: _model.tabBarController,
+        onTap: (value) => setState(() {
+          FocusScope.of(context).unfocus();
+        }),
       ),
     );
   }
 
-  FutureBuilder<LobbyModel?> displayLobby() {
+  FutureBuilder<LobbyModel?> fetchLobby() {
     return FutureBuilder(
       future: _fetchLobby,
       builder: (context, snapshot) {
@@ -193,4 +255,8 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
       ],
     );
   }
+}
+
+class FabController {
+  void Function()? onTapHandler;
 }

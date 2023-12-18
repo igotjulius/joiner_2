@@ -1,19 +1,15 @@
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/widgets/molecules/participant_atom.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
-class JoinersModel extends FlutterFlowModel {
+class JoinersModel {
   /// Initialization and disposal methods.
   bool checkboxVal = false;
   List<ParticipantModel>? participants;
   LobbyModel? currentLobby;
   Future<List<ParticipantModel>>? fetchParticipants;
-
-  void initState(BuildContext context) {}
-
-  void dispose() {}
+  PersistentBottomSheetController? controller;
 
   /// Action blocks are added here.
 
@@ -39,7 +35,6 @@ class JoinersModel extends FlutterFlowModel {
               userId: participants?[index].id,
               suffixLabel: participants?[index].joinStatus,
               showRemoveOption: showRemove,
-              rebuildParent: updatePage,
             );
           },
         );

@@ -44,6 +44,7 @@ class PendingFriendAtom extends StatelessWidget {
                 Expanded(
                   child: Text(
                     '$name sent you a friend request',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(),
                   ),
                 ),
               ],
@@ -60,7 +61,7 @@ class PendingFriendAtom extends StatelessWidget {
                     removeFriendRequest(friendId!);
                   },
                   style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    padding: EdgeInsets.symmetric(vertical: 14),
                     shape: LinearBorder(),
                   ),
                 ),
@@ -68,6 +69,7 @@ class PendingFriendAtom extends StatelessWidget {
               Expanded(
                 child: FilledButton(
                   style: FilledButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 12),
                     shape: LinearBorder(),
                   ),
                   child: Text('Accept'),

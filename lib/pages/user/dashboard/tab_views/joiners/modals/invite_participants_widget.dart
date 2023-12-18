@@ -31,27 +31,36 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Friends'),
-                FilledButton(
-                  child: Text('Invite'),
-                  onPressed: () {
-                    _model
-                        .sendInvitation(context.read<LobbyProvider>().lobbyId);
-                    context.pop();
-                  },
-                ),
-              ],
-            ),
-            _model.friendList(context),
-          ],
+    return Material(
+      child: Container(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Invite your friends'),
+                  IconButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    icon: Icon(Icons.close_rounded),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: _model.friendList(context),
+              ),
+              FilledButton(
+                child: Text('Invite'),
+                onPressed: () {
+                  _model.sendInvitation(context.read<LobbyProvider>().lobbyId);
+                  context.pop();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

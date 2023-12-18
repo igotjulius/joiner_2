@@ -128,13 +128,19 @@ ThemeData lightTheme(BuildContext context) {
       textStyle: textTheme().bodyMedium,
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: lightThemeColors().primaryContainer,
       labelStyle: textTheme().bodyMedium?.copyWith(
             fontWeight: FontWeight.w600,
             color: lightThemeColors().secondary,
             fontFamily: 'Poppins',
           ),
-      side: BorderSide(color: lightThemeColors().secondary),
+      secondarySelectedColor: lightThemeColors().primaryContainer,
+      // side: BorderSide(color: lightThemeColors().primary),
+      side: MaterialStateBorderSide.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return BorderSide.none;
+        }
+        return BorderSide(color: lightThemeColors().primary);
+      }),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -146,7 +152,7 @@ ColorScheme lightThemeColors() {
   return const ColorScheme(
     brightness: Brightness.light,
     primary: Color(0xff52b2fa),
-    primaryContainer: Color(0x2052b2fa),
+    primaryContainer: Color(0x3052b2fa),
     onPrimary: Colors.white,
     secondary: Color(0xff33A7FF),
     onSecondary: Colors.white,

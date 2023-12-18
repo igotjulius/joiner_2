@@ -42,7 +42,10 @@ class _FriendsWidgetState extends State<FriendsWidget> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            _model.friendList(pendingFriends, acceptedFriends, waitingApproval),
+            Expanded(
+              child: _model.friendList(
+                  pendingFriends, acceptedFriends, waitingApproval),
+            ),
           ],
         ),
       ),

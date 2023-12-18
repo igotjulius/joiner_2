@@ -155,7 +155,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                               ScaffoldMessenger.of(context).showSnackBar(
                                 showSuccess('Registration successful'),
                               );
-                              context.goNamed('Login');
+                              context.goNamed('Verification');
                             }
                           }
                         },

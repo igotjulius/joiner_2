@@ -83,11 +83,9 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
               ),
             ],
           ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: getUserLobbies(),
-            ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: getUserLobbies(),
           ),
         ],
       ),
@@ -99,7 +97,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     return FutureBuilder(
       future: _fetchLobbies,
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done)
+        if (snapshot.data == null)
           return Center(child: CircularProgressIndicator());
 
         final Map<String, List<LobbyModel>> result = snapshot.data!;
@@ -107,20 +105,22 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
 
         context.read<FFAppState>().setLinkableLobbies(activeLobbies);
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (pendingLobbies.length != 0)
-              Column(
-                children: [
-                  Text('Invitations'),
-                  LobbyInvitationMolecule(lobbies: pendingLobbies),
-                ],
-              ),
-            activeLobbies.length == 0
-                ? Text('No active lobbies')
-                : ActiveLobbyMolecule(activeLobbies),
-          ],
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (pendingLobbies.length != 0)
+                Column(
+                  children: [
+                    Text('Invitations'),
+                    LobbyInvitationMolecule(lobbies: pendingLobbies),
+                  ],
+                ),
+              activeLobbies.length == 0
+                  ? Text('No active lobbies')
+                  : ActiveLobbyMolecule(activeLobbies),
+            ],
+          ),
         );
       },
     );

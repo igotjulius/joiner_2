@@ -1,45 +1,52 @@
+import 'package:joiner_1/models/poll_model.dart';
+import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/modals/survey_poll_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/mole/poll_mole.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'poll_comp_model.dart';
-export 'poll_comp_model.dart';
 
 class PollCompWidget extends StatefulWidget {
   final String? lobbyId;
-  const PollCompWidget({
-    Key? key,
+  final FabController? fabController;
+  final PollCompModel? model;
+  const PollCompWidget(
     this.lobbyId,
+    this.fabController,
+    this.model, {
+    Key? key,
   });
 
   @override
-  _PollCompWidgetState createState() => _PollCompWidgetState();
+  _PollCompWidgetState createState() =>
+      _PollCompWidgetState(fabController!, model!);
 }
 
 class _PollCompWidgetState extends State<PollCompWidget> {
+  _PollCompWidgetState(FabController fabController, PollCompModel model) {
+    fabController.onTapHandler = fabHandler;
+    _model = model;
+  }
   late PollCompModel _model;
-  PersistentBottomSheetController? _controller;
-
-  @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-    _model.onUpdate();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _model = createModel(context, () => PollCompModel());
-  }
 
   @override
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_controller != null) _controller?.close();
+      if (_model.controller != null) _model.controller?.close();
     });
+  }
+
+  void fabHandler() {
+    _model.controller = showBottomSheet(
+      context: context,
+      builder: (context) {
+        return SurveyPollWidget(
+          lobbyId: widget.lobbyId!,
+        );
+      },
+    );
   }
 
   @override
@@ -56,22 +63,9 @@ class _PollCompWidgetState extends State<PollCompWidget> {
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('Poll'),
-                  FilledButton(
-                    child: Text('Create'),
-                    onPressed: () {
-                      _controller = showBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return SurveyPollWidget(
-                            lobbyId: widget.lobbyId!,
-                          );
-                        },
-                      );
-                    },
-                  ),
                 ],
               ),
               Flexible(
@@ -94,4 +88,10 @@ class _PollCompWidgetState extends State<PollCompWidget> {
       ),
     );
   }
+}
+
+class PollCompModel {
+  List<PollModel>? polls;
+  PersistentBottomSheetController? controller;
+  void dispose() {}
 }

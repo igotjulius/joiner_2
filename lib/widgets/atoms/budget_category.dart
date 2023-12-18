@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class BudgetCategoryWidget extends StatelessWidget {
   final String? lobbyId;
@@ -18,7 +21,7 @@ class BudgetCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserId = FFAppState().currentUser?.id;
+    final currentUserId = context.read<FFAppState>().currentUser?.id;
     return GestureDetector(
       onLongPress: () async {
         if (currentUserId == hostId) {
@@ -94,12 +97,8 @@ class BudgetCategoryWidget extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text(
-                    NumberFormat.currency(
-                      symbol: '₱', // Currency symbol
-                      decimalDigits: 2, // Number of decimal places
-                    ).format(amount),
-                    style: TextStyle(fontSize: 16),
+                  withCurrency(
+                    Text(amount.toString()),
                   ),
                 ].divide(
                   SizedBox(

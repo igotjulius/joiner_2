@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/resources/modals/add_budget_model.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
@@ -33,13 +32,23 @@ class _AddBudgetWidgetState extends State<AddBudgetWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      insetPadding: EdgeInsets.all(20),
+    return Material(
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Wrap(
-          alignment: WrapAlignment.center,
+        child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Add an expense'),
+                IconButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  icon: Icon(Icons.close_rounded),
+                ),
+              ],
+            ),
             CustomTextInput(
               label: 'Label',
               controller: _model.labelController,
@@ -52,13 +61,18 @@ class _AddBudgetWidgetState extends State<AddBudgetWidget> {
               inputFormatters: FilteringTextInputFormatter.digitsOnly,
               validator: _model.amountValidator,
             ),
-            FFButtonWidget(
-              text: 'Add',
-              onPressed: () {
-                _model.addExpenses(widget.lobbyId!);
-                context.pop();
-              },
-              options: FFButtonOptions(height: 40),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: double.maxFinite,
+              child: FilledButton(
+                child: Text('Add'),
+                onPressed: () {
+                  _model.addExpenses(widget.lobbyId!);
+                  context.pop();
+                },
+              ),
             ),
           ].divide(
             SizedBox(

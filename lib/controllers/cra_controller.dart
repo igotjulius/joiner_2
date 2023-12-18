@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/service/api_service.dart';
@@ -10,7 +9,9 @@ import 'package:joiner_1/utils/generic_response.dart';
 import '../models/car_model.dart';
 
 class CraController {
-  static late String _craUserId = FFAppState().pref!.getString('userId')!;
+  static late Map<String, String> user = {
+    'userId': '',
+  };
 
   // Register CRA
   static Future<String?> registerCra(User nUser) async {
@@ -21,13 +22,13 @@ class CraController {
 
   // Get all registered cars of corresponding CRA
   static Future<List<CarModel>?> getCraCars() async {
-    final res = await apiService.getCraCars(_craUserId);
+    final res = await apiService.getCraCars(user['userId']!);
     return res.data;
   }
 
   // Fetch a specific car
   static Future<CarModel?> getCraCar(String licensePlate) async {
-    final res = await apiService.getCraCar(_craUserId, licensePlate);
+    final res = await apiService.getCraCar(user['userId']!, licensePlate);
     return res.data;
   }
 
@@ -43,7 +44,7 @@ class CraController {
       converted.add(multipartFile);
     }
     final result = await apiService.registerCar(
-      _craUserId,
+      user['userId']!,
       licensePlate: car.licensePlate!,
       ownerId: car.ownerId!,
       ownerName: car.ownerName!,
@@ -76,7 +77,7 @@ class CraController {
     }
 
     final result = await apiService.editCar(
-      _craUserId,
+      user['userId']!,
       car.licensePlate!,
       licensePlate: car.licensePlate!,
       vehicleType: car.vehicleType!,
@@ -95,20 +96,20 @@ class CraController {
 
   // Delete a car
   static Future<bool> deleteCar(String licensePlate) async {
-    final result = await apiService.deleteCar(_craUserId, licensePlate);
+    final result = await apiService.deleteCar(user['userId']!, licensePlate);
     return result.code == HttpStatus.ok ? true : false;
   }
 
   // Fetch CRA's rentals
   static Future<List<RentalModel>?> getCraRentals() async {
-    final result = await apiService.getCraRentals(_craUserId);
+    final result = await apiService.getCraRentals(user['userId']!);
     return result.data;
   }
 
   // Edit Cra's account
   static Future<User?> editCraAccount(String firstName, String lastName) async {
     final result = await apiService.editCraAccount(
-        _craUserId, {'firstName': firstName, 'lastName': lastName});
+        user['userId']!, {'firstName': firstName, 'lastName': lastName});
     return result.data;
   }
 
@@ -116,6 +117,6 @@ class CraController {
   static Future<ResponseModel> changeCraPassword(
       String password, String newPassword) async {
     return await apiService.changeCraPassword(
-        _craUserId, {'password': password, 'newPassword': newPassword});
+        user['userId']!, {'password': password, 'newPassword': newPassword});
   }
 }
