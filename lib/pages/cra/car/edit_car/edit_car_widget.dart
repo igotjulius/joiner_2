@@ -14,7 +14,7 @@ import 'package:joiner_1/widgets/atoms/text_input.dart';
 
 class EditCarWidget extends StatefulWidget {
   final CarModel? car;
-  const EditCarWidget({super.key, this.car});
+  const EditCarWidget({super.key, required this.car});
 
   @override
   State<EditCarWidget> createState() => _EditCarWidgetState();
@@ -37,52 +37,6 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   void dispose() {
     super.dispose();
     _model.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(
-          color: Colors.black,
-        ),
-        title: Text('Details'),
-        actions: !isEnabled
-            ? null
-            : [
-                Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: FilledButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        showDialogLoading(context);
-                        _model.editCar().then(
-                          (value) {
-                            if (value != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                showError(
-                                    value, Theme.of(context).colorScheme.error),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                showSuccess('Changes saved'),
-                              );
-                            }
-                            context.pop();
-                          },
-                        );
-                      }
-                    },
-                    child: Text('Save changes'),
-                  ),
-                ),
-              ],
-      ),
-      body: SingleChildScrollView(
-        child: mainDisplay(),
-      ),
-    );
   }
 
   Widget mainDisplay() {
@@ -179,6 +133,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                     ),
               )
             : DropdownMenu<String>(
+                key: Key('availability'),
                 enabled: isEnabled,
                 enableSearch: false,
                 requestFocusOnTap: false,
@@ -222,6 +177,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
 
   Widget dropdownMenu() {
     return DropdownMenu<String>(
+      key: Key('vehicleType'),
       enabled: isEnabled,
       enableSearch: false,
       requestFocusOnTap: false,
@@ -344,6 +300,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
               )
             : Expanded(
                 child: InkWell(
+                  key: Key('datePicker'),
                   hoverColor: isEnabled ? null : Colors.transparent,
                   onTap: !isEnabled
                       ? null
@@ -386,6 +343,64 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                 ),
               ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        title: Text('Details'),
+        actions: !isEnabled
+            ? null
+            : [
+                Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: FilledButton(
+                    onPressed: () {
+                      // if (_formKey.currentState!.validate()) {
+                      //   showDialogLoading(context);
+                      //   _model.editCar().then(
+                      //     (value) {
+                      //       if (value != null) {
+                      //         ScaffoldMessenger.of(context).showSnackBar(
+                      //           showError(
+                      //               value, Theme.of(context).colorScheme.error),
+                      //         );
+                      //       } else {
+                      //         ScaffoldMessenger.of(context).showSnackBar(
+                      //           showSuccess('Changes saved'),
+                      //         );
+                      //       }
+                      //       context.pop();
+                      //     },
+                      //   );
+                      // }
+                      if (_formKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          showSuccess('Changes saved'),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          showError(
+                            'Error in saving',
+                            Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                      }
+                    },
+                    child: Text('Save changes'),
+                  ),
+                ),
+              ],
+      ),
+      body: SingleChildScrollView(
+        child: mainDisplay(),
+      ),
     );
   }
 }

@@ -1,7 +1,11 @@
 import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/flutter_flow/nav/nav.dart';
+import 'package:joiner_1/mock/test_utils.dart';
+import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
+import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
+import 'package:joiner_1/pages/provider/cra_provider.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +24,18 @@ void main() async {
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
+  // For testing
+  appState.setIsCra(true);
+  final _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => CraCarWidget(),
+      ),
+    ],
+  );
+  // -- End region --
+
   runApp(
     MultiProvider(
       providers: [
@@ -31,7 +47,14 @@ void main() async {
         ),
       ],
       // child: MyApp(),
-      child: MaterialApp(home: Scaffold(body: AddCarWidget())),
+      // For testing
+      child: ChangeNotifierProvider(
+        create: (_) => CraProvider(mockCraUser()),
+        child: MaterialApp.router(
+          routerConfig: _router,
+        ),
+      ),
+      // -- End region --
     ),
   );
 }
