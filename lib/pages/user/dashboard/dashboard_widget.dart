@@ -1,4 +1,5 @@
 import 'package:joiner_1/pages/user/dashboard/promo_list/promos_list.dart';
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:provider/provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:joiner_1/widgets/molecules/lobby_invitation_mole.dart';
 export 'dashboard_model.dart';
 
 class LobbiesWidget extends StatefulWidget {
-  const LobbiesWidget({Key? key}) : super(key: key);
+  const LobbiesWidget({super.key});
 
   @override
   _LobbiesWidgetState createState() => _LobbiesWidgetState();
@@ -19,6 +20,7 @@ class LobbiesWidget extends StatefulWidget {
 
 class _LobbiesWidgetState extends State<LobbiesWidget>
     with TickerProviderStateMixin {
+  Map<String, List<LobbyModel>>? lobbies;
   late LobbiesModel _model;
   Future<Map<String, List<LobbyModel>>>? _fetchLobbies;
   final _tabs = [
@@ -36,6 +38,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => LobbiesModel());
+    lobbies = context.read<LobbyProvider>().allLobbies;
     _fetchLobbies = UserController.getLobbies();
     _model.tabController =
         TabController(length: _tabs.length, vsync: this, initialIndex: 0);
@@ -50,6 +53,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+    lobbies = context.watch<LobbyProvider>().allLobbies;
     return Scaffold(
       floatingActionButton: _model.tabController!.index != 0
           ? FloatingActionButton(
@@ -85,7 +89,10 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
           ),
           Padding(
             padding: const EdgeInsets.all(10),
-            child: getUserLobbies(),
+            child: lobbies == null
+                ? getUserLobbies()
+                : displayLobbies(
+                    lobbies!['pendingLobby']!, lobbies!['activeLobby']!),
           ),
         ],
       ),
@@ -105,24 +112,29 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
 
         context.read<FFAppState>().setLinkableLobbies(activeLobbies);
 
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (pendingLobbies.length != 0)
-                Column(
-                  children: [
-                    Text('Invitations'),
-                    LobbyInvitationMolecule(lobbies: pendingLobbies),
-                  ],
-                ),
-              activeLobbies.length == 0
-                  ? Text('No active lobbies')
-                  : ActiveLobbyMolecule(activeLobbies),
-            ],
-          ),
-        );
+        return displayLobbies(pendingLobbies, activeLobbies);
       },
+    );
+  }
+
+  Widget displayLobbies(
+      List<LobbyModel>? pendingLobbies, List<LobbyModel>? activeLobbies) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (pendingLobbies != null && pendingLobbies.length != 0)
+            Column(
+              children: [
+                Text('Invitations'),
+                LobbyInvitationMolecule(lobbies: pendingLobbies),
+              ],
+            ),
+          activeLobbies != null && activeLobbies.length == 0
+              ? Text('No active lobbies')
+              : ActiveLobbyMolecule(activeLobbies!),
+        ],
+      ),
     );
   }
 }

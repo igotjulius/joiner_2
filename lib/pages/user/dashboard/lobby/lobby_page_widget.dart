@@ -1,4 +1,5 @@
 import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/mock/test_utils.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/joiners_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_widget.dart';
@@ -140,14 +141,11 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
                       model: _model.lobbyDashboardModel,
                       lobbyId: widget.lobbyId,
                     ),
-                    wrapWithModel(
-                      model: _model.chatModel!,
-                      updateCallback: () => setState(() {}),
-                      child: ChatWidget(
-                        setState,
-                        _model.currentLobby!.id,
-                        _model.currentLobby!.conversation,
-                      ),
+                    ChatWidget(
+                      setState,
+                      _model.currentLobby!.id,
+                      _model.currentLobby!.conversation,
+                      mockMessages(),
                     ),
                     BudgetWidget(
                       _fabControllers[0],
@@ -242,8 +240,9 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
       onSelected: (value) {
         switch (value) {
           case 0:
+            context.read<LobbyProvider>().removeLobby(_model.currentLobby!);
             context.pop();
-            _model.leaveLobby(widget.lobbyId!);
+            // _model.leaveLobby(widget.lobbyId!);
             break;
         }
       },

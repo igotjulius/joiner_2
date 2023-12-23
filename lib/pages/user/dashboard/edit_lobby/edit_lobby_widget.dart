@@ -157,27 +157,41 @@ class _EditLobbyWidgetState extends State<EditLobbyWidget> {
                   child: FilledButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        showDialogLoading(context);
+                        // showDialogLoading(context);
 
-                        _model.editLobby().then(
-                          (value) {
-                            if (value != null) {
-                              Provider.of<LobbyProvider>(context, listen: false)
-                                  .setCurrentLobby(value);
-                              Provider.of<FFAppState>(context, listen: false)
-                                  .updateCachedLobby(value);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                showSuccess('Lobby details saved'),
-                              );
-                              context.pop();
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                showError('Saving failed',
-                                    Theme.of(context).colorScheme.error),
-                              );
-                            }
-                          },
+                        // _model.editLobby().then(
+                        //   (value) {
+                        //     if (value != null) {
+                        //       Provider.of<LobbyProvider>(context, listen: false)
+                        //           .setCurrentLobby(value);
+                        //       Provider.of<FFAppState>(context, listen: false)
+                        //           .updateCachedLobby(value);
+                        //       ScaffoldMessenger.of(context).showSnackBar(
+                        //         showSuccess('Lobby details saved'),
+                        //       );
+                        //       context.pop();
+                        //     } else {
+                        //       ScaffoldMessenger.of(context).showSnackBar(
+                        //         showError('Saving failed',
+                        //             Theme.of(context).colorScheme.error),
+                        //       );
+                        //     }
+                        //   },
+                        // );
+                        // context.pop();
+                        final uLobby = LobbyModel(
+                          id: _model.currentLobby?.id,
+                          hostId: _model.currentLobby?.hostId,
+                          title: _model.titleInput?.text,
+                          destination: _model.destInput?.text,
+                          startDate: _model.datePicked?.start,
+                          endDate: _model.datePicked?.end,
+                          participants: _model.currentLobby?.participants,
+                          conversation: _model.currentLobby?.conversation,
+                          poll: _model.currentLobby?.poll,
+                          expense: _model.currentLobby?.expense,
                         );
+                        context.read<LobbyProvider>().setCurrentLobby(uLobby);
                         context.pop();
                       }
                     },

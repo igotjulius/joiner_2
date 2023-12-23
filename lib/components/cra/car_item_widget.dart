@@ -65,7 +65,9 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                   surfaceTintColor:
                       Theme.of(context).colorScheme.primaryContainer,
                   child: CachedNetworkImage(
-                    imageUrl: getImageUrl(widget.car.photoUrl![0]),
+                    imageUrl: widget.car.photoUrl!.isEmpty
+                        ? ''
+                        : getImageUrl(widget.car.photoUrl![0]),
                     errorWidget: (context, url, error) => Icon(
                       Icons.error,
                       color: Colors.red,

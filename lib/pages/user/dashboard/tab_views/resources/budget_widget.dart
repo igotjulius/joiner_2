@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
@@ -103,11 +105,54 @@ class _BudgetWidgetState extends State<BudgetWidget>
       shrinkWrap: true,
       itemCount: keys!.length,
       itemBuilder: (context, index) {
-        return BudgetCategoryWidget(
-          hostId: _currentLobby?.hostId,
-          lobbyId: _currentLobby?.id,
-          label: keys[index],
-          amount: _expense?.items?[keys[index]],
+        return InkWell(
+          onLongPress: () {
+            final currentUserId = context.read<FFAppState>().currentUser?.id;
+            if (currentUserId == _currentLobby?.hostId) {
+              showDialog(
+                context: context,
+                builder: ((context) => AlertDialog(
+                      title: Text('Delete'),
+                      content: Text(
+                          'Are you sure you want to delete ${keys[index]} expense?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            // await UserController.deleteSpecificExpense(
+                            //     lobbyId!, label!);
+                            // Fluttertoast.showToast(
+                            //   msg: '$label Expense Deleted.',
+                            //   toastLength: Toast.LENGTH_SHORT,
+                            //   gravity: ToastGravity.BOTTOM,
+                            //   timeInSecForIosWeb: 2,
+                            //   backgroundColor: Colors.green,
+                            //   textColor: Colors.white,
+                            //   fontSize: 10.0,
+                            // );
+                            context
+                                .read<LobbyProvider>()
+                                .removeExpense(keys[index]);
+                            context.pop();
+                          },
+                          child: Text('Yes'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('No'),
+                        ),
+                      ],
+                    )),
+              );
+            }
+          },
+          child: BudgetCategoryWidget(
+            hostId: _currentLobby?.hostId,
+            lobbyId: _currentLobby?.id,
+            label: keys[index],
+            amount: _expense?.items?[keys[index]],
+          ),
         );
       },
     );

@@ -181,7 +181,8 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                   'Budget',
                   style: _textStyle,
                 ),
-                _model.currentLobby!.expense!.items!.isEmpty
+                _model.currentLobby!.expense == null ||
+                        _model.currentLobby!.expense!.items!.isEmpty
                     ? Text('-')
                     : withCurrency(
                         Text(
@@ -197,7 +198,8 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
   }
 
   Widget expenses() {
-    if (_model.currentLobby!.expense!.items!.isEmpty)
+    if (_model.currentLobby!.expense == null ||
+        _model.currentLobby!.expense!.items!.isEmpty)
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -238,7 +240,8 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (_model.currentLobby!.poll!.length == 0)
+            if (_model.currentLobby!.poll == null ||
+                _model.currentLobby!.poll!.length == 0)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

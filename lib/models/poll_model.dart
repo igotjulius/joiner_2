@@ -7,7 +7,16 @@ class PollModel {
   @JsonKey(name: '_id', includeToJson: false)
   final String? id;
   final String? question;
-  // toJson choices = List<String>, fromJson choices = List<Map<String, String>>
+  /*
+    toJson choices = List<String>, 
+    fromJson choices = 
+    {
+      'title': 'Foods?',
+      'voters': [
+        'user-1', 'user-2',
+      ]
+    }
+  */
   final List<dynamic>? choices;
   final bool? isOpen;
 

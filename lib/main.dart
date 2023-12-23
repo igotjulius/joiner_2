@@ -6,6 +6,7 @@ import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/pages/provider/cra_provider.dart';
+import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -24,39 +25,25 @@ void main() async {
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
+  // runApp(
+  //   MultiProvider(
+  //     providers: [
+  //       ChangeNotifierProvider.value(
+  //         value: appState,
+  //       ),
+  //       ChangeNotifierProvider(
+  //         create: (context) => AppStateNotifier.instance,
+  //       ),
+  //     ],
+  //     child: MyApp(),
+  //   ),
+  // );
+
   // For testing
-  appState.setIsCra(true);
-  final _router = GoRouter(
-    routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => CraCarWidget(),
-      ),
-    ],
+  runApp(
+    testApp('/lobbies'),
   );
   // -- End region --
-
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(
-          value: appState,
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AppStateNotifier.instance,
-        ),
-      ],
-      // child: MyApp(),
-      // For testing
-      child: ChangeNotifierProvider(
-        create: (_) => CraProvider(mockCraUser()),
-        child: MaterialApp.router(
-          routerConfig: _router,
-        ),
-      ),
-      // -- End region --
-    ),
-  );
 }
 
 class MyApp extends StatefulWidget {

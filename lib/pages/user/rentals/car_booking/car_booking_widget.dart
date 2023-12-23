@@ -14,17 +14,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CarBookingWidget extends StatefulWidget {
-  final CarModel? car;
-  const CarBookingWidget({Key? key, this.car}) : super(key: key);
+  final CarModel car;
+  const CarBookingWidget({super.key, required this.car});
 
   @override
-  _CarBookingWidgetState createState() => _CarBookingWidgetState();
+  _CarBookingWidgetState createState() => _CarBookingWidgetState(car);
 }
-
-PlatformFile? pickedFile;
 
 class _CarBookingWidgetState extends State<CarBookingWidget>
     with TickerProviderStateMixin {
+  _CarBookingWidgetState(this.car);
+  final CarModel car;
   late CarBookingModel _model;
   TabController? _tabController;
   String? _noImage, _noDates;
@@ -35,7 +35,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
     _model = CarBookingModel();
     _model.dates ??= TextEditingController();
     _model.imagePicker ??= PickedImages();
-    _model.datePicked =
+    _model.datePicked ??=
         DateTimeRange(start: DateTime.now(), end: DateTime.now());
     _tabController ??= TabController(length: 2, vsync: this, initialIndex: 0);
     _tabController?.addListener(() {
@@ -102,16 +102,16 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               height: 4,
             ),
             InkWell(
+              key: Key('datePicker'),
               onTap: () async {
                 showDateRangePicker(
                   context: context,
-                  firstDate:
-                      getCurrentTimestamp.isBefore(widget.car!.startDate!)
-                          ? widget.car!.startDate!
-                          : getCurrentTimestamp,
-                  lastDate: getCurrentTimestamp.isAfter(widget.car!.endDate!)
+                  firstDate: getCurrentTimestamp.isBefore(widget.car.startDate!)
+                      ? widget.car.startDate!
+                      : getCurrentTimestamp,
+                  lastDate: getCurrentTimestamp.isAfter(widget.car.endDate!)
                       ? getCurrentTimestamp
-                      : widget.car!.endDate!,
+                      : widget.car.endDate!,
                 ).then((value) {
                   if (value != null) {
                     setState(() {
@@ -139,9 +139,9 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                       ),
                     ),
                     Text(
-                      (_model.datePicked.duration.inDays == 0
-                          ? "${DateFormat('MMM d').format(_model.datePicked.start)}"
-                          : "${DateFormat('MMM d').format(_model.datePicked.start)} - ${DateFormat('MMM d').format(_model.datePicked.end)}"),
+                      (_model.datePicked!.duration.inDays == 0
+                          ? "${DateFormat('MMM d').format(_model.datePicked!.start)}"
+                          : "${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}"),
                     ),
                   ].divide(SizedBox(width: 10.0)),
                 ),
@@ -206,7 +206,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                           ?.copyWith(color: Colors.grey),
                     ),
                     Text(
-                      '${DateFormat('MMM d').format(_model.datePicked.start)}',
+                      '${DateFormat('MMM d').format(_model.datePicked!.start)}',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -225,7 +225,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                           ?.copyWith(color: Colors.grey),
                     ),
                     Text(
-                      '${DateFormat('MMM d').format(_model.datePicked.end)}',
+                      '${DateFormat('MMM d').format(_model.datePicked!.end)}',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -244,7 +244,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                           ?.copyWith(color: Colors.grey),
                     ),
                     Text(
-                      '${_model.datePicked.duration.inDays} day${_model.datePicked.duration.inDays > 1 ? 's' : ''}',
+                      '${_model.datePicked?.duration.inDays} day${_model.datePicked!.duration.inDays > 1 ? 's' : ''}',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -264,7 +264,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                     ),
                     withCurrency(
                       Text(
-                        '${_model.datePicked.duration.inDays * widget.car!.price!}',
+                        '${_model.datePicked!.duration.inDays * widget.car.price!}',
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
@@ -295,23 +295,25 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
         FilledButton(
           onPressed: () async {
             if (_tabController?.index == 1) {
-              try {
-                showDialogLoading(context);
-                final redirUrl =
-                    await _model.processPayment(widget.car!.licensePlate!);
-                print(redirUrl);
-                await launchUrl(Uri.parse(redirUrl!),
-                    mode: LaunchMode.externalApplication);
-                context.pop();
-              } catch (e) {
-                print(e);
-              }
+              // try {
+              //   showDialogLoading(context);
+              //   final redirUrl =
+              //       await _model.processPayment(widget.car.licensePlate!);
+              //   print(redirUrl);
+              //   await launchUrl(Uri.parse(redirUrl!),
+              //       mode: LaunchMode.externalApplication);
+              //   context.pop();
+              // } catch (e) {
+              //   print(e);
+              // }
+              context.goNamed('Success');
 
               return;
             }
-            if (_model.imagePicker?.getImage() == null)
-              _noImage = 'Please select an image of your valid ID';
-            else if (_model.datePicked.duration.inDays < 1) {
+            // if (_model.imagePicker?.getImage() == null)
+            //   _noImage = 'Please select an image of your valid ID';
+            // else
+            if (_model.datePicked!.duration.inDays < 1) {
               _noDates = 'Minimum rent duration is one day';
             } else if (_noImage == null && _noDates == null)
               _tabController?.index++;
@@ -398,7 +400,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
 }
 
 class CarBookingModel {
-  late DateTimeRange datePicked;
+  DateTimeRange? datePicked;
   PickedImages? imagePicker;
   TextEditingController? dates;
 
@@ -413,9 +415,9 @@ class CarBookingModel {
   Future<String?> processPayment(String licensePlate) async {
     final rental = CarRentalModel(
       licensePlate: licensePlate,
-      startRental: datePicked.start.toString(),
-      endRental: datePicked.end.toString(),
-      duration: datePicked.duration.inDays,
+      startRental: datePicked?.start.toString(),
+      endRental: datePicked?.end.toString(),
+      duration: datePicked?.duration.inDays,
     );
     final result = await UserController.postRental(
       rental,

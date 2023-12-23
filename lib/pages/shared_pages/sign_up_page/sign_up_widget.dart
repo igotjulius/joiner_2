@@ -139,23 +139,27 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                           final craForm = rentFormKey.currentState != null &&
                               rentFormKey.currentState!.validate();
                           if (joinerForm || craForm) {
-                            showDialogLoading(context);
-                            final result = await _model.signUp();
-                            context.pop();
-                            if (result != null) {
-                              context.pop();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                showError(result,
-                                    Theme.of(context).colorScheme.error),
-                              );
-                              _model.userModel.emailError =
-                                  'Email already in use';
-                              setState(() {});
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                showSuccess('Registration successful'),
-                              );
-                              context.goNamed('Verification');
+                            // showDialogLoading(context);
+                            // final result = await _model.signUp();
+                            // context.pop();
+                            // if (result != null) {
+                            //   context.pop();
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     showError(result,
+                            //         Theme.of(context).colorScheme.error),
+                            //   );
+                            //   _model.userModel.emailError =
+                            //       'Email already in use';
+                            //   setState(() {});
+                            // } else {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     showSuccess('Registration successful'),
+                            //   );
+                            //   context.goNamed('Verification');
+                            // }
+                            if (_model.userModel.emailController?.text ==
+                                'johndoe@gmail.com') {
+                              context.goNamed('Login');
                             }
                           }
                         },

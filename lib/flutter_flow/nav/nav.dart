@@ -116,7 +116,7 @@ List<FFRoute> userRoutes() {
           builder: (context, state) {
             final obj = state.extraMap['currentLobby'] ??= null;
             return ChangeNotifierProvider(
-              create: (_) => LobbyProvider(obj),
+              create: (_) => LobbyProvider.current(obj),
               child: LobbyPageWidget(
                 currentLobby: obj,
                 lobbyId: state.pathParameters['lobbyId'],

@@ -1,7 +1,9 @@
 import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/modals/invite_participants_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
+import 'package:joiner_1/widgets/molecules/participant_atom.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,10 +30,10 @@ class _JoinersWidgetState extends State<JoinersWidget> {
   @override
   void initState() {
     super.initState();
-    _model.currentLobby = context.read<LobbyProvider>().currentLobby;
+    _lobbyProvider = context.read<LobbyProvider>();
+    _model.currentLobby = _lobbyProvider.currentLobby;
     _model.fetchParticipants =
         UserController.getParticipants(_model.currentLobby!.id!);
-    _lobbyProvider = context.read<LobbyProvider>();
   }
 
   @override
@@ -58,6 +60,7 @@ class _JoinersWidgetState extends State<JoinersWidget> {
   @override
   Widget build(BuildContext context) {
     final currentUserId = context.read<FFAppState>().currentUser!.id!;
+    context.watch<LobbyProvider>();
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -77,12 +80,34 @@ class _JoinersWidgetState extends State<JoinersWidget> {
                 height: 10,
               ),
               Flexible(
-                child: _model.getParticipants(currentUserId),
+                child: displayParticipants(
+                  _model.currentLobby!.participants!,
+                  currentUserId,
+                ), // _model.getParticipants(currentUserId),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget displayParticipants(
+      List<ParticipantModel> participants, String currentUserId) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: participants.length,
+      itemBuilder: (context, index) {
+        bool showRemove = currentUserId == _model.currentLobby?.hostId &&
+            _model.currentLobby?.hostId != participants[index].userId;
+        return ParticipantMole(
+          firstName: participants[index].firstName,
+          lastName: participants[index].lastName,
+          userId: participants[index].userId,
+          suffixLabel: participants[index].joinStatus,
+          showRemoveOption: showRemove,
+        );
+      },
     );
   }
 }

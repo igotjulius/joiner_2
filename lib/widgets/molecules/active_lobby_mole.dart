@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
+import 'package:provider/provider.dart';
 
 class ActiveLobbyMolecule extends StatelessWidget {
   ActiveLobbyMolecule(this.lobbies, {super.key});
@@ -54,9 +56,10 @@ class ActiveLobbyMolecule extends StatelessWidget {
               );
             },
             onTap: () {
+              context.read<LobbyProvider>().setCurrentLobby(lobbies[index]);
               context.pushNamed(
                 'Lobby',
-                pathParameters: {'lobbyId': lobbies[index].id!},
+                // pathParameters: {'lobbyId': lobbies[index].id!},
                 extra: <String, dynamic>{
                   'currentLobby': lobbies[index],
                 },

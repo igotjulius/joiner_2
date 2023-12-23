@@ -1,16 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 
 class LobbyProvider extends ChangeNotifier {
-  LobbyModel _currentLobby;
-  LobbyProvider(this._currentLobby);
+  late LobbyModel _currentLobby;
+  LobbyProvider.current(this._currentLobby);
+  LobbyProvider.test(this._allLobbies);
+
+  Map<String, List<LobbyModel>>? _allLobbies;
+  Map<String, List<LobbyModel>>? get allLobbies => _allLobbies;
 
   List<LobbyModel>? _activeLobbies;
   List<LobbyModel>? get activeLobbies => _activeLobbies;
   void setLinkableLobbies(List<LobbyModel> lobbies) {
     _activeLobbies = lobbies;
+  }
+
+  void addActiveLobby(LobbyModel lobby) {
+    _allLobbies?['activeLobby']?.add(lobby);
+    notifyListeners();
+  }
+
+  void removeLobby(LobbyModel lobby) {
+    _allLobbies?['activeLobby']
+        ?.removeWhere((element) => element.id == lobby.id);
+    notifyListeners();
   }
 
   void updateCachedLobby(LobbyModel uLobby) {
@@ -32,6 +48,17 @@ class LobbyProvider extends ChangeNotifier {
 
   // Get lobby id
   String get lobbyId => _currentLobby.id!;
+
+  ExpenseModel get expenses => _currentLobby.expense!;
+  void addExpense(String label, double amount) {
+    _currentLobby.expense?.items?.addAll({label: amount});
+    notifyListeners();
+  }
+
+  void removeExpense(String label) {
+    _currentLobby.expense?.items?.removeWhere((key, value) => key == label);
+    notifyListeners();
+  }
 
   // Get polls of current lobby
   List<PollModel> get polls => _currentLobby.poll!;
@@ -64,8 +91,9 @@ class LobbyProvider extends ChangeNotifier {
   }
 
   // Remove a participant
-  void removeParticipant(int index) {
-    _currentLobby.participants!.removeAt(index);
+  void removeParticipant(String userId) {
+    _currentLobby.participants!
+        .removeWhere((element) => element.userId == userId);
     notifyListeners();
   }
 }

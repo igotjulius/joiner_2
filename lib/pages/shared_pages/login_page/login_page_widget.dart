@@ -5,7 +5,7 @@ import 'login_page_model.dart';
 export 'login_page_model.dart';
 
 class LoginPageWidget extends StatefulWidget {
-  const LoginPageWidget({Key? key}) : super(key: key);
+  const LoginPageWidget({super.key});
 
   @override
   _LoginPageWidgetState createState() => _LoginPageWidgetState();
@@ -125,16 +125,27 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                               onPressed: () async {
                                 // TODO: if user is not yet verified, send a verification email and redirect to verification page
                                 if (_formKey.currentState!.validate()) {
-                                  showDialogLoading(context);
-                                  final result =
-                                      await _model.loginUser(context);
-                                  if (!result) {
-                                    context.pop();
+                                  if (_model.emailController?.text ==
+                                          '1@gmail.com' &&
+                                      _model.passwordController?.text ==
+                                          '123456') {
+                                    context.goNamed('UserDashboard');
+                                  } else {
                                     setState(() {
                                       _errorMessage =
                                           'Invalid username/password';
                                     });
                                   }
+                                  // showDialogLoading(context);
+                                  // final result =
+                                  //     await _model.loginUser(context);
+                                  // if (!result) {
+                                  //   context.pop();
+                                  //   setState(() {
+                                  //     _errorMessage =
+                                  //         'Invalid username/password';
+                                  //   });
+                                  // }
                                 }
                                 // context.goNamed('Verification');
                               },

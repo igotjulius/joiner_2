@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/widgets/molecules/participant_atom_model.dart';
 import 'package:provider/provider.dart';
 
@@ -75,8 +76,8 @@ class _ParticipantMoleState extends State<ParticipantMole> {
                     onChanged: (value) {
                       setState(() {
                         _model.isChecked = value!;
-                        widget.eventCallback!(_model.friendId!,
-                            widget.firstName!, widget.lastName!);
+                        widget.eventCallback!(widget.userId!, widget.firstName!,
+                            widget.lastName!);
                       });
                     },
                   ),
@@ -102,10 +103,12 @@ class _ParticipantMoleState extends State<ParticipantMole> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  _model.removeParticipant();
+                                  // _model.removeParticipant();
+                                  context
+                                      .read<LobbyProvider>()
+                                      .removeParticipant(widget.userId!);
                                   showSnackbar(context, 'Participant removed');
                                   context.pop();
-                                  widget.rebuildParent!(() {});
                                 },
                                 child: Text('Yes'),
                               ),

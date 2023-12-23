@@ -9,15 +9,19 @@ class ChatWidget extends StatefulWidget {
   final String? lobbyId;
   final String? conversationId;
   final Function callback;
-  const ChatWidget(this.callback, this.lobbyId, this.conversationId, {Key? key})
-      : super(key: key);
+  final List<MessageModel> messages;
+  const ChatWidget(
+      this.callback, this.lobbyId, this.conversationId, this.messages,
+      {super.key});
 
   @override
-  _ChatWidgetState createState() => _ChatWidgetState();
+  _ChatWidgetState createState() => _ChatWidgetState(messages);
 }
 
 class _ChatWidgetState extends State<ChatWidget>
     with AutomaticKeepAliveClientMixin {
+  _ChatWidgetState(this.messages);
+  List<MessageModel> messages;
   late ChatModel _model;
 
   @override
@@ -36,7 +40,7 @@ class _ChatWidgetState extends State<ChatWidget>
     _model.scrollController ??= ScrollController();
     _model.textController ??= TextEditingController();
     _model.streamSocket ??= StreamSocket();
-    _model.initSocket(widget.conversationId!);
+    // _model.initSocket(widget.conversationId!);
   }
 
   @override
@@ -56,34 +60,7 @@ class _ChatWidgetState extends State<ChatWidget>
         child: Column(
           children: [
             Expanded(
-              child: StreamBuilder(
-                stream: _model.streamSocket!.getResponse,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting)
-                    return Center(child: CircularProgressIndicator());
-
-                  if (_model.allMessages.isEmpty)
-                    return Center(
-                      child: Text('Hi there :)'),
-                    );
-
-                  return ListView.separated(
-                    reverse: true,
-                    shrinkWrap: true,
-                    itemCount: _model.allMessages.length,
-                    controller: _model.scrollController,
-                    itemBuilder: (context, index) {
-                      final message = _model.allMessages.reversed.toList()[index];
-                      return chatBubble(message);
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 10,
-                      );
-                    },
-                  );
-                },
-              ),
+              child: mockMessages(),
             ),
             Card(
               child: Padding(
@@ -129,8 +106,19 @@ class _ChatWidgetState extends State<ChatWidget>
                       ),
                       onPressed: () {
                         if (_model.textController.text.trim().isNotEmpty) {
-                          _model.sendMessage(widget.conversationId!);
-                          _model.textController.text = '';
+                          // _model.sendMessage(widget.conversationId!);
+                          setState(() {
+                            messages.insert(
+                              0,
+                              MessageModel(
+                                creator: 'John',
+                                creatorId: 'user-1',
+                                createdAt: DateTime.now(),
+                                message: _model.textController.text,
+                              ),
+                            );
+                            _model.textController.text = '';
+                          });
                         }
                       },
                       child: Text('SEND'),
@@ -142,6 +130,56 @@ class _ChatWidgetState extends State<ChatWidget>
           ],
         ),
       ),
+    );
+  }
+
+  Widget mockMessages() {
+    return ListView.separated(
+      reverse: true,
+      shrinkWrap: true,
+      itemCount: messages.length,
+      controller: _model.scrollController,
+      separatorBuilder: (context, index) {
+        return SizedBox(
+          height: 10,
+        );
+      },
+      itemBuilder: (context, index) {
+        return chatBubble(messages[index]);
+      },
+    );
+  }
+
+  StreamBuilder<MessageModel?> streamSocket() {
+    return StreamBuilder(
+      stream: _model.streamSocket!.getResponse,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Center(child: CircularProgressIndicator());
+
+        if (_model.allMessages.isEmpty)
+          return Center(
+            child: Text('Hi there :)'),
+          );
+
+        return ListView.separated(
+          reverse: true,
+          shrinkWrap: true,
+          itemCount: _model.allMessages.length,
+          controller: _model.scrollController,
+          itemBuilder: (context, index) {
+            // final message = _model.allMessages.reversed.toList()[index];
+            final message = messages[index];
+            print(message.message);
+            return chatBubble(message);
+          },
+          separatorBuilder: (context, index) {
+            return SizedBox(
+              height: 10,
+            );
+          },
+        );
+      },
     );
   }
 

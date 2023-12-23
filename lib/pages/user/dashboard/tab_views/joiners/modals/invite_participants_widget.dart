@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/modals/invite_participants_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
+import 'package:joiner_1/pages/user/provider/user_provider.dart';
+import 'package:joiner_1/widgets/molecules/participant_atom.dart';
 import 'package:provider/provider.dart';
 
 class InviteParticipantsWidget extends StatefulWidget {
@@ -50,12 +52,15 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
                 ],
               ),
               Expanded(
-                child: _model.friendList(context),
+                child: displayFriends(), //_model.friendList(context),
               ),
               FilledButton(
                 child: Text('Invite'),
                 onPressed: () {
-                  _model.sendInvitation(context.read<LobbyProvider>().lobbyId);
+                  // _model.sendInvitation(context.read<LobbyProvider>().lobbyId);
+                  context
+                      .read<LobbyProvider>()
+                      .addParticipants(_model.invitedFriends!);
                   context.pop();
                 },
               ),
@@ -63,6 +68,23 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget displayFriends() {
+    final friends = context.watch<UserProvider>().currentUser.friends!;
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: friends.length,
+      itemBuilder: (context, index) {
+        return ParticipantMole(
+          firstName: friends[index]['firstName'],
+          lastName: friends[index]['lastName'],
+          userId: friends[index]['friendId'],
+          showCheckBox: true,
+          eventCallback: _model.addFriendToInvites,
+        );
+      },
     );
   }
 }

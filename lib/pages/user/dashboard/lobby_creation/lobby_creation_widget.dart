@@ -2,9 +2,12 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/models/participant_model.dart';
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LobbyCreationWidget extends StatefulWidget {
   final String? destination;
@@ -61,31 +64,33 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                   child: Text('CREATE'),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      showDialogLoading(context);
+                      // showDialogLoading(context);
                       final lobby = LobbyModel(
                         title: _model.titleInput?.text,
                         destination: _model.destInput?.text,
                         startDate: _model.datePicked?.start,
                         endDate: _model.datePicked?.end,
-                        participants: [],
+                        participants: [ParticipantModel()],
                       );
-                      final result =
-                          await UserController.createLobby(lobby, context);
-                      context.pop();
-                      if (result != null) {
-                        context.goNamed(
-                          'Lobby',
-                          pathParameters: {'lobbyId': result.id!},
-                          extra: {'currentLobby': result},
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          showError(
-                            'Failed to create lobby',
-                            Theme.of(context).colorScheme.error,
-                          ),
-                        );
-                      }
+                      context.read<LobbyProvider>().addActiveLobby(lobby);
+                      context.goNamed('Lobbies');
+                      // final result =
+                      //     await UserController.createLobby(lobby, context);
+                      // context.pop();
+                      // if (result != null) {
+                      //   context.goNamed(
+                      //     'Lobby',
+                      //     pathParameters: {'lobbyId': result.id!},
+                      //     extra: {'currentLobby': result},
+                      //   );
+                      // } else {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     showError(
+                      //       'Failed to create lobby',
+                      //       Theme.of(context).colorScheme.error,
+                      //     ),
+                      //   );
+                      // }
                     }
                   },
                 ),

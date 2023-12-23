@@ -1,5 +1,67 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/app_state.dart';
+import 'package:joiner_1/flutter_flow/nav/nav.dart';
+import 'package:joiner_1/index.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
+import 'package:joiner_1/models/expense_model.dart';
+import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/models/message_model.dart';
+import 'package:joiner_1/models/participant_model.dart';
+import 'package:joiner_1/models/poll_model.dart';
+import 'package:joiner_1/models/user_model.dart';
+import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
+import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
+import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
+import 'package:joiner_1/pages/provider/cra_provider.dart';
+import 'package:joiner_1/pages/shared_pages/login_page/login_page_widget.dart';
+import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/edit_lobby/edit_lobby_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
+import 'package:joiner_1/pages/user/provider/user_provider.dart';
+import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
+import 'package:joiner_1/pages/user/rentals/payment_result/result_widget.dart';
+import 'package:provider/provider.dart';
+
+Widget testApp(String initialLocation) {
+  final appState = FFAppState();
+  appState.initializePersistedState().then((value) {
+    appState.setCurrentUser(
+      UserModel(
+        id: 'user-1',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'johndoe@gmail.com',
+      ),
+    );
+  });
+
+  appState.setIsCra(true);
+  return MultiProvider(
+    providers: [
+      ChangeNotifierProvider<UserProvider>(
+        create: (_) => UserProvider(
+          mockUser(),
+        ),
+      ),
+      ChangeNotifierProvider<CraProvider>(
+        create: (_) => CraProvider(
+          mockCraUser(),
+        ),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => LobbyProvider.test(
+          mockLobbies(),
+        ),
+      ),
+      ChangeNotifierProvider<FFAppState>.value(value: appState),
+    ],
+    child: MaterialApp.router(
+      routerConfig: mockRouter(initialLocation),
+    ),
+  );
+}
 
 List<CarModel> mockCars() {
   return [
@@ -10,9 +72,9 @@ List<CarModel> mockCars() {
       vehicleType: 'Sedan',
       availability: 'Available',
       startDate: DateTime.now(),
-      endDate: DateTime.now(),
+      endDate: DateTime(2024),
       price: 1234,
-      photoUrl: [''],
+      photoUrl: [],
     ),
     CarModel(
       licensePlate: 'AWDFQW',
@@ -21,9 +83,9 @@ List<CarModel> mockCars() {
       vehicleType: 'Sedan',
       availability: 'Available',
       startDate: DateTime.now(),
-      endDate: DateTime.now(),
+      endDate: DateTime(2024),
       price: 1234,
-      photoUrl: [''],
+      photoUrl: [],
     ),
     CarModel(
       licensePlate: 'ZXCVXVB',
@@ -32,11 +94,28 @@ List<CarModel> mockCars() {
       vehicleType: 'Sedan',
       availability: 'On rent',
       startDate: DateTime.now(),
-      endDate: DateTime.now(),
+      endDate: DateTime(2024),
       price: 1234,
-      photoUrl: [''],
+      photoUrl: [],
     ),
   ];
+}
+
+UserModel mockUser() {
+  return UserModel(
+    id: 'user-1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'johndoe@gmail.com',
+    friends: [
+      {
+        'friendId': 'friend-1',
+        'firstName': 'Juan',
+        'lastName': 'Cruz',
+        'status': 'accepted',
+      },
+    ],
+  );
 }
 
 CraUserModel mockCraUser() {
@@ -50,4 +129,218 @@ CraUserModel mockCraUser() {
     vehicles: mockCars(),
     rentals: [],
   );
+}
+
+GoRouter mockRouter(String initialLocation) {
+  return GoRouter(
+    initialLocation: initialLocation,
+    routes: [
+      GoRoute(
+        name: 'Lobbies',
+        path: '/lobbies',
+        builder: (context, state) => LobbiesWidget(),
+        routes: [
+          GoRoute(
+            name: 'LobbyCreation',
+            path: 'createLobby',
+            builder: (context, state) => LobbyCreationWidget(),
+          ),
+          GoRoute(
+            name: 'Lobby',
+            path: 'lobby',
+            builder: (context, state) {
+              LobbyModel obj = state.extraMap['currentLobby'];
+              return LobbyPageWidget(
+                currentLobby: obj,
+                lobbyId: obj.id,
+              );
+            },
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/signUp',
+        builder: (context, state) => SignUpPageWidget(),
+      ),
+      GoRoute(
+        name: 'Login',
+        path: '/login',
+        builder: (context, state) => LoginPageWidget(),
+        routes: [
+          GoRoute(
+            name: 'UserDashboard',
+            path: 'userDashboard',
+            builder: (context, state) => LobbiesWidget(),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/addCar',
+        builder: (context, state) => AddCarWidget(),
+      ),
+      GoRoute(
+        path: '/craCar',
+        builder: (context, state) => CraCarWidget(),
+      ),
+      GoRoute(
+        path: '/editCar',
+        builder: (context, state) => EditCarWidget(
+          car: mockCars()[0],
+        ),
+      ),
+      GoRoute(
+        path: '/rental',
+        builder: (context, state) => CarBookingWidget(
+          car: mockCars()[0],
+        ),
+        routes: [
+          GoRoute(
+            name: 'Success',
+            path: 'success',
+            builder: (context, state) => ResultWidget(result: 'success'),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Map<String, List<LobbyModel>> mockLobbies() {
+  return {
+    'activeLobby': [
+      LobbyModel(
+        id: 'lobby-1',
+        hostId: 'user-1',
+        title: 'Beach',
+        destination: 'Badian Beach',
+        startDate: DateTime.now(),
+        endDate: DateTime.now(),
+        expense: ExpenseModel(
+          id: 'e-1',
+          items: {},
+          total: 0,
+        ),
+        participants: [
+          ParticipantModel(
+            id: 'p-1',
+            userId: 'user-1',
+            firstName: 'John',
+            lastName: 'Doe',
+            joinStatus: 'Joined',
+            type: 'Host',
+          ),
+        ],
+        poll: [],
+      ),
+      LobbyModel(
+        id: 'lobby-2',
+        hostId: 'user-1',
+        title: 'Hiking',
+        destination: 'Mt. Kan-Irag',
+        startDate: DateTime.now(),
+        endDate: DateTime.now(),
+        expense: ExpenseModel(
+          id: 'e-1',
+          items: {
+            'Foods': 1234,
+            'Drinks': 1234,
+          },
+          total: 2468,
+        ),
+        participants: [
+          ParticipantModel(
+            id: 'p-1',
+            userId: 'user-1',
+            firstName: 'John',
+            lastName: 'Doe',
+            joinStatus: 'Joined',
+            type: 'Host',
+          ),
+          ParticipantModel(
+            id: 'p-2',
+            userId: 'user-2',
+            firstName: 'Juan',
+            lastName: 'Cruz',
+            joinStatus: 'Joined',
+            type: 'Participant',
+          ),
+        ],
+        poll: [
+          PollModel(
+            id: 'poll-1',
+            question: 'Meeting Time?',
+            choices: [
+              {
+                'title': '7 AM',
+                'voters': [],
+              },
+              {
+                'title': '9 AM',
+                'voters': [],
+              },
+              {
+                'title': '10 AM',
+                'voters': [],
+              },
+            ],
+            isOpen: true,
+          ),
+        ],
+      ),
+      LobbyModel(
+        id: 'lobby-2',
+        hostId: 'user-1',
+        title: 'RoadTrip',
+        destination: '',
+        startDate: DateTime.now(),
+        endDate: DateTime.now(),
+        expense: ExpenseModel(
+          id: 'e-1',
+          items: {},
+          total: 0,
+        ),
+        participants: [
+          ParticipantModel(
+            id: 'p-1',
+            userId: 'user-1',
+            firstName: 'John',
+            lastName: 'Doe',
+            joinStatus: 'Joined',
+            type: 'Host',
+          ),
+        ],
+        poll: [],
+      ),
+    ],
+    'pendingLobby': []
+  };
+}
+
+List<MessageModel> mockMessages() {
+  return [
+    MessageModel(
+      creator: 'Juan',
+      creatorId: 'user-2',
+      createdAt: DateTime.now(),
+      message: 'Hello there',
+    ),
+    MessageModel(
+      creator: 'Juan',
+      creatorId: 'user-2',
+      createdAt: DateTime.now(),
+      message: 'I\'m excited for the weekend',
+    ),
+  ];
+}
+
+extension _GoRouterStateExtensions on GoRouterState {
+  Map<String, dynamic> get extraMap =>
+      extra != null ? extra as Map<String, dynamic> : {};
+  Map<String, dynamic> get allParams => <String, dynamic>{}
+    ..addAll(pathParameters)
+    ..addAll(queryParameters)
+    ..addAll(extraMap);
+  TransitionInfo get transitionInfo => extraMap.containsKey(kTransitionInfoKey)
+      ? extraMap[kTransitionInfoKey] as TransitionInfo
+      : TransitionInfo.appDefault();
 }

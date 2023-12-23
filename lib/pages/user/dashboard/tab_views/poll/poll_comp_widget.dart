@@ -41,11 +41,9 @@ class _PollCompWidgetState extends State<PollCompWidget> {
   void fabHandler() {
     _model.controller = showBottomSheet(
       context: context,
-      builder: (context) {
-        return SurveyPollWidget(
-          lobbyId: widget.lobbyId!,
-        );
-      },
+      builder: (context) => SurveyPollWidget(
+        lobbyId: widget.lobbyId!,
+      ),
     );
   }
 
@@ -68,7 +66,7 @@ class _PollCompWidgetState extends State<PollCompWidget> {
                   Text('Poll'),
                 ],
               ),
-              Flexible(
+              Expanded(
                 child: _model.polls == null || _model.polls!.isEmpty
                     ? Center(child: Text('No polls as of the moment.'))
                     : ListView.builder(

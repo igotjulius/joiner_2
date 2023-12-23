@@ -66,7 +66,8 @@ class InviteParticipantsModel extends FlutterFlowModel {
   }
 
   void addFriendToInvites(String friendId, String firstName, String lastName) {
-    invitedFriends!.add(new ParticipantModel(
+    print(friendId);
+    invitedFriends!.add(ParticipantModel(
         userId: friendId, firstName: firstName, lastName: lastName));
   }
 

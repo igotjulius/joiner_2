@@ -238,6 +238,27 @@ class _AddCarWidgetState extends State<AddCarWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Register car'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  showSuccess('Car registered successfully'),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  showError('Registration failed', Colors.red),
+                );
+              }
+              imagePickerError = _model.imagePicker!.getImages() == null ||
+                      _model.imagePicker!.getImages()!.isEmpty
+                  ? 'Please upload an image of your car'
+                  : null;
+              setState(() {});
+            },
+            child: Text('Register'),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -260,44 +281,43 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                       ),
                     ),
                   ),
-                  FilledButton(
-                    key: Key('submit'),
-                    onPressed: () async {
-                      // if (_formKey.currentState!.validate() &&
-                      //     _model.imagePicker!.getImages() != null) {
-                      // showDialogLoading(context);
-                      // _model.register().then((value) {
-                      //   if (value != null) {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       showError(
-                      //           value, Theme.of(context).colorScheme.error),
-                      //     );
-                      //   } else {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       showSuccess('Car registered successfully'),
-                      //     );
-                      //   }
-                      //   context.pop();
-                      // });
-                      // }
-                      if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          showSuccess('Car registered successfully'),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          showError('Registration failed', Colors.red),
-                        );
-                      }
-                      imagePickerError =
-                          _model.imagePicker!.getImages() == null ||
-                                  _model.imagePicker!.getImages()!.isEmpty
-                              ? 'Please upload an image of your car'
-                              : null;
-                      setState(() {});
-                    },
-                    child: Text('Register Car'),
-                  ),
+                  // FilledButton(
+                  // onPressed: () async {
+                  // if (_formKey.currentState!.validate() &&
+                  //     _model.imagePicker!.getImages() != null) {
+                  // showDialogLoading(context);
+                  // _model.register().then((value) {
+                  //   if (value != null) {
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       showError(
+                  //           value, Theme.of(context).colorScheme.error),
+                  //     );
+                  //   } else {
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       showSuccess('Car registered successfully'),
+                  //     );
+                  //   }
+                  //   context.pop();
+                  // });
+                  // }
+                  // if (_formKey.currentState!.validate()) {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     showSuccess('Car registered successfully'),
+                  //   );
+                  // } else {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     showError('Registration failed', Colors.red),
+                  //   );
+                  // }
+                  // imagePickerError =
+                  //     _model.imagePicker!.getImages() == null ||
+                  //             _model.imagePicker!.getImages()!.isEmpty
+                  //         ? 'Please upload an image of your car'
+                  //         : null;
+                  // setState(() {});
+                  // },
+                  // child: Text('Register Car'),
+                  // ),
                 ].divide(
                   SizedBox(
                     height: 20,

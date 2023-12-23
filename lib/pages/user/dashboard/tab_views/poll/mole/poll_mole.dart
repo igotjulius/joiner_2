@@ -60,10 +60,29 @@ class _PollMoleculeState extends State<PollMolecule> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       onTap: () async {
-                        await _model.votePoll(
-                          index,
-                          widget.lobbyId!,
-                        );
+                        // await _model.votePoll(
+                        //   index,
+                        //   widget.lobbyId!,
+                        // );
+                        _model.selectedIndex == index
+                            ? _model.selectedIndex = null
+                            : _model.selectedIndex = index;
+                        var {'title': _, 'voters': voters as List} =
+                            _model.poll?.choices![_model.selectedIndex == null
+                                ? index
+                                : _model.selectedIndex!]; // Selected choice
+                        if (_model.hasVoted()) {
+                          if (voters.any((voter) =>
+                              voter == FFAppState().currentUser?.id)) {
+                            voters.remove(FFAppState().currentUser?.id);
+                          } else {
+                            _model.removeVote();
+                            voters.add(FFAppState().currentUser?.id);
+                          }
+                        } else {
+                          voters.add(FFAppState().currentUser?.id);
+                        }
+
                         setState(() {});
                       },
                       child: PollChoices(
@@ -92,18 +111,28 @@ class _PollMoleculeState extends State<PollMolecule> {
                     size: 24.0,
                   ),
                   onPressed: () {
-                    _model.deletePoll(widget.lobbyId!).then((value) {
-                      Provider.of<LobbyProvider>(context, listen: false)
-                          .removePoll(widget.index!);
-                    });
+                    // _model.deletePoll(widget.lobbyId!).then((value) {
+                    //   Provider.of<LobbyProvider>(context, listen: false)
+                    //       .removePoll(widget.index!);
+                    // });
+                    context.read<LobbyProvider>().removePoll(widget.index!);
                   },
                 ),
                 TextButton(
                   onPressed: () {
-                    _model.closePoll(widget.lobbyId!).then((uPoll) {
-                      Provider.of<LobbyProvider>(context, listen: false)
-                          .closePoll(widget.index!, uPoll);
-                    });
+                    // _model.closePoll(widget.lobbyId!).then((uPoll) {
+                    //   Provider.of<LobbyProvider>(context, listen: false)
+                    //       .closePoll(widget.index!, uPoll);
+                    // });
+                    final uPoll = PollModel(
+                      id: _model.poll?.id,
+                      question: _model.poll?.question,
+                      choices: _model.poll?.choices,
+                      isOpen: !_model.poll!.isOpen!,
+                    );
+                    context
+                        .read<LobbyProvider>()
+                        .closePoll(widget.index!, uPoll);
                   },
                   child: Text(
                       _model.poll!.isOpen! ? 'Close poll' : 'Re-open poll'),
