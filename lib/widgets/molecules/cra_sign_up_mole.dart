@@ -67,7 +67,11 @@ class _CraSignUpMoleState extends State<CraSignUpMole> {
                 obscureText: true,
                 validator: _model.confirmPass,
               ),
-            ],
+            ].divide(
+              SizedBox(
+                height: 10,
+              ),
+            ),
           ),
         ),
       ),

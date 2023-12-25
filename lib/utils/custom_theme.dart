@@ -107,6 +107,10 @@ ThemeData lightTheme(BuildContext context) {
     textTheme: textTheme(),
     tabBarTheme: TabBarTheme(
       labelColor: lightThemeColors().secondary,
+      labelStyle: textTheme().bodyMedium?.copyWith(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+          ),
       unselectedLabelColor: lightThemeColors().onSurfaceVariant,
       indicatorSize: TabBarIndicatorSize.label,
       dividerColor: Colors.grey[300],

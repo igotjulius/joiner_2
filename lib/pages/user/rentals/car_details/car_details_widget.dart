@@ -71,8 +71,10 @@ class _CarDetailsState extends State<CarDetails> {
                         ),
                         FilledButton(
                           onPressed: () {
-                            context.pushNamed('Booking',
-                                extra: {'car': widget.car});
+                            context.pushNamed(
+                              'Booking',
+                              extra: {'car': widget.car},
+                            );
                           },
                           child: Text('Rent now'),
                         ),

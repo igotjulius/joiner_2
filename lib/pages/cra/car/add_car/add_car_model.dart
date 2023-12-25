@@ -8,23 +8,22 @@ import 'package:flutter/material.dart';
 class AddCarModel {
   /// Initialization and disposal methods.
   DateTimeRange? datePicked;
-  PickedImages? imagePicker;
+  PickedImages imagePicker = PickedImages();
 
   // State field(s) for TextField widget.
-  TextEditingController? licenseController;
+  TextEditingController licenseController = TextEditingController();
   // State field(s) for TextField widget.
-  TextEditingController? vehicleTypeController;
+  TextEditingController vehicleTypeController = TextEditingController();
   // State field(s) for TextField widget.
-  TextEditingController? datesController;
+  TextEditingController datesController = TextEditingController();
   // State field(s) for TextField widget.
-  TextEditingController? priceController;
+  TextEditingController priceController = TextEditingController();
 
   void dispose() {
-    licenseController?.dispose();
-    vehicleTypeController?.dispose();
-    datesController?.dispose();
-    priceController?.dispose();
-    imagePicker = null;
+    licenseController.dispose();
+    vehicleTypeController.dispose();
+    datesController.dispose();
+    priceController.dispose();
   }
 
   /// Action blocks are added here.
@@ -41,24 +40,16 @@ class AddCarModel {
       endDate: datePicked?.end,
       price: double.parse(priceController.text),
     );
-    return await CraController.registerCar(car, imagePicker!.getImages()!);
+    return await CraController.registerCar(car, imagePicker.getImages());
   }
 
   /// Additional helper methods are added here.
   /// Validators
-  String? licenseValidator(String? value) {
-    return isEmpty(value);
-  }
-
-  String? vehicleTypeValidator(String? value) {
-    return isEmpty(value);
-  }
 
   String? datesValidator(String? value) {
-    return isEmpty(value);
-  }
-
-  String? priceValidator(String? value) {
-    return isEmpty(value);
+    var validate = isEmpty(value);
+    if (validate != null) return validate;
+    if (datePicked!.duration.inDays < 1) return 'Minimum rent is one day';
+    return null;
   }
 }

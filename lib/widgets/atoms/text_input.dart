@@ -57,6 +57,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
   Widget onRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Text(

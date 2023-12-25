@@ -22,15 +22,15 @@ class EditCarWidget extends StatefulWidget {
 
 class _EditCarWidgetState extends State<EditCarWidget> {
   late EditCarModel _model;
-  String? imagePickerError;
+  String? _imagePickerError;
   final _formKey = GlobalKey<FormState>();
-  bool isEnabled = true;
+  bool _isEnabled = true;
 
   @override
   void initState() {
     super.initState();
     _model = EditCarModel(widget.car!);
-    isEnabled = widget.car?.availability == 'On rent' ? false : true;
+    _isEnabled = widget.car?.availability == 'On rent' ? false : true;
   }
 
   @override
@@ -48,7 +48,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
           color: Colors.black,
         ),
         title: Text('Details'),
-        actions: !isEnabled
+        actions: !_isEnabled
             ? null
             : [
                 Padding(
@@ -90,6 +90,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
       padding: const EdgeInsets.all(20),
       child: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -103,7 +104,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 Text(
-                  _model.car!.licensePlate!,
+                  _model.car.licensePlate!,
                 ),
               ],
             ),
@@ -121,39 +122,13 @@ class _EditCarWidgetState extends State<EditCarWidget> {
     );
   }
 
-  Widget displayPrice() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text(
-            'Price',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
-        isEnabled
-            ? Expanded(
-                child: CustomTextInput(
-                  controller: _model.priceController,
-                  validator: isEmpty,
-                  contentPadding: EdgeInsets.all(10),
-                  isDense: true,
-                ),
-              )
-            : Text(
-                _model.car!.price.toString(),
-              ),
-      ],
-    );
-  }
-
   Widget info() {
     return Align(
       alignment: Alignment.center,
       child: InfoContainer(
           filled: true,
           child: Text(
-            isEnabled
+            _isEnabled
                 ? 'Click the image if you want to upload new set of images.'
                 : 'Vehicles on rent can not be edited.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -166,23 +141,24 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   Widget availability() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Availability',
           style: Theme.of(context).textTheme.titleSmall,
         ),
-        !isEnabled
+        !_isEnabled
             ? Text(
-                _model.car!.availability!,
+                _model.car.availability!,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
               )
             : DropdownMenu<String>(
-                enabled: isEnabled,
+                enabled: _isEnabled,
                 enableSearch: false,
                 requestFocusOnTap: false,
-                initialSelection: _model.availability,
+                initialSelection: _model.car.availability,
                 dropdownMenuEntries: <String>['Available', 'Unavailable']
                     .map((value) => DropdownMenuEntry<String>(
                           value: value,
@@ -190,13 +166,14 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                         ))
                     .toList(),
                 onSelected: (value) {
-                  _model.availability = value;
+                  _model.availabilityController.text = value!;
                 },
                 inputDecorationTheme: InputDecorationTheme(
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(horizontal: 10),
                   constraints: BoxConstraints.tight(Size.fromHeight(40)),
                 ),
+                controller: _model.availabilityController,
               ),
       ],
     );
@@ -211,18 +188,107 @@ class _EditCarWidgetState extends State<EditCarWidget> {
           style: Theme.of(context).textTheme.titleSmall,
         ),
         SizedBox(height: 4),
-        !isEnabled
+        !_isEnabled
             ? Text(
-                _model.car!.vehicleType!,
+                _model.car.vehicleType!,
               )
             : dropdownMenu(),
       ],
     );
   }
 
+  Widget displayPrice() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            'Price',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
+        _isEnabled
+            ? Expanded(
+                child: CustomTextInput(
+                  controller: _model.priceController,
+                  validator: isEmpty,
+                  contentPadding: EdgeInsets.all(10),
+                  isDense: true,
+                ),
+              )
+            : Text(
+                _model.car.price.toString(),
+              ),
+      ],
+    );
+  }
+
+  Widget datePicker() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            'Available Dates',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
+        !_isEnabled
+            ? Text(
+                '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}',
+              )
+            : Expanded(
+                child: InkWell(
+                  hoverColor: _isEnabled ? null : Colors.transparent,
+                  onTap: !_isEnabled
+                      ? null
+                      : () async {
+                          _model.datePicked = await showDateRangePicker(
+                            context: context,
+                            firstDate: getCurrentTimestamp,
+                            lastDate: DateTime(2050),
+                          );
+
+                          if (_model.datePicked != null) {
+                            setState(() {
+                              _model.datesController.text =
+                                  '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
+                            });
+                          }
+                        },
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      inputDecorationTheme:
+                          Theme.of(context).inputDecorationTheme.copyWith(
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                              ),
+                    ),
+                    child: CustomTextInput(
+                      key: ValueKey(_model.datesController.text),
+                      controller: _model.datesController,
+                      validator: _model.datesValidator,
+                      prefixIcon: Icon(
+                        Icons.calendar_today_rounded,
+                        size: 20,
+                      ),
+                      enabled: false,
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(10),
+                    ),
+                  ),
+                ),
+              ),
+      ],
+    );
+  }
+
   Widget dropdownMenu() {
     return DropdownMenu<String>(
-      enabled: isEnabled,
+      enabled: _isEnabled,
       enableSearch: false,
       requestFocusOnTap: false,
       initialSelection: _model.vehicleType,
@@ -248,17 +314,17 @@ class _EditCarWidgetState extends State<EditCarWidget> {
       children: [
         Card(
           child: InkWell(
-            hoverColor: isEnabled ? null : Colors.transparent,
-            onTap: !isEnabled
+            hoverColor: _isEnabled ? null : Colors.transparent,
+            onTap: !_isEnabled
                 ? null
                 : () async {
-                    imagePickerError = await _model.imagePicker!.selectImages();
+                    _imagePickerError = await _model.imagePicker.selectImages();
                     setState(() {});
                   },
             child: imageCarousel(),
           ),
         ),
-        if (imagePickerError != null)
+        if (_imagePickerError != null)
           Container(
             padding: EdgeInsets.all(8),
             child: Row(
@@ -272,7 +338,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                   width: 4,
                 ),
                 Text(
-                  imagePickerError!,
+                  _imagePickerError!,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.error,
                   ),
@@ -291,9 +357,9 @@ class _EditCarWidgetState extends State<EditCarWidget> {
   }
 
   Widget imageCarousel() {
-    final images = _model.imagePicker!.getImages() != null
-        ? _model.imagePicker!.getImages()
-        : _model.car!.photoUrl;
+    final images = _model.imagePicker.getImages().isNotEmpty
+        ? _model.imagePicker.getImages()
+        : _model.car.photoUrl;
     return CarouselSlider.builder(
       itemCount: images!.length,
       options: CarouselOptions(
@@ -303,7 +369,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
       ),
       itemBuilder: (context, index, viewIndex) {
         final image = images[index];
-        return _model.imagePicker!.getImages() != null
+        return _model.imagePicker.getImages().isNotEmpty
             ? pickedImage(image as XFile)
             : networkImage(image as String);
       },
@@ -325,67 +391,6 @@ class _EditCarWidgetState extends State<EditCarWidget> {
       placeholder: (context, url) => Center(
         child: const CircularProgressIndicator(),
       ),
-    );
-  }
-
-  Widget datePicker() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text(
-            'Available Dates',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
-        !isEnabled
-            ? Text(
-                '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}',
-              )
-            : Expanded(
-                child: InkWell(
-                  hoverColor: isEnabled ? null : Colors.transparent,
-                  onTap: !isEnabled
-                      ? null
-                      : () async {
-                          _model.datePicked = await showDateRangePicker(
-                            context: context,
-                            firstDate: getCurrentTimestamp,
-                            lastDate: DateTime(2050),
-                          );
-
-                          if (_model.datePicked != null) {
-                            setState(() {
-                              _model.datesController?.text =
-                                  '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
-                            });
-                          }
-                        },
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                      inputDecorationTheme:
-                          Theme.of(context).inputDecorationTheme.copyWith(
-                                disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                ),
-                              ),
-                    ),
-                    child: CustomTextInput(
-                      key: ValueKey(_model.datesController?.text),
-                      controller: _model.datesController,
-                      validator: isEmpty,
-                      prefixIcon: Icon(
-                        Icons.calendar_today_rounded,
-                        size: 20,
-                      ),
-                      enabled: false,
-                      isDense: true,
-                      contentPadding: EdgeInsets.all(10),
-                    ),
-                  ),
-                ),
-              ),
-      ],
     );
   }
 }

@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_model.dart';
-import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
@@ -20,8 +19,7 @@ class AddCarWidget extends StatefulWidget {
 
 class _AddCarWidgetState extends State<AddCarWidget> {
   late AddCarModel _model;
-  String? imagePickerError;
-  String? imageUrl;
+  String? _imagePickerError, _vehicleTypeError;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -29,11 +27,6 @@ class _AddCarWidgetState extends State<AddCarWidget> {
   void initState() {
     super.initState();
     _model = AddCarModel();
-    _model.licenseController ??= TextEditingController();
-    _model.vehicleTypeController ??= TextEditingController();
-    _model.datesController ??= TextEditingController();
-    _model.priceController ??= TextEditingController();
-    _model.imagePicker = PickedImages();
   }
 
   @override
@@ -42,8 +35,208 @@ class _AddCarWidgetState extends State<AddCarWidget> {
     _model.dispose();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Register car'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: FilledButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate() &&
+                    _model.imagePicker.getImages().isNotEmpty) {
+                  showDialogLoading(context);
+                  _model.register().then((value) {
+                    if (value != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        showError(value, Theme.of(context).colorScheme.error),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        showSuccess('Car registered successfully'),
+                      );
+                    }
+                    context.pop();
+                  });
+                }
+
+                setState(() {
+                  if (_model.imagePicker.getImages().isEmpty)
+                    _imagePickerError = 'Please upload an image of your car';
+                  _vehicleTypeError =
+                      isEmpty(_model.vehicleTypeController.text);
+                });
+              },
+              child: Text('Register Car'),
+            ),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                children: [
+                  imagePicker(),
+                  Column(
+                    children: [
+                      licensePlate(),
+                      vehicleType(),
+                      datePicker(),
+                      price(),
+                    ].divide(
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ),
+                  ),
+                ].divide(
+                  SizedBox(
+                    height: 20,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget imagePicker() {
+    return Column(
+      children: [
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: () async {
+              _imagePickerError = await _model.imagePicker.selectImages();
+              setState(() {});
+            },
+            child: Container(
+              height: 160,
+              child: _model.imagePicker.getImages().isNotEmpty
+                  ? imageCarousel()
+                  : Center(
+                      child: Text(
+                        'Tap to Upload Image',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+            ),
+          ),
+        ),
+        if (_imagePickerError != null)
+          Container(
+            padding: EdgeInsets.all(8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.error,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  _imagePickerError!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+              ],
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).colorScheme.error,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+      ],
+    );
+  }
+
+  CarouselSlider imageCarousel() {
+    return CarouselSlider.builder(
+      itemCount: _model.imagePicker.getImages().length,
+      options: CarouselOptions(
+        enlargeCenterPage: true,
+        enableInfiniteScroll: false,
+      ),
+      itemBuilder: (context, index, viewIndex) {
+        XFile image = _model.imagePicker.getImages()[index];
+        if (kIsWeb) {
+          return Image.network(image.path);
+        } else {
+          return Image.file(
+            File(image.path),
+            fit: BoxFit.contain,
+          );
+        }
+      },
+    );
+  }
+
+  Widget licensePlate() {
+    return CustomTextInput(
+      label: 'License Plate',
+      labelStyle:
+          Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+      controller: _model.licenseController,
+      validator: isEmpty,
+      direction: TextInputDirection.row,
+    );
+  }
+
+  Widget vehicleType() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            'Vehicle Type',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.grey),
+          ),
+        ),
+        Expanded(
+          child: DropdownMenu<String>(
+            enableSearch: false,
+            requestFocusOnTap: false,
+            dropdownMenuEntries: <String>['Sedan', 'Van', 'SUV']
+                .map((value) => DropdownMenuEntry<String>(
+                      value: value,
+                      label: value,
+                    ))
+                .toList(),
+            onSelected: (value) {
+              setState(() {
+                _vehicleTypeError = null;
+              });
+            },
+            expandedInsets: EdgeInsets.zero,
+            controller: _model.vehicleTypeController,
+            errorText: _vehicleTypeError,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget datePicker() {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Text(
@@ -56,7 +249,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
         ),
         Expanded(
           child: InkWell(
-            onTap: () async {
+            onTap: () {
               showDateRangePicker(
                 context: context,
                 firstDate: getCurrentTimestamp,
@@ -64,9 +257,11 @@ class _AddCarWidgetState extends State<AddCarWidget> {
               ).then((value) {
                 if (value != null) {
                   setState(() {
-                    _model.datesController?.text =
-                        '${DateFormat('MMM d').format(_model.datePicked!.start)} - ${DateFormat('MMM d').format(_model.datePicked!.end)}';
+                    _model.datesController.text =
+                        '${DateFormat('MMM d').format(value.start)} - ${DateFormat('MMM d').format(value.end)}';
                   });
+
+                  _model.datePicked = value;
                 }
               });
             },
@@ -95,205 +290,16 @@ class _AddCarWidgetState extends State<AddCarWidget> {
     );
   }
 
-  Widget imagePicker() {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () async {
-              imagePickerError = await _model.imagePicker!.selectImages();
-              setState(() {});
-            },
-            child: Container(
-              height: 160,
-              child: _model.imagePicker!.getImages() != null &&
-                      _model.imagePicker!.getImages()!.isNotEmpty
-                  ? imageCarousel()
-                  : Center(
-                      child: Text(
-                        'Tap to Upload Image',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-            ),
-          ),
-          if (imagePickerError != null)
-            Container(
-              padding: EdgeInsets.all(8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.error,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    imagePickerError!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  CarouselSlider imageCarousel() {
-    return CarouselSlider.builder(
-      itemCount: _model.imagePicker!.getImages()!.length,
-      options: CarouselOptions(
-        enlargeCenterPage: true,
-        enableInfiniteScroll: false,
-      ),
-      itemBuilder: (context, index, viewIndex) {
-        XFile image = _model.imagePicker!.getImages()![index];
-        if (kIsWeb) {
-          return Image.network(image.path);
-        } else {
-          return Image.file(
-            File(image.path),
-            fit: BoxFit.contain,
-          );
-        }
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Register car'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Center(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  imagePicker(),
-                  Column(
-                    children: [
-                      licensePlate(),
-                      vehicleType(),
-                      datePicker(),
-                      price(),
-                    ].divide(
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ),
-                  ),
-                  FilledButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate() &&
-                          _model.imagePicker!.getImages() != null) {
-                        showDialogLoading(context);
-                        _model.register().then((value) {
-                          if (value != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              showError(
-                                  value, Theme.of(context).colorScheme.error),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              showSuccess('Car registered successfully'),
-                            );
-                          }
-                          context.pop();
-                        });
-                      }
-                      imagePickerError =
-                          _model.imagePicker!.getImages() == null ||
-                                  _model.imagePicker!.getImages()!.isEmpty
-                              ? 'Please upload an image of your car'
-                              : null;
-                      setState(() {});
-                    },
-                    child: Text('Register Car'),
-                  ),
-                ].divide(
-                  SizedBox(
-                    height: 20,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget price() {
     return CustomTextInput(
       label: 'Price',
       labelStyle:
           Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
       controller: _model.priceController,
-      validator: _model.priceValidator,
+      validator: isEmpty,
       keyboardType: TextInputType.number,
       inputFormatters: FilteringTextInputFormatter.digitsOnly,
       direction: TextInputDirection.row,
-    );
-  }
-
-  Widget licensePlate() {
-    return CustomTextInput(
-      label: 'License Plate',
-      labelStyle:
-          Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-      controller: _model.licenseController,
-      validator: _model.licenseValidator,
-      direction: TextInputDirection.row,
-    );
-  }
-
-  Widget vehicleType() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text(
-            'Vehicle Type',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: Colors.grey),
-          ),
-        ),
-        Expanded(
-          child: DropdownMenu<String>(
-            enableSearch: false,
-            requestFocusOnTap: false,
-            dropdownMenuEntries: <String>['Sedan', 'Van', 'SUV']
-                .map((value) => DropdownMenuEntry<String>(
-                      value: value,
-                      label: value,
-                    ))
-                .toList(),
-            onSelected: (value) {
-              // _model.vehicleType = value;
-            },
-            expandedInsets: EdgeInsets.zero,
-          ),
-        ),
-      ],
     );
   }
 }

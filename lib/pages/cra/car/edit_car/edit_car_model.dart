@@ -6,34 +6,30 @@ import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/image_handler.dart';
+import 'package:joiner_1/utils/utils.dart';
 
 class EditCarModel {
-  CarModel? car;
+  CarModel car;
   DateTimeRange? datePicked;
-  String? availability;
   String? vehicleType;
-  TextEditingController? datesController;
-  TextEditingController? priceController;
-  PickedImages? imagePicker;
+  TextEditingController datesController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController availabilityController = TextEditingController();
+  PickedImages imagePicker = PickedImages();
 
-  EditCarModel(CarModel _car) {
-    this.car = _car;
-    availability =
-        car?.availability == 'Available' ? 'Available' : 'Unavailable';
-    vehicleType = car?.vehicleType;
-    priceController ??= TextEditingController();
-    priceController?.text = car!.price.toString();
-    datesController ??= TextEditingController();
-    datesController?.text =
-        '${DateFormat('MMM d').format(car!.startDate!)} - ${DateFormat('MMM d').format(car!.endDate!)}';
-    datePicked = DateTimeRange(start: car!.startDate!, end: car!.endDate!);
+  EditCarModel(this.car) {
+    vehicleType = car.vehicleType;
+    priceController.text = car.price.toString();
+    datesController.text =
+        '${DateFormat('MMM d').format(car.startDate!)} - ${DateFormat('MMM d').format(car.endDate!)}';
+    datePicked = DateTimeRange(start: car.startDate!, end: car.endDate!);
     imagePicker = PickedImages();
   }
 
   void dispose() {
-    datesController?.dispose();
-    priceController?.dispose();
-    imagePicker = null;
+    datesController.dispose();
+    priceController.dispose();
+    availabilityController.dispose();
   }
 
   // Converts picked files to a MultipartFile for sending to the server
@@ -55,19 +51,26 @@ class EditCarModel {
   Future<String?> editCar() async {
     if (datePicked == null) {
       datePicked = DateTimeRange(
-        start: car!.startDate!,
-        end: car!.endDate!,
+        start: car.startDate!,
+        end: car.endDate!,
       );
     }
     final uCar = CarModel(
-      licensePlate: car!.licensePlate!,
+      licensePlate: car.licensePlate!,
       vehicleType: vehicleType,
-      availability: availability,
+      availability: availabilityController.text,
       startDate: datePicked?.start,
       endDate: datePicked?.end,
-      price: double.parse(priceController!.text),
+      price: double.parse(priceController.text),
     );
 
-    return await CraController.editCar(uCar, imagePicker!.getImages());
+    return await CraController.editCar(uCar, imagePicker.getImages());
+  }
+
+  String? datesValidator(String? value) {
+    var validate = isEmpty(value);
+    if (validate != null) return validate;
+    if (datePicked!.duration.inDays < 1) return 'Minimum rent is one day';
+    return null;
   }
 }

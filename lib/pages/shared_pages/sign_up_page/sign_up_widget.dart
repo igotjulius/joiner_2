@@ -36,9 +36,31 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
     _model.craModel = CraSignUpMoleModel();
   }
 
+  AppBar appBar() => AppBar(
+        title: Text(
+          'Create an Account',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: TextButton(
+              child: Text(
+                'Already have an account?',
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                context.goNamed('Login');
+              },
+            ),
+          ),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar(),
       body: SafeArea(
         child: GestureDetector(
           onTap: () {
@@ -50,29 +72,6 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
               padding: EdgeInsetsDirectional.all(20),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          'Create an Account',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ),
-                      Spacer(),
-                      TextButton(
-                        child: Text(
-                          'Login Now',
-                        ),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          context.goNamed('Login');
-                        },
-                      ),
-                    ],
-                  ),
                   Container(
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
@@ -83,7 +82,6 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                     ),
                     child: TabBar(
                       splashBorderRadius: BorderRadius.circular(20),
-                      labelPadding: EdgeInsets.symmetric(vertical: 8),
                       labelColor: Colors.white,
                       unselectedLabelColor: Colors.blue[300],
                       indicator: BoxDecoration(
@@ -131,7 +129,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                         ),
                       ),
                       Spacer(),
-                      FilledButton.tonal(
+                      FilledButton(
                         onPressed: () async {
                           final joinerForm =
                               joinerFormKey.currentState != null &&
@@ -143,11 +141,6 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                             final result = await _model.signUp();
                             context.pop();
                             if (result != null) {
-                              context.pop();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                showError(result,
-                                    Theme.of(context).colorScheme.error),
-                              );
                               _model.userModel.emailError =
                                   'Email already in use';
                               setState(() {});

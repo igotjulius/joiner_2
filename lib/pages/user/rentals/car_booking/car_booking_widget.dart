@@ -9,6 +9,7 @@ import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/info_container.dart';
+import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -27,16 +28,13 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
     with TickerProviderStateMixin {
   late CarBookingModel _model;
   TabController? _tabController;
-  String? _noImage, _noDates;
+  String? _noImage;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     _model = CarBookingModel();
-    _model.dates ??= TextEditingController();
-    _model.imagePicker ??= PickedImages();
-    _model.datePicked =
-        DateTimeRange(start: DateTime.now(), end: DateTime.now());
     _tabController ??= TabController(length: 2, vsync: this, initialIndex: 0);
     _tabController?.addListener(() {
       setState(() {});
@@ -65,12 +63,12 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               clipBehavior: Clip.antiAlias,
               child: InkWell(
                 onTap: () async {
-                  await _model.imagePicker?.selectImage();
+                  await _model.imagePicker.selectImage();
                   setState(() {
                     _noImage = null;
                   });
                 },
-                child: _model.imagePicker?.getImage() != null
+                child: _model.imagePicker.getImage() != null
                     ? displayImage()
                     : Center(
                         child: Text('Tap to Upload'),
@@ -115,47 +113,36 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                 ).then((value) {
                   if (value != null) {
                     setState(() {
-                      _noDates = null;
+                      _model.dates.text =
+                          '${DateFormat('MMM d').format(value.start)} - ${DateFormat('MMM d').format(value.end)}';
                     });
+                    _model.datePicked = value;
                   }
-                  _model.datePicked = value!;
                 });
               },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(),
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  inputDecorationTheme:
+                      Theme.of(context).inputDecorationTheme.copyWith(
+                            disabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.black),
+                            ),
+                          ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                      child: Icon(
-                        Icons.calendar_today,
-                        color: Color(0xFF52B2FA),
-                        size: 24.0,
-                      ),
+                child: Form(
+                  key: _formKey,
+                  child: CustomTextInput(
+                    controller: _model.dates,
+                    validator: _model.datesValidator,
+                    suffixIcon: Icon(
+                      Icons.calendar_today_rounded,
                     ),
-                    Text(
-                      (_model.datePicked.duration.inDays == 0
-                          ? "${DateFormat('MMM d').format(_model.datePicked.start)}"
-                          : "${DateFormat('MMM d').format(_model.datePicked.start)} - ${DateFormat('MMM d').format(_model.datePicked.end)}"),
-                    ),
-                  ].divide(SizedBox(width: 10.0)),
+                    enabled: false,
+                  ),
                 ),
               ),
             ),
-            if (_noDates != null)
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  _noDates!,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.error),
-                ),
-              ),
           ],
         ),
       ],
@@ -163,7 +150,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
   }
 
   Widget displayImage() {
-    XFile image = _model.imagePicker!.getImage()!;
+    XFile image = _model.imagePicker.getImage()!;
     if (kIsWeb) {
       return Image.network(
         image.path,
@@ -309,14 +296,14 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
 
               return;
             }
-            if (_model.imagePicker?.getImage() == null)
+            if (_model.imagePicker.getImage() == null)
               _noImage = 'Please select an image of your valid ID';
-            else if (_model.datePicked.duration.inDays < 1) {
-              _noDates = 'Minimum rent duration is one day';
-            } else if (_noImage == null && _noDates == null)
-              _tabController?.index++;
 
-            setState(() {});
+            setState(() {
+              if (_formKey.currentState!.validate()) {
+                if (_noImage == null) _tabController?.index++;
+              }
+            });
           },
           child: Text('Next'),
         ),
@@ -398,15 +385,15 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
 }
 
 class CarBookingModel {
-  late DateTimeRange datePicked;
-  PickedImages? imagePicker;
-  TextEditingController? dates;
+  DateTimeRange datePicked =
+      DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  PickedImages imagePicker = PickedImages();
+  TextEditingController dates = TextEditingController();
 
   /// Initialization and disposal methods.
 
   void dispose() {
-    imagePicker = null;
-    dates?.dispose();
+    dates.dispose();
   }
 
   /// Action blocks are added here.
@@ -419,10 +406,17 @@ class CarBookingModel {
     );
     final result = await UserController.postRental(
       rental,
-      imagePicker!.getImage()!,
+      imagePicker.getImage()!,
     );
     return result.data;
   }
 
   /// Additional helper methods are added here.
+  String? datesValidator(String? value) {
+    var validate = isEmpty(value);
+    if (validate != null) return validate;
+    if (datePicked.duration.inDays < 1)
+      return 'Minimum rent duration is one day';
+    return null;
+  }
 }

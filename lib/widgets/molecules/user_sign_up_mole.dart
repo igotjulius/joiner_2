@@ -64,7 +64,7 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
               ),
             ].divide(
               SizedBox(
-                height: 16,
+                height: 10,
               ),
             ),
           ),
