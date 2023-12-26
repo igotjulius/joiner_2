@@ -9,7 +9,7 @@ class WaitingApproval extends StatelessWidget {
       {super.key, this.name, this.friendId, this.parentSetState});
 
   void removeFriendRequest(String friendId) async {
-    await UserController.removeFriendRequest(friendId);
+    // await UserController.removeFriendRequest(friendId);
     parentSetState!(() {});
   }
 

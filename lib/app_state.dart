@@ -19,19 +19,19 @@ class FFAppState extends ChangeNotifier {
     pref = await SharedPreferences.getInstance();
     if (pref!.getBool('isCra') != null) {
       setIsCra(pref!.getBool('isCra')!);
-      pref!.getBool('isCra')!
-          ? _currentUser = new CraUserModel(
-              id: pref!.getString('userId'),
-              firstName: pref!.getString('firstName'),
-              lastName: pref!.getString('lastName'),
-              email: pref!.getString('email'),
-            )
-          : _currentUser = new UserModel(
-              id: pref!.getString('userId'),
-              firstName: pref!.getString('firstName'),
-              lastName: pref!.getString('lastName'),
-              email: pref!.getString('email'),
-            );
+      // pref!.getBool('isCra')!
+      //     ? _currentUser = new CraUserModel(
+      //         id: pref!.getString('userId')!,
+      //         firstName: pref!.getString('firstName'),
+      //         lastName: pref!.getString('lastName'),
+      //         email: pref!.getString('email'),
+      //       )
+      //     : _currentUser = new UserModel(
+      //         id: pref!.getString('userId'),
+      //         firstName: pref!.getString('firstName'),
+      //         lastName: pref!.getString('lastName'),
+      //         email: pref!.getString('email'),
+      //       );
     }
   }
 

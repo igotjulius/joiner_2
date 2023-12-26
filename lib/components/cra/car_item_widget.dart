@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joiner_1/app_state.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/utils.dart';
@@ -17,14 +18,6 @@ class CarItemWidget extends StatefulWidget {
 }
 
 class _CarItemWidgetState extends State<CarItemWidget> {
-  late CarItemModel _model;
-
-  @override
-  void initState() {
-    super.initState();
-    _model = CarItemModel();
-  }
-
   void handleLongPress() {
     showDialog(
       context: context,
@@ -38,7 +31,10 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             TextButton(
               onPressed: () {
                 showDialogLoading(context);
-                _model.delete(widget.car.licensePlate!).then((value) {
+                context
+                    .read<CraController>()
+                    .removeCar(widget.car.licensePlate!)
+                    .then((value) {
                   if (value) {
                     context.pop();
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -68,7 +64,8 @@ class _CarItemWidgetState extends State<CarItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isCra = context.watch<FFAppState>().isCra;
+    final controller = context.watch<AuthController>();
+    final isCra = controller.userTypeController is CraController;
     return Card(
       surfaceTintColor: Theme.of(context).colorScheme.secondary,
       child: InkWell(
@@ -79,9 +76,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             context.pushNamed(
               'CarDetails',
               pathParameters: {'licensePlate': widget.car.licensePlate!},
-              extra: <String, dynamic>{
-                'car': widget.car,
-              },
+              extra: widget.car,
             );
             return;
           }
@@ -182,11 +177,5 @@ class _CarItemWidgetState extends State<CarItemWidget> {
         ),
       ),
     );
-  }
-}
-
-class CarItemModel {
-  Future<bool> delete(String licensePlate) async {
-    return await CraController.deleteCar(licensePlate);
   }
 }

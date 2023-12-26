@@ -404,11 +404,11 @@ class CarBookingModel {
       endRental: datePicked.end.toString(),
       duration: datePicked.duration.inDays,
     );
-    final result = await UserController.postRental(
-      rental,
-      imagePicker.getImage()!,
-    );
-    return result.data;
+    // final result = await UserController.postRental(
+    //   rental,
+    //   imagePicker.getImage()!,
+    // );
+    // return result.data;
   }
 
   /// Additional helper methods are added here.

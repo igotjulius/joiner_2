@@ -1,4 +1,6 @@
 import 'package:joiner_1/app_state.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/nav/nav.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
@@ -16,18 +18,16 @@ void main() async {
 
   usePathUrlStrategy();
 
-  final appState = FFAppState(); // Initialize FFAppState
+  // final appState = FFAppState(); // Initialize FFAppState
+  // await appState.initializePersistedState();
+  final appState = AuthController();
   await appState.initializePersistedState();
-
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: appState,
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AppStateNotifier.instance,
-        ),
+        // ChangeNotifierProvider.value(value: appState),
+        ChangeNotifierProvider(create: (context) => AppStateNotifier.instance),
+        ChangeNotifierProvider<AuthController>.value(value: appState),
       ],
       child: MyApp(),
     ),
@@ -44,18 +44,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late FFAppState _appState;
-  late AppStateNotifier _appStateNotifier;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  // late FFAppState _appState;
+  // late AppStateNotifier _appStateNotifier;
 
   @override
   Widget build(BuildContext context) {
-    _appState = context.watch<FFAppState>();
-    _appStateNotifier = Provider.of<AppStateNotifier>(context);
+    final appState = context.watch<AuthController>();
     return MaterialApp.router(
       title: 'Joiner 1',
       localizationsDelegates: [
@@ -69,16 +63,14 @@ class _MyAppState extends State<MyApp> {
       routerConfig: GoRouter(
         initialLocation: '/login',
         debugLogDiagnostics: true,
-        refreshListenable: _appStateNotifier,
+        refreshListenable: appState,
         errorBuilder: (context, state) {
           print('${state.error} ${state.fullPath}');
           return LoginPageWidget();
         },
-        routes: _appStateNotifier.routes
-            .map((r) => r.toRoute(_appStateNotifier))
-            .toList(),
+        routes: appState.routes,
         redirect: (context, state) {
-          return _appStateNotifier.redirectState(context, state, _appState);
+          return appState.redirectState(state);
         },
       ),
       debugShowCheckedModeBanner: false,
@@ -110,9 +102,11 @@ class _NavBarPageState extends State<NavBarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FFAppState>(
+    return Consumer<AuthController>(
       builder: (context, value, child) {
-        return value.isCra ? craDashboard() : userDashboard();
+        return value.userTypeController is CraController
+            ? craDashboard()
+            : userDashboard();
       },
     );
   }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:joiner_1/components/cra/car_item_widget.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
-import 'package:joiner_1/models/car_model.dart';
+import 'package:provider/provider.dart';
 
 class CraCarWidget extends StatefulWidget {
   const CraCarWidget({super.key});
@@ -12,16 +13,17 @@ class CraCarWidget extends StatefulWidget {
 }
 
 class _CraCarWidgetState extends State<CraCarWidget> {
-  Future<List<CarModel>?>? _fetchCars;
-
   @override
   void initState() {
     super.initState();
-    _fetchCars = CraController.getCraCars();
+    final controller =
+        context.read<AuthController>().userTypeController as CraController;
+    controller.refetchCraCars();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.watch<AuthController>();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -41,40 +43,28 @@ class _CraCarWidgetState extends State<CraCarWidget> {
   Padding mainBody() {
     return Padding(
       padding: EdgeInsets.all(20),
-      child: getCars(),
+      child: displayCars(),
     );
   }
 
-  FutureBuilder<List<CarModel>?> getCars() {
-    return FutureBuilder(
-      future: _fetchCars,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done)
-          return Center(
-            child: CircularProgressIndicator(),
+  Widget displayCars() {
+    final cars =
+        (context.watch<AuthController>().userTypeController as CraController)
+            .cars;
+    return SingleChildScrollView(
+      child: ListView.separated(
+        shrinkWrap: true,
+        itemCount: cars.length,
+        itemBuilder: (context, index) {
+          final car = cars[index];
+          return CarItemWidget(car: car);
+        },
+        separatorBuilder: (context, index) {
+          return SizedBox(
+            height: 10,
           );
-
-        List<CarModel>? cars = snapshot.data;
-        if (cars == null)
-          return Center(
-            child: Text('No registered cars'),
-          );
-        return SingleChildScrollView(
-          child: ListView.separated(
-            shrinkWrap: true,
-            itemCount: cars.length,
-            itemBuilder: (context, index) {
-              final car = cars[index];
-              return CarItemWidget(car: car);
-            },
-            separatorBuilder: (context, index) {
-              return SizedBox(
-                height: 10,
-              );
-            },
-          ),
-        );
-      },
+        },
+      ),
     );
   }
 }

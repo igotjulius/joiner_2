@@ -22,7 +22,8 @@ class RentalsModel extends FlutterFlowModel {
   /// Action blocks are added here.
   FutureBuilder<ResponseModel<List<RentalModel>>> getRentals() {
     return FutureBuilder(
-      future: UserController.getRentals(),
+      // future: UserController.getRentals(),
+      future: null,
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(

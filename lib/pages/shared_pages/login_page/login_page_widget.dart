@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'login_page_model.dart';
 export 'login_page_model.dart';
 
@@ -21,9 +23,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   void initState() {
     super.initState();
     _model = LoginPageModel();
-
-    _model.emailController ??= TextEditingController();
-    _model.passwordController ??= TextEditingController();
   }
 
   @override
@@ -89,7 +88,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   errorText: _errorMessage,
                                 ),
                                 style: Theme.of(context).textTheme.bodySmall,
-                                validator: _model.validateEmail,
+                                validator: validateEmail,
                               ),
                               TextFormField(
                                 key: Key('passwordField'),
@@ -100,7 +99,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   errorText: _errorMessage,
                                 ),
                                 style: Theme.of(context).textTheme.bodySmall,
-                                validator: _model.validatePassword,
+                                validator: isEmpty,
                               ),
                             ].divide(SizedBox(height: 10.0)),
                           ),
@@ -122,21 +121,28 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       letterSpacing: 3,
                                     ),
                               ),
-                              onPressed: () async {
+                              onPressed: () {
                                 // TODO: if user is not yet verified, send a verification email and redirect to verification page
                                 if (_formKey.currentState!.validate()) {
                                   showDialogLoading(context);
-                                  final result =
-                                      await _model.loginUser(context);
-                                  if (!result) {
-                                    context.pop();
-                                    setState(() {
-                                      _errorMessage =
-                                          'Invalid username/password';
-                                    });
-                                  }
+                                  context
+                                      .read<AuthController>()
+                                      .loginUser(_model.emailController.text,
+                                          _model.passwordController.text)
+                                      .then(
+                                    (value) {
+                                      context.pop();
+                                      if (value == null) {
+                                        setState(() {
+                                          _errorMessage =
+                                              'Invalid username/password';
+                                        });
+                                        return;
+                                      }
+                                    },
+                                  );
+                                  // _model.loginUser();
                                 }
-                                // context.goNamed('Verification');
                               },
                             ),
                           ),
@@ -154,8 +160,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 onTap: () {
                                   setState(() {
                                     // _errorMessage = null;
-                                    _model.emailController?.clear();
-                                    _model.passwordController?.clear();
+                                    _model.emailController.clear();
+                                    _model.passwordController.clear();
                                     context.pushNamed('Sign Up');
                                   });
                                 },

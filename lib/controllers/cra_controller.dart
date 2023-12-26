@@ -1,39 +1,126 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/main.dart';
+import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/rental_model.dart';
-import 'package:joiner_1/service/api_service.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:joiner_1/utils/generic_response.dart';
+import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
+import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
+import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
+import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
+import 'package:joiner_1/pages/shared_pages/account/account_widget.dart';
+import 'package:joiner_1/pages/shared_pages/rental_details/rental_details_widget.dart';
+import 'package:joiner_1/service/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/car_model.dart';
 
-class CraController {
-  static late Map<String, String> user = {
-    'userId': '',
-  };
+class CraController extends AuthController implements Auth {
+  CraController(this._currentUser, this._apiService) {
+    final craRoutes = [
+      GoRoute(
+        name: 'Cars',
+        path: '/cars',
+        builder: (context, params) => NavBarPage(
+          initialPage: 'Cars',
+          page: CraCarWidget(),
+        ),
+        routes: [
+          GoRoute(
+            name: 'RegisterCar',
+            path: 'registerCar',
+            builder: (context, state) => AddCarWidget(),
+          ),
+          GoRoute(
+            name: 'CarDetails',
+            path: ':licensePlate',
+            builder: (context, state) {
+              final obj = state.extra as CarModel;
+              return EditCarWidget(car: obj);
+            },
+          ),
+        ],
+      ),
+      GoRoute(
+        name: 'CraRentals',
+        path: '/craRentals',
+        builder: (context, params) => NavBarPage(
+          initialPage: 'CraRentals',
+          page: CraRentalsWidget(),
+        ),
+        routes: [
+          GoRoute(
+            name: 'RentalDetails',
+            path: 'rentalDetails',
+            builder: (context, state) {
+              final RentalModel rental = state.extra as RentalModel;
+              return RentalDetails(
+                rental: rental,
+              );
+            },
+          ),
+        ],
+      ),
+      GoRoute(
+        name: 'Account',
+        path: '/account',
+        builder: (context, params) => NavBarPage(
+          initialPage: 'Account',
+          page: AccountWidget(),
+        ),
+      ),
+    ];
+    super.setRoutes(craRoutes);
+  }
+  final ApiService _apiService;
+  final CraUserModel _currentUser;
 
-  // Register CRA
-  static Future<String?> registerCra(User nUser) async {
-    final result = await apiService.registerCra(nUser);
-    if (result.code == HttpStatus.created) return null;
-    return result.message;
+  @override
+  User get profile => _currentUser;
+
+  @override
+  Future cacheUser() async {
+    pref = await SharedPreferences.getInstance();
+    String craUser = jsonEncode(_currentUser.toJson());
+    pref.setString('craUser', craUser);
   }
 
-  // Get all registered cars of corresponding CRA
-  static Future<List<CarModel>?> getCraCars() async {
-    final res = await apiService.getCraCars(user['userId']!);
-    return res.data;
+  @override
+  void logout() async {
+    pref = await SharedPreferences.getInstance();
+    pref.clear();
+  }
+
+  @override
+  bool isVerified() {
+    return _currentUser.verification != null ? true : false;
+  }
+
+  List<CarModel> get cars => _currentUser.vehicles;
+  void refetchCraCars() async {
+    final res = await _apiService.getCraCars(_currentUser.id);
+    _currentUser.vehicles = res.data!;
+    notifyListeners();
   }
 
   // Fetch a specific car
-  static Future<CarModel?> getCraCar(String licensePlate) async {
-    final res = await apiService.getCraCar(user['userId']!, licensePlate);
-    return res.data;
+  CarModel? getCar(String licensePlate) {
+    CarModel? car;
+    cars.forEach((element) {
+      if (element.licensePlate == licensePlate) {
+        car = element;
+        return;
+      }
+    });
+    return car;
   }
 
   // Register car under corresponding CRA
-  static Future<String?> registerCar(CarModel car, List<XFile> images) async {
+  Future<String?> registerCar(CarModel car, List<XFile> images) async {
     List<MultipartFile> converted = [];
     for (final image in images) {
       final multipartFile = MultipartFile.fromBytes(
@@ -43,8 +130,8 @@ class CraController {
       );
       converted.add(multipartFile);
     }
-    final result = await apiService.registerCar(
-      user['userId']!,
+    final result = await _apiService.registerCar(
+      _currentUser.id,
       licensePlate: car.licensePlate!,
       ownerId: car.ownerId!,
       ownerName: car.ownerName!,
@@ -57,12 +144,13 @@ class CraController {
     );
     // Return error message if car is already registered by its licenseplate
     if (result.code == 406) return result.message;
-
+    _currentUser.vehicles.add(result.data!);
+    super.notifyListeners();
     return null;
   }
 
   // Edit car
-  static Future<String?> editCar(CarModel car, List<XFile>? images) async {
+  Future<String?> editCar(CarModel car, List<XFile>? images) async {
     List<MultipartFile>? converted;
     if (images != null) {
       converted = [];
@@ -76,8 +164,8 @@ class CraController {
       }
     }
 
-    final result = await apiService.editCar(
-      user['userId']!,
+    final result = await _apiService.editCar(
+      _currentUser.id,
       car.licensePlate!,
       licensePlate: car.licensePlate!,
       vehicleType: car.vehicleType!,
@@ -90,33 +178,47 @@ class CraController {
 
     // Return error message
     if (result.code == 406) return result.message;
-
+    final index = _currentUser.vehicles
+        .indexWhere((element) => element.licensePlate == car.licensePlate);
+    _currentUser.vehicles[index] = result.data!;
+    super.notifyListeners();
     return null;
   }
 
   // Delete a car
-  static Future<bool> deleteCar(String licensePlate) async {
-    final result = await apiService.deleteCar(user['userId']!, licensePlate);
-    return result.code == HttpStatus.ok ? true : false;
+  Future<bool> removeCar(String licensePlate) async {
+    final result = await _apiService.deleteCar(_currentUser.id, licensePlate);
+    if (result.code == HttpStatus.ok) {
+      _currentUser.vehicles
+          .removeWhere((element) => element.licensePlate == licensePlate);
+      notifyListeners();
+      return true;
+    }
+    return false;
   }
 
   // Fetch CRA's rentals
-  static Future<List<RentalModel>?> getCraRentals() async {
-    final result = await apiService.getCraRentals(user['userId']!);
-    return result.data;
+  List<RentalModel> get rentals => _currentUser.rentals;
+  void refetchCraRentals() async {
+    final result = await _apiService.getCraRentals(_currentUser.id);
+    _currentUser.rentals = result.data!;
+    notifyListeners();
   }
 
   // Edit Cra's account
-  static Future<User?> editCraAccount(String firstName, String lastName) async {
-    final result = await apiService.editCraAccount(
-        user['userId']!, {'firstName': firstName, 'lastName': lastName});
-    return result.data;
+  void editCraAccount(String firstName, String lastName) async {
+    await _apiService.editCraAccount(
+        _currentUser.id, {'firstName': firstName, 'lastName': lastName});
+    _currentUser.firstName = firstName;
+    _currentUser.lastName = lastName;
+    notifyListeners();
   }
 
   // Change Cra's password
-  static Future<ResponseModel> changeCraPassword(
-      String password, String newPassword) async {
-    return await apiService.changeCraPassword(
-        user['userId']!, {'password': password, 'newPassword': newPassword});
+  // TODO: check implementation
+  Future<String?> changeCraPassword(String password, String newPassword) async {
+    final res = await _apiService.changeCraPassword(
+        _currentUser.id, {'password': password, 'newPassword': newPassword});
+    return res.code == HttpStatus.ok ? null : res.message;
   }
 }

@@ -101,8 +101,8 @@ class _PollMoleculeState extends State<PollMolecule> {
                 TextButton(
                   onPressed: () {
                     _model.closePoll(widget.lobbyId!).then((uPoll) {
-                      Provider.of<LobbyProvider>(context, listen: false)
-                          .closePoll(widget.index!, uPoll);
+                      // Provider.of<LobbyProvider>(context, listen: false)
+                      //     .closePoll(widget.index!, uPoll);
                     });
                   },
                   child: Text(
@@ -151,7 +151,7 @@ class PollMoleModel extends FlutterFlowModel {
       voters.add(FFAppState().currentUser?.id);
     }
 
-    await UserController.votePoll(title, lobbyId);
+    // await UserController.votePoll(title, lobbyId);
     count();
   }
 
@@ -190,12 +190,12 @@ class PollMoleModel extends FlutterFlowModel {
   }
 
   // Close a poll
-  Future<PollModel> closePoll(String lobbyId) async {
-    return await UserController.closePoll(lobbyId, poll!.id!);
+  Future<PollModel?> closePoll(String lobbyId) async {
+    // return await UserController.closePoll(lobbyId, poll!.id!);
   }
 
   // Delete a poll
   Future<List<PollModel>?> deletePoll(String lobbyId) async {
-    return UserController.deletePoll(lobbyId, poll!.id!);
+    // return UserController.deletePoll(lobbyId, poll!.id!);
   }
 }

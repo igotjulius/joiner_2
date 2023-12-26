@@ -24,9 +24,7 @@ class _RentalInfoState extends State<RentalInfo> {
         onTap: () {
           context.pushNamed(
             'RentalDetails',
-            extra: <String, dynamic>{
-              'rental': widget.rental,
-            },
+            extra: widget.rental,
           );
         },
         child: Padding(

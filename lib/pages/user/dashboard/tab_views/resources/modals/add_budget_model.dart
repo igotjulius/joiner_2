@@ -19,9 +19,9 @@ class AddBudgetModel extends FlutterFlowModel {
 
   void addExpenses(String lobbyId) async {
     double amount = double.parse(amountController.text);
-    await UserController.putExpenses(
-      ExpenseModel(items: {labelController.text : amount}),
-      lobbyId
-    );
+    // await UserController.putExpenses(
+    //   ExpenseModel(items: {labelController.text : amount}),
+    //   lobbyId
+    // );
   }
 }

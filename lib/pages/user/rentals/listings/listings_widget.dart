@@ -16,7 +16,7 @@ class _ListingsWidgetState extends State<ListingsWidget> {
   @override
   void initState() {
     super.initState();
-    _fetchAvailableCars = UserController.getAvailableCars();
+    // _fetchAvailableCars = UserController.getAvailableCars();
   }
 
   @override

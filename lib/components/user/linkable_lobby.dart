@@ -159,9 +159,10 @@ class LinkableLobbyModel extends FlutterFlowModel {
   Future<bool> linkRentalToLobby(
       RentalModel rental, double price, int index) async {
     final linkedLobby = lobbies![index];
-    return await UserController.linkRentalToLobby(
-      rental,
-      linkedLobby.id!,
-    );
+    // return await UserController.linkRentalToLobby(
+    //   rental,
+    //   linkedLobby.id!,
+    // );
+    return false;
   }
 }

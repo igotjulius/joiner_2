@@ -1,14 +1,12 @@
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/pages/user/dashboard/promo_list/promos_list.dart';
 import 'package:provider/provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'dashboard_model.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
 import 'package:joiner_1/widgets/molecules/lobby_invitation_mole.dart';
-
-export 'dashboard_model.dart';
 
 class LobbiesWidget extends StatefulWidget {
   const LobbiesWidget({Key? key}) : super(key: key);
@@ -19,8 +17,6 @@ class LobbiesWidget extends StatefulWidget {
 
 class _LobbiesWidgetState extends State<LobbiesWidget>
     with TickerProviderStateMixin {
-  late LobbiesModel _model;
-  Future<Map<String, List<LobbyModel>>>? _fetchLobbies;
   final _tabs = [
     Tab(
       text: 'Promos',
@@ -29,29 +25,21 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
       text: 'Lobbies',
     ),
   ];
-
+  late TabController _tabController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LobbiesModel());
-    _fetchLobbies = UserController.getLobbies();
-    _model.tabController =
+
+    _tabController =
         TabController(length: _tabs.length, vsync: this, initialIndex: 0);
   }
 
   @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
     return Scaffold(
-      floatingActionButton: _model.tabController!.index != 0
+      floatingActionButton: _tabController.index != 0
           ? FloatingActionButton(
               onPressed: () {
                 context.goNamed('LobbyCreation');
@@ -68,13 +56,13 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
         backgroundColor: Color(0xfffafafa),
         bottom: TabBar(
           tabs: _tabs,
-          controller: _model.tabController,
+          controller: _tabController,
           onTap: (value) => setState(() {}),
         ),
       ),
       body: TabBarView(
         key: Key('userDashboard'),
-        controller: _model.tabController,
+        controller: _tabController,
         children: [
           Column(
             children: [
@@ -85,14 +73,38 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
           ),
           Padding(
             padding: const EdgeInsets.all(10),
-            child: getUserLobbies(),
+            child: displayLobbies(),
           ),
         ],
       ),
     );
   }
 
-  // Fetch user lobbies
+  Widget displayLobbies() {
+    final provider =
+        context.watch<AuthController>().userTypeController as UserController;
+    final pendingLobbies = provider.pendingLobbies;
+    final activeLobbies = provider.activeLobbies;
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (pendingLobbies.length != 0)
+            Column(
+              children: [
+                Text('Invitations'),
+                LobbyInvitationMolecule(lobbies: pendingLobbies),
+              ],
+            ),
+          activeLobbies.length == 0
+              ? Text('No active lobbies')
+              : ActiveLobbyMolecule(activeLobbies),
+        ],
+      ),
+    );
+  }
+
+  /* Fetch user lobbies
   FutureBuilder getUserLobbies() {
     return FutureBuilder(
       future: _fetchLobbies,
@@ -125,4 +137,5 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
       },
     );
   }
+  */
 }

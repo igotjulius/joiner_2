@@ -32,11 +32,11 @@ class SurveyPollModel extends FlutterFlowModel {
       question: questionController.text,
       choices: choices,
     );
-    final result = await UserController.postPoll(
-      nPoll,
-      lobbyId,
-    );
-    return result;
+    // final result = await UserController.postPoll(
+    //   nPoll,
+    //   lobbyId,
+    // );
+    // return result;
   }
 
   /// Additional helper methods are added here.

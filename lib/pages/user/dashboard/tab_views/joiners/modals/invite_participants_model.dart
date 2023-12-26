@@ -18,7 +18,7 @@ class InviteParticipantsModel extends FlutterFlowModel {
   FutureBuilder<ResponseModel<List<Map<String, String>>>?> friendList(
       BuildContext context) {
     return FutureBuilder(
-      future: UserController.getFriends(),
+      future: null,
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(
@@ -71,6 +71,6 @@ class InviteParticipantsModel extends FlutterFlowModel {
   }
 
   void sendInvitation(String lobbyId) async {
-    await UserController.inviteParticipants(invitedFriends!, lobbyId);
+    // await UserController.inviteParticipants(invitedFriends!, lobbyId);
   }
 }

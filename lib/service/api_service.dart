@@ -23,10 +23,10 @@ part 'api_service.g.dart';
   Make sure that the physical phone and host machine are in the same network.
 */
 // const String serverUrl = 'http://192.168.137.1:443/';
-// const String serverUrl = 'http://localhost:443/';
-const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
-final apiService = ApiService(Dio(), baseUrl: serverUrl);
+// final apiService = ApiService(Dio(), baseUrl: serverUrl);
 // ApiService(Dio(BaseOptions(contentType: 'application/json')));
 
 @RestApi(baseUrl: serverUrl)
@@ -333,7 +333,7 @@ abstract class ApiService {
   // Registering a car and uploading an image
   @MultiPart()
   @POST('cra/{craUserId}/register/car')
-  Future<ResponseModel> registerCar(
+  Future<ResponseModel<CarModel>> registerCar(
     @Path('craUserId') String craUserId, {
     @Part() required String licensePlate,
     @Part() required String ownerId,
@@ -349,7 +349,7 @@ abstract class ApiService {
   // Editing a car
   @MultiPart()
   @PUT('cra/{craUserId}/car/{licensePlate}')
-  Future<ResponseModel> editCar(
+  Future<ResponseModel<CarModel>> editCar(
     @Path('craUserId') String craUserId,
     @Path('licensePlate') String carLicensePlate, {
     @Part() required String licensePlate,
@@ -370,7 +370,7 @@ abstract class ApiService {
 
   // Edit cra profile
   @POST('cra/{craUserId}/account')
-  Future<ResponseModel<User>> editCraAccount(
+  Future<void> editCraAccount(
     @Path('craUserId') String craUserId,
     @Body() Map<String, String> update,
   );

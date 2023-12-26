@@ -46,14 +46,14 @@ class _PendingLobbyMoleculeState extends State<PendingLobbyMolecule> {
                   FFButtonWidget(
                     text: 'Maybe next time',
                     onPressed: () async {
-                      UserController.declineLobbyInvitation(lobby.id!);
+                      // UserController.declineLobbyInvitation(lobby.id!);
                     },
                     options: FFButtonOptions(height: 40),
                   ),
                   FFButtonWidget(
                     text: 'Join',
                     onPressed: () async {
-                      UserController.acceptLobbyInvitation(lobby.id!);
+                      // UserController.acceptLobbyInvitation(lobby.id!);
                     },
                     options: FFButtonOptions(height: 40),
                   ),

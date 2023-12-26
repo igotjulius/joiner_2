@@ -43,11 +43,11 @@ class LobbyPageModel {
   }
 
   Future<LobbyModel?> fetchLobby(String lobbyId) async {
-    return await UserController.getLobby(lobbyId);
+    // return await UserController.getLobby(lobbyId);
   }
 
   void leaveLobby(String lobbyId) async {
-    await UserController.leaveLobby(lobbyId);
+    // await UserController.leaveLobby(lobbyId);
   }
 
   /// Additional helper methods are added here.

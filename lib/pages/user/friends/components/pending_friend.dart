@@ -13,12 +13,12 @@ class PendingFriendAtom extends StatelessWidget {
   });
 
   void acceptFriendRequest(String friendId) async {
-    await UserController.acceptFriendRequest(friendId);
+    // await UserController.acceptFriendRequest(friendId);
     parentSetState!(() {});
   }
 
   void removeFriendRequest(String friendId) async {
-    await UserController.removeFriendRequest(friendId);
+    // await UserController.removeFriendRequest(friendId);
     parentSetState!(() {});
   }
 

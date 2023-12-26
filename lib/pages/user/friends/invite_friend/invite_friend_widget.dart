@@ -52,7 +52,7 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
             ),
             FilledButton(
               onPressed: () async {
-                await UserController.inviteFriend(_model.textController.text);
+                // await UserController.inviteFriend(_model.textController.text);
                 context.pop();
               },
               child: Text('Send friend request'),

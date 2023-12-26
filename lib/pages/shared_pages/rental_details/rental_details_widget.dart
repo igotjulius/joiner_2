@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/components/user/linkable_lobby.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -17,10 +19,11 @@ class RentalDetails extends StatefulWidget {
 class _RentalDetailsState extends State<RentalDetails> {
   @override
   Widget build(BuildContext context) {
-    final appState = context.watch<FFAppState>();
+    final isCra =
+        context.watch<AuthController>().userTypeController is CraController;
     return Scaffold(
       appBar: AppBar(
-        actions: appState.isCra
+        actions: isCra
             ? null
             : [
                 Padding(

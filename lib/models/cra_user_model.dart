@@ -8,23 +8,23 @@ part 'cra_user_model.g.dart';
 @JsonSerializable()
 class CraUserModel extends User {
   @JsonKey(name: '_id')
-  final String? id;
+  final String id;
   @JsonKey(includeIfNull: false)
-  final String? password;
-  final String? firstName, lastName, email, contactNo, address;
-  final List<CarModel>? vehicles;
-  final List<RentalModel>? rentals;
+  String? password;
+  String? firstName, lastName, email, contactNo, address;
+  List<CarModel> vehicles;
+  List<RentalModel> rentals;
 
-  const CraUserModel({
-    this.id,
+  CraUserModel({
+    required this.id,
     this.firstName,
     this.lastName,
     this.email,
     this.password,
     this.contactNo,
     this.address,
-    this.vehicles,
-    this.rentals,
+    required this.vehicles,
+    required this.rentals,
   }) : super(
           id: id,
           firstName: firstName,
@@ -38,4 +38,9 @@ class CraUserModel extends User {
   factory CraUserModel.fromJson(Map<String, dynamic> json) =>
       _$CraUserModelFromJson(json);
   Map<String, dynamic> toJson() => _$CraUserModelToJson(this);
+
+  // static List<CarModel> _fromJsonVehicles(List<dynamic> json) =>
+  //     json.map((e) => CarModel.fromJson(e)).toList();
+  // static List<RentalModel> _fromJsonRentals(List<dynamic> json) =>
+  //     json.map((e) => RentalModel.fromJson(e)).toList();
 }

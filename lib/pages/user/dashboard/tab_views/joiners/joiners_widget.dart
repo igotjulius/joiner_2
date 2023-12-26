@@ -29,8 +29,8 @@ class _JoinersWidgetState extends State<JoinersWidget> {
   void initState() {
     super.initState();
     _model.currentLobby = context.read<LobbyProvider>().currentLobby;
-    _model.fetchParticipants =
-        UserController.getParticipants(_model.currentLobby!.id!);
+    // _model.fetchParticipants =
+    //     UserController.getParticipants(_model.currentLobby!.id!);
     _lobbyProvider = context.read<LobbyProvider>();
   }
 

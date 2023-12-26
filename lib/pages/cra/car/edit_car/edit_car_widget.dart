@@ -57,7 +57,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         showDialogLoading(context);
-                        _model.editCar().then(
+                        _model.editCar(context).then(
                           (value) {
                             if (value != null) {
                               ScaffoldMessenger.of(context).showSnackBar(

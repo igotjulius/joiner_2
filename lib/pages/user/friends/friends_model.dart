@@ -22,7 +22,8 @@ class FriendsModel extends FlutterFlowModel {
     Widget Function(List<Map<String, String>>) waitingApproval,
   ) {
     return FutureBuilder(
-      future: UserController.getFriends(),
+      // future: UserController.getFriends(),
+      future: null,
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(

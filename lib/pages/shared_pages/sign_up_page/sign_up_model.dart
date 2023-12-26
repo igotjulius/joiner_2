@@ -17,23 +17,23 @@ class SignUpPageModel {
 
   Future<String?> signUp() async {
     late User nUser;
-    if (tabController?.index == 0) {
-      nUser = UserModel(
-        firstName: userModel.fNameController.text,
-        lastName: userModel.lNameController.text,
-        email: userModel.emailController.text,
-        password: userModel.passwordController.text,
-      );
-    } else {
-      nUser = CraUserModel(
-        firstName: craModel.fNameController.text,
-        lastName: craModel.lNameController.text,
-        email: craModel.emailController.text,
-        address: craModel.addressController.text,
-        contactNo: craModel.contactController.text,
-        password: craModel.passwordController.text,
-      );
-    }
-    return await User.registerUser(nUser);
+    // if (tabController?.index == 0) {
+    //   nUser = UserModel(
+    //     firstName: userModel.fNameController.text,
+    //     lastName: userModel.lNameController.text,
+    //     email: userModel.emailController.text,
+    //     password: userModel.passwordController.text,
+    //   );
+    // } else {
+    //   nUser = CraUserModel(
+    //     firstName: craModel.fNameController.text,
+    //     lastName: craModel.lNameController.text,
+    //     email: craModel.emailController.text,
+    //     address: craModel.addressController.text,
+    //     contactNo: craModel.contactController.text,
+    //     password: craModel.passwordController.text,
+    //   );
+    // }
+    // return await User.registerUser(nUser);
   }
 }

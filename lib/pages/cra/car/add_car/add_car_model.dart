@@ -40,7 +40,7 @@ class AddCarModel {
       endDate: datePicked?.end,
       price: double.parse(priceController.text),
     );
-    return await CraController.registerCar(car, imagePicker.getImages());
+    // return await CraController.registerCar(car, imagePicker.getImages());
   }
 
   /// Additional helper methods are added here.

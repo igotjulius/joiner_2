@@ -69,23 +69,23 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                         endDate: _model.datePicked?.end,
                         participants: [],
                       );
-                      final result =
-                          await UserController.createLobby(lobby, context);
-                      context.pop();
-                      if (result != null) {
-                        context.goNamed(
-                          'Lobby',
-                          pathParameters: {'lobbyId': result.id!},
-                          extra: {'currentLobby': result},
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          showError(
-                            'Failed to create lobby',
-                            Theme.of(context).colorScheme.error,
-                          ),
-                        );
-                      }
+                      // final result =
+                      //     await UserController.createLobby(lobby, context);
+                      // context.pop();
+                      // if (result != null) {
+                      //   context.goNamed(
+                      //     'Lobby',
+                      //     pathParameters: {'lobbyId': result.id!},
+                      //     extra: {'currentLobby': result},
+                      //   );
+                      // } else {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     showError(
+                      //       'Failed to create lobby',
+                      //       Theme.of(context).colorScheme.error,
+                      //     ),
+                      //   );
+                      // }
                     }
                   },
                 ),

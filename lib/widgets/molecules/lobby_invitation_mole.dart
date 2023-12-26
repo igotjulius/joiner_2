@@ -84,8 +84,8 @@ class _LobbyInvitationMoleculeState extends State<LobbyInvitationMolecule> {
                             FFButtonWidget(
                               text: 'Maybe next time',
                               onPressed: () {
-                                UserController.declineLobbyInvitation(
-                                    lobby.id!);
+                                // UserController.declineLobbyInvitation(
+                                //     lobby.id!);
                                 setState(() {});
                               },
                               options: FFButtonOptions(
@@ -105,7 +105,7 @@ class _LobbyInvitationMoleculeState extends State<LobbyInvitationMolecule> {
                             FFButtonWidget(
                               text: 'Accept',
                               onPressed: () {
-                                UserController.acceptLobbyInvitation(lobby.id!);
+                                // UserController.acceptLobbyInvitation(lobby.id!);
                                 setState(() {});
                               },
                               options: FFButtonOptions(

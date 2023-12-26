@@ -16,6 +16,6 @@ class ParticipantModel extends FlutterFlowModel {
   void initState(BuildContext context) {}
 
   void removeParticipant() {
-    UserController.removeParticipant(lobbyId!, friendId!);
+    // UserController.removeParticipant(lobbyId!, friendId!);
   }
 }

@@ -36,8 +36,8 @@ class ActiveLobbyMolecule extends StatelessWidget {
                       actions: [
                         TextButton(
                           onPressed: () async {
-                            await UserController.deleteLobby(
-                                lobbies[index].id!);
+                            // await UserController.deleteLobby(
+                            //     lobbies[index].id!);
                             showSnackbar(context, 'Lobby Deleted');
                             context.pop();
                           },

@@ -34,8 +34,8 @@ class BudgetCategoryWidget extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () async {
-                        await UserController.deleteSpecificExpense(
-                            lobbyId!, label!);
+                        // await UserController.deleteSpecificExpense(
+                        //     lobbyId!, label!);
                         Fluttertoast.showToast(
                           msg: '$label Expense Deleted.',
                           toastLength: Toast.LENGTH_SHORT,

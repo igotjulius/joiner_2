@@ -7,7 +7,7 @@ class LobbyDashboardModel {
   LobbyDashboardModel(this.currentLobby);
 
   Future<void> fetchLobby(String lobbyId) async {
-    currentLobby = await UserController.getLobby(lobbyId);
+    // currentLobby = await UserController.getLobby(lobbyId);
   }
 
   double totalBudget() {

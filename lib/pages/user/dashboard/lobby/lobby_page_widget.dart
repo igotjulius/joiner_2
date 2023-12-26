@@ -50,7 +50,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     super.initState();
     _model = LobbyPageModel();
     _model.initModel(widget.currentLobby!);
-    _fetchLobby = UserController.getLobby(widget.lobbyId!);
+    // _fetchLobby = UserController.getLobby(widget.lobbyId!);
     _model.tabBarController = TabController(
       vsync: this,
       length: _tabs.length,

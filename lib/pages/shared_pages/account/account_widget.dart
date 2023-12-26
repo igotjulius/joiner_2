@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:go_router/go_router.dart';
 import 'package:joiner_1/app_state.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/helpers/user.dart';
@@ -29,7 +30,8 @@ class _AccountWidgetState extends State<AccountWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _model.currentUser = context.watch<FFAppState>().currentUser;
+    _model.currentUser =
+        context.watch<AuthController>().userTypeController?.profile;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -292,7 +294,7 @@ class _AccountWidgetState extends State<AccountWidget> {
   Widget logout() {
     return TextButton.icon(
       onPressed: () {
-        _model.logout(context);
+        context.read<AuthController>().logout();
       },
       icon: Icon(Icons.logout),
       label: Align(
@@ -334,33 +336,27 @@ class AccountModel {
 
   Future<User?> editProfile() async {
     final isCra = FFAppState().isCra;
-    if (isCra)
-      return await CraController.editCraAccount(
-          firstNameController!.text, lastNameController!.text);
-    else
-      return await UserController.editAccount(
-          firstNameController!.text, lastNameController!.text);
+    // if (isCra)
+    //   return await CraController.editCraAccount(
+    //       firstNameController!.text, lastNameController!.text);
+    // else
+    //   return await UserController.editAccount(
+    //       firstNameController!.text, lastNameController!.text);
   }
 
   Future<bool> changePassword() async {
-    final isCra = FFAppState().isCra;
-    final result = isCra
-        ? await CraController.changeCraPassword(
-            passController!.text, nPassController!.text)
-        : await UserController.changePassword(
-            passController!.text, nPassController!.text);
-    if (result.code == HttpStatus.ok)
-      return true;
-    else {
-      errorText = result.message;
-      return false;
-    }
+    return false;
+    // final isCra = FFAppState().isCra;
+    // final result = isCra
+    //     ? await CraController.changeCraPassword(
+    //         passController!.text, nPassController!.text)
+    //     : await UserController.changePassword(
+    //         passController!.text, nPassController!.text);
+    // if (result.code == HttpStatus.ok)
+    //   return true;
+    // else {
+    //   errorText = result.message;
+    //   return false;
+    // }
   }
-
-  void logout(BuildContext context) {
-    context.read<FFAppState>().setCurrentUser(null);
-    context.goNamed('Login');
-  }
-
-  /// Additional helper methods are added here.
 }
