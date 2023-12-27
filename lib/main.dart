@@ -74,9 +74,9 @@ class _MyAppState extends State<MyApp> {
           print('${state.error} ${state.fullPath}');
           return LoginPageWidget();
         },
-        routes: _appStateNotifier.routes
-            .map((r) => r.toRoute(_appStateNotifier))
-            .toList(),
+        routes: _appStateNotifier.routes,
+            // .map((r) => r.routes)
+            // .toList(),
         redirect: (context, state) {
           return _appStateNotifier.redirectState(context, state, _appState);
         },

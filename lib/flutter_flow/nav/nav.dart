@@ -40,8 +40,8 @@ class AppStateNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<FFRoute> _routes = baseRoute();
-  List<FFRoute> get routes => _routes;
+  List<GoRoute> _routes = baseRoute();
+  List<GoRoute> get routes => _routes;
   void setRoutes() {
     final appState = FFAppState();
     _routes = baseRoute();
@@ -67,19 +67,31 @@ class AppStateNotifier extends ChangeNotifier {
   }
 }
 
-List<FFRoute> baseRoute() {
-  List<FFRoute> routes = [
-    FFRoute(
+List<GoRoute> baseRoute() {
+  List<GoRoute> routes = [
+    GoRoute(
       name: 'Login',
       path: '/login',
       builder: (context, params) => LoginPageWidget(),
+      pageBuilder: (context, state) =>
+                topToBottomTransition<void>(
+                  context: context,
+                  state: state,
+                  child: LoginPageWidget()
+                )
     ),
-    FFRoute(
+    GoRoute(
       name: 'Sign Up',
       path: '/sign-up',
       builder: (context, params) => SignUpPageWidget(),
+      pageBuilder: (context, state) =>
+                topToBottomTransition<void>(
+                  context: context,
+                  state: state,
+                  child: SignUpPageWidget()
+                )
     ),
-    FFRoute(
+    GoRoute(
       name: 'Verification',
       path: '/verification',
       builder: (context, params) => VerificationWidget(),
@@ -88,84 +100,159 @@ List<FFRoute> baseRoute() {
   return routes;
 }
 
-List<FFRoute> userRoutes() {
+List<GoRoute> userRoutes() {
   return [
-    FFRoute(
+    GoRoute(
       name: 'MainDashboard',
       path: '/lobby',
       builder: (context, params) => NavBarPage(initialPage: 'MainDashboard'),
+      pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+        context: context,
+        state: state,
+        child: NavBarPage(initialPage: 'MainDashboard'),
+      ),
       routes: [
         GoRoute(
-          name: 'LobbyCreation',
-          path: 'create',
-          builder: (context, state) {
-            final selectedDestination = state.extraMap['destination'];
-            return LobbyCreationWidget(
-              destination: selectedDestination,
-            );
-          },
-        ),
+            name: 'LobbyCreation',
+            path: 'create',
+            builder: (context, state) {
+              final selectedDestination = state.extraMap['destination'];
+              return LobbyCreationWidget(
+                destination: selectedDestination,
+              );
+            },
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: Builder(
+                    builder: (context) {
+                      final selectedDestination = state.extraMap['destination'];
+                      return LobbyCreationWidget(
+                        destination: selectedDestination,
+                      );
+                    },
+                  ),
+                )),
         GoRoute(
-          name: 'BrowseMap',
-          path: 'browseMap',
-          builder: (context, state) => MapFeature(),
-        ),
+            name: 'BrowseMap',
+            path: 'browseMap',
+            builder: (context, state) => MapFeature(),
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                    context: context, state: state, child: MapFeature())),
         GoRoute(
-          name: 'Lobby',
-          path: ':lobbyId',
-          builder: (context, state) {
-            final obj = state.extraMap['currentLobby'] ??= null;
-            return ChangeNotifierProvider(
-              create: (_) => LobbyProvider(obj),
-              child: LobbyPageWidget(
-                currentLobby: obj,
-                lobbyId: state.pathParameters['lobbyId'],
-              ),
-            );
-          },
-        ),
+            name: 'Lobby',
+            path: ':lobbyId',
+            builder: (context, state) {
+              final obj = state.extraMap['currentLobby'] ??= null;
+              return ChangeNotifierProvider(
+                create: (_) => LobbyProvider(obj),
+                child: LobbyPageWidget(
+                  currentLobby: obj,
+                  lobbyId: state.pathParameters['lobbyId'],
+                ),
+              );
+            },
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: Builder(
+                    builder: (context) {
+                      final obj = state.extraMap['currentLobby'] ??= null;
+                      return ChangeNotifierProvider(
+                        create: (_) => LobbyProvider(obj),
+                        child: LobbyPageWidget(
+                          currentLobby: obj,
+                          lobbyId: state.pathParameters['lobbyId'],
+                        ),
+                      );
+                    },
+                  ),
+                )),
       ],
     ),
-    FFRoute(
+    GoRoute(
       name: 'CarRentals',
       path: '/rentals',
-      builder: (context, params) => params.isEmpty
-          ? NavBarPage(initialPage: 'CarRentals')
-          : NavBarPage(
-              initialPage: 'CarRentals',
-              page: RentalsWidget(),
-            ),
+      builder: (context, params) => NavBarPage(initialPage: 'CarRentals'),
+    ),
+    GoRoute(
+      name: 'CarRentalsWithParams',
+      path: '/rentals/list',
+      builder: (context, params) => NavBarPage(
+        initialPage: 'CarRentals',
+        page: RentalsWidget(),
+      ),
       routes: [
         GoRoute(
-          name: 'Listings',
-          path: 'listings',
-          builder: (context, params) => ListingsWidget(),
-        ),
+            name: 'Listings',
+            path: 'listings',
+            builder: (context, params) => ListingsWidget(),
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                    context: context, state: state, child: ListingsWidget())),
         GoRoute(
             name: 'CarDetails',
             path: 'carDetails',
             builder: (context, state) {
               CarModel obj = state.extraMap['car'] as CarModel;
               return CarDetails(car: obj);
-            }),
+            },
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: Builder(
+                    builder: (context) {
+                      CarModel obj = state.extraMap['car'] as CarModel;
+                      return CarDetails(car: obj);
+                    },
+                  ),
+                )),
         GoRoute(
-          name: 'Booking',
-          path: 'booking',
-          builder: (context, state) {
-            CarModel obj = state.extraMap['car'] as CarModel;
-            return CarBookingWidget(car: obj);
-          },
-        ),
+            name: 'Booking',
+            path: 'booking',
+            builder: (context, state) {
+              CarModel obj = state.extraMap['car'] as CarModel;
+              return CarBookingWidget(car: obj);
+            },
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: Builder(
+                    builder: (context) {
+                      CarModel obj = state.extraMap['car'] as CarModel;
+                      return CarBookingWidget(car: obj);
+                    },
+                  ),
+                )),
         GoRoute(
-          name: 'RentalDetails',
-          path: 'rentalDetails',
-          builder: (context, state) {
-            final RentalModel rental = state.extraMap['rental'] as RentalModel;
-            return RentalDetails(
-              rental: rental,
-            );
-          },
-        ),
+            name: 'RentalDetails',
+            path: 'rentalDetails',
+            builder: (context, state) {
+              final RentalModel rental =
+                  state.extraMap['rental'] as RentalModel;
+              return RentalDetails(
+                rental: rental,
+              );
+            },
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: Builder(
+                    builder: (context) {
+                      RentalModel rental =
+                          state.extraMap['rental'] as RentalModel;
+                      return RentalDetails(
+                        rental: rental,
+                      );
+                    },
+                  ),
+                )),
         GoRoute(
           name: 'Result',
           path: ':paymentResult',
@@ -181,54 +268,83 @@ List<FFRoute> userRoutes() {
             builder: (context, state) => ResultWidget(result: 'success')),
       ],
     ),
-    FFRoute(
+    GoRoute(
       name: 'Friends',
       path: '/friends',
+      builder: (context, params) => NavBarPage(initialPage: 'Friends'),
+    ),
+    GoRoute(
+      name: 'FriendsWithParams',
+      path: '/friends/details',
       builder: (context, params) =>
-          params.isEmpty ? NavBarPage(initialPage: 'Friends') : FriendsWidget(),
+          NavBarPage(initialPage: 'Friends', page: FriendsWidget()),
       routes: [
         GoRoute(
-          name: 'InviteFriend',
-          path: 'invite-request',
-          builder: (context, params) => InviteFriendWidget(),
-        ),
+            name: 'InviteFriend',
+            path: 'invite-request',
+            builder: (context, params) => InviteFriendWidget(),
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                    context: context,
+                    state: state,
+                    child: InviteFriendWidget())),
       ],
     ),
-    FFRoute(
+    // GoRoute(
+    //     name: 'Account',
+    //     path: '/account',
+    //     builder: (context, params) => AccountWidget()),
+    GoRoute(
       name: 'Account',
       path: '/account',
-      builder: (context, params) =>
-          params.isEmpty ? NavBarPage(initialPage: 'Account') : AccountWidget(),
+      builder: (context, params) => NavBarPage(initialPage: 'Account'),
     ),
   ];
 }
 
-List<FFRoute> craRoutes() {
+List<GoRoute> craRoutes() {
   return [
-    FFRoute(
+    // GoRoute(
+    //     name: 'Cars',
+    //     path: '/cars',
+    //     builder: (context, params) => CraCarWidget(),
+    GoRoute(
       name: 'Cars',
       path: '/cars',
-      builder: (context, params) =>
-          params.isEmpty ? NavBarPage(initialPage: 'Cars') : CraCarWidget(),
+      builder: (context, params) => NavBarPage(initialPage: 'Cars'),
       routes: [
         GoRoute(
-          name: 'RegisterCar',
-          path: 'registerCar',
-          builder: (context, state) => AddCarWidget(),
-        ),
+            name: 'RegisterCar',
+            path: 'registerCar',
+            builder: (context, state) => AddCarWidget(),
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                    context: context, state: state, child: AddCarWidget())),
         GoRoute(
-          name: 'CarDetails',
-          path: ':licensePlate',
-          builder: (context, state) {
-            final obj = state.extraMap['car'] ??= null;
-            return EditCarWidget(
-              car: obj,
-            );
-          },
-        ),
+            name: 'CarDetails',
+            path: ':licensePlate',
+            builder: (context, state) {
+              final obj = state.extraMap['car'] ??= null;
+              return EditCarWidget(
+                car: obj,
+              );
+            },
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: Builder(
+                    builder: (context) {
+                      final obj = state.extraMap['car'] ??= null;
+                      return EditCarWidget(
+                        car: obj,
+                      );
+                    },
+                  ),
+                )),
       ],
     ),
-    FFRoute(
+    GoRoute(
       name: 'CraRentals',
       path: '/craRentals',
       builder: (context, params) => NavBarPage(
@@ -237,27 +353,41 @@ List<FFRoute> craRoutes() {
       ),
       routes: [
         GoRoute(
-          name: 'RentalDetails',
-          path: 'rentalDetails',
-          builder: (context, state) {
-            final RentalModel rental = state.extraMap['rental'] as RentalModel;
-            return RentalDetails(
-              rental: rental,
-            );
-          },
-        ),
+            name: 'RentalDetails',
+            path: 'rentalDetails',
+            builder: (context, state) {
+              final RentalModel rental =
+                  state.extraMap['rental'] as RentalModel;
+              return RentalDetails(
+                rental: rental,
+              );
+            },
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: Builder(
+                    builder: (context) {
+                      RentalModel rental =
+                          state.extraMap['rental'] as RentalModel;
+                      return RentalDetails(rental: rental);
+                    },
+                  ),
+                )),
       ],
     ),
-    FFRoute(
-      name: 'Account',
-      path: '/account',
-      builder: (context, params) => params.isEmpty
-          ? NavBarPage(initialPage: 'Account')
-          : NavBarPage(
-              initialPage: 'Account',
-              page: AccountWidget(),
-            ),
-    ),
+    // GoRoute(
+    //   name: 'Account',
+    //   path: '/account',
+    //   builder: (context, params) => NavBarPage(
+    //     initialPage: 'Account',
+    //     page: AccountWidget(),
+    //   ),
+    // ),
+    GoRoute(
+        name: 'Account',
+        path: '/account',
+        builder: (context, params) => NavBarPage(initialPage: 'Account')),
   ];
 }
 
@@ -414,3 +544,79 @@ class TransitionInfo {
 
   static TransitionInfo appDefault() => TransitionInfo(hasTransition: false);
 }
+
+CustomTransitionPage buildPageWithDefaultTransition<T>({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<T>(
+      key: state.pageKey,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      });
+}
+
+CustomTransitionPage topToBottomTransition<T>({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<T>(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, -1.0); 
+      const end = Offset.zero;
+      const curve = Curves.easeInOut;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      var offsetAnimation = animation.drive(tween);
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: child,
+      );
+    },
+  );
+}
+
+CustomTransitionPage bottomToTopTransition<T>({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<T>(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset.zero;
+      const end = Offset(0.0, -1.0);
+      const curve = Curves.easeInOut;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      var offsetAnimation = animation.drive(tween);
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: child,
+      );
+    },
+  );
+}
+
