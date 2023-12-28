@@ -116,9 +116,22 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
                     LobbyInvitationMolecule(lobbies: pendingLobbies),
                   ],
                 ),
-              activeLobbies.length == 0
-                  ? Text('No active lobbies')
-                  : ActiveLobbyMolecule(activeLobbies),
+              Center(
+                child: activeLobbies.length == 0
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            size: 52.0,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 8.0),
+                          Text('No Active Lobbies'),
+                        ],
+                      )
+                    : ActiveLobbyMolecule(activeLobbies),
+              )
             ],
           ),
         );

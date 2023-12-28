@@ -70,7 +70,30 @@ class _PollCompWidgetState extends State<PollCompWidget> {
               ),
               Flexible(
                 child: _model.polls == null || _model.polls!.isEmpty
-                    ? Center(child: Text('No polls as of the moment.'))
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.not_interested,
+                                  size: 48.0,
+                                  color: Colors.grey,
+                                ),
+                                Icon(
+                                  Icons.poll,
+                                  size: 48.0,
+                                  color: Colors.grey,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8.0),
+                            Text('No polls as of the moment.'),
+                          ],
+                        ),
+                      )
                     : ListView.builder(
                         shrinkWrap: true,
                         itemCount: _model.polls?.length,

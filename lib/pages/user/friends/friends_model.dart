@@ -31,9 +31,19 @@ class FriendsModel extends FlutterFlowModel {
         final result = snapshot.data!.data;
         if (result == null)
           return Center(
-            child: Text('Add your friends here'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.person_add,
+                  size: 48.0,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 8.0),
+                Text('Add your friends here'),
+              ],
+            ),
           );
-
         List<Map<String, String>> pending = [], accepted = [], forApproval = [];
         result.forEach(
           (element) {

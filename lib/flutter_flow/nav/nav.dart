@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
-import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rental_details/rental_details_widget.dart';

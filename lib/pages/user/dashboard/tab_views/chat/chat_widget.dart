@@ -62,10 +62,20 @@ class _ChatWidgetState extends State<ChatWidget>
                   if (snapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());
 
-                  if (_model.allMessages.isEmpty)
+                  if (_model.allMessages.isEmpty) {
                     return Center(
-                      child: Text('Hi there :)'),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('👋',
+                              style: TextStyle(fontSize: 52.0)
+                                  ),
+                          SizedBox(height: 8.0),
+                          Text('Hi there! ;)'),
+                        ],
+                      ),
                     );
+                  }
 
                   return ListView.separated(
                     reverse: true,
@@ -73,7 +83,8 @@ class _ChatWidgetState extends State<ChatWidget>
                     itemCount: _model.allMessages.length,
                     controller: _model.scrollController,
                     itemBuilder: (context, index) {
-                      final message = _model.allMessages.reversed.toList()[index];
+                      final message =
+                          _model.allMessages.reversed.toList()[index];
                       return chatBubble(message);
                     },
                     separatorBuilder: (context, index) {

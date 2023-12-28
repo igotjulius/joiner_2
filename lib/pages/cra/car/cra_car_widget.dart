@@ -57,8 +57,30 @@ class _CraCarWidgetState extends State<CraCarWidget> {
         List<CarModel>? cars = snapshot.data;
         if (cars == null)
           return Center(
-            child: Text('No registered cars'),
-          );
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row
+                    (
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.not_interested,
+                          size: 48.0,
+                          color: Colors.grey,
+                        ),
+                        Icon(
+                          Icons.directions_car,
+                          size: 48.0,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.0),
+                    Text('No Registered Cars'),
+                  ],
+                ),
+              );
         return SingleChildScrollView(
           child: ListView.separated(
             shrinkWrap: true,

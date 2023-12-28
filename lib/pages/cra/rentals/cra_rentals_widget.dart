@@ -40,8 +40,30 @@ class _CraRentalsWidgetState extends State<CraRentalsWidget> {
         final rentals = snapshot.data;
         if (rentals == null)
           return Center(
-            child: Text('No rentals as of the moment'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.not_interested,
+                      size: 48.0,
+                      color: Colors.grey,
+                    ),
+                    Icon(
+                      Icons.receipt,
+                      size: 48.0,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.0),
+                Text('No Rentals as of the moment'),
+              ],
+            ),
           );
+
         return SingleChildScrollView(
           child: Column(
             children: [
