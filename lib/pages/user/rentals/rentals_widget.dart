@@ -43,26 +43,28 @@ class _RentalsWidgetState extends State<RentalsWidget> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: rentals.length,
-                  itemBuilder: (context, index) {
-                    RentalModel rental = rentals[index];
-                    return RentalInfo(
-                      rental: rental,
-                    );
-                  },
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: rentals.isEmpty
+            ? Center(
+                child: Text('No rentals at this moment'),
+              )
+            : Column(
+                children: [
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: rentals.length,
+                      itemBuilder: (context, index) {
+                        RentalModel rental = rentals[index];
+                        return RentalInfo(
+                          rental: rental,
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
       ),
     );
   }

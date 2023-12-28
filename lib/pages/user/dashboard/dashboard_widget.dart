@@ -33,6 +33,8 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     super.initState();
     provider = context.read<Auth>() as UserController;
     provider.refetchLobbies();
+    provider.refetchRentals();
+    provider.refetchFriendsList();
     _tabController =
         TabController(length: _tabs.length, vsync: this, initialIndex: 0);
   }

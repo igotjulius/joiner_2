@@ -1,8 +1,10 @@
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
-import '/flutter_flow/flutter_flow_util.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'invite_friend_model.dart';
-export 'invite_friend_model.dart';
 
 class InviteFriendWidget extends StatefulWidget {
   const InviteFriendWidget({Key? key}) : super(key: key);
@@ -12,22 +14,11 @@ class InviteFriendWidget extends StatefulWidget {
 }
 
 class _InviteFriendWidgetState extends State<InviteFriendWidget> {
-  late InviteFriendModel _model;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _model = createModel(context, () => InviteFriendModel());
-
-    _model.textController ??= TextEditingController();
-  }
+  TextEditingController _emailController = TextEditingController();
 
   @override
   void dispose() {
-    _model.dispose();
-
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -46,13 +37,27 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
             ),
             CustomTextInput(
               label: 'Enter your friend\'s email',
-              controller: _model.textController,
+              controller: _emailController,
               hintText: 'Your friend\'s email..',
             ),
             FilledButton(
-              onPressed: () async {
-                // await UserController.inviteFriend(_model.textController.text);
-                context.pop();
+              onPressed: () {
+                showDialogLoading(context);
+                (context.read<Auth>() as UserController)
+                    .inviteFriend(_emailController.text)
+                    .then((value) {
+                  context.pop();
+                  if (value) {
+                    context.pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      showSuccess('Friend request sent'),
+                    );
+                  } else
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      showError('Can\'t send request :(',
+                          Theme.of(context).colorScheme.error),
+                    );
+                });
               },
               child: Text('Send friend request'),
             ),

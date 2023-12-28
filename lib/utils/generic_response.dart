@@ -1,6 +1,7 @@
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/expense_model.dart';
+import 'package:joiner_1/models/friend_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
@@ -57,9 +58,11 @@ class ResponseModel<T> {
               .map((element) => ParticipantModel.fromJson(element))
               .toList()
         };
-      }
+      } else if (json.containsKey('friendId'))
+        converted = FriendModel.fromJson(json);
+
       return converted as T;
-    } else if (json is List<dynamic>) {
+    } else if (json is List) {
       if (json.isEmpty) {
         return null;
       }
@@ -77,14 +80,8 @@ class ResponseModel<T> {
         converted =
             json.map((element) => ParticipantModel.fromJson(element)).toList();
       else if (data.containsKey('friendId')) {
-        converted = json
-            .map((element) => {
-                  'firstName': element['firstName'] as String,
-                  'lastName': element['lastName'] as String,
-                  'friendId': element['friendId'] as String,
-                  'status': element['status'] as String,
-                })
-            .toList();
+        converted =
+            json.map((element) => FriendModel.fromJson(element)).toList();
       } else if (data.containsKey('question')) {
         converted = json.map((element) => PollModel.fromJson(element)).toList();
       }

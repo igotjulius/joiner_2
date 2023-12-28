@@ -1,38 +1,34 @@
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/friend_model.dart';
 import 'package:joiner_1/pages/user/friends/components/pending_friend.dart';
 import 'package:joiner_1/pages/user/friends/components/accepted_friend.dart';
 import 'package:joiner_1/pages/user/friends/components/waiting_approval.dart';
+import 'package:provider/provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'friends_model.dart';
-export 'friends_model.dart';
 
 class FriendsWidget extends StatefulWidget {
-  const FriendsWidget({Key? key}) : super(key: key);
+  const FriendsWidget({super.key});
 
   @override
   _FriendsWidgetState createState() => _FriendsWidgetState();
 }
 
 class _FriendsWidgetState extends State<FriendsWidget> {
-  late FriendsModel _model;
-  final _key = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => FriendsModel(setState));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _model.dispose();
+    (context.read<Auth>() as UserController).refetchFriendsList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<Auth>() as UserController;
+    final pendingFriendsList = provider.pendingFriends;
+    final acceptedFriendsList = provider.acceptedFriends;
+    final forApprovalList = provider.forApproval;
     return Scaffold(
-      key: _key,
       appBar: AppBar(
         title: Text(
           'Friends',
@@ -40,14 +36,31 @@ class _FriendsWidgetState extends State<FriendsWidget> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Expanded(
-              child: _model.friendList(
-                  pendingFriends, acceptedFriends, waitingApproval),
-            ),
-          ],
-        ),
+        child: pendingFriendsList.isEmpty &&
+                forApprovalList.isEmpty &&
+                acceptedFriendsList.isEmpty
+            ? Center(child: Text('Your friend list is empty'))
+            : Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        if (pendingFriendsList.isNotEmpty)
+                          pendingFriends(pendingFriendsList),
+                        if (forApprovalList.isNotEmpty)
+                          waitingApproval(forApprovalList),
+                        if (acceptedFriendsList.isNotEmpty)
+                          acceptedFriends(acceptedFriendsList),
+                      ].divide(
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -58,7 +71,7 @@ class _FriendsWidgetState extends State<FriendsWidget> {
     );
   }
 
-  Widget pendingFriends(List<Map<String, String>> list) {
+  Widget pendingFriends(List<FriendModel> list) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,9 +88,8 @@ class _FriendsWidgetState extends State<FriendsWidget> {
           itemCount: list.length,
           itemBuilder: (context, index) {
             return PendingFriendAtom(
-              name: '${list[index]['firstName']} ${list[index]['lastName']}',
-              friendId: list[index]['friendId'],
-              parentSetState: setState,
+              name: '${list[index].firstName} ${list[index].lastName}',
+              friendId: list[index].friendId,
             );
           },
           separatorBuilder: (context, index) {
@@ -90,7 +102,7 @@ class _FriendsWidgetState extends State<FriendsWidget> {
     );
   }
 
-  Widget acceptedFriends(List<Map<String, String>> list) {
+  Widget acceptedFriends(List<FriendModel> list) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,8 +118,14 @@ class _FriendsWidgetState extends State<FriendsWidget> {
           shrinkWrap: true,
           itemCount: list.length,
           itemBuilder: (context, index) {
-            return AcceptedFriendAtom(
-              name: '${list[index]['firstName']} ${list[index]['lastName']}',
+            return InkWell(
+              onLongPress: () {
+                (context.read<Auth>() as UserController)
+                    .removeFriendRequest(list[index].friendId);
+              },
+              child: AcceptedFriendAtom(
+                name: '${list[index].firstName} ${list[index].lastName}',
+              ),
             );
           },
           separatorBuilder: (context, index) {
@@ -120,7 +138,7 @@ class _FriendsWidgetState extends State<FriendsWidget> {
     );
   }
 
-  Widget waitingApproval(List<Map<String, String>> list) {
+  Widget waitingApproval(List<FriendModel> list) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,9 +155,8 @@ class _FriendsWidgetState extends State<FriendsWidget> {
           itemCount: list.length,
           itemBuilder: (context, index) {
             return WaitingApproval(
-              friendId: list[index]['friendId'],
-              name: '${list[index]['firstName']} ${list[index]['lastName']}',
-              parentSetState: setState,
+              friendId: list[index].friendId,
+              name: '${list[index].firstName} ${list[index].lastName}',
             );
           },
           separatorBuilder: (context, index) {

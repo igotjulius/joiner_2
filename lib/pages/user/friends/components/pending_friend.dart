@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class PendingFriendAtom extends StatelessWidget {
-  final String? name;
-  final String? friendId;
-  final void Function(Function())? parentSetState;
+  final String name;
+  final String friendId;
   const PendingFriendAtom({
     super.key,
-    this.name,
-    this.friendId,
-    this.parentSetState,
+    required this.name,
+    required this.friendId,
   });
-
-  void acceptFriendRequest(String friendId) async {
-    // await UserController.acceptFriendRequest(friendId);
-    parentSetState!(() {});
-  }
-
-  void removeFriendRequest(String friendId) async {
-    // await UserController.removeFriendRequest(friendId);
-    parentSetState!(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +50,17 @@ class PendingFriendAtom extends StatelessWidget {
                 child: TextButton(
                   child: Text('Decline'),
                   onPressed: () {
-                    removeFriendRequest(friendId!);
+                    showDialogLoading(context);
+                    (context.read<Auth>() as UserController)
+                        .removeFriendRequest(friendId)
+                        .then((value) {
+                      context.pop();
+                      if (!value)
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          showError('Error declining',
+                              Theme.of(context).colorScheme.error),
+                        );
+                    });
                   },
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 14),
@@ -73,7 +76,17 @@ class PendingFriendAtom extends StatelessWidget {
                   ),
                   child: Text('Accept'),
                   onPressed: () {
-                    acceptFriendRequest(friendId!);
+                    showDialogLoading(context);
+                    (context.read<Auth>() as UserController)
+                        .acceptFriendRequest(friendId)
+                        .then((value) {
+                      context.pop();
+                      if (!value)
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          showError('Error in accepting',
+                              Theme.of(context).colorScheme.error),
+                        );
+                    });
                   },
                 ),
               )

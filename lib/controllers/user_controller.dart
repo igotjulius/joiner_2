@@ -8,6 +8,7 @@ import 'package:joiner_1/main.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/models/expense_model.dart';
+import 'package:joiner_1/models/friend_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
@@ -156,7 +157,7 @@ class UserController extends Auth {
   @override
   Future cacheUser() async {
     _pref = await SharedPreferences.getInstance();
-    String user = jsonEncode(_currentUser?.toJson());
+    String user = jsonEncode(_currentUser.toJson());
     _pref.setString('user', user);
   }
 
@@ -168,7 +169,7 @@ class UserController extends Auth {
 
   @override
   bool isVerified() {
-    return _currentUser?.verification != null ? true : false;
+    return _currentUser.verification != null ? true : false;
   }
 
   /* 
@@ -177,20 +178,25 @@ class UserController extends Auth {
     - CRUD Poll
     - CUD Participants
   */
-  List<LobbyModel> get pendingLobbies => _currentUser!.pendingLobby;
-  List<LobbyModel> get activeLobbies => _currentUser!.activeLobby;
-  List<Map<String, String>> get friends => _currentUser!.friends
-      .where((element) => element['status'] == 'Accepted')
+  List<LobbyModel> get pendingLobbies => _currentUser.pendingLobby;
+  List<LobbyModel> get activeLobbies => _currentUser.activeLobby;
+  List<FriendModel> get friends => _currentUser.friends;
+  List<FriendModel> get acceptedFriends => _currentUser.friends
+      .where((element) => element.status == 'Accepted')
       .toList();
-  List<Map<String, String>> get pendingFriends => _currentUser!.friends
-      .where((element) => element['status'] != 'Accepted')
+  List<FriendModel> get pendingFriends => _currentUser.friends
+      .where((element) => element.status == 'Pending')
+      .toList();
+  List<FriendModel> get forApproval => _currentUser.friends
+      .where((element) => element.status == 'Waiting Approval')
       .toList();
 
   void refetchLobbies() async {
     try {
-      final result = await _apiService.getLobbies(_currentUser!.id);
-      _currentUser!.pendingLobby = result.data!['pending']!;
-      _currentUser!.activeLobby = result.data!['active']!;
+      final result = await _apiService.getLobbies(_currentUser.id);
+      _currentUser.pendingLobby = result.data!['pending']!;
+      _currentUser.activeLobby = result.data!['active']!;
+      cacheUser();
       notifyListeners();
     } catch (e) {
       print('Error in fetching lobbies: $e');
@@ -199,7 +205,7 @@ class UserController extends Auth {
 
   // Fetch specific lobby
   Future<LobbyModel?> fetchLobby(String lobbyId) async {
-    final res = await _apiService.getLobby(_currentUser!.id, lobbyId);
+    final res = await _apiService.getLobby(_currentUser.id, lobbyId);
     if (res.code == HttpStatus.ok)
       return res.data;
     else
@@ -209,8 +215,8 @@ class UserController extends Auth {
   // Create lobby TODO: implemented
   Future<LobbyModel?> createLobby(LobbyModel lobby) async {
     try {
-      final result = await _apiService.createLobby(lobby, _currentUser!.id);
-      _currentUser?.activeLobby.add(result.data!);
+      final result = await _apiService.createLobby(lobby, _currentUser.id);
+      _currentUser.activeLobby.add(result.data!);
       super.notifyListeners();
       return result.data;
     } catch (e) {
@@ -223,10 +229,10 @@ class UserController extends Auth {
   Future<bool> editLobby(LobbyModel lobby) async {
     try {
       final result =
-          await _apiService.editLobby(lobby, _currentUser!.id, lobby.id!);
-      final index = _currentUser!.activeLobby
+          await _apiService.editLobby(lobby, _currentUser.id, lobby.id!);
+      final index = _currentUser.activeLobby
           .indexWhere((element) => element.id == lobby.id);
-      _currentUser!.activeLobby[index] = result.data!;
+      _currentUser.activeLobby[index] = result.data!;
       notifyListeners();
       return true;
     } catch (e, stack) {
@@ -253,8 +259,8 @@ class UserController extends Auth {
 // Leave from a lobby TODO: implemented
   Future<bool> leaveLobby(String lobbyId) async {
     try {
-      await _apiService.leaveLobby(_currentUser!.id, lobbyId);
-      _currentUser!.activeLobby.removeWhere((element) => element.id == lobbyId);
+      await _apiService.leaveLobby(_currentUser.id, lobbyId);
+      _currentUser.activeLobby.removeWhere((element) => element.id == lobbyId);
       notifyListeners();
       return true;
     } catch (e, stack) {
@@ -267,9 +273,9 @@ class UserController extends Auth {
   // HOST Add Expenses TODO: implemented
   Future<bool> putExpenses(ExpenseModel expenseModel, String lobbyId) async {
     try {
-      final result = await _apiService.putExpenses(
-          expenseModel, _currentUser!.id, lobbyId);
-      final currentLobby = _currentUser!.activeLobby
+      final result =
+          await _apiService.putExpenses(expenseModel, _currentUser.id, lobbyId);
+      final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.expense = result.data?['expenses'];
       currentLobby.participants = result.data?['participants'];
@@ -284,15 +290,14 @@ class UserController extends Auth {
 
   //Get Expenses
   Future<ResponseModel<ExpenseModel>> getExpenses(String lobbyId) async {
-    return await _apiService.getExpenses(_currentUser!.id, lobbyId);
+    return await _apiService.getExpenses(_currentUser.id, lobbyId);
   }
 
   // HOST Delete Expenses
   Future<bool> deleteExpenses(String lobbyId) async {
     try {
-      final result =
-          await _apiService.deleteExpenses(_currentUser!.id, lobbyId);
-      final currentLobby = _currentUser!.activeLobby
+      final result = await _apiService.deleteExpenses(_currentUser.id, lobbyId);
+      final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.expense = result.data;
       super.notifyListeners();
@@ -307,8 +312,8 @@ class UserController extends Auth {
   Future<bool> deleteSpecificExpense(String lobbyId, String label) async {
     try {
       final result = await _apiService.deleteSpecificExpense(
-          _currentUser!.id, lobbyId, label);
-      final currentLobby = _currentUser!.activeLobby
+          _currentUser.id, lobbyId, label);
+      final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.expense = result.data?['expenses'];
       currentLobby.participants = result.data?['participants'];
@@ -323,7 +328,7 @@ class UserController extends Auth {
 
   // Get all poll of a lobby
   Future<List<PollModel>?> getPoll(String lobbyId) async {
-    final response = await _apiService.getPoll(_currentUser!.id, lobbyId);
+    final response = await _apiService.getPoll(_currentUser.id, lobbyId);
     return response.data;
   }
 
@@ -331,8 +336,8 @@ class UserController extends Auth {
   Future<bool> createPoll(PollModel poll, String lobbyId) async {
     try {
       final response =
-          await _apiService.postPoll(poll, _currentUser!.id, lobbyId);
-      final currentLobby = _currentUser!.activeLobby
+          await _apiService.postPoll(poll, _currentUser.id, lobbyId);
+      final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.poll?.add(response.data!);
       super.notifyListeners();
@@ -346,7 +351,7 @@ class UserController extends Auth {
   // Vote to a poll TODO: implemented
   Future<bool> votePoll(String choice, String lobbyId) async {
     try {
-      await _apiService.votePoll({'title': choice}, _currentUser!.id, lobbyId);
+      await _apiService.votePoll({'title': choice}, _currentUser.id, lobbyId);
       super.notifyListeners();
 
       return true;
@@ -359,8 +364,8 @@ class UserController extends Auth {
   // Close corresponding poll TODO: implemented
   Future<bool> closePoll(String lobbyId, String pollId) async {
     try {
-      await _apiService.closePoll(_currentUser!.id, lobbyId, pollId);
-      final currentLobby = _currentUser!.activeLobby
+      await _apiService.closePoll(_currentUser.id, lobbyId, pollId);
+      final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       final poll =
           currentLobby.poll?.firstWhere((element) => element.id == pollId);
@@ -376,8 +381,8 @@ class UserController extends Auth {
   // Delete corresponding poll TODO: implemented
   Future<bool> deletePoll(String lobbyId, String pollId) async {
     try {
-      await _apiService.deletePoll(_currentUser!.id, lobbyId, pollId);
-      final currentLobby = _currentUser!.activeLobby
+      await _apiService.deletePoll(_currentUser.id, lobbyId, pollId);
+      final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.poll?.removeWhere((element) => element.id == pollId);
       super.notifyListeners();
@@ -391,7 +396,7 @@ class UserController extends Auth {
   // Fetch participants of a lobby
   Future<List<ParticipantModel>> getParticipants(String lobbyId) async {
     final response =
-        await _apiService.getParticipants(_currentUser!.id, lobbyId);
+        await _apiService.getParticipants(_currentUser.id, lobbyId);
     return response.data!;
   }
 
@@ -400,8 +405,8 @@ class UserController extends Auth {
       List<ParticipantModel> participants, String lobbyId) async {
     try {
       final result = await _apiService.inviteParticipants(
-          participants, _currentUser!.id, lobbyId);
-      final currentLobby = _currentUser!.activeLobby
+          participants, _currentUser.id, lobbyId);
+      final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.participants = result.data!;
       super.notifyListeners();
@@ -417,8 +422,8 @@ class UserController extends Auth {
   Future<bool> removeParticipant(String lobbyId, String participantId) async {
     try {
       await _apiService.removeParticipant(
-          _currentUser!.id, lobbyId, participantId);
-      final currentLobby = _currentUser!.activeLobby
+          _currentUser.id, lobbyId, participantId);
+      final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.participants
           ?.removeWhere((element) => element.id == participantId);
@@ -434,13 +439,13 @@ class UserController extends Auth {
   // Accept invitation to join a lobby
   Future<void> acceptLobbyInvitation(String lobbyId) async {
     await _apiService
-        .acceptLobbyInvitation({'lobbyId': lobbyId}, _currentUser!.id);
+        .acceptLobbyInvitation({'lobbyId': lobbyId}, _currentUser.id);
   }
 
   // Decline invitation to join a lobby
   Future<void> declineLobbyInvitation(String lobbyId) async {
     await _apiService
-        .declineLobbyInvitation({'lobbyId': lobbyId}, _currentUser!.id);
+        .declineLobbyInvitation({'lobbyId': lobbyId}, _currentUser.id);
   }
 
   /* 
@@ -455,26 +460,21 @@ class UserController extends Auth {
   List<RentalModel> get rentals => _currentUser.rentals!;
 
   // Fetch user's rentals
-  Future<bool> refetchRentals() async {
+  void refetchRentals() async {
     try {
-      final result = await _apiService.getRentals(_currentUser!.id);
-      _currentUser.rentals = result.data;
+      final result = await _apiService.getRentals(_currentUser.id);
+      _currentUser.rentals = result.data ?? [];
+      cacheUser();
       notifyListeners();
-      return true;
     } catch (e, stack) {
       print('Error in fetching user rentals: $e');
       print(stack);
     }
-    return false;
   }
 
   Future<bool> linkRentalToLobby(RentalModel rental, String lobbyId) async {
     try {
-      final result = await _apiService.linkRentalToLobby(
-        rental,
-        _currentUser!.id,
-        lobbyId,
-      );
+      await _apiService.linkRentalToLobby(rental, _currentUser.id, lobbyId);
       final currentRental = _currentUser.rentals
           ?.firstWhere((element) => element.id == rental.id);
       currentRental?.linkedLobbyId = lobbyId;
@@ -492,29 +492,76 @@ class UserController extends Auth {
 
   */
 
-  // Invite user as a friend
-  Future<void> inviteFriend(String friendEmail) async {
-    await _apiService.inviteFriend({'email': friendEmail}, _currentUser!.id);
+  /*
+    Friends Related
+  */
+  // Invite user as a friend TODO: check
+  Future<bool> inviteFriend(String friendEmail) async {
+    try {
+      final result = await _apiService
+          .inviteFriend({'email': friendEmail}, _currentUser.id);
+      _currentUser.friends.add(result.data!);
+      notifyListeners();
+      return true;
+    } catch (e, stack) {
+      print('Error in sending friend request: $e');
+      print(stack);
+    }
+    return false;
   }
 
   // Fetch user's friend list
-  Future<ResponseModel<List<Map<String, String>>>?> getFriends() {
-    return _apiService.getFriends(_currentUser!.id);
+  void refetchFriendsList() async {
+    try {
+      final result = await _apiService.getFriends(_currentUser.id);
+      _currentUser.friends = result.data ?? [];
+      cacheUser();
+      notifyListeners();
+    } catch (e, stack) {
+      print('Error in fetching friends list: $e');
+      print(stack);
+    }
   }
 
-  // Accept friend request
-  Future<void> acceptFriendRequest(String friendId) async {
-    await _apiService.acceptFriendRequest(_currentUser!.id, friendId);
+  // Accept friend request TODO: check
+  Future<bool> acceptFriendRequest(String friendId) async {
+    try {
+      await _apiService.acceptFriendRequest(_currentUser.id, friendId);
+      _currentUser.friends
+          .firstWhere((element) => element.friendId == friendId)
+          .status = 'Accepted';
+      notifyListeners();
+      return true;
+    } catch (e, stack) {
+      print('Error in accepting friend request: $e');
+      print(stack);
+    }
+    return false;
   }
 
-  // Remove friend request
-  Future<void> removeFriendRequest(String friendId) async {
-    await _apiService.removeFriendRequest(_currentUser!.id, friendId);
+  // Remove friend request TODO: check
+  Future<bool> removeFriendRequest(String friendId) async {
+    try {
+      await _apiService.removeFriendRequest(_currentUser.id, friendId);
+      _currentUser.friends
+          .removeWhere((element) => element.friendId == friendId);
+      notifyListeners();
+      return true;
+    } catch (e, stack) {
+      print('Error in declining friend request: $e');
+      print(stack);
+    }
+    return false;
   }
+  /*
+
+    -----End of Friends relations-----
+
+  */
 
   // Fetch available cars
   Future<List<CarModel>> getAvailableCars() async {
-    final response = await _apiService.getAvailableCars(_currentUser!.id);
+    final response = await _apiService.getAvailableCars(_currentUser.id);
     return response.data!;
   }
 
@@ -528,7 +575,7 @@ class UserController extends Auth {
       contentType: MediaType('application', 'octet-stream'),
     ));
     return await _apiService.postRental(
-      _currentUser!.id,
+      _currentUser.id,
       licensePlate: carRental.licensePlate!,
       startRental: carRental.startRental!,
       endRental: carRental.endRental!,
@@ -540,7 +587,7 @@ class UserController extends Auth {
   // Edit user profile
   Future<UserModel?> editAccount(String firstName, String lastName) async {
     final request = {'firstName': firstName, 'lastName': lastName};
-    final result = await _apiService.editAccount(request, _currentUser!.id);
+    final result = await _apiService.editAccount(request, _currentUser.id);
     return result.data;
   }
 
@@ -548,6 +595,6 @@ class UserController extends Auth {
   Future<ResponseModel> changePassword(
       String currentPassword, String nPassword) async {
     final request = {'password': currentPassword, 'newPassword': nPassword};
-    return await _apiService.changePassword(request, _currentUser!.id);
+    return await _apiService.changePassword(request, _currentUser.id);
   }
 }

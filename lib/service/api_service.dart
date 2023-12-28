@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/expense_model.dart';
+import 'package:joiner_1/models/friend_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
@@ -158,7 +159,7 @@ abstract class ApiService {
 
   // Invite a friend (send friend request)
   @POST('user/{userId}/social')
-  Future<void> inviteFriend(
+  Future<ResponseModel<FriendModel>> inviteFriend(
     @Body() Map<String, String> user,
     @Path('userId') String userId, {
     @Header('Content-Type') String contentType = 'application/json',
@@ -166,7 +167,7 @@ abstract class ApiService {
 
   // Get user's friends
   @GET('user/{userId}/social')
-  Future<ResponseModel<List<Map<String, String>>>?> getFriends(
+  Future<ResponseModel<List<FriendModel>>> getFriends(
     @Path('userId') String userId,
   );
 

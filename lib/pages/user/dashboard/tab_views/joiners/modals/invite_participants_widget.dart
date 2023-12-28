@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/friend_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
@@ -18,13 +19,13 @@ class InviteParticipantsWidget extends StatefulWidget {
 
 class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
   late UserController provider;
-  late List<Map<String, String>> friendList;
+  late List<FriendModel> friendList;
   List<ParticipantModel> invitedFriends = [];
 
-  List<Map<String, String>> filter(List<Map<String, String>> friendList) {
+  List<FriendModel> filter(List<FriendModel> friendList) {
     widget.currentLobby.participants?.forEach((participant) {
       friendList.removeWhere((friend) {
-        return friend['friendId'] == participant.userId;
+        return friend.friendId == participant.userId;
       });
     });
 
@@ -74,9 +75,9 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
                   itemCount: friendList.length,
                   itemBuilder: (context, index) {
                     return ParticipantMole(
-                      firstName: friendList[index]['firstName']!,
-                      lastName: friendList[index]['lastName']!,
-                      friendUserId: friendList[index]['friendId']!,
+                      firstName: friendList[index].firstName,
+                      lastName: friendList[index].lastName,
+                      friendUserId: friendList[index].friendId,
                       showCheckBox: true,
                       addFriendToInvite: addFriendToInvites,
                     );

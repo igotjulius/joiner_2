@@ -1,3 +1,4 @@
+import 'package:joiner_1/models/friend_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
@@ -14,8 +15,8 @@ class UserModel extends User {
   String? firstName, lastName, email, contactNo;
   List<LobbyModel> pendingLobby;
   List<LobbyModel> activeLobby;
-  List<Map<String, String>> friends;
-  List<RentalModel>? rentals;
+  List<FriendModel> friends;
+  List<RentalModel> rentals;
   Map<String, String>? verification;
 
   UserModel({
@@ -28,7 +29,7 @@ class UserModel extends User {
     required this.friends,
     required this.pendingLobby,
     required this.activeLobby,
-    this.rentals,
+    required this.rentals,
     this.verification,
   }) : super(
           id: id,

@@ -1,5 +1,4 @@
 import 'package:joiner_1/components/cra/car_item_widget.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:flutter/material.dart';
 
