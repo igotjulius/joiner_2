@@ -3,8 +3,6 @@ import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'login_page_model.dart';
-export 'login_page_model.dart';
 
 class LoginPageWidget extends StatefulWidget {
   const LoginPageWidget({Key? key}) : super(key: key);
@@ -14,7 +12,10 @@ class LoginPageWidget extends StatefulWidget {
 }
 
 class _LoginPageWidgetState extends State<LoginPageWidget> {
-  late LoginPageModel _model;
+  TextEditingController _emailController =
+      TextEditingController(text: '1@gmail.com');
+  TextEditingController _passwordController =
+      TextEditingController(text: '123456');
   String? _errorMessage;
 
   final _formKey = GlobalKey<FormState>();
@@ -22,13 +23,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   @override
   void initState() {
     super.initState();
-    _model = LoginPageModel();
   }
 
   @override
   void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
-    _model.dispose();
   }
 
   @override
@@ -81,7 +82,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       EdgeInsets.only(top: 2.5, bottom: 2.5)),
                               TextFormField(
                                 key: Key('emailField'),
-                                controller: _model.emailController,
+                                controller: _emailController,
                                 autofocus: true,
                                 decoration: InputDecoration(
                                   labelText: 'Email',
@@ -92,7 +93,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                               ),
                               TextFormField(
                                 key: Key('passwordField'),
-                                controller: _model.passwordController,
+                                controller: _passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   labelText: 'Password',
@@ -127,8 +128,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   showDialogLoading(context);
                                   context
                                       .read<AuthController>()
-                                      .loginUser(_model.emailController.text,
-                                          _model.passwordController.text)
+                                      .loginUser(_emailController.text,
+                                          _passwordController.text)
                                       .then(
                                     (value) {
                                       context.pop();
@@ -141,7 +142,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       }
                                     },
                                   );
-                                  // _model.loginUser();
+                                  // loginUser();
                                 }
                               },
                             ),
@@ -160,8 +161,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 onTap: () {
                                   setState(() {
                                     // _errorMessage = null;
-                                    _model.emailController.clear();
-                                    _model.passwordController.clear();
+                                    _emailController.clear();
+                                    _passwordController.clear();
                                     context.pushNamed('Sign Up');
                                   });
                                 },

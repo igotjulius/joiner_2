@@ -1,9 +1,6 @@
-import 'dart:io';
 import 'package:go_router/go_router.dart';
 import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
-import 'package:joiner_1/controllers/cra_controller.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
@@ -19,80 +20,82 @@ import 'package:joiner_1/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/car_model.dart';
 
-class CraController extends AuthController implements Auth {
-  CraController(this._currentUser, this._apiService) {
-    final craRoutes = [
-      GoRoute(
-        name: 'Cars',
-        path: '/cars',
-        builder: (context, params) => NavBarPage(
-          initialPage: 'Cars',
-          page: CraCarWidget(),
-        ),
-        routes: [
-          GoRoute(
-            name: 'RegisterCar',
-            path: 'registerCar',
-            builder: (context, state) => AddCarWidget(),
-          ),
-          GoRoute(
-            name: 'CarDetails',
-            path: ':licensePlate',
-            builder: (context, state) {
-              final obj = state.extra as CarModel;
-              return EditCarWidget(car: obj);
-            },
-          ),
-        ],
+class CraController extends ChangeNotifier implements Auth {
+  CraController(this._currentUser, this._apiService);
+  ApiService _apiService;
+  CraUserModel _currentUser;
+  late SharedPreferences _pref;
+  final _craRoutes = [
+    GoRoute(
+      name: 'Cars',
+      path: '/cars',
+      builder: (context, params) => NavBarPage(
+        initialPage: 'Cars',
+        page: CraCarWidget(),
       ),
-      GoRoute(
-        name: 'CraRentals',
-        path: '/craRentals',
-        builder: (context, params) => NavBarPage(
-          initialPage: 'CraRentals',
-          page: CraRentalsWidget(),
+      routes: [
+        GoRoute(
+          name: 'RegisterCar',
+          path: 'registerCar',
+          builder: (context, state) => AddCarWidget(),
         ),
-        routes: [
-          GoRoute(
-            name: 'RentalDetails',
-            path: 'rentalDetails',
-            builder: (context, state) {
-              final RentalModel rental = state.extra as RentalModel;
-              return RentalDetails(
-                rental: rental,
-              );
-            },
-          ),
-        ],
-      ),
-      GoRoute(
-        name: 'Account',
-        path: '/account',
-        builder: (context, params) => NavBarPage(
-          initialPage: 'Account',
-          page: AccountWidget(),
+        GoRoute(
+          name: 'CarDetails',
+          path: ':licensePlate',
+          builder: (context, state) {
+            final obj = state.extra as CarModel;
+            return EditCarWidget(car: obj);
+          },
         ),
+      ],
+    ),
+    GoRoute(
+      name: 'CraRentals',
+      path: '/craRentals',
+      builder: (context, params) => NavBarPage(
+        initialPage: 'CraRentals',
+        page: CraRentalsWidget(),
       ),
-    ];
-    super.setRoutes(craRoutes);
-  }
-  final ApiService _apiService;
-  final CraUserModel _currentUser;
+      routes: [
+        GoRoute(
+          name: 'RentalDetails',
+          path: 'rentalDetails',
+          builder: (context, state) {
+            final RentalModel rental = state.extra as RentalModel;
+            return RentalDetails(
+              rental: rental,
+            );
+          },
+        ),
+      ],
+    ),
+    GoRoute(
+      name: 'Account',
+      path: '/account',
+      builder: (context, params) => NavBarPage(
+        initialPage: 'Account',
+        page: AccountWidget(),
+      ),
+    ),
+  ];
+
+  @override
+  List<GoRoute> get routes => _craRoutes;
 
   @override
   User get profile => _currentUser;
 
   @override
   Future cacheUser() async {
-    pref = await SharedPreferences.getInstance();
+    _pref = await SharedPreferences.getInstance();
     String craUser = jsonEncode(_currentUser.toJson());
-    pref.setString('craUser', craUser);
+    _pref.setString('craUser', craUser);
   }
 
   @override
   void logout() async {
-    pref = await SharedPreferences.getInstance();
-    pref.clear();
+    _pref = await SharedPreferences.getInstance();
+    _pref.clear();
   }
 
   @override

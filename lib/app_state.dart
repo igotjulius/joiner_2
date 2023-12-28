@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/models/lobby_model.dart';
-import 'package:joiner_1/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FFAppState extends ChangeNotifier {

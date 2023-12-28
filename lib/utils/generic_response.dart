@@ -50,6 +50,14 @@ class ResponseModel<T> {
         converted = CarModel.fromJson(json);
       else if (json.containsKey('items'))
         converted = ExpenseModel.fromJson(json);
+      else if (json.containsKey('expenses')) {
+        converted = {
+          'expenses': ExpenseModel.fromJson(json['expenses']),
+          'participants': (json['participant'] as List)
+              .map((element) => ParticipantModel.fromJson(element))
+              .toList()
+        };
+      }
       return converted as T;
     } else if (json is List<dynamic>) {
       if (json.isEmpty) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/models/car_model.dart';

@@ -31,7 +31,7 @@ class _PendingLobbyMoleculeState extends State<PendingLobbyMolecule> {
                   Icon(Icons.question_mark),
                   Column(
                     children: [
-                      Text(lobby.title!),
+                      Text(lobby.title),
                       Text(
                         lobby.startDate != null
                             ? "${lobby.startDate} - ${lobby.endDate}"

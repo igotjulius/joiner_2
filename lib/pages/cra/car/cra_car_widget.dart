@@ -16,8 +16,7 @@ class _CraCarWidgetState extends State<CraCarWidget> {
   @override
   void initState() {
     super.initState();
-    final controller =
-        context.read<AuthController>().userTypeController as CraController;
+    final controller = context.read<CraController>();
     controller.refetchCraCars();
   }
 
@@ -48,9 +47,7 @@ class _CraCarWidgetState extends State<CraCarWidget> {
   }
 
   Widget displayCars() {
-    final cars =
-        (context.watch<AuthController>().userTypeController as CraController)
-            .cars;
+    final cars = context.watch<CraController>().cars;
     return SingleChildScrollView(
       child: ListView.separated(
         shrinkWrap: true,

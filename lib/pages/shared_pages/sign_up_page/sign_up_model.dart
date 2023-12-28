@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
-import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/widgets/molecules/cra_sign_up_mole.dart';
 import 'package:joiner_1/widgets/molecules/user_sign_up_mole.dart';
 

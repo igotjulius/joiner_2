@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/components/user/linkable_lobby.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
@@ -19,8 +18,7 @@ class RentalDetails extends StatefulWidget {
 class _RentalDetailsState extends State<RentalDetails> {
   @override
   Widget build(BuildContext context) {
-    final isCra =
-        context.watch<AuthController>().userTypeController is CraController;
+    final isCra = context.watch<Auth>() is CraController;
     return Scaffold(
       appBar: AppBar(
         actions: isCra

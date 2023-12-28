@@ -1,4 +1,3 @@
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';

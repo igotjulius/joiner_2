@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/modals/invite_participants_model.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/lobby_model.dart';
+import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
+import 'package:joiner_1/utils/utils.dart';
+import 'package:joiner_1/widgets/molecules/participant_atom.dart';
 import 'package:provider/provider.dart';
 
 class InviteParticipantsWidget extends StatefulWidget {
-  const InviteParticipantsWidget({super.key});
+  final LobbyModel currentLobby;
+  const InviteParticipantsWidget({super.key, required this.currentLobby});
 
   @override
   State<InviteParticipantsWidget> createState() =>
@@ -13,20 +17,35 @@ class InviteParticipantsWidget extends StatefulWidget {
 }
 
 class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
-  late InviteParticipantsModel _model;
+  late UserController provider;
+  late List<Map<String, String>> friendList;
+  List<ParticipantModel> invitedFriends = [];
+
+  List<Map<String, String>> filter(List<Map<String, String>> friendList) {
+    widget.currentLobby.participants?.forEach((participant) {
+      friendList.removeWhere((friend) {
+        return friend['friendId'] == participant.userId;
+      });
+    });
+
+    return friendList;
+  }
+
+  void addFriendToInvites(String friendId, String firstName, String lastName) {
+    invitedFriends.add(new ParticipantModel(
+      userId: friendId,
+      firstName: firstName,
+      lastName: lastName,
+      joinStatus: 'Pending',
+      type: 'Joiner',
+    ));
+  }
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => InviteParticipantsModel());
-    _model.participants = context.read<LobbyProvider>().participants;
-    _model.invitedFriends = [];
-  }
-
-  @override
-  void dispose() {
-    _model.maybeDispose();
-    super.dispose();
+    provider = context.read<UserController>();
+    friendList = filter(provider.friends);
   }
 
   @override
@@ -50,12 +69,36 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
                 ],
               ),
               Expanded(
-                child: _model.friendList(context),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: friendList.length,
+                  itemBuilder: (context, index) {
+                    return ParticipantMole(
+                      firstName: friendList[index]['firstName']!,
+                      lastName: friendList[index]['lastName']!,
+                      friendUserId: friendList[index]['friendId']!,
+                      showCheckBox: true,
+                      addFriendToInvite: addFriendToInvites,
+                    );
+                  },
+                ),
               ),
               FilledButton(
                 child: Text('Invite'),
                 onPressed: () {
-                  _model.sendInvitation(context.read<LobbyProvider>().lobbyId);
+                  showDialogLoading(context);
+                  provider
+                      .inviteParticipants(
+                          invitedFriends, widget.currentLobby.id!)
+                      .then((value) {
+                    context.pop();
+                    if (!value) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        showError('Invitation failed',
+                            Theme.of(context).colorScheme.error),
+                      );
+                    }
+                  });
                   context.pop();
                 },
               ),

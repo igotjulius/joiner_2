@@ -97,8 +97,10 @@ class MapFeatureState extends State<MapFeature> {
                 width: double.maxFinite,
                 child: FilledButton(
                   onPressed: () {
-                    context.pushNamed('LobbyCreation',
-                        extra: {'destination': _featureName});
+                    context.pushNamed(
+                      'LobbyCreation',
+                      extra: _featureName,
+                    );
                   },
                   child: Text('Create lobby'),
                 ),

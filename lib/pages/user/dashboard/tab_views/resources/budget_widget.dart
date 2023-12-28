@@ -1,36 +1,28 @@
-import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
-import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
-import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/resources/modals/add_budget_widget.dart';
 import 'package:joiner_1/widgets/atoms/budget_category.dart';
 import 'package:joiner_1/widgets/atoms/participant_budget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class BudgetWidget extends StatefulWidget {
-  final FabController? fabController;
-  final BudgetModel? model;
-  final String? hostId, lobbyId;
-  const BudgetWidget(this.fabController, this.model, this.lobbyId, this.hostId,
-      {super.key});
+  final FabController fabController;
+  final BudgetModel model;
+  final LobbyModel currentLobby;
+  const BudgetWidget({
+    super.key,
+    required this.fabController,
+    required this.model,
+    required this.currentLobby,
+  });
 
   @override
-  _BudgetWidgetState createState() =>
-      _BudgetWidgetState(fabController!, model!);
+  _BudgetWidgetState createState() => _BudgetWidgetState();
 }
 
 class _BudgetWidgetState extends State<BudgetWidget>
     with TickerProviderStateMixin {
-  _BudgetWidgetState(FabController fabController, this._model) {
-    fabController.onTapHandler = fabHandler;
-  }
-  late BudgetModel _model;
-  LobbyModel? _currentLobby;
-  List<ParticipantModel>? _participants;
-  ExpenseModel? _expense;
-  TabController? _tabController;
+  late TabController _tabController;
   final _tabs = [
     Tab(
       text: 'Expenses',
@@ -44,9 +36,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
   @override
   void initState() {
     super.initState();
-    _currentLobby = context.read<LobbyProvider>().currentLobby;
-    _participants = _currentLobby?.participants;
-    _expense = _currentLobby?.expense;
+    widget.fabController.onTapHandler = fabHandler;
     _tabController = TabController(
       vsync: this,
       length: _tabs.length,
@@ -56,21 +46,22 @@ class _BudgetWidgetState extends State<BudgetWidget>
 
   @override
   void dispose() {
+    _tabController.dispose();
     super.dispose();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_model.controller != null) _model.controller?.close();
+      if (widget.model.controller != null) widget.model.controller?.close();
     });
   }
 
   void fabHandler() {
-    _model.controller = showBottomSheet(
+    widget.model.controller = showBottomSheet(
       context: context,
-      builder: (context) => AddBudgetWidget(lobbyId: _currentLobby?.id),
+      builder: (context) => AddBudgetWidget(lobbyId: widget.currentLobby.id!),
     );
   }
 
   Widget expensesTab() {
-    if (_expense?.items?.length == 0) {
+    if (widget.currentLobby.expense?.items?.length == 0) {
       return Center(
         child: Text('There\'s no expenses listed'),
       );
@@ -98,81 +89,23 @@ class _BudgetWidgetState extends State<BudgetWidget>
   }
 
   Widget expenses() {
-    final keys = _expense?.items?.keys.toList();
+    final keys = widget.currentLobby.expense?.items?.keys.toList();
     return ListView.builder(
       shrinkWrap: true,
       itemCount: keys!.length,
       itemBuilder: (context, index) {
         return BudgetCategoryWidget(
-          hostId: _currentLobby?.hostId,
-          lobbyId: _currentLobby?.id,
+          hostId: widget.currentLobby.hostId!,
+          lobbyId: widget.currentLobby.id!,
           label: keys[index],
-          amount: _expense?.items?[keys[index]],
+          amount: widget.currentLobby.expense!.items![keys[index]]!,
         );
       },
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Container(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ChoiceChip(
-                    label: Text('Expenses'),
-                    selected: _index == 0 ? true : false,
-                    showCheckmark: false,
-                    onSelected: (_) {
-                      setState(() {
-                        _index = 0;
-                        _tabController?.index = 0;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  ChoiceChip(
-                    label: Text('Budget'),
-                    selected: _index == 1 ? true : false,
-                    showCheckmark: false,
-                    onSelected: (_) {
-                      setState(() {
-                        _index = 1;
-                        _tabController?.index = 1;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    expensesTab(),
-                    budgetTab(),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget budgetTab() {
-    if (_expense?.items?.length == 0) {
+    if (widget.currentLobby.expense?.items?.length == 0) {
       return Center(
         child: Text('There\'s no expenses yet'),
       );
@@ -185,7 +118,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
           SizedBox(
             height: 20,
           ),
-          Text('Total Expenses: ₱${_expense?.total}',
+          Text('Total Expenses: ₱${widget.currentLobby.expense?.total}',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(10, 30, 10, 5),
@@ -218,17 +151,72 @@ class _BudgetWidgetState extends State<BudgetWidget>
   Widget contributions() {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: _participants?.length,
+      itemCount: widget.currentLobby.participants?.length,
       itemBuilder: (context, index) {
-        if (_participants?[index].joinStatus == 'Joined')
+        if (widget.currentLobby.participants?[index].joinStatus == 'Joined')
           return ParticipantBudget(
-            id: _participants?[index].id,
-            participantFname: _participants?[index].firstName,
-            participantLname: _participants?[index].lastName,
-            amount: _participants?[index].contribution!['amount'],
+            id: widget.currentLobby.participants?[index].id,
+            participantFname:
+                widget.currentLobby.participants?[index].firstName,
+            participantLname: widget.currentLobby.participants?[index].lastName,
+            amount: widget
+                .currentLobby.participants?[index].contribution!['amount'],
           );
         return null;
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ChoiceChip(
+                  label: Text('Expenses'),
+                  selected: _index == 0 ? true : false,
+                  showCheckmark: false,
+                  onSelected: (_) {
+                    setState(() {
+                      _index = 0;
+                      _tabController.index = 0;
+                    });
+                  },
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                ChoiceChip(
+                  label: Text('Budget'),
+                  selected: _index == 1 ? true : false,
+                  showCheckmark: false,
+                  onSelected: (_) {
+                    setState(() {
+                      _index = 1;
+                      _tabController.index = 1;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  expensesTab(),
+                  budgetTab(),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,75 +1,66 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:joiner_1/app_state.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class BudgetCategoryWidget extends StatelessWidget {
-  final String? lobbyId;
-  final String? label;
-  final double? amount;
-  final String? hostId;
+  final String lobbyId;
+  final String label;
+  final double amount;
+  final String hostId;
   const BudgetCategoryWidget({
     super.key,
-    this.hostId,
-    this.lobbyId,
-    this.label,
-    this.amount,
+    required this.hostId,
+    required this.lobbyId,
+    required this.label,
+    required this.amount,
   });
+
+  Future<dynamic> confirmationDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete'),
+        content: Text('Are you sure you want to delete $label expense?'),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              final provider = context.read<Auth>() as UserController;
+              provider.deleteSpecificExpense(lobbyId, label).then((value) {
+                if (value)
+                  context.pop();
+                else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    showError('Can\'t delete expense',
+                        Theme.of(context).colorScheme.error),
+                  );
+                }
+              });
+            },
+            child: Text('Yes'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('No'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final currentUserId = context.read<FFAppState>().currentUser?.id;
-    return GestureDetector(
-      onLongPress: () async {
-        if (currentUserId == hostId) {
-          showDialog(
-            context: context,
-            builder: ((context) => AlertDialog(
-                  title: Text('Delete'),
-                  content:
-                      Text('Are you sure you want to delete $label expense?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () async {
-                        // await UserController.deleteSpecificExpense(
-                        //     lobbyId!, label!);
-                        Fluttertoast.showToast(
-                          msg: '$label Expense Deleted.',
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 2,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 10.0,
-                        );
-                        context.pop();
-                      },
-                      child: Text('Yes'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('No'),
-                    ),
-                  ],
-                )),
-          );
-        } else {
-          Fluttertoast.showToast(
-            msg: 'Only a Host can remove expenses.',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.redAccent,
-            textColor: Colors.white,
-            fontSize: 10.0,
-          );
-        }
-      },
+    final currentUserId = context.read<Auth>().profile?.id;
+    return InkWell(
+      onLongPress: currentUserId != hostId
+          ? null
+          : () async {
+              confirmationDialog(context);
+            },
       child: Container(
         height: 65,
         decoration: BoxDecoration(
@@ -86,7 +77,7 @@ class BudgetCategoryWidget extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    label!,
+                    label,
                     style: TextStyle(fontSize: 16),
                   ),
                 ].divide(

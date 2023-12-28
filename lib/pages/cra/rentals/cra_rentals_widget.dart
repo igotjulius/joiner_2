@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
-import 'package:joiner_1/flutter_flow/nav/nav.dart';
-import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/widgets/atoms/user_rental_info.dart';
 import 'package:provider/provider.dart';
 

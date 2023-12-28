@@ -14,20 +14,20 @@ class LobbyModel {
   )
   final String? id;
   final String? hostId;
-  final String? title;
-  final String? destination;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final List<ParticipantModel>? participants;
+  String title;
+  String? destination;
+  DateTime? startDate;
+  DateTime? endDate;
+  List<ParticipantModel>? participants;
   final String? conversation;
   final List<PollModel>? poll;
-  final ExpenseModel? expense;
+  ExpenseModel? expense;
   final List<RentalModel>? linkedRental;
 
-  const LobbyModel({
+  LobbyModel({
     this.id,
     this.hostId,
-    this.title,
+    required this.title,
     this.destination,
     this.startDate,
     this.endDate,

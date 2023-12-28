@@ -9,9 +9,9 @@ class PollModel {
   final String? question;
   // toJson choices = List<String>, fromJson choices = List<Map<String, String>>
   final List<dynamic>? choices;
-  final bool? isOpen;
+  bool? isOpen;
 
-  const PollModel({this.id, this.question, this.choices, this.isOpen});
+  PollModel({this.id, this.question, this.choices, this.isOpen});
 
   factory PollModel.fromJson(Map<String, dynamic> json) =>
       _$PollModelFromJson(json);

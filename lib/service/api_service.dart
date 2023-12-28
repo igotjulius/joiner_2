@@ -15,15 +15,15 @@ import '../models/lobby_model.dart';
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
-// const String serverUrl =
-//     'http://10.0.2.2:443/'; // For mobile emulator run on the host machine
+const String serverUrl =
+    'http://10.0.2.2:443/'; // For mobile emulator run on the host machine
 /*
   For physical phones, address might change.
   Run ipconfig from the host machine to configure the ip address of the server.
   Make sure that the physical phone and host machine are in the same network.
 */
 // const String serverUrl = 'http://192.168.137.1:443/';
-const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'http://localhost:443/';
 // const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
 // final apiService = ApiService(Dio(), baseUrl: serverUrl);
@@ -118,7 +118,7 @@ abstract class ApiService {
 
   // Add a participant/s to a lobby
   @POST('user/{userId}/lobby/{lobbyId}/invitation')
-  Future<void> inviteParticipants(
+  Future<ResponseModel<List<ParticipantModel>?>> inviteParticipants(
     @Body() List<ParticipantModel> participants,
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId, {
@@ -267,7 +267,7 @@ abstract class ApiService {
 
   //Create expenses
   @PUT('user/{userId}/lobby/{lobbyId}/expense')
-  Future<ResponseModel<ExpenseModel>> putExpenses(
+  Future<ResponseModel<Map<String, dynamic>>> putExpenses(
     @Body() ExpenseModel expense,
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId, {
@@ -290,7 +290,7 @@ abstract class ApiService {
 
   //HOST Delete SPECIFIC Expense
   @DELETE('user/{userId}/lobby/{lobbyId}/expense/{label}')
-  Future<ResponseModel<ExpenseModel>> deleteSpecificExpense(
+  Future<ResponseModel<Map<String, dynamic>>> deleteSpecificExpense(
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
     @Path('label') String label,

@@ -3,10 +3,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:joiner_1/pages/cra/car/add_car/add_car_model.dart';
+import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 
@@ -18,21 +17,31 @@ class AddCarWidget extends StatefulWidget {
 }
 
 class _AddCarWidgetState extends State<AddCarWidget> {
-  late AddCarModel _model;
+  // late AddCarModel _model;
   String? _imagePickerError, _vehicleTypeError;
+  DateTimeRange? _datePicked;
+  PickedImages _imagePicker = PickedImages();
+  TextEditingController _licenseController = TextEditingController();
+  TextEditingController _vehicleTypeController = TextEditingController();
+  TextEditingController _datesController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
-    _model = AddCarModel();
+  String? datesValidator(String? value) {
+    var validate = isEmpty(value);
+    if (validate != null) return validate;
+    if (_datePicked!.duration.inDays < 1) return 'Minimum rent is one day';
+    return null;
   }
 
   @override
   void dispose() {
+    _licenseController.dispose();
+    _vehicleTypeController.dispose();
+    _datesController.dispose();
+    _priceController.dispose();
     super.dispose();
-    _model.dispose();
   }
 
   @override
@@ -46,27 +55,27 @@ class _AddCarWidgetState extends State<AddCarWidget> {
             child: FilledButton(
               onPressed: () {
                 if (_formKey.currentState!.validate() &&
-                    _model.imagePicker.getImages().isNotEmpty) {
+                    _imagePicker.getImages().isNotEmpty) {
                   showDialogLoading(context);
-                  _model.register().then((value) {
-                    if (value != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        showError(value, Theme.of(context).colorScheme.error),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        showSuccess('Car registered successfully'),
-                      );
-                    }
-                    context.pop();
-                  });
+                  // TODO: Refactor - To be implemented
+                  // _register().then((value) {
+                  //   if (value != null) {
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       showError(value, Theme.of(context).colorScheme.error),
+                  //     );
+                  //   } else {
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       showSuccess('Car registered successfully'),
+                  //     );
+                  //   }
+                  //   context.pop();
+                  // });
                 }
 
                 setState(() {
-                  if (_model.imagePicker.getImages().isEmpty)
+                  if (_imagePicker.getImages().isEmpty)
                     _imagePickerError = 'Please upload an image of your car';
-                  _vehicleTypeError =
-                      isEmpty(_model.vehicleTypeController.text);
+                  _vehicleTypeError = isEmpty(_vehicleTypeController.text);
                 });
               },
               child: Text('Register Car'),
@@ -116,12 +125,12 @@ class _AddCarWidgetState extends State<AddCarWidget> {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () async {
-              _imagePickerError = await _model.imagePicker.selectImages();
+              _imagePickerError = await _imagePicker.selectImages();
               setState(() {});
             },
             child: Container(
               height: 160,
-              child: _model.imagePicker.getImages().isNotEmpty
+              child: _imagePicker.getImages().isNotEmpty
                   ? imageCarousel()
                   : Center(
                       child: Text(
@@ -166,13 +175,13 @@ class _AddCarWidgetState extends State<AddCarWidget> {
 
   CarouselSlider imageCarousel() {
     return CarouselSlider.builder(
-      itemCount: _model.imagePicker.getImages().length,
+      itemCount: _imagePicker.getImages().length,
       options: CarouselOptions(
         enlargeCenterPage: true,
         enableInfiniteScroll: false,
       ),
       itemBuilder: (context, index, viewIndex) {
-        XFile image = _model.imagePicker.getImages()[index];
+        XFile image = _imagePicker.getImages()[index];
         if (kIsWeb) {
           return Image.network(image.path);
         } else {
@@ -190,7 +199,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
       label: 'License Plate',
       labelStyle:
           Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-      controller: _model.licenseController,
+      controller: _licenseController,
       validator: isEmpty,
       direction: TextInputDirection.row,
     );
@@ -226,7 +235,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
               });
             },
             expandedInsets: EdgeInsets.zero,
-            controller: _model.vehicleTypeController,
+            controller: _vehicleTypeController,
             errorText: _vehicleTypeError,
           ),
         ),
@@ -257,11 +266,11 @@ class _AddCarWidgetState extends State<AddCarWidget> {
               ).then((value) {
                 if (value != null) {
                   setState(() {
-                    _model.datesController.text =
+                    _datesController.text =
                         '${DateFormat('MMM d').format(value.start)} - ${DateFormat('MMM d').format(value.end)}';
                   });
 
-                  _model.datePicked = value;
+                  _datePicked = value;
                 }
               });
             },
@@ -276,8 +285,8 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                         ),
               ),
               child: CustomTextInput(
-                controller: _model.datesController,
-                validator: _model.datesValidator,
+                controller: _datesController,
+                validator: datesValidator,
                 suffixIcon: Icon(
                   Icons.calendar_today_rounded,
                 ),
@@ -295,7 +304,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
       label: 'Price',
       labelStyle:
           Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-      controller: _model.priceController,
+      controller: _priceController,
       validator: isEmpty,
       keyboardType: TextInputType.number,
       inputFormatters: FilteringTextInputFormatter.digitsOnly,

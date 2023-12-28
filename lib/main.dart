@@ -1,7 +1,7 @@
-import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/nav/nav.dart';
+import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
 import 'package:provider/provider.dart';
@@ -18,16 +18,21 @@ void main() async {
 
   usePathUrlStrategy();
 
-  // final appState = FFAppState(); // Initialize FFAppState
-  // await appState.initializePersistedState();
-  final appState = AuthController();
-  await appState.initializePersistedState();
+  final authState = AuthController();
+  await authState.initializePersistedState();
   runApp(
     MultiProvider(
       providers: [
         // ChangeNotifierProvider.value(value: appState),
         ChangeNotifierProvider(create: (context) => AppStateNotifier.instance),
-        ChangeNotifierProvider<AuthController>.value(value: appState),
+        // ChangeNotifierProvider<AuthController>.value(value: authState),
+        ChangeNotifierProvider<AuthController>.value(
+          value: authState,
+        ),
+        ChangeNotifierProxyProvider<AuthController, Auth?>(
+          create: (_) => null,
+          update: (_, auth, user) => auth.userTypeController,
+        ),
       ],
       child: MyApp(),
     ),
@@ -43,13 +48,34 @@ class MyApp extends StatefulWidget {
       context.findAncestorStateOfType<_MyAppState>()!;
 }
 
-class _MyAppState extends State<MyApp> {
-  // late FFAppState _appState;
-  // late AppStateNotifier _appStateNotifier;
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  // For caching user data
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      print('app is paused');
+      await context.read<AuthController>().userTypeController?.cacheUser();
+      print('done caching');
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final appState = context.watch<AuthController>();
+    final user = context.select<AuthController, User?>(
+        (value) => value.userTypeController?.profile);
     return MaterialApp.router(
       title: 'Joiner 1',
       localizationsDelegates: [
@@ -63,14 +89,19 @@ class _MyAppState extends State<MyApp> {
       routerConfig: GoRouter(
         initialLocation: '/login',
         debugLogDiagnostics: true,
-        refreshListenable: appState,
         errorBuilder: (context, state) {
           print('${state.error} ${state.fullPath}');
           return LoginPageWidget();
         },
-        routes: appState.routes,
+        routes: context
+            .select<AuthController, List<GoRoute>>((value) => value.routes),
         redirect: (context, state) {
-          return appState.redirectState(state);
+          bool loggingIn = user != null && state.matchedLocation == '/login';
+          bool loggingOut = user == null && state.matchedLocation == '/account';
+          if (loggingIn) return user is CraController ? '/cars' : '/lobby';
+          if (loggingOut) return '/login';
+          return null;
+          // return appState.redirectState(state);
         },
       ),
       debugShowCheckedModeBanner: false,

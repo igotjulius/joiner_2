@@ -1,45 +1,35 @@
-import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/poll_model.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'survey_poll_model.dart';
-
-export 'survey_poll_model.dart';
 
 class SurveyPollWidget extends StatefulWidget {
-  final String? lobbyId;
-  const SurveyPollWidget({
-    Key? key,
-    this.lobbyId,
-  }) : super(key: key);
+  final String lobbyId;
+  const SurveyPollWidget({super.key, required this.lobbyId});
 
   @override
   _SurveyPollWidgetState createState() => _SurveyPollWidgetState();
 }
 
 class _SurveyPollWidgetState extends State<SurveyPollWidget> {
-  late SurveyPollModel _model;
-
-  @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-    _model.onUpdate();
-  }
-
+  TextEditingController _questionController = TextEditingController();
+  List<TextEditingController> _choicesController = [];
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SurveyPollModel());
-
-    _model.questionController ??= TextEditingController();
-    _model.choicesController!.add(TextEditingController());
+    _choicesController.add(TextEditingController());
   }
 
   @override
   void dispose() {
-    _model.maybeDispose();
-
+    _questionController.dispose();
+    _choicesController.forEach((element) {
+      element.dispose();
+    });
     super.dispose();
   }
 
@@ -69,7 +59,7 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
               CustomTextInput(
                 label: 'Question',
                 hintText: 'What are you deciding about?',
-                controller: _model.questionController,
+                controller: _questionController,
                 fillColor: Theme.of(context).colorScheme.primaryContainer,
               ),
               Column(
@@ -79,17 +69,17 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                     child: Text('Add a Choice'),
                     onPressed: () {
                       setState(() {
-                        _model.choicesController!.add(TextEditingController());
+                        _choicesController.add(TextEditingController());
                       });
                     },
                   ),
                   ListView.separated(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemCount: _model.choicesController!.length,
+                    itemCount: _choicesController.length,
                     itemBuilder: (context, index) {
                       return CustomTextInput(
-                        controller: _model.choicesController![index],
+                        controller: _choicesController[index],
                       );
                     },
                     separatorBuilder: (context, index) {
@@ -107,10 +97,29 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: () async {
-                        final nPoll = await _model.createPoll(widget.lobbyId!);
-                        Provider.of<LobbyProvider>(context, listen: false)
-                            .addPoll(nPoll!);
-                        context.pop();
+                        List<String> choices = [];
+                        _choicesController
+                            .forEach((element) => choices.add(element.text));
+                        final nPoll = PollModel(
+                          question: _questionController.text,
+                          choices: choices,
+                        );
+                        final provider = context.read<Auth>() as UserController;
+                        provider
+                            .createPoll(nPoll, widget.lobbyId)
+                            .then((value) {
+                          context.pop();
+                          if (value) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              showSuccess('Poll created'),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              showError('Can\'t create',
+                                  Theme.of(context).colorScheme.error),
+                            );
+                          }
+                        });
                       },
                       label: Text('Create'),
                       icon: Icon(

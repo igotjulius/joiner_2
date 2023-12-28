@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';

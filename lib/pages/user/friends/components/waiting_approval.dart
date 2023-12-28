@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/controllers/user_controller.dart';
 
 class WaitingApproval extends StatelessWidget {
   final String? name;

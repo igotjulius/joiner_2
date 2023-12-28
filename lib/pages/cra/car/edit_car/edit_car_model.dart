@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/models/car_model.dart';
@@ -65,8 +64,7 @@ class EditCarModel {
       endDate: datePicked?.end,
       price: double.parse(priceController.text),
     );
-    final controller =
-        context.read<AuthController>().userTypeController as CraController;
+    final controller = context.read<CraController>();
     return controller.editCar(uCar, imagePicker.getImages());
   }
 

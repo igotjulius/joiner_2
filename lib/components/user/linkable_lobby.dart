@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -18,29 +18,25 @@ class LinkableLobby extends StatefulWidget {
 }
 
 class _LinkableLobbyState extends State<LinkableLobby> {
-  LinkableLobbyModel? _model;
-
-  @override
-  void initState() {
-    super.initState();
-    _model = createModel(context, () => LinkableLobbyModel());
-    _model?.lobbies = context.read<FFAppState>().activeLobbies;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final _lobbies =
+        (context.read<Auth>() as UserController).activeLobbies.where((element) {
+      print('${element.id}  ${widget.rental?.linkedLobbyId}');
+      return element.id != widget.rental?.linkedLobbyId;
+    }).toList();
     return Container(
       padding: EdgeInsets.all(10),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            _model?.lobbies == null
-                ? Text('You haven\'t joined a lobby yet')
+            _lobbies.isEmpty
+                ? Text('No linkable lobby :(')
                 : ListView.builder(
                     shrinkWrap: true,
-                    itemCount: _model?.lobbies?.length,
+                    itemCount: _lobbies.length,
                     itemBuilder: (context, index) {
-                      final lobby = _model?.lobbies?[index];
+                      final lobby = _lobbies[index];
                       return Card(
                         child: InkWell(
                           onTap: () {
@@ -57,11 +53,11 @@ class _LinkableLobbyState extends State<LinkableLobby> {
                                         onPressed: () {
                                           context.pop();
                                           showDialogLoading(context);
-                                          _model
-                                              ?.linkRentalToLobby(
+                                          (context.read<Auth>()
+                                                  as UserController)
+                                              .linkRentalToLobby(
                                             widget.rental!,
-                                            widget.rental!.price!,
-                                            index,
+                                            lobby.id!,
                                           )
                                               .then(
                                             (isSuccess) {
@@ -114,7 +110,7 @@ class _LinkableLobbyState extends State<LinkableLobby> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(lobby!.title!),
+                                          Text(lobby.title),
                                           Text(
                                               "${lobby.participants!.length} people"),
                                         ],
@@ -145,24 +141,5 @@ class _LinkableLobbyState extends State<LinkableLobby> {
         ),
       ),
     );
-  }
-}
-
-class LinkableLobbyModel extends FlutterFlowModel {
-  List<LobbyModel>? lobbies;
-  @override
-  void initState(BuildContext context) {}
-
-  @override
-  void dispose() {}
-
-  Future<bool> linkRentalToLobby(
-      RentalModel rental, double price, int index) async {
-    final linkedLobby = lobbies![index];
-    // return await UserController.linkRentalToLobby(
-    //   rental,
-    //   linkedLobby.id!,
-    // );
-    return false;
   }
 }

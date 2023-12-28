@@ -17,12 +17,12 @@ class RentalModel {
   final int? duration;
   final String? rentalStatus;
   final double? price;
-  final String? linkedLobbyId;
+  String? linkedLobbyId;
   final DateTime? createdAt;
   final String? paymentId;
   final String? paymentStatus;
 
-  const RentalModel({
+  RentalModel({
     this.id,
     this.licensePlate,
     this.vehicleOwner,

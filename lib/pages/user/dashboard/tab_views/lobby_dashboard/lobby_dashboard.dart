@@ -1,45 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/user/dashboard/edit_lobby/edit_lobby_widget.dart';
-import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class LobbyDashboardWidget extends StatefulWidget {
-  final LobbyDashboardModel? model;
-  final String? lobbyId;
-  const LobbyDashboardWidget({super.key, this.lobbyId, this.model});
+  final String lobbyId;
+  const LobbyDashboardWidget({super.key, required this.lobbyId});
 
   @override
   State<LobbyDashboardWidget> createState() => _LobbyDashboardWidgetState();
 }
 
 class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
-  late LobbyDashboardModel _model;
   late TextStyle _textStyle;
+  final DateFormat dateFormat = DateFormat('MMMM dd, yyyy');
   PersistentBottomSheetController? _controller;
+  late LobbyModel _currentLobby;
+
+  String hostParticipant() {
+    String host = '';
+    _currentLobby.participants!.forEach((element) {
+      if (element.type!.toString() == 'Host')
+        host = '${element.firstName} ${element.lastName}';
+    });
+
+    return host;
+  }
 
   @override
   void initState() {
     super.initState();
-    _model = widget.model!;
-    _model.fetchLobby(widget.lobbyId!);
   }
 
   @override
   void dispose() {
-    super.dispose();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_controller != null) _controller?.close();
     });
+    super.dispose();
   }
-
-  final DateFormat dateFormat = DateFormat('MMMM dd, yyyy');
 
   @override
   Widget build(BuildContext context) {
     _textStyle = Theme.of(context).textTheme.titleSmall!;
     final _textStyleMed = Theme.of(context).textTheme.titleMedium!;
+    _currentLobby = (context.watch<Auth>() as UserController)
+        .activeLobbies
+        .firstWhere((element) => element.id == widget.lobbyId);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -54,7 +66,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "${_model.currentLobby?.title}",
+                    "${_currentLobby.title}",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   TextButton(
@@ -63,10 +75,14 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                         context: context,
                         builder: (context) {
                           return EditLobbyWidget(
-                            currentLobby: _model.currentLobby,
+                            currentLobby: _currentLobby,
                           );
                         },
                       );
+                      // _controller?.closed.then((value) {
+                      //   setState(() {});
+                      //   widget.setParentState(() {});
+                      // });
                     },
                     child: Text('Edit details'),
                   ),
@@ -82,7 +98,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                     width: 8,
                   ),
                   Text(
-                    _model.hostParticipant(),
+                    hostParticipant(),
                   ),
                 ],
               ),
@@ -96,8 +112,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                     width: 8,
                   ),
                   Text(
-                    _model
-                        .getAllParticipants()
+                    _currentLobby.participants!
                         .map((participant) =>
                             '${participant.firstName} ${participant.lastName}')
                         .join(', '),
@@ -154,9 +169,9 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                   style: _textStyle,
                 ),
                 Text(
-                  _model.currentLobby!.destination!.isEmpty
+                  _currentLobby.destination!.isEmpty
                       ? '-'
-                      : _model.currentLobby!.destination!,
+                      : _currentLobby.destination!,
                 ),
               ],
             ),
@@ -168,9 +183,9 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                   style: _textStyle,
                 ),
                 Text(
-                  _model.currentLobby!.startDate == null
+                  _currentLobby.startDate == null
                       ? '-'
-                      : dateFormat.format(_model.currentLobby!.startDate!),
+                      : dateFormat.format(_currentLobby.startDate!),
                 ),
               ],
             ),
@@ -181,11 +196,11 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                   'Budget',
                   style: _textStyle,
                 ),
-                _model.currentLobby!.expense!.items!.isEmpty
+                _currentLobby.expense!.items!.isEmpty
                     ? Text('-')
                     : withCurrency(
                         Text(
-                          '${_model.currentLobby?.expense?.total}',
+                          '${_currentLobby.expense?.total}',
                         ),
                       ),
               ],
@@ -197,7 +212,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
   }
 
   Widget expenses() {
-    if (_model.currentLobby!.expense!.items!.isEmpty)
+    if (_currentLobby.expense!.items!.isEmpty)
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -208,11 +223,11 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
         ],
       );
     else {
-      final label = _model.currentLobby?.expense?.items?.keys.toList();
-      final value = _model.currentLobby?.expense?.items?.values.toList();
+      final label = _currentLobby.expense?.items?.keys.toList();
+      final value = _currentLobby.expense?.items?.values.toList();
       return ListView.separated(
         shrinkWrap: true,
-        itemCount: _model.currentLobby!.expense!.items!.length,
+        itemCount: _currentLobby.expense!.items!.length,
         separatorBuilder: (context, index) => Divider(
           height: 10,
         ),
@@ -238,7 +253,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (_model.currentLobby!.poll!.length == 0)
+            if (_currentLobby.poll!.length == 0)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -251,10 +266,10 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
             else
               ListView.separated(
                 shrinkWrap: true,
-                itemCount: _model.currentLobby!.poll!.length,
+                itemCount: _currentLobby.poll!.length,
                 separatorBuilder: (context, index) => Divider(),
                 itemBuilder: (context, index) {
-                  PollModel poll = _model.currentLobby!.poll![index];
+                  PollModel poll = _currentLobby.poll![index];
                   final highestChoice = highestCount(poll.choices!);
 
                   return Padding(

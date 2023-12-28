@@ -1,4 +1,6 @@
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/models/message_model.dart';
+import 'package:provider/provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'chat_model.dart';
@@ -6,11 +8,8 @@ import 'chat_model.dart';
 export 'chat_model.dart';
 
 class ChatWidget extends StatefulWidget {
-  final String? lobbyId;
-  final String? conversationId;
-  final Function callback;
-  const ChatWidget(this.callback, this.lobbyId, this.conversationId, {Key? key})
-      : super(key: key);
+  final String conversationId;
+  const ChatWidget({Key? key, required this.conversationId}) : super(key: key);
 
   @override
   _ChatWidgetState createState() => _ChatWidgetState();
@@ -24,19 +23,9 @@ class _ChatWidgetState extends State<ChatWidget>
   bool get wantKeepAlive => true;
 
   @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-    _model.onUpdate();
-  }
-
-  @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ChatModel());
-    _model.scrollController ??= ScrollController();
-    _model.textController ??= TextEditingController();
-    _model.streamSocket ??= StreamSocket();
-    _model.initSocket(widget.conversationId!);
+    _model = ChatModel(widget.conversationId);
   }
 
   @override
@@ -57,7 +46,7 @@ class _ChatWidgetState extends State<ChatWidget>
           children: [
             Expanded(
               child: StreamBuilder(
-                stream: _model.streamSocket!.getResponse,
+                stream: _model.streamSocket.getResponse,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());
@@ -73,7 +62,8 @@ class _ChatWidgetState extends State<ChatWidget>
                     itemCount: _model.allMessages.length,
                     controller: _model.scrollController,
                     itemBuilder: (context, index) {
-                      final message = _model.allMessages.reversed.toList()[index];
+                      final message =
+                          _model.allMessages.reversed.toList()[index];
                       return chatBubble(message);
                     },
                     separatorBuilder: (context, index) {
@@ -128,8 +118,10 @@ class _ChatWidgetState extends State<ChatWidget>
                         backgroundColor: Colors.transparent,
                       ),
                       onPressed: () {
+                        final currentUserId = context.read<Auth>().profile;
                         if (_model.textController.text.trim().isNotEmpty) {
-                          _model.sendMessage(widget.conversationId!);
+                          _model.sendMessage(
+                              widget.conversationId, currentUserId!);
                           _model.textController.text = '';
                         }
                       },
@@ -146,7 +138,7 @@ class _ChatWidgetState extends State<ChatWidget>
   }
 
   Widget chatBubble(MessageModel message) {
-    bool isUserMessage = message.creatorId == FFAppState().currentUser!.id;
+    bool isUserMessage = message.creatorId == context.read<Auth>().profile?.id;
     return Column(
       crossAxisAlignment:
           isUserMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,

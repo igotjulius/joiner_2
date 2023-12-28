@@ -10,12 +10,10 @@ import 'package:joiner_1/pages/shared_pages/rental_details/rental_details_widget
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
 import 'package:joiner_1/pages/shared_pages/verification/verification_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/map_feature/map_feature.dart';
-import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart';
 import 'package:joiner_1/pages/user/rentals/car_details/car_details_widget.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
 import 'package:joiner_1/pages/user/rentals/payment_result/result_widget.dart';
-import 'package:provider/provider.dart';
 import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -115,12 +113,8 @@ List<FFRoute> userRoutes() {
           path: ':lobbyId',
           builder: (context, state) {
             final obj = state.extraMap['currentLobby'] ??= null;
-            return ChangeNotifierProvider(
-              create: (_) => LobbyProvider(obj),
-              child: LobbyPageWidget(
-                currentLobby: obj,
-                lobbyId: state.pathParameters['lobbyId'],
-              ),
+            return LobbyPageWidget(
+              currentLobbyId: state.pathParameters['lobbyId']!,
             );
           },
         ),

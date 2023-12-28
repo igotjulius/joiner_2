@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/models/lobby_model.dart';
+import 'package:provider/provider.dart';
 
 class ActiveLobbyMolecule extends StatelessWidget {
-  ActiveLobbyMolecule(this.lobbies, {super.key});
-  late final List<LobbyModel> lobbies;
+  ActiveLobbyMolecule({
+    super.key,
+  });
 
   final DateFormat dateFormat = DateFormat('MMM dd');
 
   @override
   Widget build(BuildContext context) {
+    final lobbies = context.watch<UserController>().activeLobbies;
     return ListView.separated(
       shrinkWrap: true,
       separatorBuilder: (context, index) {
@@ -35,9 +38,9 @@ class ActiveLobbyMolecule extends StatelessWidget {
                           Text('Are you sure you want to cancel this trip?'),
                       actions: [
                         TextButton(
-                          onPressed: () async {
-                            // await UserController.deleteLobby(
-                            //     lobbies[index].id!);
+                          onPressed: () {
+                            (context.read<Auth>() as UserController)
+                                .deleteLobby(lobbies[index].id!);
                             showSnackbar(context, 'Lobby Deleted');
                             context.pop();
                           },
@@ -45,7 +48,7 @@ class ActiveLobbyMolecule extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            context.pop();
                           },
                           child: Text('No'),
                         ),
@@ -57,9 +60,7 @@ class ActiveLobbyMolecule extends StatelessWidget {
               context.pushNamed(
                 'Lobby',
                 pathParameters: {'lobbyId': lobbies[index].id!},
-                extra: <String, dynamic>{
-                  'currentLobby': lobbies[index],
-                },
+                extra: lobbies[index],
               );
             },
             child: Card(
@@ -87,7 +88,7 @@ class ActiveLobbyMolecule extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            lobbies[index].title!,
+                            lobbies[index].title,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!

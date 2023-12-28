@@ -15,10 +15,10 @@ import 'package:joiner_1/pages/shared_pages/verification/verification_widget.dar
 import 'package:joiner_1/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthController<T extends Auth> extends ChangeNotifier {
+class AuthController extends ChangeNotifier {
   static final ApiService _apiService = ApiService(Dio());
-  T? userTypeController;
-  late SharedPreferences pref;
+  Auth? _userTypeController;
+  Auth? get userTypeController => _userTypeController;
 
   static List<GoRoute> _routes = baseRoutes();
   static List<GoRoute> baseRoutes() {
@@ -66,25 +66,29 @@ class AuthController<T extends Auth> extends ChangeNotifier {
     final result =
         await _apiService.loginUser({'email': email, 'password': password});
 
-    // TODO: This the part where the user is redirected to its appropriate dashboard
+    /* 
+      This is the part where the user is redirected to its appropriate dashboard.
+      Whenever the _userTypeController is initialized, it notifies the state of the app,
+      that it will be updated and automatically redirects to the appropriate dashboard
+      based on the logged in user.
+    */
     if (result.code == HttpStatus.ok) {
       if (result.message == 'CraUser') {
-        userTypeController =
-            CraController(result.data! as CraUserModel, _apiService) as T;
+        _userTypeController =
+            CraController(result.data! as CraUserModel, _apiService);
       } else {
-        userTypeController =
-            UserController(result.data! as UserModel, _apiService) as T;
+        _userTypeController =
+            UserController(result.data! as UserModel, _apiService);
       }
-      userTypeController?.cacheUser();
-      notifyListeners();
+      _userTypeController?.cacheUser();
+      setRoutes(_userTypeController!.routes);
     }
-
     return result.data;
   }
 
   void logout() {
-    userTypeController?.logout();
-    userTypeController = null;
+    _userTypeController?.logout();
+    _userTypeController = null;
     _routes = baseRoutes();
     notifyListeners();
   }
@@ -94,34 +98,26 @@ class AuthController<T extends Auth> extends ChangeNotifier {
     var cachedUser = _pref.getString('user');
     if (cachedUser != null) {
       Map<String, dynamic> user = jsonDecode(cachedUser);
-      userTypeController =
-          UserController(UserModel.fromJson(user), _apiService) as T;
+      _userTypeController =
+          UserController(UserModel.fromJson(user), _apiService);
+      setRoutes(_userTypeController!.routes);
       return;
     }
     cachedUser = _pref.getString('craUser');
     if (cachedUser != null) {
       Map<String, dynamic> craUser = jsonDecode(cachedUser);
-      userTypeController =
-          CraController(CraUserModel.fromJson(craUser), _apiService) as T;
+      _userTypeController =
+          CraController(CraUserModel.fromJson(craUser), _apiService);
+      setRoutes(_userTypeController!.routes);
       return;
     }
     print('Neither user or cra user is cached.');
   }
-
-  FutureOr<String?> redirectState(GoRouterState state) {
-    bool loggingIn =
-        userTypeController != null && state.matchedLocation == '/login';
-    bool loggingOut =
-        userTypeController == null && state.matchedLocation == '/account';
-    if (loggingIn)
-      return userTypeController is CraController ? '/cars' : '/lobby';
-    if (loggingOut) return '/login';
-    return null;
-  }
 }
 
-abstract interface class Auth {
-  User get profile;
+abstract class Auth extends ChangeNotifier {
+  User? get profile;
+  List<GoRoute> get routes;
   Future cacheUser();
   void logout();
   bool isVerified();

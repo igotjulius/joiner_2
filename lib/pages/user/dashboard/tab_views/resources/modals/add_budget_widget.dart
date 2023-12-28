@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/pages/user/dashboard/tab_views/resources/modals/add_budget_model.dart';
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/expense_model.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
+import 'package:provider/provider.dart';
 
 class AddBudgetWidget extends StatefulWidget {
-  final String? lobbyId;
-  const AddBudgetWidget({super.key, this.lobbyId});
+  final String lobbyId;
+  const AddBudgetWidget({super.key, required this.lobbyId});
 
   @override
   State<AddBudgetWidget> createState() => _AddBudgetWidgetState();
 }
 
 class _AddBudgetWidgetState extends State<AddBudgetWidget> {
-  late AddBudgetModel _model;
-
-  @override
-  void initState() {
-    super.initState();
-    _model = createModel(context, () => AddBudgetModel());
-
-    _model.labelController ??= TextEditingController();
-    _model.amountController ??= TextEditingController();
-  }
+  TextEditingController _labelController = TextEditingController();
+  TextEditingController _amountController = TextEditingController();
 
   @override
   void dispose() {
+    _labelController.dispose();
+    _amountController.dispose();
     super.dispose();
-    _model.dispose();
   }
 
   @override
@@ -51,15 +48,15 @@ class _AddBudgetWidgetState extends State<AddBudgetWidget> {
             ),
             CustomTextInput(
               label: 'Label',
-              controller: _model.labelController,
-              validator: _model.labelValidator,
+              controller: _labelController,
+              validator: isEmpty,
             ),
             CustomTextInput(
               label: 'Amount',
-              controller: _model.amountController,
+              controller: _amountController,
               keyboardType: TextInputType.number,
               inputFormatters: FilteringTextInputFormatter.digitsOnly,
-              validator: _model.amountValidator,
+              validator: isEmpty,
             ),
             SizedBox(
               height: 10,
@@ -69,8 +66,23 @@ class _AddBudgetWidgetState extends State<AddBudgetWidget> {
               child: FilledButton(
                 child: Text('Add'),
                 onPressed: () {
-                  _model.addExpenses(widget.lobbyId!);
-                  context.pop();
+                  final provider = context.read<Auth>() as UserController;
+                  double amount = double.parse(_amountController.text);
+                  provider
+                      .putExpenses(
+                    ExpenseModel(items: {_labelController.text: amount}),
+                    widget.lobbyId,
+                  )
+                      .then((value) {
+                    if (value)
+                      context.pop();
+                    else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        showError('Can\'t add exepense',
+                            Theme.of(context).colorScheme.error),
+                      );
+                    }
+                  });
                 },
               ),
             ),

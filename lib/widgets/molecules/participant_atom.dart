@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
-import 'package:joiner_1/models/lobby_model.dart';
-import 'package:joiner_1/widgets/molecules/participant_atom_model.dart';
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class ParticipantMole extends StatefulWidget {
-  final String? firstName;
-  final String? lastName;
-  final String? userId;
+  final String firstName;
+  final String lastName;
+  final String friendUserId;
   final bool? showCheckBox;
-  final Function(String, String, String)? eventCallback;
+  final Function(String, String, String)? addFriendToInvite;
   final String? suffixLabel;
   final bool? showRemoveOption;
-  final Function(Function())? rebuildParent;
+  final String? lobbyId;
 
   const ParticipantMole({
     Key? key,
-    this.firstName,
-    this.lastName,
-    this.userId,
+    required this.firstName,
+    required this.lastName,
+    required this.friendUserId,
+    this.lobbyId,
     this.showCheckBox,
-    this.eventCallback,
+    this.addFriendToInvite,
     this.suffixLabel,
     this.showRemoveOption,
-    this.rebuildParent,
   }) : super(key: key);
 
   @override
@@ -31,14 +32,11 @@ class ParticipantMole extends StatefulWidget {
 }
 
 class _ParticipantMoleState extends State<ParticipantMole> {
-  late ParticipantModel _model;
+  bool isChecked = false;
 
   @override
   void initState() {
     super.initState();
-    _model =
-        createModel(context, () => ParticipantModel(friendId: widget.userId));
-    _model.lobbyId = Provider.of<LobbyModel?>(context, listen: false)?.id;
   }
 
   @override
@@ -66,17 +64,20 @@ class _ParticipantMoleState extends State<ParticipantMole> {
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    '${widget.firstName!} ${widget.lastName!}',
+                    '${widget.firstName} ${widget.lastName}',
                   ),
                 ),
                 if (widget.showCheckBox != null)
                   Checkbox(
-                    value: _model.isChecked,
+                    value: isChecked,
                     onChanged: (value) {
                       setState(() {
-                        _model.isChecked = value!;
-                        widget.eventCallback!(_model.friendId!,
-                            widget.firstName!, widget.lastName!);
+                        isChecked = value!;
+                        widget.addFriendToInvite!(
+                          widget.friendUserId,
+                          widget.firstName,
+                          widget.lastName,
+                        );
                       });
                     },
                   ),
@@ -96,18 +97,34 @@ class _ParticipantMoleState extends State<ParticipantMole> {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  context.pop();
+                                  final provider =
+                                      context.read<Auth>() as UserController;
+                                  provider
+                                      .removeParticipant(
+                                    widget.lobbyId!,
+                                    widget.friendUserId,
+                                  )
+                                      .then((value) {
+                                    context.pop();
+                                    if (!value) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        showError(
+                                            'Can\'t remove participant',
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .error),
+                                      );
+                                    }
+                                  });
                                 },
-                                child: Text('No'),
+                                child: Text('Yes'),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  _model.removeParticipant();
-                                  showSnackbar(context, 'Participant removed');
                                   context.pop();
-                                  widget.rebuildParent!(() {});
                                 },
-                                child: Text('Yes'),
+                                child: Text('No'),
                               ),
                             ],
                             elevation: 8.0,

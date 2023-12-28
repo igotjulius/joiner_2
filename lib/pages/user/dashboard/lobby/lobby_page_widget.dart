@@ -1,23 +1,18 @@
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/joiners/joiners_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/lobby_dashboard/lobby_dashboard.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/chat/chat_widget.dart';
-import 'package:joiner_1/pages/user/dashboard/provider/lobby_provider.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/resources/budget_widget.dart';
+import 'package:provider/provider.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'lobby_page_model.dart';
-import 'package:joiner_1/models/lobby_model.dart';
-export 'lobby_page_model.dart';
 
 class LobbyPageWidget extends StatefulWidget {
-  final LobbyModel? currentLobby;
-  final String? lobbyId;
-
-  LobbyPageWidget({Key? key, this.currentLobby, this.lobbyId})
-      : super(key: key);
+  final String currentLobbyId;
+  LobbyPageWidget({super.key, required this.currentLobbyId});
 
   @override
   _LobbyPageWidgetState createState() => _LobbyPageWidgetState();
@@ -27,8 +22,6 @@ final DateFormat dateFormat = DateFormat('MMMM dd');
 
 class _LobbyPageWidgetState extends State<LobbyPageWidget>
     with TickerProviderStateMixin {
-  late LobbyPageModel _model;
-  Future<LobbyModel?>? _fetchLobby;
   final _tabs = [
     Tab(text: 'Dashboard'),
     Tab(text: 'Chat'),
@@ -41,49 +34,41 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
     FabController(),
     FabController()
   ];
+  late TabController _tabBarController;
+  late BudgetModel budgetModel = BudgetModel();
+  late PollCompModel pollModel = PollCompModel();
+  late JoinersModel joinersModel = JoinersModel();
   bool showFab = true;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  late LobbyModel _currentLobby;
 
   @override
   void initState() {
     super.initState();
-    _model = LobbyPageModel();
-    _model.initModel(widget.currentLobby!);
-    // _fetchLobby = UserController.getLobby(widget.lobbyId!);
-    _model.tabBarController = TabController(
+    _tabBarController = TabController(
       vsync: this,
       length: _tabs.length,
       initialIndex: 0,
     );
-    _model.tabBarController?.addListener(() {
-      if (_model.tabBarController!.indexIsChanging) {
+    _tabBarController.addListener(() {
+      if (_tabBarController.indexIsChanging) {
         FocusScope.of(context).unfocus();
       }
     });
   }
 
   @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    _model.currentLobby = context.watch<LobbyProvider>().currentLobby;
-    if (_model.currentLobby == null)
-      return fetchLobby();
-    else
-      return mainDisplay();
+    _currentLobby = (context.watch<Auth>() as UserController)
+        .activeLobbies
+        .firstWhere((element) => element.id == widget.currentLobbyId);
+    return mainDisplay();
   }
 
   Widget mainDisplay() {
     return Scaffold(
-      key: scaffoldKey,
       appBar: appBar(),
       body: mainContent(),
-      floatingActionButton: showFab && _model.tabBarController!.index > 1
+      floatingActionButton: showFab && _tabBarController.index > 1
           ? Visibility(
               visible: showFab,
               child: FloatingActionButton(
@@ -91,10 +76,10 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
                   setState(() {
                     showFab = false;
                   });
-                  switch (_model.tabBarController!.index) {
+                  switch (_tabBarController.index) {
                     case 2:
                       _fabControllers[0].onTapHandler!();
-                      _model.budgetModel?.controller?.closed.then((value) {
+                      budgetModel.controller?.closed.then((value) {
                         setState(() {
                           showFab = true;
                         });
@@ -102,7 +87,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
                       break;
                     case 3:
                       _fabControllers[1].onTapHandler!();
-                      _model.pollModel?.controller?.closed.then((value) {
+                      pollModel.controller?.closed.then((value) {
                         setState(() {
                           showFab = true;
                         });
@@ -110,7 +95,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
                       break;
                     case 4:
                       _fabControllers[2].onTapHandler!();
-                      _model.joinersModel?.controller?.closed.then((value) {
+                      joinersModel.controller?.closed.then((value) {
                         setState(() {
                           showFab = true;
                         });
@@ -134,33 +119,28 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
             children: [
               Expanded(
                 child: TabBarView(
-                  controller: _model.tabBarController,
+                  controller: _tabBarController,
                   children: [
                     LobbyDashboardWidget(
-                      model: _model.lobbyDashboardModel,
-                      lobbyId: widget.lobbyId,
+                      lobbyId: widget.currentLobbyId,
                     ),
-                    wrapWithModel(
-                      model: _model.chatModel!,
-                      updateCallback: () => setState(() {}),
-                      child: ChatWidget(
-                        setState,
-                        _model.currentLobby!.id,
-                        _model.currentLobby!.conversation,
-                      ),
-                    ),
+                    ChatWidget(conversationId: _currentLobby.conversation!),
                     BudgetWidget(
-                      _fabControllers[0],
-                      _model.budgetModel,
-                      _model.currentLobby!.id,
-                      _model.currentLobby!.hostId,
+                      currentLobby: _currentLobby,
+                      fabController: _fabControllers[0],
+                      model: budgetModel,
                     ),
                     PollCompWidget(
-                      _model.currentLobby!.id,
-                      _fabControllers[1],
-                      _model.pollModel,
+                      currentLobbyId: _currentLobby.id!,
+                      fabController: _fabControllers[1],
+                      model: pollModel,
+                      polls: _currentLobby.poll!,
                     ),
-                    JoinersWidget(_fabControllers[2], _model.joinersModel),
+                    JoinersWidget(
+                      currentLobby: _currentLobby,
+                      fabController: _fabControllers[2],
+                      model: joinersModel,
+                    ),
                   ],
                 ),
               ),
@@ -188,15 +168,15 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _model.currentLobby!.title!,
+                  _currentLobby.title,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Text(
-                  _model.currentLobby!.startDate == _model.currentLobby!.endDate
-                      ? (_model.currentLobby!.startDate == null
+                  _currentLobby.startDate == _currentLobby.endDate
+                      ? (_currentLobby.startDate == null
                           ? 'Date undecided'
-                          : "${dateFormat.format(_model.currentLobby!.startDate!)}")
-                      : "${dateFormat.format(_model.currentLobby!.startDate!)} - ${dateFormat.format(_model.currentLobby!.endDate!)}",
+                          : "${dateFormat.format(_currentLobby.startDate!)}")
+                      : "${dateFormat.format(_currentLobby.startDate!)} - ${dateFormat.format(_currentLobby.endDate!)}",
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ],
@@ -213,27 +193,11 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
         tabAlignment: TabAlignment.center,
         isScrollable: true,
         tabs: _tabs,
-        controller: _model.tabBarController,
+        controller: _tabBarController,
         onTap: (value) => setState(() {
           FocusScope.of(context).unfocus();
         }),
       ),
-    );
-  }
-
-  FutureBuilder<LobbyModel?> fetchLobby() {
-    return FutureBuilder(
-      future: _fetchLobby,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done)
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        _model.currentLobby = snapshot.data;
-        Provider.of<LobbyProvider>(context, listen: false)
-            .setCurrentLobby(_model.currentLobby!);
-        return mainDisplay();
-      },
     );
   }
 
@@ -243,7 +207,8 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
         switch (value) {
           case 0:
             context.pop();
-            _model.leaveLobby(widget.lobbyId!);
+            (context.read<Auth>() as UserController)
+                .leaveLobby(widget.currentLobbyId);
             break;
         }
       },
