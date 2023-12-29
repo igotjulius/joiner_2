@@ -83,7 +83,10 @@ class CraController extends Auth {
   @override
   User get profile => _currentUser;
 
-  @override
+  @override // TODO: implemented
+  set profile(User? user) => _currentUser = user as CraUserModel;
+
+  @override // TODO: implemented
   Future<bool> cacheUser() async {
     try {
       _pref = await SharedPreferences.getInstance();
@@ -97,15 +100,12 @@ class CraController extends Auth {
     return false;
   }
 
-  @override
-  bool isVerified() {
-    return _currentUser.verification != null ? true : false;
-  }
-
   List<CarModel> get cars => _currentUser.vehicles;
+
+  // TODO: implemented
   void refetchCraCars() async {
     final res = await _apiService.getCraCars(_currentUser.id);
-    _currentUser.vehicles = res.data!;
+    _currentUser.vehicles = res.data ?? [];
     notifyListeners();
   }
 
@@ -151,7 +151,7 @@ class CraController extends Auth {
     return null;
   }
 
-  // Edit car TODO: check
+  // Edit car TODO: implemented
   Future<String?> editCar(CarModel car, List<XFile>? images) async {
     List<MultipartFile>? converted;
     if (images != null) {
@@ -200,10 +200,10 @@ class CraController extends Auth {
   }
 
   // Fetch CRA's rentals
-  @override
+  @override // TODO: implemented
   List<RentalModel> get rentals => _currentUser.rentals;
 
-  @override
+  @override // TODO: implemented
   void refetchRentals() async {
     try {
       final result = await _apiService.getCraRentals(_currentUser.id);
@@ -220,7 +220,7 @@ class CraController extends Auth {
     Account related actions
   */
 
-  // Change Cra's password
+  // Change Cra's password // TODO: implemented
   Future<bool> changePassword(String password, String newPassword) async {
     try {
       final result = await _apiService.changeCraPassword(
@@ -237,7 +237,7 @@ class CraController extends Auth {
     return false;
   }
 
-  // TODO: check
+  // TODO: implemented
   @override
   Future<bool> logout() async {
     try {
@@ -251,7 +251,7 @@ class CraController extends Auth {
     }
   }
 
-  @override
+  @override // TODO: implemented
   Future<bool> editAccount(String firstName, String lastName) async {
     try {
       final result = await _apiService.editCraAccount(

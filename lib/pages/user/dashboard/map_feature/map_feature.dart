@@ -32,6 +32,12 @@ class MapFeatureState extends State<MapFeature> {
     _downloadRegion();
   }
 
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    super.dispose();
+  }
+
   void _onMapCreated(MapboxMapController controller) {
     _mapController = controller;
   }

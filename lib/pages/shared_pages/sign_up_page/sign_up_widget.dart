@@ -39,6 +39,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
   void dispose() {
     _userModel.dispose();
     _craModel.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -153,7 +154,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                               ScaffoldMessenger.of(context).showSnackBar(
                                 showSuccess('Registration successful'),
                               );
-                              context.goNamed('Verification');
+                              context.goNamed('Login');
                             }
                           }
                         },

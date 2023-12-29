@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/utils/utils.dart';
+import 'package:joiner_1/widgets/atoms/text_input.dart';
+import 'package:provider/provider.dart';
 
 class VerificationWidget extends StatefulWidget {
   const VerificationWidget({super.key});
@@ -9,6 +13,8 @@ class VerificationWidget extends StatefulWidget {
 }
 
 class _VerificationWidgetState extends State<VerificationWidget> {
+  TextEditingController _codeController = TextEditingController();
+  String? _verificationError;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,15 +47,60 @@ class _VerificationWidgetState extends State<VerificationWidget> {
             SizedBox(
               height: 20,
             ),
-            TextField(),
+            CustomTextInput(
+              controller: _codeController,
+              errorText: _verificationError,
+            ),
             SizedBox(
               height: 20,
             ),
             Align(
               alignment: Alignment.center,
-              child: FilledButton(
-                onPressed: () {},
-                child: Text('Verify'),
+              child: Column(
+                children: [
+                  FilledButton(
+                    onPressed: () {
+                      showDialogLoading(context);
+                      context
+                          .read<AuthController>()
+                          .verify(_codeController.text)
+                          .then((value) {
+                        context.pop();
+                        if (!value) {
+                          setState(() {
+                            _verificationError = 'Invalid code';
+                          });
+                        }
+                      });
+                    },
+                    child: Text('Verify'),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () {
+                      setState(() {
+                        context.read<AuthController>().resendVerification();
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        showSuccess('Email sent'),
+                      );
+                    },
+                    child: Text(
+                      'Resend code?',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                          ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

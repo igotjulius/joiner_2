@@ -154,7 +154,10 @@ class UserController extends Auth {
   @override
   User? get profile => _currentUser;
 
-  @override
+  @override // TODO: implemented
+  set profile(User? user) => _currentUser = user as UserModel;
+
+  @override // TODO: implemented
   Future<bool> cacheUser() async {
     try {
       _pref = await SharedPreferences.getInstance();
@@ -166,11 +169,6 @@ class UserController extends Auth {
       print(stack);
     }
     return false;
-  }
-
-  @override
-  bool isVerified() {
-    return _currentUser.verification != null ? true : false;
   }
 
   /* 
@@ -192,6 +190,7 @@ class UserController extends Auth {
       .where((element) => element.status == 'Waiting Approval')
       .toList();
 
+  // TODO: implemented
   void refetchLobbies() async {
     try {
       final result = await _apiService.getLobbies(_currentUser.id);
@@ -437,13 +436,13 @@ class UserController extends Auth {
     return false;
   }
 
-  // Accept invitation to join a lobby
+  // Accept invitation to join a lobby // TODO: NOT IMPLEMENTED
   Future<void> acceptLobbyInvitation(String lobbyId) async {
     await _apiService
         .acceptLobbyInvitation({'lobbyId': lobbyId}, _currentUser.id);
   }
 
-  // Decline invitation to join a lobby
+  // Decline invitation to join a lobby // TODO: NOT IMPLEMENTED
   Future<void> declineLobbyInvitation(String lobbyId) async {
     await _apiService
         .declineLobbyInvitation({'lobbyId': lobbyId}, _currentUser.id);
@@ -498,7 +497,7 @@ class UserController extends Auth {
   /*
     Friends Related
   */
-  // Invite user as a friend TODO: check
+  // Invite user as a friend // TODO: implemented
   Future<bool> inviteFriend(String friendEmail) async {
     try {
       final result = await _apiService
@@ -513,7 +512,7 @@ class UserController extends Auth {
     return false;
   }
 
-  // Fetch user's friend list
+  // Fetch user's friend list // TODO: implemented
   void refetchFriendsList() async {
     try {
       final result = await _apiService.getFriends(_currentUser.id);
@@ -526,7 +525,7 @@ class UserController extends Auth {
     }
   }
 
-  // Accept friend request TODO: check
+  // Accept friend request // TODO: implemented
   Future<bool> acceptFriendRequest(String friendId) async {
     try {
       await _apiService.acceptFriendRequest(_currentUser.id, friendId);
@@ -542,7 +541,7 @@ class UserController extends Auth {
     return false;
   }
 
-  // Remove friend request TODO: check
+  // Remove friend request // TODO: implemented
   Future<bool> removeFriendRequest(String friendId) async {
     try {
       await _apiService.removeFriendRequest(_currentUser.id, friendId);
@@ -574,7 +573,7 @@ class UserController extends Auth {
     return null;
   }
 
-  // User Renting a Car TODO: check
+  // User Renting a Car // TODO: implemented
   Future<String?> postRental(CarRentalModel carRental, XFile image) async {
     try {
       List<MultipartFile> converted = [];
@@ -603,8 +602,7 @@ class UserController extends Auth {
     Account related actions
   */
 
-  // TODO: check
-  @override
+  @override // TODO: implemented
   Future<bool> logout() async {
     try {
       _pref = await SharedPreferences.getInstance();
@@ -617,7 +615,7 @@ class UserController extends Auth {
     }
   }
 
-  // Edit user profile TODO: check
+  // Edit user profile // TODO: implemented
   Future<bool> editAccount(String firstName, String lastName) async {
     try {
       final result = await _apiService.editAccount(
@@ -636,7 +634,7 @@ class UserController extends Auth {
     return false;
   }
 
-  // Change password TODO: check
+  // Change password // TODO: implemented
   Future<bool> changePassword(String currentPassword, String nPassword) async {
     try {
       final result = await _apiService.changePassword(

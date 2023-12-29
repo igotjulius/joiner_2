@@ -14,6 +14,7 @@ class CraUserModel extends User {
   String firstName, lastName, email, password;
   List<CarModel> vehicles;
   List<RentalModel> rentals;
+  final Map<String, dynamic>? verification;
 
   CraUserModel({
     required this.id,
@@ -25,6 +26,7 @@ class CraUserModel extends User {
     this.address,
     required this.vehicles,
     required this.rentals,
+    this.verification,
   }) : super(
           id: id,
           firstName: firstName,
@@ -33,6 +35,7 @@ class CraUserModel extends User {
           password: password,
           contactNo: contactNo,
           address: address,
+          verification: verification,
         );
 
   factory CraUserModel.fromJson(Map<String, dynamic> json) =>

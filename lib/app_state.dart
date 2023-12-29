@@ -45,9 +45,9 @@ class FFAppState extends ChangeNotifier {
 
     if (_currentUser != null) {
       pref!.setString('userId', currentUser!.id!);
-      pref!.setString('firstName', currentUser.firstName!);
-      pref!.setString('lastName', currentUser.lastName!);
-      pref!.setString('email', currentUser.email!);
+      pref!.setString('firstName', currentUser.firstName);
+      pref!.setString('lastName', currentUser.lastName);
+      pref!.setString('email', currentUser.email);
       pref!.setBool('isCra', _isCra);
     } else {
       pref!.clear();
@@ -58,8 +58,8 @@ class FFAppState extends ChangeNotifier {
 
   void updateProfile(User updatedProfile) {
     _currentUser = updatedProfile;
-    pref!.setString('firstName', updatedProfile.firstName!);
-    pref!.setString('lastName', updatedProfile.lastName!);
+    pref!.setString('firstName', updatedProfile.firstName);
+    pref!.setString('lastName', updatedProfile.lastName);
   }
 
   bool _isCra = false;

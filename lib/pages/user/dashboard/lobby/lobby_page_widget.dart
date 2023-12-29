@@ -57,6 +57,12 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
   }
 
   @override
+  void dispose() {
+    _tabBarController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _currentLobby = (context.watch<Auth>() as UserController)
         .activeLobbies

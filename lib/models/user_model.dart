@@ -17,7 +17,7 @@ class UserModel extends User {
   List<LobbyModel> activeLobby;
   List<FriendModel> friends;
   List<RentalModel> rentals;
-  Map<String, String>? verification;
+  final Map<String, dynamic>? verification;
 
   UserModel({
     required this.id,

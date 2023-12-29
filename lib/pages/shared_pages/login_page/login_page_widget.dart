@@ -123,7 +123,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     ),
                               ),
                               onPressed: () {
-                                // TODO: if user is not yet verified, send a verification email and redirect to verification page
                                 if (_formKey.currentState!.validate()) {
                                   showDialogLoading(context);
                                   context

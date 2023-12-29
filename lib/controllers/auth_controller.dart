@@ -17,7 +17,7 @@ import 'package:joiner_1/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends ChangeNotifier {
-  static final ApiService _apiService = ApiService(Dio());
+  final ApiService _apiService = ApiService(Dio());
   Auth? _userTypeController;
   Auth? get userTypeController => _userTypeController;
 
@@ -43,27 +43,58 @@ class AuthController extends ChangeNotifier {
   }
 
   List<GoRoute> get routes => _routes;
+  // TODO: implemented
   void setRoutes() {
-    if (_userTypeController?.profile?.verification != null)
+    _routes = baseRoutes();
+    if (_userTypeController?.profile?.verification?['createdAt'] == null)
       _routes.addAll(_userTypeController!.routes);
     notifyListeners();
   }
 
-  // Register CRA
+  // Register CRA // TODO: implemented
   Future<String?> registerCra(User nUser) async {
     final result = await _apiService.registerCra(nUser);
     if (result.code == HttpStatus.created) return null;
     return result.message;
   }
 
-  // Register Joiner
+  // Register Joiner // TODO: implemented
   Future<String?> registerUser(User nUser) async {
     final result = await _apiService.registerUser(nUser);
     if (result.code == HttpStatus.created) return null;
     return result.message;
   }
 
-  // Login CRA/Joiner
+  // Verify // TODO: implemented
+  Future<bool> verify(String verificationCode) async {
+    try {
+      final result = await _apiService.verify(
+        {
+          'code': verificationCode,
+          'email': _userTypeController!.profile!.email
+        },
+      );
+      if (result.code != HttpStatus.ok) return false;
+      if (result.message == 'CraUser Verified')
+        _userTypeController?.profile = result.data as CraUserModel;
+      else if (result.message == 'Verified')
+        _userTypeController?.profile = result.data as UserModel;
+      setRoutes();
+      return true;
+    } catch (e, stack) {
+      print('Error in verifying email: $e');
+      print(stack);
+    }
+    return false;
+  }
+
+  // Resend verification code // TODO: implemented
+  void resendVerification() async {
+    await _apiService
+        .resendVerification({'email': _userTypeController!.profile!.email});
+  }
+
+  // Login CRA/Joiner // TODO: implemented
   Future<User?> loginUser(String email, String password) async {
     final result =
         await _apiService.loginUser({'email': email, 'password': password});
@@ -88,6 +119,7 @@ class AuthController extends ChangeNotifier {
     return result.data;
   }
 
+  // TODO: implemented
   Future<bool> logout() async {
     try {
       await _userTypeController?.logout();
@@ -102,6 +134,7 @@ class AuthController extends ChangeNotifier {
     return false;
   }
 
+  // TODO: implemented
   Future initializePersistedState() async {
     final _pref = await SharedPreferences.getInstance();
     var cachedUser = _pref.getString('user');
@@ -126,10 +159,10 @@ class AuthController extends ChangeNotifier {
 
 abstract class Auth extends ChangeNotifier {
   User? get profile;
+  set profile(User? user);
   List<GoRoute> get routes;
   Future<bool> cacheUser();
   Future<bool> logout();
-  bool isVerified();
   Future<bool> changePassword(String currentPassword, String nPassword);
   Future<bool> editAccount(String firstName, String lastName);
   void refetchRentals();

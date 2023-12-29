@@ -25,7 +25,6 @@ void main() async {
       providers: [
         // ChangeNotifierProvider.value(value: appState),
         ChangeNotifierProvider(create: (context) => AppStateNotifier.instance),
-        // ChangeNotifierProvider<AuthController>.value(value: authState),
         ChangeNotifierProvider<AuthController>.value(
           value: authState,
         ),
@@ -99,8 +98,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           bool loggingIn = user != null && state.matchedLocation == '/login';
           bool loggingOut = user == null && state.matchedLocation == '/account';
           if (loggingIn) {
-            if (user?.verification == null) {
-              print('object');
+            if (user?.verification == null ||
+                user?.verification!['createdAt'] != null) {
               user = null;
               return '/verification';
             }

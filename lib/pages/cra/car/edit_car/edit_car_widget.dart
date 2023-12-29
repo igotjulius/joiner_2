@@ -149,7 +149,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
         ),
         !_isEnabled
             ? Text(
-                _model.car.availability!,
+                _model.car.availability,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -190,7 +190,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
         SizedBox(height: 4),
         !_isEnabled
             ? Text(
-                _model.car.vehicleType!,
+                _model.car.vehicleType,
               )
             : dropdownMenu(),
       ],

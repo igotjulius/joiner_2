@@ -40,6 +40,12 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     context.watch<Auth>();
     return ChangeNotifierProvider<UserController>.value(
@@ -90,22 +96,21 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
   Widget displayLobbies() {
     final pendingLobbies = provider.pendingLobbies;
     final activeLobbies = provider.activeLobbies;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (pendingLobbies.length != 0)
-            Column(
+    return activeLobbies.length == 0
+        ? Center(child: Text('No active lobbies'))
+        : SingleChildScrollView(
+            child: Column(
               children: [
-                Text('Invitations'),
-                LobbyInvitationMolecule(lobbies: pendingLobbies),
+                if (pendingLobbies.length != 0)
+                  Column(
+                    children: [
+                      Text('Invitations'),
+                      LobbyInvitationMolecule(lobbies: pendingLobbies),
+                    ],
+                  ),
+                ActiveLobbyMolecule(),
               ],
             ),
-          activeLobbies.length == 0
-              ? Text('No active lobbies')
-              : ActiveLobbyMolecule(),
-        ],
-      ),
-    );
+          );
   }
 }

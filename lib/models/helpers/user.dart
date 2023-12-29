@@ -10,7 +10,7 @@ abstract class User {
     required this.password,
     this.contactNo,
     this.address,
-    this.verification,
+    required this.verification,
   });
 
   Map<String, dynamic> toJson();
