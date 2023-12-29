@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
@@ -31,6 +32,7 @@ import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserController extends Auth {
@@ -43,6 +45,11 @@ class UserController extends Auth {
       name: 'MainDashboard',
       path: '/lobby',
       builder: (context, params) => NavBarPage(initialPage: 'MainDashboard'),
+      pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+        context: context,
+        state: state,
+        child: NavBarPage(initialPage: 'MainDashboard'),
+      ),
       routes: [
         GoRoute(
           name: 'LobbyCreation',
@@ -53,20 +60,44 @@ class UserController extends Auth {
               destination: selectedDestination as String,
             );
           },
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: Builder(
+              builder: (context) {
+                final selectedDestination = state.extra ?? '';
+                return LobbyCreationWidget(
+                  destination: selectedDestination as String,
+                );
+              },
+            ),
+          ),
         ),
         GoRoute(
           name: 'BrowseMap',
           path: 'browseMap',
           builder: (context, state) => MapFeature(),
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: MapFeature(),
+          ),
         ),
         GoRoute(
           name: 'Lobby',
           path: ':lobbyId',
-          builder: (context, state) {
-            return LobbyPageWidget(
-              currentLobbyId: state.pathParameters['lobbyId']!,
-            );
-          },
+          builder: (context, state) => LobbyPageWidget(
+            currentLobbyId: state.pathParameters['lobbyId']!,
+          ),
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: Builder(
+              builder: (context) => LobbyPageWidget(
+                currentLobbyId: state.pathParameters['lobbyId']!,
+              ),
+            ),
+          ),
         ),
       ],
     ),
@@ -82,14 +113,30 @@ class UserController extends Auth {
           name: 'Listings',
           path: 'listings',
           builder: (context, params) => ListingsWidget(),
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: ListingsWidget(),
+          ),
         ),
         GoRoute(
-            name: 'CarDetails',
-            path: 'carDetails',
-            builder: (context, state) {
-              CarModel obj = state.extra as CarModel;
-              return CarDetails(car: obj);
-            }),
+          name: 'CarDetails',
+          path: 'carDetails',
+          builder: (context, state) {
+            CarModel obj = state.extra as CarModel;
+            return CarDetails(car: obj);
+          },
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: Builder(
+              builder: (context) {
+                CarModel obj = state.extra as CarModel;
+                return CarDetails(car: obj);
+              },
+            ),
+          ),
+        ),
         GoRoute(
           name: 'Booking',
           path: 'booking',
@@ -97,17 +144,39 @@ class UserController extends Auth {
             CarModel obj = state.extra as CarModel;
             return CarBookingWidget(car: obj);
           },
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: Builder(
+              builder: (context) {
+                CarModel obj = state.extra as CarModel;
+                return CarBookingWidget(car: obj);
+              },
+            ),
+          ),
         ),
         GoRoute(
-          name: 'RentalDetails',
-          path: 'rentalDetails',
-          builder: (context, state) {
-            final RentalModel rental = state.extra as RentalModel;
-            return RentalDetails(
-              rental: rental,
-            );
-          },
-        ),
+            name: 'RentalDetails',
+            path: 'rentalDetails',
+            builder: (context, state) {
+              final RentalModel rental = state.extra as RentalModel;
+              return RentalDetails(
+                rental: rental,
+              );
+            },
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: Builder(
+                    builder: (context) {
+                      final RentalModel rental = state.extra as RentalModel;
+                      return RentalDetails(
+                        rental: rental,
+                      );
+                    },
+                  ),
+                )),
         GoRoute(
           name: 'Result',
           path: ':paymentResult',
@@ -136,6 +205,11 @@ class UserController extends Auth {
           name: 'InviteFriend',
           path: 'invite-request',
           builder: (context, params) => InviteFriendWidget(),
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: InviteFriendWidget(),
+          ),
         ),
       ],
     ),

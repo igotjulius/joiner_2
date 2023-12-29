@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
@@ -16,6 +17,7 @@ import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rentals/rental_details/rental_details_widget.dart';
 import 'package:joiner_1/service/api_service.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/car_model.dart';
 
@@ -37,6 +39,11 @@ class CraController extends Auth {
           name: 'RegisterCar',
           path: 'registerCar',
           builder: (context, state) => AddCarWidget(),
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: AddCarWidget(),
+          ),
         ),
         GoRoute(
           name: 'CarDetails',
@@ -45,6 +52,18 @@ class CraController extends Auth {
             final obj = state.extra as CarModel;
             return EditCarWidget(car: obj);
           },
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: Builder(
+              builder: (context) {
+                final obj = state.extra as CarModel;
+                return EditCarWidget(
+                  car: obj,
+                );
+              },
+            ),
+          ),
         ),
       ],
     ),
@@ -65,6 +84,16 @@ class CraController extends Auth {
               rental: rental,
             );
           },
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: Builder(
+              builder: (context) {
+                final RentalModel rental = state.extra as RentalModel;
+                return RentalDetails(rental: rental);
+              },
+            ),
+          ),
         ),
       ],
     ),
