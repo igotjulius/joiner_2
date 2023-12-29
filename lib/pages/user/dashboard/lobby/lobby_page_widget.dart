@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
@@ -7,7 +9,6 @@ import 'package:joiner_1/pages/user/dashboard/tab_views/poll/poll_comp_widget.da
 import 'package:joiner_1/pages/user/dashboard/tab_views/chat/chat_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/resources/budget_widget.dart';
 import 'package:provider/provider.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 class LobbyPageWidget extends StatefulWidget {
@@ -49,11 +50,6 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
       length: _tabs.length,
       initialIndex: 0,
     );
-    _tabBarController.addListener(() {
-      if (_tabBarController.indexIsChanging) {
-        FocusScope.of(context).unfocus();
-      }
-    });
   }
 
   @override
@@ -64,9 +60,10 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
 
   @override
   Widget build(BuildContext context) {
-    _currentLobby = (context.watch<Auth>() as UserController)
-        .activeLobbies
-        .firstWhere((element) => element.id == widget.currentLobbyId);
+    (context.watch<Auth?>() as UserController).activeLobbies.forEach((element) {
+      if (element.id == widget.currentLobbyId) _currentLobby = element;
+      return;
+    });
     return mainDisplay();
   }
 
@@ -200,9 +197,6 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
         isScrollable: true,
         tabs: _tabs,
         controller: _tabBarController,
-        onTap: (value) => setState(() {
-          FocusScope.of(context).unfocus();
-        }),
       ),
     );
   }

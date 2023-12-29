@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/friend_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/molecules/participant_atom.dart';
 import 'package:provider/provider.dart';

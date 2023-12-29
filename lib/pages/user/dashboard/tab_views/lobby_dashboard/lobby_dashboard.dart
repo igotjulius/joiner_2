@@ -49,12 +49,13 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
   Widget build(BuildContext context) {
     _textStyle = Theme.of(context).textTheme.titleSmall!;
     final _textStyleMed = Theme.of(context).textTheme.titleMedium!;
-    _currentLobby = (context.watch<Auth>() as UserController)
-        .activeLobbies
-        .firstWhere((element) => element.id == widget.lobbyId);
+    (context.watch<Auth?>() as UserController).activeLobbies.forEach((element) {
+      if (element.id == widget.lobbyId) _currentLobby = element;
+      return;
+    });
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Container(
         padding: EdgeInsets.all(20),

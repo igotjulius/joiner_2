@@ -1,14 +1,12 @@
+import 'package:go_router/go_router.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
-import 'package:joiner_1/flutter_flow/nav/nav.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'flutter_flow/internationalization.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'index.dart';
 import 'pages/cra/car/cra_car_widget.dart';
@@ -23,8 +21,6 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        // ChangeNotifierProvider.value(value: appState),
-        ChangeNotifierProvider(create: (context) => AppStateNotifier.instance),
         ChangeNotifierProvider<AuthController>.value(
           value: authState,
         ),
@@ -77,13 +73,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         (value) => value.userTypeController?.profile);
     return MaterialApp.router(
       title: 'Joiner 1',
-      localizationsDelegates: [
-        FFLocalizationsDelegate(),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('en', '')],
       theme: lightTheme(context),
       routerConfig: GoRouter(
         initialLocation: '/login',
@@ -156,55 +145,53 @@ class _NavBarPageState extends State<NavBarPage> {
       'Account': AccountWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
-    return SafeArea(
-      child: Scaffold(
-        body: tabs[_currentPageName]!,
-        extendBody: true,
-        bottomNavigationBar: Container(
-          padding: EdgeInsets.all(10),
-          color: Colors.transparent,
-          child: Card(
-            surfaceTintColor: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: GNav(
-                selectedIndex: currentIndex,
-                onTabChange: (i) => setState(() {
-                  _currentPage = null;
-                  _currentPageName = tabs.keys.toList()[i];
-                }),
-                color: Colors.grey,
-                activeColor: Theme.of(context).primaryColor,
-                tabBackgroundColor:
-                    Theme.of(context).colorScheme.primaryContainer,
-                padding: EdgeInsetsDirectional.all(10),
-                gap: 8,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                duration: Duration(milliseconds: 500),
-                haptic: false,
-                textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                tabs: [
-                  GButton(
-                    icon: Icons.meeting_room_rounded,
-                    text: 'Lobby',
+    return Scaffold(
+      body: SafeArea(child: tabs[_currentPageName]!),
+      extendBody: true,
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(10),
+        color: Colors.transparent,
+        child: Card(
+          surfaceTintColor: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: GNav(
+              selectedIndex: currentIndex,
+              onTabChange: (i) => setState(() {
+                _currentPage = null;
+                _currentPageName = tabs.keys.toList()[i];
+              }),
+              color: Colors.grey,
+              activeColor: Theme.of(context).primaryColor,
+              tabBackgroundColor:
+                  Theme.of(context).colorScheme.primaryContainer,
+              padding: EdgeInsetsDirectional.all(10),
+              gap: 8,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              duration: Duration(milliseconds: 500),
+              haptic: false,
+              textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w600,
                   ),
-                  GButton(
-                    icon: Icons.directions_car,
-                    text: 'Rentals',
-                  ),
-                  GButton(
-                    icon: Icons.people_alt_outlined,
-                    text: 'Friends',
-                  ),
-                  GButton(
-                    icon: Icons.person_outline,
-                    text: 'Account',
-                  )
-                ],
-              ),
+              tabs: [
+                GButton(
+                  icon: Icons.meeting_room_rounded,
+                  text: 'Lobby',
+                ),
+                GButton(
+                  icon: Icons.directions_car,
+                  text: 'Rentals',
+                ),
+                GButton(
+                  icon: Icons.people_alt_outlined,
+                  text: 'Friends',
+                ),
+                GButton(
+                  icon: Icons.person_outline,
+                  text: 'Account',
+                )
+              ],
             ),
           ),
         ),

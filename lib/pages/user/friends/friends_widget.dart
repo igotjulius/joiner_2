@@ -1,11 +1,12 @@
+import 'package:go_router/go_router.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/friend_model.dart';
 import 'package:joiner_1/pages/user/friends/components/pending_friend.dart';
 import 'package:joiner_1/pages/user/friends/components/accepted_friend.dart';
 import 'package:joiner_1/pages/user/friends/components/waiting_approval.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 class FriendsWidget extends StatefulWidget {
@@ -35,7 +36,7 @@ class _FriendsWidgetState extends State<FriendsWidget> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
         child: pendingFriendsList.isEmpty &&
                 forApprovalList.isEmpty &&
                 acceptedFriendsList.isEmpty

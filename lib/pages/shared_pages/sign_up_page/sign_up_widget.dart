@@ -57,7 +57,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
       body: SafeArea(
         child: GestureDetector(
           onTap: () {
-            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
           },
           child: Container(
             height: MediaQuery.of(context).size.height,

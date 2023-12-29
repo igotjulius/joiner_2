@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_widgets.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
+import 'package:provider/provider.dart';
 
 class LobbyInvitationMolecule extends StatefulWidget {
   final List<LobbyModel>? lobbies;
@@ -80,17 +82,12 @@ class _LobbyInvitationMoleculeState extends State<LobbyInvitationMolecule> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            FFButtonWidget(
-                              text: 'Maybe next time',
+                            FilledButton(
+                              child: Text('Maybe next time'),
                               onPressed: () {
-                                // UserController.declineLobbyInvitation(
-                                //     lobby.id!);
-                                setState(() {});
+                                (context.read<Auth>() as UserController)
+                                    .declineLobbyInvitation(lobby.id!);
                               },
-                              options: FFButtonOptions(
-                                color: Colors.blue,
-                                height: 40,
-                              ),
                             ),
                           ],
                         ),
@@ -101,16 +98,12 @@ class _LobbyInvitationMoleculeState extends State<LobbyInvitationMolecule> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            FFButtonWidget(
-                              text: 'Accept',
+                            FilledButton(
+                              child: Text('Accept'),
                               onPressed: () {
-                                // UserController.acceptLobbyInvitation(lobby.id!);
-                                setState(() {});
+                                (context.read<Auth>() as UserController)
+                                    .acceptLobbyInvitation(lobby.id!);
                               },
-                              options: FFButtonOptions(
-                                color: Colors.blue,
-                                height: 40,
-                              ),
                             ),
                           ],
                         ),

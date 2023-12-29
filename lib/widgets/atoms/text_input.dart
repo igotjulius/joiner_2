@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/utils/utils.dart';
 
 enum TextInputDirection { row, column }
 

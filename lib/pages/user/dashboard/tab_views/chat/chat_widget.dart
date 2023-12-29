@@ -1,7 +1,7 @@
+import 'package:intl/intl.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:provider/provider.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'chat_model.dart';
 
@@ -40,7 +40,7 @@ class _ChatWidgetState extends State<ChatWidget>
       padding: EdgeInsets.all(20),
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).unfocus();
+          FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Column(
           children: [

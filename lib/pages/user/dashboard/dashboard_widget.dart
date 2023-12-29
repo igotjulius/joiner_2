@@ -1,8 +1,8 @@
+import 'package:go_router/go_router.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/pages/user/dashboard/promo_list/promos_list.dart';
 import 'package:provider/provider.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
 import 'package:joiner_1/widgets/molecules/lobby_invitation_mole.dart';
@@ -25,7 +25,6 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     ),
   ];
   late TabController _tabController;
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   late UserController provider;
 
   @override
@@ -61,7 +60,6 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
                 ),
               )
             : null,
-        key: scaffoldKey,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           toolbarHeight: 0,
@@ -96,13 +94,14 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
   Widget displayLobbies() {
     final pendingLobbies = provider.pendingLobbies;
     final activeLobbies = provider.activeLobbies;
-    return activeLobbies.length == 0
+    return activeLobbies.length == 0 && pendingLobbies.isEmpty
         ? Center(child: Text('No active lobbies'))
         : SingleChildScrollView(
             child: Column(
               children: [
                 if (pendingLobbies.length != 0)
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Invitations'),
                       LobbyInvitationMolecule(lobbies: pendingLobbies),

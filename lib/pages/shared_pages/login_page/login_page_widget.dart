@@ -41,7 +41,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
       body: SafeArea(
         child: GestureDetector(
           onTap: () {
-            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
           },
           child: CustomScrollView(
             slivers: [

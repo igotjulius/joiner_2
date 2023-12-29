@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class ActiveLobbyMolecule extends StatelessWidget {
@@ -41,7 +43,9 @@ class ActiveLobbyMolecule extends StatelessWidget {
                           onPressed: () {
                             (context.read<Auth>() as UserController)
                                 .deleteLobby(lobbies[index].id!);
-                            showSnackbar(context, 'Lobby Deleted');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              showSuccess('Lobby Deleted'),
+                            );
                             context.pop();
                           },
                           child: Text('Yes'),

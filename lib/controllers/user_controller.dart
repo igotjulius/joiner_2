@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
 import 'package:joiner_1/main.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
@@ -436,16 +437,36 @@ class UserController extends Auth {
     return false;
   }
 
-  // Accept invitation to join a lobby // TODO: NOT IMPLEMENTED
+  // Accept invitation to join a lobby // TODO: check
   Future<void> acceptLobbyInvitation(String lobbyId) async {
-    await _apiService
-        .acceptLobbyInvitation({'lobbyId': lobbyId}, _currentUser.id);
+    try {
+      await _apiService
+          .acceptLobbyInvitation({'lobbyId': lobbyId}, _currentUser.id);
+      _currentUser.pendingLobby.removeWhere((element) {
+        if (element.id == lobbyId) {
+          _currentUser.activeLobby.add(element);
+          return true;
+        }
+        return false;
+      });
+      notifyListeners();
+    } catch (e, stack) {
+      print('Error in accepting lobby invitation: $e');
+      print(stack);
+    }
   }
 
-  // Decline invitation to join a lobby // TODO: NOT IMPLEMENTED
+  // Decline invitation to join a lobby // TODO: check
   Future<void> declineLobbyInvitation(String lobbyId) async {
-    await _apiService
-        .declineLobbyInvitation({'lobbyId': lobbyId}, _currentUser.id);
+    try {
+      await _apiService
+          .declineLobbyInvitation({'lobbyId': lobbyId}, _currentUser.id);
+      _currentUser.pendingLobby.removeWhere((element) => element.id == lobbyId);
+      notifyListeners();
+    } catch (e, stack) {
+      print('Error in declining lobby invitation: $e');
+      print(stack);
+    }
   }
 
   /* 
@@ -498,18 +519,20 @@ class UserController extends Auth {
     Friends Related
   */
   // Invite user as a friend // TODO: implemented
-  Future<bool> inviteFriend(String friendEmail) async {
+  Future<ResponseModel?> inviteFriend(String friendEmail) async {
     try {
       final result = await _apiService
           .inviteFriend({'email': friendEmail}, _currentUser.id);
-      _currentUser.friends.add(result.data!);
+      if (result.data != null) {
+        _currentUser.friends.add(result.data!);
+      }
       notifyListeners();
-      return true;
+      return result;
     } catch (e, stack) {
       print('Error in sending friend request: $e');
       print(stack);
     }
-    return false;
+    return null;
   }
 
   // Fetch user's friend list // TODO: implemented

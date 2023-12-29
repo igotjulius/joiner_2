@@ -4,8 +4,8 @@ import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/modals/survey_poll_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/mole/poll_mole.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 class PollCompWidget extends StatefulWidget {
@@ -51,13 +51,14 @@ class _PollCompWidgetState extends State<PollCompWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final polls = (context.watch<Auth>() as UserController)
-        .activeLobbies
-        .firstWhere((element) => element.id == widget.currentLobbyId)
-        .poll;
+    var polls;
+    (context.watch<Auth?>() as UserController).activeLobbies.forEach((element) {
+      if (element.id == widget.currentLobbyId) polls = element.poll;
+      return;
+    });
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Container(
         child: Padding(
@@ -71,8 +72,8 @@ class _PollCompWidgetState extends State<PollCompWidget> {
                 ],
               ),
               Flexible(
-                child: polls!.isEmpty
-                    ? Center(child: Text('No widget.polls as of the moment.'))
+                child: polls == null || polls.isEmpty
+                    ? Center(child: Text('No widget polls as of the moment.'))
                     : ListView.builder(
                         shrinkWrap: true,
                         itemCount: polls.length,

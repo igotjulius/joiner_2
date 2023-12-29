@@ -19,78 +19,70 @@ class LobbyCreationWidget extends StatefulWidget {
 class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
   DateTimeRange? _datePicked;
   TextEditingController _titleInput = TextEditingController();
-  TextEditingController _destInput = TextEditingController();
-  TextEditingController _budgetInput = TextEditingController();
-
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late TextEditingController _destInput;
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _destInput = TextEditingController(text: widget.destination);
+  }
 
   @override
   void dispose() {
     _titleInput.dispose();
     _destInput.dispose();
-    _budgetInput.dispose();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _destInput.text = widget.destination;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
         automaticallyImplyLeading: true,
         actions: [],
         centerTitle: true,
-        elevation: 2.0,
+        elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               'New Lobby',
             ),
-            SizedBox(
-              height: 56,
-              child: TextButton(
-                child: Text('CREATE'),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    showDialogLoading(context);
-                    final lobby = LobbyModel(
-                      title: _titleInput.text,
-                      destination: _destInput.text,
-                      startDate: _datePicked?.start,
-                      endDate: _datePicked?.end,
-                      participants: [],
-                      poll: [],
-                      linkedRental: [],
+            TextButton(
+              child: Text('CREATE'),
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  showDialogLoading(context);
+                  final lobby = LobbyModel(
+                    title: _titleInput.text,
+                    destination: _destInput.text,
+                    startDate: _datePicked?.start,
+                    endDate: _datePicked?.end,
+                    participants: [],
+                    poll: [],
+                    linkedRental: [],
+                  );
+                  final provider = context.read<Auth>() as UserController;
+                  final result = await provider.createLobby(lobby);
+                  context.pop();
+                  if (result != null) {
+                    context.goNamed(
+                      'Lobby',
+                      pathParameters: {'lobbyId': result.id!},
+                      extra: {'currentLobby': result},
                     );
-                    final provider = context.read<Auth>() as UserController;
-                    final result = await provider.createLobby(lobby);
-                    context.pop();
-                    if (result != null) {
-                      context.goNamed(
-                        'Lobby',
-                        pathParameters: {'lobbyId': result.id!},
-                        extra: {'currentLobby': result},
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        showError(
-                          'Failed to create lobby',
-                          Theme.of(context).colorScheme.error,
-                        ),
-                      );
-                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      showError(
+                        'Failed to create lobby',
+                        Theme.of(context).colorScheme.error,
+                      ),
+                    );
                   }
-                },
-              ),
+                }
+              },
             )
           ],
         ),

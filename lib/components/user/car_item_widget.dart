@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:go_router/go_router.dart';
 import 'package:joiner_1/models/car_model.dart';
+import 'package:joiner_1/utils/utils.dart';
 
 class CarItemWidget extends StatelessWidget {
   final CarModel? car;
