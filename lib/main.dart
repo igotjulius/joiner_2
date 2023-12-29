@@ -1,8 +1,8 @@
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/flutter_flow/nav/nav.dart';
+import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
-import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
 import 'package:joiner_1/utils/custom_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select<AuthController, User?>(
+    var user = context.select<AuthController, User?>(
         (value) => value.userTypeController?.profile);
     return MaterialApp.router(
       title: 'Joiner 1',
@@ -98,7 +98,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         redirect: (context, state) {
           bool loggingIn = user != null && state.matchedLocation == '/login';
           bool loggingOut = user == null && state.matchedLocation == '/account';
-          if (loggingIn) return user is CraController ? '/cars' : '/lobby';
+          if (loggingIn) {
+            if (user?.verification == null) {
+              print('object');
+              user = null;
+              return '/verification';
+            }
+            return user is CraUserModel ? '/cars' : '/lobby';
+          }
           if (loggingOut) return '/login';
           return null;
           // return appState.redirectState(state);
@@ -110,7 +117,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 }
 
 class NavBarPage extends StatefulWidget {
-  NavBarPage({Key? key, this.initialPage, this.page}) : super(key: key);
+  NavBarPage({super.key, this.initialPage, this.page});
 
   final String? initialPage;
   final Widget? page;
@@ -119,7 +126,7 @@ class NavBarPage extends StatefulWidget {
   _NavBarPageState createState() => _NavBarPageState();
 }
 
-/// This is the private State class that goes with NavBarPage.
+/// The widget accountable for bottom navigation bar.
 class _NavBarPageState extends State<NavBarPage> {
   String _currentPageName = 'Login';
   late Widget? _currentPage;
@@ -150,54 +157,55 @@ class _NavBarPageState extends State<NavBarPage> {
       'Account': AccountWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
-    return Scaffold(
-      body: SafeArea(
-        child: tabs[_currentPageName]!,
-      ),
-      extendBody: true,
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.all(10),
-        color: Colors.transparent,
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 10),
-            child: GNav(
-              selectedIndex: currentIndex,
-              onTabChange: (i) => setState(() {
-                _currentPage = null;
-                _currentPageName = tabs.keys.toList()[i];
-              }),
-              color: Colors.grey,
-              activeColor: Theme.of(context).primaryColor,
-              tabBackgroundColor:
-                  Theme.of(context).colorScheme.primaryContainer,
-              padding: EdgeInsetsDirectional.all(10),
-              gap: 8,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              duration: Duration(milliseconds: 500),
-              haptic: false,
-              textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w600,
+    return SafeArea(
+      child: Scaffold(
+        body: tabs[_currentPageName]!,
+        extendBody: true,
+        bottomNavigationBar: Container(
+          padding: EdgeInsets.all(10),
+          color: Colors.transparent,
+          child: Card(
+            surfaceTintColor: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: GNav(
+                selectedIndex: currentIndex,
+                onTabChange: (i) => setState(() {
+                  _currentPage = null;
+                  _currentPageName = tabs.keys.toList()[i];
+                }),
+                color: Colors.grey,
+                activeColor: Theme.of(context).primaryColor,
+                tabBackgroundColor:
+                    Theme.of(context).colorScheme.primaryContainer,
+                padding: EdgeInsetsDirectional.all(10),
+                gap: 8,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                duration: Duration(milliseconds: 500),
+                haptic: false,
+                textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                tabs: [
+                  GButton(
+                    icon: Icons.meeting_room_rounded,
+                    text: 'Lobby',
                   ),
-              tabs: [
-                GButton(
-                  icon: Icons.meeting_room_rounded,
-                  text: 'Lobby',
-                ),
-                GButton(
-                  icon: Icons.directions_car,
-                  text: 'Rentals',
-                ),
-                GButton(
-                  icon: Icons.people_alt_outlined,
-                  text: 'Friends',
-                ),
-                GButton(
-                  icon: Icons.person_outline,
-                  text: 'Account',
-                )
-              ],
+                  GButton(
+                    icon: Icons.directions_car,
+                    text: 'Rentals',
+                  ),
+                  GButton(
+                    icon: Icons.people_alt_outlined,
+                    text: 'Friends',
+                  ),
+                  GButton(
+                    icon: Icons.person_outline,
+                    text: 'Account',
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -208,7 +216,7 @@ class _NavBarPageState extends State<NavBarPage> {
   Widget craDashboard() {
     final tabs = {
       'Cars': CraCarWidget(),
-      'CraRentals': CraRentalsWidget(),
+      'CraRentals': RentalsWidget(),
       'Account': AccountWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);

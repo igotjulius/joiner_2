@@ -7,8 +7,8 @@ import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 
 class CarDetails extends StatefulWidget {
-  final CarModel? car;
-  const CarDetails({super.key, this.car});
+  final CarModel car;
+  const CarDetails({super.key, required this.car});
 
   @override
   State<CarDetails> createState() => _CarDetailsState();
@@ -16,7 +16,7 @@ class CarDetails extends StatefulWidget {
 
 class _CarDetailsState extends State<CarDetails> {
   Widget imageCarousel() {
-    final images = widget.car?.photoUrl;
+    final images = widget.car.photoUrl;
     return Card(
       child: CarouselSlider.builder(
         itemCount: images?.length,
@@ -60,7 +60,7 @@ class _CarDetailsState extends State<CarDetails> {
                       children: [
                         withCurrency(
                           Text(
-                            '${widget.car?.price} / day',
+                            '${widget.car.price} / day',
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall
@@ -73,7 +73,7 @@ class _CarDetailsState extends State<CarDetails> {
                           onPressed: () {
                             context.pushNamed(
                               'Booking',
-                              extra: {'car': widget.car},
+                              extra: widget.car,
                             );
                           },
                           child: Text('Rent now'),
@@ -82,7 +82,7 @@ class _CarDetailsState extends State<CarDetails> {
                     ),
                     Chip(
                       label: Text(
-                        widget.car!.availability!,
+                        widget.car.availability,
                       ),
                     ),
                   ],
@@ -92,12 +92,12 @@ class _CarDetailsState extends State<CarDetails> {
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 Text(
-                    '${DateFormat('MMM d').format(widget.car!.startDate!)} - ${DateFormat('MMM d').format(widget.car!.endDate!)}'),
+                    '${DateFormat('MMM d').format(widget.car.startDate)} - ${DateFormat('MMM d').format(widget.car.endDate)}'),
                 Text(
                   'Car owner',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
-                Text(widget.car!.ownerName!),
+                Text(widget.car.ownerName!),
               ].divide(
                 SizedBox(
                   height: 10,

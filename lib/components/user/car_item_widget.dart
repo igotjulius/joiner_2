@@ -33,7 +33,7 @@ class CarItemWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
-                    car!.vehicleType!,
+                    car!.vehicleType,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),

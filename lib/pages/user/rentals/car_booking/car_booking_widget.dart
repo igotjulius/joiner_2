@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,40 +10,41 @@ import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/info_container.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CarBookingWidget extends StatefulWidget {
-  final CarModel? car;
-  const CarBookingWidget({Key? key, this.car}) : super(key: key);
+  final CarModel car;
+  const CarBookingWidget({super.key, required this.car});
 
   @override
   _CarBookingWidgetState createState() => _CarBookingWidgetState();
 }
 
-PlatformFile? pickedFile;
-
 class _CarBookingWidgetState extends State<CarBookingWidget>
     with TickerProviderStateMixin {
-  late CarBookingModel _model;
-  TabController? _tabController;
   String? _noImage;
   final _formKey = GlobalKey<FormState>();
+  DateTimeRange _datePicked =
+      DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  PickedImages _imagePicker = PickedImages();
+  late TabController _tabController;
+  TextEditingController _dates = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _model = CarBookingModel();
-    _tabController ??= TabController(length: 2, vsync: this, initialIndex: 0);
-    _tabController?.addListener(() {
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
       setState(() {});
     });
   }
 
   @override
   void dispose() {
-    _model.dispose();
+    _dates.dispose();
     super.dispose();
   }
 
@@ -62,12 +64,12 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               clipBehavior: Clip.antiAlias,
               child: InkWell(
                 onTap: () async {
-                  await _model.imagePicker.selectImage();
+                  await _imagePicker.selectImage();
                   setState(() {
                     _noImage = null;
                   });
                 },
-                child: _model.imagePicker.getImage() != null
+                child: _imagePicker.getImage() != null
                     ? displayImage()
                     : Center(
                         child: Text('Tap to Upload'),
@@ -102,20 +104,19 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               onTap: () async {
                 showDateRangePicker(
                   context: context,
-                  firstDate:
-                      getCurrentTimestamp.isBefore(widget.car!.startDate!)
-                          ? widget.car!.startDate!
-                          : getCurrentTimestamp,
-                  lastDate: getCurrentTimestamp.isAfter(widget.car!.endDate!)
+                  firstDate: getCurrentTimestamp.isBefore(widget.car.startDate)
+                      ? widget.car.startDate
+                      : getCurrentTimestamp,
+                  lastDate: getCurrentTimestamp.isAfter(widget.car.endDate)
                       ? getCurrentTimestamp
-                      : widget.car!.endDate!,
+                      : widget.car.endDate,
                 ).then((value) {
                   if (value != null) {
                     setState(() {
-                      _model.dates.text =
+                      _dates.text =
                           '${DateFormat('MMM d').format(value.start)} - ${DateFormat('MMM d').format(value.end)}';
                     });
-                    _model.datePicked = value;
+                    _datePicked = value;
                   }
                 });
               },
@@ -132,8 +133,11 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                 child: Form(
                   key: _formKey,
                   child: CustomTextInput(
-                    controller: _model.dates,
-                    validator: _model.datesValidator,
+                    controller: _dates,
+                    validator: (value) {
+                      return datesValidator(value, _datePicked.duration.inDays);
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     suffixIcon: Icon(
                       Icons.calendar_today_rounded,
                     ),
@@ -149,7 +153,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
   }
 
   Widget displayImage() {
-    XFile image = _model.imagePicker.getImage()!;
+    XFile image = _imagePicker.getImage()!;
     if (kIsWeb) {
       return Image.network(
         image.path,
@@ -192,7 +196,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                           ?.copyWith(color: Colors.grey),
                     ),
                     Text(
-                      '${DateFormat('MMM d').format(_model.datePicked.start)}',
+                      '${DateFormat('MMM d').format(_datePicked.start)}',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -211,7 +215,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                           ?.copyWith(color: Colors.grey),
                     ),
                     Text(
-                      '${DateFormat('MMM d').format(_model.datePicked.end)}',
+                      '${DateFormat('MMM d').format(_datePicked.end)}',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -230,7 +234,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                           ?.copyWith(color: Colors.grey),
                     ),
                     Text(
-                      '${_model.datePicked.duration.inDays} day${_model.datePicked.duration.inDays > 1 ? 's' : ''}',
+                      '${_datePicked.duration.inDays} day${_datePicked.duration.inDays > 1 ? 's' : ''}',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -250,7 +254,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                     ),
                     withCurrency(
                       Text(
-                        '${_model.datePicked.duration.inDays * widget.car!.price!}',
+                        '${_datePicked.duration.inDays * widget.car.price}',
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
@@ -270,39 +274,43 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
   Widget navButtons() {
     return Row(
       children: [
-        if (_tabController?.index != 0)
+        if (_tabController.index != 0)
           TextButton(
             onPressed: () {
-              _tabController?.index--;
+              _tabController.index--;
             },
             child: Text('Back'),
           ),
         Spacer(),
         FilledButton(
           onPressed: () async {
-            if (_tabController?.index == 1) {
-              try {
-                showDialogLoading(context);
-                final redirUrl =
-                    await _model.processPayment(widget.car!.licensePlate!);
-                print(redirUrl);
-                await launchUrl(Uri.parse(redirUrl!),
-                    mode: LaunchMode.externalApplication);
-                context.pop();
-              } catch (e) {
-                print(e);
-              }
-
+            if (_tabController.index == 1) {
+              showDialogLoading(context);
+              final rental = CarRentalModel(
+                licensePlate: widget.car.licensePlate,
+                startRental: _datePicked.start.toString(),
+                endRental: _datePicked.end.toString(),
+                duration: _datePicked.duration.inDays,
+              );
+              final redirUrl = await (context.read<Auth>() as UserController)
+                  .postRental(rental, _imagePicker.getImage()!);
+              await launchUrl(Uri.parse(redirUrl!),
+                  mode: LaunchMode.externalApplication);
+              context.pop();
+            }
+            if (_imagePicker.getImage() == null) {
+              setState(() {
+                _noImage = 'Please select an image of your valid ID';
+              });
               return;
             }
-            if (_model.imagePicker.getImage() == null)
-              _noImage = 'Please select an image of your valid ID';
-
-            setState(() {
-              if (_formKey.currentState!.validate()) {
-                if (_noImage == null) _tabController?.index++;
-              }
-            });
+            if (_tabController.index < 2 && _formKey.currentState != null) {
+              setState(() {
+                if (_formKey.currentState!.validate()) {
+                  if (_noImage == null) _tabController.index++;
+                }
+              });
+            }
           },
           child: Text('Next'),
         ),
@@ -344,7 +352,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                   width: 8,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: _tabController?.index == 0
+                    color: _tabController.index == 0
                         ? Theme.of(context).primaryColor
                         : Colors.grey[300],
                   ),
@@ -354,7 +362,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                   width: 8,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: _tabController?.index == 1
+                    color: _tabController.index == 1
                         ? Theme.of(context).primaryColor
                         : Colors.grey[300],
                   ),
@@ -364,7 +372,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                   width: 8,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: _tabController?.index == 2
+                    color: _tabController.index == 2
                         ? Theme.of(context).primaryColor
                         : Colors.grey[300],
                   ),
@@ -380,42 +388,5 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
         ),
       ),
     );
-  }
-}
-
-class CarBookingModel {
-  DateTimeRange datePicked =
-      DateTimeRange(start: DateTime.now(), end: DateTime.now());
-  PickedImages imagePicker = PickedImages();
-  TextEditingController dates = TextEditingController();
-
-  /// Initialization and disposal methods.
-
-  void dispose() {
-    dates.dispose();
-  }
-
-  /// Action blocks are added here.
-  Future<String?> processPayment(String licensePlate) async {
-    final rental = CarRentalModel(
-      licensePlate: licensePlate,
-      startRental: datePicked.start.toString(),
-      endRental: datePicked.end.toString(),
-      duration: datePicked.duration.inDays,
-    );
-    // final result = await UserController.postRental(
-    //   rental,
-    //   imagePicker.getImage()!,
-    // );
-    // return result.data;
-  }
-
-  /// Additional helper methods are added here.
-  String? datesValidator(String? value) {
-    var validate = isEmpty(value);
-    if (validate != null) return validate;
-    if (datePicked.duration.inDays < 1)
-      return 'Minimum rent duration is one day';
-    return null;
   }
 }

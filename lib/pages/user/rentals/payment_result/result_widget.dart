@@ -7,16 +7,25 @@ class ResultWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Payment $result'),
+      ),
       body: Center(
-        child: Column(
-          children: [
-            Text('Payment sent'),
-            Image.asset(
-              'assets/images/$result-payment.png',
-              scale: 0.6,
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(top: 40),
+          child: Column(
+            children: [
+              Image.asset(
+                'assets/images/$result-payment.png',
+                height: 200,
+                width: 200,
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Text('Payment $result'),
+            ],
+          ),
         ),
       ),
     );

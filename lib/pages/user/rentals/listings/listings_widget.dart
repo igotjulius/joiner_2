@@ -1,6 +1,9 @@
 import 'package:joiner_1/components/cra/car_item_widget.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/car_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListingsWidget extends StatefulWidget {
   const ListingsWidget({Key? key}) : super(key: key);
@@ -15,7 +18,8 @@ class _ListingsWidgetState extends State<ListingsWidget> {
   @override
   void initState() {
     super.initState();
-    // _fetchAvailableCars = UserController.getAvailableCars();
+    _fetchAvailableCars =
+        (context.read<Auth>() as UserController).getAvailableCars();
   }
 
   @override

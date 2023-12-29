@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/flutter_flow/flutter_flow_util.dart';
+import 'package:joiner_1/index.dart';
 import 'package:joiner_1/main.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
@@ -13,14 +13,12 @@ import 'package:http_parser/http_parser.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
-import 'package:joiner_1/pages/cra/rentals/cra_rentals_widget.dart';
-import 'package:joiner_1/pages/shared_pages/account/account_widget.dart';
-import 'package:joiner_1/pages/shared_pages/rental_details/rental_details_widget.dart';
+import 'package:joiner_1/pages/shared_pages/rentals/rental_details/rental_details_widget.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/car_model.dart';
 
-class CraController extends ChangeNotifier implements Auth {
+class CraController extends Auth {
   CraController(this._currentUser, this._apiService);
   ApiService _apiService;
   CraUserModel _currentUser;
@@ -54,7 +52,7 @@ class CraController extends ChangeNotifier implements Auth {
       path: '/craRentals',
       builder: (context, params) => NavBarPage(
         initialPage: 'CraRentals',
-        page: CraRentalsWidget(),
+        page: RentalsWidget(),
       ),
       routes: [
         GoRoute(
@@ -86,16 +84,17 @@ class CraController extends ChangeNotifier implements Auth {
   User get profile => _currentUser;
 
   @override
-  Future cacheUser() async {
-    _pref = await SharedPreferences.getInstance();
-    String craUser = jsonEncode(_currentUser.toJson());
-    _pref.setString('craUser', craUser);
-  }
-
-  @override
-  void logout() async {
-    _pref = await SharedPreferences.getInstance();
-    _pref.clear();
+  Future<bool> cacheUser() async {
+    try {
+      _pref = await SharedPreferences.getInstance();
+      String craUser = jsonEncode(_currentUser.toJson());
+      _pref.setString('craUser', craUser);
+      return true;
+    } catch (e, stack) {
+      print('Error in caching user data: $e');
+      print(stack);
+    }
+    return false;
   }
 
   @override
@@ -122,7 +121,7 @@ class CraController extends ChangeNotifier implements Auth {
     return car;
   }
 
-  // Register car under corresponding CRA
+  // Register car under corresponding CRA TODO: implemented
   Future<String?> registerCar(CarModel car, List<XFile> images) async {
     List<MultipartFile> converted = [];
     for (final image in images) {
@@ -138,21 +137,21 @@ class CraController extends ChangeNotifier implements Auth {
       licensePlate: car.licensePlate!,
       ownerId: car.ownerId!,
       ownerName: car.ownerName!,
-      vehicleType: car.vehicleType!,
-      availability: car.availability!,
-      startDate: car.startDate!.toString(),
-      endDate: car.endDate!.toString(),
-      price: car.price!,
+      vehicleType: car.vehicleType,
+      availability: car.availability,
+      startDate: car.startDate.toString(),
+      endDate: car.endDate.toString(),
+      price: car.price,
       files: converted,
     );
     // Return error message if car is already registered by its licenseplate
     if (result.code == 406) return result.message;
     _currentUser.vehicles.add(result.data!);
-    super.notifyListeners();
+    notifyListeners();
     return null;
   }
 
-  // Edit car
+  // Edit car TODO: check
   Future<String?> editCar(CarModel car, List<XFile>? images) async {
     List<MultipartFile>? converted;
     if (images != null) {
@@ -171,11 +170,11 @@ class CraController extends ChangeNotifier implements Auth {
       _currentUser.id,
       car.licensePlate!,
       licensePlate: car.licensePlate!,
-      vehicleType: car.vehicleType!,
-      availability: car.availability!,
-      startDate: car.startDate!.toString(),
-      endDate: car.endDate!.toString(),
-      price: car.price!,
+      vehicleType: car.vehicleType,
+      availability: car.availability,
+      startDate: car.startDate.toString(),
+      endDate: car.endDate.toString(),
+      price: car.price,
       files: converted,
     );
 
@@ -184,7 +183,7 @@ class CraController extends ChangeNotifier implements Auth {
     final index = _currentUser.vehicles
         .indexWhere((element) => element.licensePlate == car.licensePlate);
     _currentUser.vehicles[index] = result.data!;
-    super.notifyListeners();
+    notifyListeners();
     return null;
   }
 
@@ -201,27 +200,78 @@ class CraController extends ChangeNotifier implements Auth {
   }
 
   // Fetch CRA's rentals
+  @override
   List<RentalModel> get rentals => _currentUser.rentals;
-  void refetchCraRentals() async {
-    final result = await _apiService.getCraRentals(_currentUser.id);
-    _currentUser.rentals = result.data!;
-    notifyListeners();
+
+  @override
+  void refetchRentals() async {
+    try {
+      final result = await _apiService.getCraRentals(_currentUser.id);
+      _currentUser.rentals = result.data ?? [];
+      cacheUser();
+      notifyListeners();
+    } catch (e, stack) {
+      print('Error in fetching cra rentals: $e');
+      print(stack);
+    }
   }
 
-  // Edit Cra's account
-  void editCraAccount(String firstName, String lastName) async {
-    await _apiService.editCraAccount(
-        _currentUser.id, {'firstName': firstName, 'lastName': lastName});
-    _currentUser.firstName = firstName;
-    _currentUser.lastName = lastName;
-    notifyListeners();
-  }
+  /*
+    Account related actions
+  */
 
   // Change Cra's password
-  // TODO: check implementation
-  Future<String?> changeCraPassword(String password, String newPassword) async {
-    final res = await _apiService.changeCraPassword(
-        _currentUser.id, {'password': password, 'newPassword': newPassword});
-    return res.code == HttpStatus.ok ? null : res.message;
+  Future<bool> changePassword(String password, String newPassword) async {
+    try {
+      final result = await _apiService.changeCraPassword(
+        {'password': password, 'newPassword': newPassword},
+        _currentUser.id,
+      );
+      _currentUser.password = result.data!;
+      notifyListeners();
+      return true;
+    } catch (e, stack) {
+      print('Error in changing password: $e');
+      print(stack);
+    }
+    return false;
   }
+
+  // TODO: check
+  @override
+  Future<bool> logout() async {
+    try {
+      _pref = await SharedPreferences.getInstance();
+      _pref.clear();
+      return true;
+    } catch (e, stack) {
+      print('Error in logging out: $e');
+      print(stack);
+      throw e;
+    }
+  }
+
+  @override
+  Future<bool> editAccount(String firstName, String lastName) async {
+    try {
+      final result = await _apiService.editCraAccount(
+          {'firstName': firstName, 'lastName': lastName}, _currentUser.id);
+      if (result.code == HttpStatus.ok) {
+        _currentUser.firstName = firstName;
+        _currentUser.lastName = lastName;
+        notifyListeners();
+        return true;
+      } else
+        return false;
+    } catch (e, stack) {
+      print('Error in editting account: $e');
+      print(stack);
+    }
+    return false;
+  }
+  /*
+
+    -----End of Account relations-----
+
+  */
 }

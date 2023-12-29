@@ -66,10 +66,17 @@ String? validateMobile(String? value) {
   return null;
 }
 
+String? datesValidator(String? value, int duration) {
+  var validate = isEmpty(value);
+  if (validate != null) return validate;
+  if (duration < 1) return 'Minimum rent duration is one day';
+  return null;
+}
+
 String? validatePassword(String? value) {
   final trimmed = isEmpty(value);
   if (trimmed != null) return trimmed;
-  if (value!.length < 5) return 'Minimum 6 characters';
+  if (value!.length < 6) return 'Minimum 6 characters';
   return null;
 }
 

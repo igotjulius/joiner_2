@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,6 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
   void initState() {
     super.initState();
     _model = context.read<UserSignUpMoleModel>();
-    _model.initState();
   }
 
   @override
@@ -45,10 +45,9 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
                 controller: _model.emailController,
                 validator: validateEmail,
                 errorText: _model.emailError,
-                onChanged: (value) {
+                onChanged: (value) => setState(() {
                   _model.emailError = null;
-                  setState(() {});
-                },
+                }),
               ),
               CustomTextInput(
                 label: 'Password',
@@ -75,30 +74,36 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
 }
 
 class UserSignUpMoleModel {
-  TextEditingController? fNameController;
-  TextEditingController? lNameController;
-  TextEditingController? emailController;
-  TextEditingController? passwordController;
-  TextEditingController? confirmPassController;
+  TextEditingController fNameController = TextEditingController();
+  TextEditingController lNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPassController = TextEditingController();
   String? emailError;
 
-  void initState() {
-    fNameController ??= TextEditingController();
-    lNameController ??= TextEditingController();
-    emailController ??= TextEditingController();
-    passwordController ??= TextEditingController();
-    confirmPassController ??= TextEditingController();
-  }
-
   void dispose() {
-    fNameController?.dispose();
-    lNameController?.dispose();
-    emailController?.dispose();
-    passwordController?.dispose();
-    confirmPassController?.dispose();
+    fNameController.dispose();
+    lNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPassController.dispose();
   }
 
   String? confirmPass(String? value) {
-    return confirmPassword(value, passwordController!.text);
+    return confirmPassword(value, passwordController.text);
+  }
+
+  UserModel getUserInput() {
+    return UserModel(
+      id: '',
+      firstName: fNameController.text,
+      lastName: lNameController.text,
+      email: emailController.text,
+      password: passwordController.text,
+      friends: [],
+      pendingLobby: [],
+      activeLobby: [],
+      rentals: [],
+    );
   }
 }

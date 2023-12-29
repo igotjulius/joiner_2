@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_model.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/molecules/cra_sign_up_mole.dart';
 import 'package:joiner_1/widgets/molecules/user_sign_up_mole.dart';
@@ -17,7 +17,9 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
     with TickerProviderStateMixin {
   GlobalKey<FormState> joinerFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> rentFormKey = GlobalKey<FormState>();
-  late SignUpPageModel _model;
+  final _userModel = UserSignUpMoleModel();
+  final _craModel = CraSignUpMoleModel();
+  late TabController _tabController;
   final _tabs = [
     Tab(
       text: 'Joiner',
@@ -30,10 +32,14 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
   @override
   void initState() {
     super.initState();
-    _model = SignUpPageModel();
-    _model.userModel = UserSignUpMoleModel();
-    _model.tabController ??= TabController(length: _tabs.length, vsync: this);
-    _model.craModel = CraSignUpMoleModel();
+    _tabController = TabController(length: _tabs.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _userModel.dispose();
+    _craModel.dispose();
+    super.dispose();
   }
 
   AppBar appBar() => AppBar(
@@ -41,20 +47,6 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
           'Create an Account',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: TextButton(
-              child: Text(
-                'Already have an account?',
-              ),
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                context.goNamed('Login');
-              },
-            ),
-          ),
-        ],
       );
 
   @override
@@ -89,25 +81,25 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                         borderRadius: BorderRadius.circular(20),
                       ),
                       indicatorSize: TabBarIndicatorSize.tab,
-                      controller: _model.tabController,
+                      controller: _tabController,
                       onTap: (value) {
-                        _model.tabController?.index = value;
+                        _tabController.index = value;
                       },
                       tabs: _tabs,
                     ),
                   ),
                   Expanded(
                     child: TabBarView(
-                      controller: _model.tabController,
+                      controller: _tabController,
                       children: [
                         Provider.value(
-                          value: _model.userModel,
+                          value: _userModel,
                           child: UserSignUpMole(
                             formKey: joinerFormKey,
                           ),
                         ),
                         Provider.value(
-                          value: _model.craModel,
+                          value: _craModel,
                           child: CraSignUpMole(
                             formKey: rentFormKey,
                           ),
@@ -131,6 +123,7 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                       Spacer(),
                       FilledButton(
                         onPressed: () async {
+                          FocusManager.instance.primaryFocus?.unfocus();
                           final joinerForm =
                               joinerFormKey.currentState != null &&
                                   joinerFormKey.currentState!.validate();
@@ -138,12 +131,24 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                               rentFormKey.currentState!.validate();
                           if (joinerForm || craForm) {
                             showDialogLoading(context);
-                            final result = await _model.signUp();
+                            final result = joinerForm
+                                ? await context
+                                    .read<AuthController>()
+                                    .registerUser(_userModel.getUserInput())
+                                : await context
+                                    .read<AuthController>()
+                                    .registerCra(_craModel.getUserInput());
                             context.pop();
                             if (result != null) {
-                              _model.userModel.emailError =
-                                  'Email already in use';
-                              setState(() {});
+                              setState(() {
+                                if (joinerFormKey.currentState != null) {
+                                  _userModel.emailError =
+                                      'Email already in use';
+                                }
+                                if (rentFormKey.currentState != null) {
+                                  _craModel.emailError = 'Email already in use';
+                                }
+                              });
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 showSuccess('Registration successful'),

@@ -16,13 +16,12 @@ class _CraCarWidgetState extends State<CraCarWidget> {
   @override
   void initState() {
     super.initState();
-    final controller = context.read<CraController>();
+    final controller = context.read<Auth>() as CraController;
     controller.refetchCraCars();
   }
 
   @override
   Widget build(BuildContext context) {
-    context.watch<AuthController>();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -47,21 +46,25 @@ class _CraCarWidgetState extends State<CraCarWidget> {
   }
 
   Widget displayCars() {
-    final cars = context.watch<CraController>().cars;
-    return SingleChildScrollView(
-      child: ListView.separated(
-        shrinkWrap: true,
-        itemCount: cars.length,
-        itemBuilder: (context, index) {
-          final car = cars[index];
-          return CarItemWidget(car: car);
-        },
-        separatorBuilder: (context, index) {
-          return SizedBox(
-            height: 10,
+    final cars = (context.watch<Auth>() as CraController).cars;
+    return cars.isEmpty
+        ? Center(
+            child: Text('You don\'t have registered cars yet'),
+          )
+        : SingleChildScrollView(
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: cars.length,
+              itemBuilder: (context, index) {
+                final car = cars[index];
+                return CarItemWidget(car: car);
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(
+                  height: 10,
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
   }
 }

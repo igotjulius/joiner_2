@@ -8,6 +8,7 @@ import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/flutter_flow/nav/nav.dart';
 import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/models/helpers/user.dart';
+import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/pages/shared_pages/login_page/login_page_widget.dart';
 import 'package:joiner_1/pages/shared_pages/sign_up_page/sign_up_widget.dart';
@@ -42,8 +43,9 @@ class AuthController extends ChangeNotifier {
   }
 
   List<GoRoute> get routes => _routes;
-  void setRoutes(List<GoRoute> nRoutes) {
-    _routes.addAll(nRoutes);
+  void setRoutes() {
+    if (_userTypeController?.profile?.verification != null)
+      _routes.addAll(_userTypeController!.routes);
     notifyListeners();
   }
 
@@ -81,16 +83,23 @@ class AuthController extends ChangeNotifier {
             UserController(result.data! as UserModel, _apiService);
       }
       _userTypeController?.cacheUser();
-      setRoutes(_userTypeController!.routes);
+      setRoutes();
     }
     return result.data;
   }
 
-  void logout() {
-    _userTypeController?.logout();
-    _userTypeController = null;
-    _routes = baseRoutes();
-    notifyListeners();
+  Future<bool> logout() async {
+    try {
+      await _userTypeController?.logout();
+      _userTypeController = null;
+      _routes = baseRoutes();
+      notifyListeners();
+      return true;
+    } catch (e, stack) {
+      print('Error in logging out: $e');
+      print(stack);
+    }
+    return false;
   }
 
   Future initializePersistedState() async {
@@ -100,7 +109,7 @@ class AuthController extends ChangeNotifier {
       Map<String, dynamic> user = jsonDecode(cachedUser);
       _userTypeController =
           UserController(UserModel.fromJson(user), _apiService);
-      setRoutes(_userTypeController!.routes);
+      setRoutes();
       return;
     }
     cachedUser = _pref.getString('craUser');
@@ -108,7 +117,7 @@ class AuthController extends ChangeNotifier {
       Map<String, dynamic> craUser = jsonDecode(cachedUser);
       _userTypeController =
           CraController(CraUserModel.fromJson(craUser), _apiService);
-      setRoutes(_userTypeController!.routes);
+      setRoutes();
       return;
     }
     print('Neither user or cra user is cached.');
@@ -118,7 +127,11 @@ class AuthController extends ChangeNotifier {
 abstract class Auth extends ChangeNotifier {
   User? get profile;
   List<GoRoute> get routes;
-  Future cacheUser();
-  void logout();
+  Future<bool> cacheUser();
+  Future<bool> logout();
   bool isVerified();
+  Future<bool> changePassword(String currentPassword, String nPassword);
+  Future<bool> editAccount(String firstName, String lastName);
+  void refetchRentals();
+  List<RentalModel> get rentals;
 }

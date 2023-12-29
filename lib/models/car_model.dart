@@ -7,22 +7,22 @@ class CarModel {
   final String? licensePlate;
   final String? ownerName;
   final String? ownerId;
-  final String? vehicleType;
-  final String? availability;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final double? price;
+  final String vehicleType;
+  final String availability;
+  final DateTime startDate;
+  final DateTime endDate;
+  final double price;
   final List<String>? photoUrl;
 
   const CarModel({
     this.licensePlate,
     this.ownerId,
     this.ownerName,
-    this.vehicleType,
-    this.availability,
-    this.startDate,
-    this.endDate,
-    this.price,
+    required this.vehicleType,
+    required this.availability,
+    required this.startDate,
+    required this.endDate,
+    required this.price,
     this.photoUrl,
   });
 

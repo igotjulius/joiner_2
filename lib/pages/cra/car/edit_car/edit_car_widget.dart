@@ -35,8 +35,8 @@ class _EditCarWidgetState extends State<EditCarWidget> {
 
   @override
   void dispose() {
-    super.dispose();
     _model.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,6 +59,7 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                         showDialogLoading(context);
                         _model.editCar(context).then(
                           (value) {
+                            context.pop();
                             if (value != null) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 showError(
@@ -69,7 +70,6 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                                 showSuccess('Changes saved'),
                               );
                             }
-                            context.pop();
                           },
                         );
                       }

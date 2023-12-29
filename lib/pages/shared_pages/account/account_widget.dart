@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/models/helpers/user.dart';
 import 'package:joiner_1/utils/utils.dart';
@@ -8,27 +7,32 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AccountWidget extends StatefulWidget {
-  const AccountWidget({Key? key}) : super(key: key);
+  const AccountWidget({super.key});
 
   @override
   _AccountWidgetState createState() => _AccountWidgetState();
 }
 
 class _AccountWidgetState extends State<AccountWidget> {
-  late AccountModel _model;
   final _passFormKey = GlobalKey<FormState>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  late User _currentUser;
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _passController = TextEditingController();
+  TextEditingController _nPassController = TextEditingController();
+  String? _errorText;
 
-  @override
-  void initState() {
-    super.initState();
-    _model = AccountModel();
+  void _resetController() {
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _passController = TextEditingController();
+    _nPassController = TextEditingController();
+    _errorText = null;
   }
 
   @override
   Widget build(BuildContext context) {
-    _model.currentUser =
-        context.watch<AuthController>().userTypeController?.profile;
+    _currentUser = context.watch<Auth>().profile!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -51,7 +55,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                   width: 20,
                 ),
                 Text(
-                  "${_model.currentUser?.firstName} ${_model.currentUser?.lastName?[0]}.",
+                  "${_currentUser.firstName} ${_currentUser.lastName[0]}.",
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -59,20 +63,20 @@ class _AccountWidgetState extends State<AccountWidget> {
                 Spacer(),
                 IconButton(
                   onPressed: () {
-                    editDetails();
+                    _editDetails();
                   },
                   icon: Icon(Icons.edit_rounded),
                 ),
               ],
             ),
-            details(),
+            _details(),
             SizedBox(
               height: 20,
             ),
             Column(
               children: [
-                changePassword(),
-                logout(),
+                _changePassword(),
+                _logout(),
               ].divide(
                 SizedBox(
                   height: 10,
@@ -89,7 +93,7 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  Widget details() {
+  Widget _details() {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
@@ -101,7 +105,7 @@ class _AccountWidgetState extends State<AccountWidget> {
               style: textTheme.titleMedium,
             ),
             Text(
-              _model.currentUser!.firstName!,
+              _currentUser.firstName,
               style:
                   textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             ),
@@ -119,7 +123,7 @@ class _AccountWidgetState extends State<AccountWidget> {
               style: textTheme.titleMedium,
             ),
             Text(
-              "${_model.currentUser?.lastName}",
+              "${_currentUser.lastName}",
               style:
                   textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             ),
@@ -137,7 +141,7 @@ class _AccountWidgetState extends State<AccountWidget> {
               style: textTheme.titleMedium,
             ),
             Text(
-              "${_model.currentUser?.email}",
+              "${_currentUser.email}",
               style:
                   textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             ),
@@ -151,8 +155,8 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  void editDetails() {
-    showDialog(
+  Future _editDetails() {
+    return showDialog(
         context: context,
         builder: (context) {
           return Dialog(
@@ -163,14 +167,14 @@ class _AccountWidgetState extends State<AccountWidget> {
                 children: [
                   CustomTextInput(
                     label: 'First name',
-                    controller: _model.firstNameController,
+                    controller: _firstNameController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   CustomTextInput(
                     label: 'Last name',
-                    controller: _model.lastNameController,
+                    controller: _lastNameController,
                   ),
                   SizedBox(
                     height: 20,
@@ -180,23 +184,22 @@ class _AccountWidgetState extends State<AccountWidget> {
                     child: FilledButton(
                       onPressed: () async {
                         showDialogLoading(context);
-                        final result = await _model.editProfile();
-
-                        if (result != null) {
-                          context.read<FFAppState>().updateProfile(result);
+                        final result = await context.read<Auth>().editAccount(
+                            _firstNameController.text,
+                            _lastNameController.text);
+                        context.pop();
+                        if (result) {
+                          context.pop();
+                          _resetController();
                           ScaffoldMessenger.of(context).showSnackBar(
                             showSuccess('Changes saved'),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            showError('Saving failed',
+                            showError('Can\'t edit profile :(',
                                 Theme.of(context).colorScheme.error),
                           );
                         }
-                        _model.resetController();
-                        context.pop();
-                        context.pop();
-                        setState(() {});
                       },
                       child: Text('Save'),
                     ),
@@ -208,7 +211,7 @@ class _AccountWidgetState extends State<AccountWidget> {
         });
   }
 
-  Widget changePassword() {
+  Widget _changePassword() {
     return TextButton.icon(
       style: TextButton.styleFrom(
         minimumSize: Size.fromHeight(10),
@@ -229,16 +232,25 @@ class _AccountWidgetState extends State<AccountWidget> {
                         children: [
                           CustomTextInput(
                             label: 'Enter current password',
-                            controller: _model.passController,
+                            controller: _passController,
                             obscureText: true,
-                            errorText: _model.errorText,
+                            errorText: _errorText,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            onChanged: (_) => {
+                              setState(() {
+                                _errorText = null;
+                              })
+                            },
                           ),
                           SizedBox(height: 4),
                           CustomTextInput(
                             label: 'Enter new password',
-                            controller: _model.nPassController,
+                            controller: _nPassController,
                             obscureText: true,
                             validator: validatePassword,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                           ),
                           SizedBox(
                             height: 20,
@@ -249,17 +261,24 @@ class _AccountWidgetState extends State<AccountWidget> {
                               onPressed: () async {
                                 if (_passFormKey.currentState!.validate()) {
                                   showDialogLoading(context);
-                                  final result = await _model.changePassword();
+                                  final result = await (context.read<Auth>())
+                                      .changePassword(_passController.text,
+                                          _nPassController.text);
+                                  context.pop();
                                   if (result) {
-                                    context.pop();
                                     context.pop();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       showSuccess('Password changed'),
                                     );
-                                    _model.resetController();
+                                    _resetController();
                                   } else {
-                                    context.pop();
-                                    setState(() {});
+                                    setState(() {
+                                      _errorText = 'Passwords don\'t match';
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      showError('Can\'t change password :(',
+                                          Theme.of(context).colorScheme.error),
+                                    );
                                   }
                                 }
                               },
@@ -288,10 +307,18 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  Widget logout() {
+  Widget _logout() {
     return TextButton.icon(
       onPressed: () {
-        context.read<AuthController>().logout();
+        showDialogLoading(context);
+        context.read<AuthController>().logout().then((value) {
+          context.pop();
+          if (!value)
+            ScaffoldMessenger.of(context).showSnackBar(
+              showError(
+                  'Can\'t logout :(', Theme.of(context).colorScheme.error),
+            );
+        });
       },
       icon: Icon(Icons.logout),
       label: Align(
@@ -305,55 +332,5 @@ class _AccountWidgetState extends State<AccountWidget> {
         ),
       ),
     );
-  }
-}
-
-class AccountModel {
-  User? currentUser;
-  TextEditingController? firstNameController;
-  TextEditingController? lastNameController;
-  TextEditingController? passController;
-  TextEditingController? nPassController;
-  String? errorText;
-
-  AccountModel() {
-    firstNameController ??= TextEditingController();
-    lastNameController ??= TextEditingController();
-    passController ??= TextEditingController();
-    nPassController ??= TextEditingController();
-  }
-
-  void resetController() {
-    firstNameController = TextEditingController();
-    lastNameController = TextEditingController();
-    passController = TextEditingController();
-    nPassController = TextEditingController();
-    errorText = null;
-  }
-
-  Future<User?> editProfile() async {
-    final isCra = FFAppState().isCra;
-    // if (isCra)
-    //   return await CraController.editCraAccount(
-    //       firstNameController!.text, lastNameController!.text);
-    // else
-    //   return await UserController.editAccount(
-    //       firstNameController!.text, lastNameController!.text);
-  }
-
-  Future<bool> changePassword() async {
-    return false;
-    // final isCra = FFAppState().isCra;
-    // final result = isCra
-    //     ? await CraController.changeCraPassword(
-    //         passController!.text, nPassController!.text)
-    //     : await UserController.changePassword(
-    //         passController!.text, nPassController!.text);
-    // if (result.code == HttpStatus.ok)
-    //   return true;
-    // else {
-    //   errorText = result.message;
-    //   return false;
-    // }
   }
 }

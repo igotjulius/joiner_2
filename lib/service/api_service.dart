@@ -8,11 +8,9 @@ import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/utils/generic_response.dart';
-import '../models/user_model.dart';
 import 'package:retrofit/http.dart';
 import '../models/lobby_model.dart';
 
-//
 part 'api_service.g.dart';
 
 // local environment, use ngrok for port forwarding
@@ -193,14 +191,14 @@ abstract class ApiService {
 
   // Edit user profile
   @POST('user/{userId}/account')
-  Future<ResponseModel<UserModel>> editAccount(
+  Future<ResponseModel> editAccount(
     @Body() Map<String, String> update,
     @Path('userId') String userId,
   );
 
   // Change password
   @POST('user/{userId}/changePassword')
-  Future<ResponseModel> changePassword(
+  Future<ResponseModel<String>> changePassword(
     @Body() Map<String, String> request,
     @Path('userId') String userId,
   );
@@ -371,15 +369,15 @@ abstract class ApiService {
 
   // Edit cra profile
   @POST('cra/{craUserId}/account')
-  Future<void> editCraAccount(
-    @Path('craUserId') String craUserId,
+  Future<ResponseModel> editCraAccount(
     @Body() Map<String, String> update,
+    @Path('craUserId') String craUserId,
   );
 
   // Change cra password
   @POST('cra/{craUserId}/changePassword')
-  Future<ResponseModel> changeCraPassword(
-    @Path('craUserId') String craUserId,
+  Future<ResponseModel<String>> changeCraPassword(
     @Body() Map<String, String> update,
+    @Path('craUserId') String craUserId,
   );
 }

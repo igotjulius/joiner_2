@@ -13,11 +13,18 @@ class _VerificationWidgetState extends State<VerificationWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          'Verification Code',
+          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
         leading: IconButton(
-            onPressed: () {
-              context.goNamed('Login');
-            },
-            icon: Icon(Icons.arrow_back_outlined)),
+          onPressed: () {
+            context.goNamed('Login');
+          },
+          icon: Icon(Icons.arrow_back_outlined),
+        ),
         automaticallyImplyLeading: false,
       ),
       body: Padding(
@@ -25,15 +32,6 @@ class _VerificationWidgetState extends State<VerificationWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Verification Code',
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            SizedBox(
-              height: 8,
-            ),
             Text(
               'Enter the verification code sent to your email address',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(

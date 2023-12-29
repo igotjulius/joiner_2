@@ -3,11 +3,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/cra_controller.dart';
+import 'package:joiner_1/models/car_model.dart';
 import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
+import 'package:provider/provider.dart';
 
 class AddCarWidget extends StatefulWidget {
   const AddCarWidget({super.key});
@@ -17,7 +22,6 @@ class AddCarWidget extends StatefulWidget {
 }
 
 class _AddCarWidgetState extends State<AddCarWidget> {
-  // late AddCarModel _model;
   String? _imagePickerError, _vehicleTypeError;
   DateTimeRange? _datePicked;
   PickedImages _imagePicker = PickedImages();
@@ -57,19 +61,33 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                 if (_formKey.currentState!.validate() &&
                     _imagePicker.getImages().isNotEmpty) {
                   showDialogLoading(context);
-                  // TODO: Refactor - To be implemented
-                  // _register().then((value) {
-                  //   if (value != null) {
-                  //     ScaffoldMessenger.of(context).showSnackBar(
-                  //       showError(value, Theme.of(context).colorScheme.error),
-                  //     );
-                  //   } else {
-                  //     ScaffoldMessenger.of(context).showSnackBar(
-                  //       showSuccess('Car registered successfully'),
-                  //     );
-                  //   }
-                  //   context.pop();
-                  // });
+                  final provider = (context.read<Auth>() as CraController);
+                  final nCar = CarModel(
+                    licensePlate: _licenseController.text,
+                    ownerId: provider.profile.id!,
+                    ownerName:
+                        '${provider.profile.firstName} ${provider.profile.lastName}',
+                    vehicleType: _vehicleTypeController.text,
+                    availability: 'Available',
+                    startDate: _datePicked!.start,
+                    endDate: _datePicked!.end,
+                    price: double.parse(_priceController.text),
+                  );
+                  provider
+                      .registerCar(nCar, _imagePicker.getImages())
+                      .then((value) {
+                    context.pop();
+                    if (value != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        showError(value, Theme.of(context).colorScheme.error),
+                      );
+                    } else {
+                      context.goNamed('Cars');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        showSuccess('Car registered successfully'),
+                      );
+                    }
+                  });
                 }
 
                 setState(() {

@@ -63,8 +63,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<AuthController>();
-    final isCra = controller.userTypeController is CraController;
+    final isCra = context.watch<Auth>() is CraController;
     return Card(
       surfaceTintColor: Theme.of(context).colorScheme.secondary,
       child: InkWell(
@@ -80,7 +79,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             return;
           }
           if (!isCra) {
-            context.pushNamed('CarDetails', extra: {'car': widget.car});
+            context.pushNamed('CarDetails', extra: widget.car);
           }
         },
         child: Padding(
@@ -99,7 +98,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                         ),
                   ),
                   Text(
-                    widget.car.availability!,
+                    widget.car.availability,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -150,7 +149,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.car.vehicleType!,
+                            widget.car.vehicleType,
                           ),
                           Row(
                             children: [

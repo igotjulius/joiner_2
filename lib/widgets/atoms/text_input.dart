@@ -24,6 +24,7 @@ class CustomTextInput extends StatefulWidget {
   final TextInputDirection? direction;
   final Icon? suffixIcon;
   final TextStyle? labelStyle;
+  final AutovalidateMode? autovalidateMode;
 
   CustomTextInput({
     super.key,
@@ -46,6 +47,7 @@ class CustomTextInput extends StatefulWidget {
     this.direction = TextInputDirection.column,
     this.suffixIcon,
     this.labelStyle,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
   }) : inputFormatters =
             inputFormatters ?? FilteringTextInputFormatter.singleLineFormatter;
 
@@ -99,6 +101,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
       keyboardType: widget.keyboardType,
       enabled: widget.enabled,
       obscureText: widget.obscureText,
+      autovalidateMode: widget.autovalidateMode,
       inputFormatters: [
         widget.inputFormatters,
       ],

@@ -15,7 +15,7 @@ import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/pages/shared_pages/account/account_widget.dart';
-import 'package:joiner_1/pages/shared_pages/rental_details/rental_details_widget.dart';
+import 'package:joiner_1/pages/shared_pages/rentals/rental_details/rental_details_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby_creation/lobby_creation_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/map_feature/map_feature.dart';
@@ -25,7 +25,7 @@ import 'package:joiner_1/pages/user/rentals/car_booking/car_booking_widget.dart'
 import 'package:joiner_1/pages/user/rentals/car_details/car_details_widget.dart';
 import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
 import 'package:joiner_1/pages/user/rentals/payment_result/result_widget.dart';
-import 'package:joiner_1/pages/user/rentals/rentals_widget.dart';
+import 'package:joiner_1/pages/shared_pages/rentals/rentals_widget.dart';
 import 'package:joiner_1/service/api_service.dart';
 import 'package:joiner_1/utils/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
@@ -155,16 +155,17 @@ class UserController extends Auth {
   User? get profile => _currentUser;
 
   @override
-  Future cacheUser() async {
-    _pref = await SharedPreferences.getInstance();
-    String user = jsonEncode(_currentUser.toJson());
-    _pref.setString('user', user);
-  }
-
-  @override
-  void logout() async {
-    _pref = await SharedPreferences.getInstance();
-    _pref.clear();
+  Future<bool> cacheUser() async {
+    try {
+      _pref = await SharedPreferences.getInstance();
+      String user = jsonEncode(_currentUser.toJson());
+      _pref.setString('user', user);
+      return true;
+    } catch (e, stack) {
+      print('Error in caching user data: $e');
+      print(stack);
+    }
+    return false;
   }
 
   @override
@@ -457,9 +458,11 @@ class UserController extends Auth {
   /* 
     Rentals related
   */
-  List<RentalModel> get rentals => _currentUser.rentals!;
+  @override
+  List<RentalModel> get rentals => _currentUser.rentals;
 
   // Fetch user's rentals
+  @override
   void refetchRentals() async {
     try {
       final result = await _apiService.getRentals(_currentUser.id);
@@ -475,9 +478,9 @@ class UserController extends Auth {
   Future<bool> linkRentalToLobby(RentalModel rental, String lobbyId) async {
     try {
       await _apiService.linkRentalToLobby(rental, _currentUser.id, lobbyId);
-      final currentRental = _currentUser.rentals
-          ?.firstWhere((element) => element.id == rental.id);
-      currentRental?.linkedLobbyId = lobbyId;
+      final currentRental =
+          _currentUser.rentals.firstWhere((element) => element.id == rental.id);
+      currentRental.linkedLobbyId = lobbyId;
       return true;
     } catch (e, stack) {
       print('Error in linking to lobby: $e');
@@ -560,41 +563,101 @@ class UserController extends Auth {
   */
 
   // Fetch available cars
-  Future<List<CarModel>> getAvailableCars() async {
-    final response = await _apiService.getAvailableCars(_currentUser.id);
-    return response.data!;
+  Future<List<CarModel>?> getAvailableCars() async {
+    try {
+      final response = await _apiService.getAvailableCars(_currentUser.id);
+      return response.data!;
+    } catch (e, stack) {
+      print('Error in fetching available cars: $e');
+      print(stack);
+    }
+    return null;
   }
 
-  // User Renting a Car
-  Future<ResponseModel<String>> postRental(
-      CarRentalModel carRental, XFile image) async {
-    List<MultipartFile> converted = [];
-    converted.add(MultipartFile.fromBytes(
-      await image.readAsBytes(),
-      filename: image.name,
-      contentType: MediaType('application', 'octet-stream'),
-    ));
-    return await _apiService.postRental(
-      _currentUser.id,
-      licensePlate: carRental.licensePlate!,
-      startRental: carRental.startRental!,
-      endRental: carRental.endRental!,
-      duration: carRental.duration!,
-      files: converted,
-    );
+  // User Renting a Car TODO: check
+  Future<String?> postRental(CarRentalModel carRental, XFile image) async {
+    try {
+      List<MultipartFile> converted = [];
+      converted.add(MultipartFile.fromBytes(
+        await image.readAsBytes(),
+        filename: image.name,
+        contentType: MediaType('application', 'octet-stream'),
+      ));
+      final result = await _apiService.postRental(
+        _currentUser.id,
+        licensePlate: carRental.licensePlate!,
+        startRental: carRental.startRental!,
+        endRental: carRental.endRental!,
+        duration: carRental.duration!,
+        files: converted,
+      );
+      return result.data;
+    } catch (e, stack) {
+      print('Error in booking: $e');
+      print(stack);
+    }
+    return null;
   }
 
-  // Edit user profile
-  Future<UserModel?> editAccount(String firstName, String lastName) async {
-    final request = {'firstName': firstName, 'lastName': lastName};
-    final result = await _apiService.editAccount(request, _currentUser.id);
-    return result.data;
+  /*
+    Account related actions
+  */
+
+  // TODO: check
+  @override
+  Future<bool> logout() async {
+    try {
+      _pref = await SharedPreferences.getInstance();
+      _pref.clear();
+      return true;
+    } catch (e, stack) {
+      print('Error in logging out: $e');
+      print(stack);
+      throw e;
+    }
   }
 
-  // Change password
-  Future<ResponseModel> changePassword(
-      String currentPassword, String nPassword) async {
-    final request = {'password': currentPassword, 'newPassword': nPassword};
-    return await _apiService.changePassword(request, _currentUser.id);
+  // Edit user profile TODO: check
+  Future<bool> editAccount(String firstName, String lastName) async {
+    try {
+      final result = await _apiService.editAccount(
+          {'firstName': firstName, 'lastName': lastName}, _currentUser.id);
+      if (result.code == HttpStatus.ok) {
+        _currentUser.firstName = firstName;
+        _currentUser.lastName = lastName;
+        notifyListeners();
+        return true;
+      } else
+        return false;
+    } catch (e, stack) {
+      print('Error in editting account: $e');
+      print(stack);
+    }
+    return false;
   }
+
+  // Change password TODO: check
+  Future<bool> changePassword(String currentPassword, String nPassword) async {
+    try {
+      final result = await _apiService.changePassword(
+        {'password': currentPassword, 'newPassword': nPassword},
+        _currentUser.id,
+      );
+      if (result.code == HttpStatus.ok) {
+        _currentUser.password = result.data!;
+        notifyListeners();
+        return true;
+      } else
+        return false;
+    } catch (e, stack) {
+      print('Error in changing password: $e');
+      print(stack);
+    }
+    return false;
+  }
+  /*
+
+    -----End of Account relations-----
+
+  */
 }

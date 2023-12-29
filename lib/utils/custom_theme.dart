@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 export 'custom_theme.dart';
 
@@ -12,7 +13,12 @@ ThemeData lightTheme(BuildContext context) {
     primaryColor: lightThemeColors().primary,
     scaffoldBackgroundColor: lightThemeColors().background,
     appBarTheme: AppBarTheme(
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light,
+      ),
       backgroundColor: Colors.transparent,
+      scrolledUnderElevation: 0,
       titleTextStyle: textTheme().displayMedium?.copyWith(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.w600,
@@ -23,8 +29,8 @@ ThemeData lightTheme(BuildContext context) {
       shape: ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      color: Color(0xffffffff),
-      // surfaceTintColor: Color(0xffffffff),
+      color: Colors.white,
+      elevation: 3,
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
@@ -163,7 +169,7 @@ ColorScheme lightThemeColors() {
     tertiary: Color(0xffffb400),
     error: Color(0xffcc0000),
     onError: Colors.white,
-    background: Color(0xfff9f9f9),
+    background: Color(0xfffffafa),
     onBackground: Colors.black,
     surface: Color(0xfff2f2f2),
     onSurface: Color(0xff101014),

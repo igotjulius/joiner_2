@@ -10,17 +10,17 @@ class CraUserModel extends User {
   @JsonKey(name: '_id')
   final String id;
   @JsonKey(includeIfNull: false)
-  String? password;
-  String? firstName, lastName, email, contactNo, address;
+  String? contactNo, address;
+  String firstName, lastName, email, password;
   List<CarModel> vehicles;
   List<RentalModel> rentals;
 
   CraUserModel({
     required this.id,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.password,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.password,
     this.contactNo,
     this.address,
     required this.vehicles,

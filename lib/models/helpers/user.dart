@@ -1,12 +1,13 @@
 abstract class User {
-  final String? id, firstName, lastName, email, password, contactNo, address;
+  final String? id, contactNo, address;
+  final String firstName, lastName, email, password;
   final Map<String, dynamic>? verification;
   const User({
     this.id,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.password,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.password,
     this.contactNo,
     this.address,
     this.verification,

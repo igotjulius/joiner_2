@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joiner_1/models/cra_user_model.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,6 @@ class _CraSignUpMoleState extends State<CraSignUpMole> {
   void initState() {
     super.initState();
     _model = context.read<CraSignUpMoleModel>();
-    _model.initState();
   }
 
   @override
@@ -43,6 +43,10 @@ class _CraSignUpMoleState extends State<CraSignUpMole> {
                 label: 'Email',
                 controller: _model.emailController,
                 validator: validateEmail,
+                errorText: _model.emailError,
+                onChanged: (value) => setState(() {
+                  _model.emailError = null;
+                }),
               ),
               CustomTextInput(
                 label: 'Address',
@@ -80,35 +84,38 @@ class _CraSignUpMoleState extends State<CraSignUpMole> {
 }
 
 class CraSignUpMoleModel {
-  TextEditingController? fNameController;
-  TextEditingController? lNameController;
-  TextEditingController? emailController;
-  TextEditingController? addressController;
-  TextEditingController? contactController;
-  TextEditingController? passwordController;
-  TextEditingController? confirmPassController;
-
-  void initState() {
-    fNameController ??= TextEditingController();
-    lNameController ??= TextEditingController();
-    emailController ??= TextEditingController();
-    addressController ??= TextEditingController();
-    contactController ??= TextEditingController();
-    passwordController ??= TextEditingController();
-    confirmPassController ??= TextEditingController();
-  }
+  TextEditingController fNameController = TextEditingController();
+  TextEditingController lNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController contactController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPassController = TextEditingController();
+  String? emailError;
 
   void dispose() {
-    fNameController?.dispose();
-    lNameController?.dispose();
-    emailController?.dispose();
-    addressController?.dispose();
-    contactController?.dispose();
-    passwordController?.dispose();
-    confirmPassController?.dispose();
+    fNameController.dispose();
+    lNameController.dispose();
+    emailController.dispose();
+    addressController.dispose();
+    contactController.dispose();
+    passwordController.dispose();
+    confirmPassController.dispose();
   }
 
   String? confirmPass(String? value) {
-    return confirmPassword(value, passwordController!.text);
+    return confirmPassword(value, passwordController.text);
+  }
+
+  CraUserModel getUserInput() {
+    return CraUserModel(
+      id: '',
+      firstName: fNameController.text,
+      lastName: lNameController.text,
+      email: emailController.text,
+      password: passwordController.text,
+      vehicles: [],
+      rentals: [],
+    );
   }
 }
