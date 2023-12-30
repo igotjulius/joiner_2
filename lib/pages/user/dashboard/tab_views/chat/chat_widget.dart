@@ -51,10 +51,20 @@ class _ChatWidgetState extends State<ChatWidget>
                   if (snapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());
 
-                  if (_model.allMessages.isEmpty)
+                  if (_model.allMessages.isEmpty) {
                     return Center(
-                      child: Text('Hi there :)'),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('👋',
+                              style: TextStyle(fontSize: 52.0)
+                                  ),
+                          SizedBox(height: 8.0),
+                          Text('Hi there! ;)'),
+                        ],
+                      ),
                     );
+                  }
 
                   return ListView.separated(
                     reverse: true,

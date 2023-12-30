@@ -63,7 +63,18 @@ class _BudgetWidgetState extends State<BudgetWidget>
   Widget expensesTab() {
     if (widget.currentLobby.expense?.items?.length == 0) {
       return Center(
-        child: Text('There\'s no expenses listed'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.monetization_on,
+              size: 48.0,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 8.0),
+            Text("There's no expenses listed"),
+          ],
+        ),
       );
     }
     return SingleChildScrollView(
@@ -107,7 +118,18 @@ class _BudgetWidgetState extends State<BudgetWidget>
   Widget budgetTab() {
     if (widget.currentLobby.expense?.items?.length == 0) {
       return Center(
-        child: Text('There\'s no expenses yet'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.monetization_on,
+              size: 48.0,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 8.0),
+            Text("There's no expenses yet"),
+          ],
+        ),
       );
     }
     return SingleChildScrollView(

@@ -49,7 +49,28 @@ class _CraCarWidgetState extends State<CraCarWidget> {
     final cars = (context.watch<Auth>() as CraController).cars;
     return cars.isEmpty
         ? Center(
-            child: Text('You don\'t have registered cars yet'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.not_interested,
+                      size: 48.0,
+                      color: Colors.grey,
+                    ),
+                    Icon(
+                      Icons.directions_car,
+                      size: 48.0,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.0),
+                Text('You don\'t have Registered Cars yet'),
+              ],
+            ),
           )
         : SingleChildScrollView(
             child: ListView.separated(

@@ -95,7 +95,20 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     final pendingLobbies = provider.pendingLobbies;
     final activeLobbies = provider.activeLobbies;
     return activeLobbies.length == 0 && pendingLobbies.isEmpty
-        ? Center(child: Text('No active lobbies'))
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 52.0,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 8.0),
+                Text('No Active Lobbies'),
+              ],
+            ),
+          )
         : SingleChildScrollView(
             child: Column(
               children: [
