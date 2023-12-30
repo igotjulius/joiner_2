@@ -22,8 +22,8 @@ part 'api_service.g.dart';
   Make sure that the physical phone and host machine are in the same network.
 */
 // const String serverUrl = 'http://192.168.137.1:443/';
-// const String serverUrl = 'http://localhost:443/';
-const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
+const String serverUrl = 'http://localhost:443/';
+// const String serverUrl = 'https://joiner-backend-v4.onrender.com/';
 
 // final apiService = ApiService(Dio(), baseUrl: serverUrl);
 // ApiService(Dio(BaseOptions(contentType: 'application/json')));
@@ -114,10 +114,11 @@ abstract class ApiService {
   );
 
   // Get all available cars
-  @GET('user/{userId}/rent/car?availability={availability}')
+  @POST('user/{userId}/rent/car/available')
   Future<ResponseModel<List<CarModel>>> getAvailableCars(
+    @Body() Map<String, dynamic> body,
     @Path('userId') String userId, {
-    @Query('availability') String availability = 'Available',
+    @Query('filter') String? queryString,
   });
 
   // Get all participants

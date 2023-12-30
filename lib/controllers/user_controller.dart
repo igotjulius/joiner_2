@@ -659,9 +659,27 @@ class UserController extends Auth {
   */
 
   // Fetch available cars
-  Future<List<CarModel>?> getAvailableCars() async {
+  Future<List<CarModel>?> getAvailableCars({
+    DateTimeRange? dateFilter,
+    double? priceFilter,
+  }) async {
     try {
-      final response = await _apiService.getAvailableCars(_currentUser.id);
+      String queryString = '';
+      final Map<String, dynamic> body = {};
+      if (dateFilter != null) {
+        queryString += 'dates';
+        body['startDate'] = dateFilter.start.toString();
+        body['endDate'] = dateFilter.end.toString();
+      }
+      if (priceFilter != null) {
+        queryString += ' price';
+        body['maxAmount'] = priceFilter;
+      }
+      final response = await _apiService.getAvailableCars(
+        body,
+        _currentUser.id,
+        queryString: queryString.isNotEmpty ? queryString : null,
+      );
       return response.data!;
     } catch (e, stack) {
       print('Error in fetching available cars: $e');
