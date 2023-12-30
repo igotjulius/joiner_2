@@ -56,9 +56,7 @@ class _ChatWidgetState extends State<ChatWidget>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('👋',
-                              style: TextStyle(fontSize: 52.0)
-                                  ),
+                          Text('👋', style: TextStyle(fontSize: 52.0)),
                           SizedBox(height: 8.0),
                           Text('Hi there! ;)'),
                         ],

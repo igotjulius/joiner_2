@@ -51,7 +51,28 @@ class _RentalsWidgetState extends State<RentalsWidget> {
         padding: const EdgeInsets.all(20),
         child: rentals.isEmpty
             ? Center(
-                child: Text('No rentals at this moment'),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.not_interested,
+                          size: 48.0,
+                          color: Colors.grey,
+                        ),
+                        Icon(
+                          Icons.receipt,
+                          size: 48.0,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.0),
+                    Text('No Rentals as of the moment'),
+                  ],
+                ),
               )
             : Column(
                 children: [

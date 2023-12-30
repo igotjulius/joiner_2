@@ -73,7 +73,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
       body: mainContent(),
       floatingActionButton: showFab && _tabBarController.index > 1
           ? Visibility(
-              visible: showFab,
+              visible: true,
               child: FloatingActionButton(
                 onPressed: () {
                   setState(() {
@@ -197,6 +197,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
         isScrollable: true,
         tabs: _tabs,
         controller: _tabBarController,
+        onTap: (i) => setState(() {}),
       ),
     );
   }

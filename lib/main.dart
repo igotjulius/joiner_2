@@ -10,7 +10,6 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'index.dart';
 import 'pages/cra/car/cra_car_widget.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -116,33 +115,15 @@ class NavBarPage extends StatefulWidget {
 }
 
 /// The widget accountable for bottom navigation bar.
-class _NavBarPageState extends State<NavBarPage>
-    with SingleTickerProviderStateMixin {
+class _NavBarPageState extends State<NavBarPage> {
   String _currentPageName = 'Login';
   late Widget? _currentPage;
-  late final AnimationController _controller = AnimationController.unbounded(
-    duration: const Duration(seconds: 2),
-    vsync: this,
-  );
-  late final Animation<Offset> _offsetAnimation = Tween<Offset>(
-    begin: Offset.zero,
-    end: const Offset(1.5, 0.0),
-  ).animate(CurvedAnimation(
-    parent: _controller,
-    curve: Curves.elasticIn,
-  ));
 
   @override
   void initState() {
     super.initState();
     _currentPageName = widget.initialPage ?? _currentPageName;
     _currentPage = widget.page;
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -157,30 +138,16 @@ class _NavBarPageState extends State<NavBarPage>
   }
 
   Widget userDashboard() {
-    // final tabs = {
-    //   'MainDashboard': LobbiesWidget(),
-    //   'CarRentals': RentalsWidget(),
-    //   'Friends': FriendsWidget(),
-    //   'Account': AccountWidget(),
-    // };
-    final tabs = [
-      LobbiesWidget(),
-      RentalsWidget(),
-      FriendsWidget(),
-      AccountWidget(),
-    ];
-    // final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
+    final tabs = {
+      'MainDashboard': LobbiesWidget(),
+      'CarRentals': RentalsWidget(),
+      'Friends': FriendsWidget(),
+      'Account': AccountWidget(),
+    };
+    final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
     return Scaffold(
       body: SafeArea(
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return SlideTransition(
-              position: AlwaysStoppedAnimation(Offset(-_controller.value, 0)),
-              child: tabs[_controller.value.toInt()],
-            );
-          },
-        ),
+        child: tabs[_currentPageName]!,
       ),
       extendBody: true,
       bottomNavigationBar: Container(
@@ -191,15 +158,11 @@ class _NavBarPageState extends State<NavBarPage>
           child: Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: GNav(
-              selectedIndex: _controller.value.toInt(),
+              selectedIndex: currentIndex,
               onTabChange: (i) {
-                //   setState(() {
-                //   _currentPage = null;
-                //   _currentPageName = tabs.keys.toList()[i];
-                // });
                 setState(() {
-                  // _controller.value = 1;
-                  _controller.animateTo(i.toDouble());
+                  _currentPage = null;
+                  _currentPageName = tabs.keys.toList()[i];
                 });
               },
               color: Colors.grey,

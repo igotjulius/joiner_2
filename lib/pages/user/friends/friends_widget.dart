@@ -40,7 +40,20 @@ class _FriendsWidgetState extends State<FriendsWidget> {
         child: pendingFriendsList.isEmpty &&
                 forApprovalList.isEmpty &&
                 acceptedFriendsList.isEmpty
-            ? Center(child: Text('Your friend list is empty'))
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.person_add,
+                      size: 48.0,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 8.0),
+                    Text('Add your friends here'),
+                  ],
+                ),
+              )
             : Column(
                 children: [
                   Expanded(
