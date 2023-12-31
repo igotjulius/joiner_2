@@ -1,6 +1,7 @@
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/resources/modals/add_budget_widget.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/budget_category.dart';
 import 'package:joiner_1/widgets/atoms/participant_budget.dart';
 import 'package:flutter/material.dart';
@@ -85,11 +86,11 @@ class _BudgetWidgetState extends State<BudgetWidget>
             children: [
               Text(
                 'Items',
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               Text(
                 'Amount',
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),
@@ -134,35 +135,19 @@ class _BudgetWidgetState extends State<BudgetWidget>
     }
     return SingleChildScrollView(
       child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 20,
-          ),
-          Text('Total Expenses: ₱${widget.currentLobby.expense?.total}',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10, 30, 10, 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Participants',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                  ],
-                ),
-                Text(
-                  'Budgets',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Participants',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Text(
+                'Contribution',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
           ),
           contributions(),
         ],
@@ -191,53 +176,74 @@ class _BudgetWidgetState extends State<BudgetWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return Padding(
+      padding: EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChoiceChip(
+                label: Text('Expenses'),
+                selected: _index == 0 ? true : false,
+                showCheckmark: false,
+                onSelected: (_) {
+                  setState(() {
+                    _index = 0;
+                    _tabController.index = 0;
+                  });
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              ChoiceChip(
+                label: Text('Budget'),
+                selected: _index == 1 ? true : false,
+                showCheckmark: false,
+                onSelected: (_) {
+                  setState(() {
+                    _index = 1;
+                    _tabController.index = 1;
+                  });
+                },
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Text(
+                'Total Expenses: ',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              withCurrency(
+                Text(
+                  '${widget.currentLobby.expense?.total}',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
               children: [
-                ChoiceChip(
-                  label: Text('Expenses'),
-                  selected: _index == 0 ? true : false,
-                  showCheckmark: false,
-                  onSelected: (_) {
-                    setState(() {
-                      _index = 0;
-                      _tabController.index = 0;
-                    });
-                  },
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                ChoiceChip(
-                  label: Text('Budget'),
-                  selected: _index == 1 ? true : false,
-                  showCheckmark: false,
-                  onSelected: (_) {
-                    setState(() {
-                      _index = 1;
-                      _tabController.index = 1;
-                    });
-                  },
-                ),
+                expensesTab(),
+                budgetTab(),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  expensesTab(),
-                  budgetTab(),
-                ],
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

@@ -193,6 +193,10 @@ TextTheme textTheme() {
       fontWeight: FontWeight.w400,
       fontSize: 24,
     ),
+    headlineMedium: TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 18,
+    ),
     headlineSmall: TextStyle(
       fontWeight: FontWeight.w600,
       fontSize: 16,

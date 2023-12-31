@@ -33,19 +33,24 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
   late TabController _tabController;
   TextEditingController _dates = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() {
-      setState(() {});
-    });
-  }
+  bool isSelectedDatesValid(
+      List<Map<String, dynamic>> schedule, DateTime start, DateTime end) {
+    for (var element in schedule) {
+      // Parse date to DateTime object
+      DateTime rentalStartDate = DateTime.parse(element['rentalStartDate']);
+      DateTime rentalEndDate = DateTime.parse(element['rentalEndDate']);
+      // Convert dates for comparing
+      rentalStartDate = DateTime.utc(
+          rentalStartDate.year, rentalStartDate.month, rentalStartDate.day);
+      rentalEndDate = DateTime.utc(
+          rentalEndDate.year, rentalEndDate.month, rentalEndDate.day);
+      start = DateTime.utc(start.year, start.month, start.day);
+      end = DateTime.utc(end.year, end.month, end.day);
 
-  @override
-  void dispose() {
-    _dates.dispose();
-    super.dispose();
+      if (start.compareTo(rentalEndDate) <= 0 &&
+          end.compareTo(rentalStartDate) >= 0) return false;
+    }
+    return true;
   }
 
   Widget uploadId() {
@@ -135,9 +140,15 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                   child: CustomTextInput(
                     controller: _dates,
                     validator: (value) {
+                      final isValid = isSelectedDatesValid(
+                        widget.car.schedule!,
+                        _datePicked.start,
+                        _datePicked.end,
+                      );
+                      if (!isValid)
+                        return 'Selected dates have already been rented';
                       return datesValidator(value, _datePicked.duration.inDays);
                     },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     suffixIcon: Icon(
                       Icons.calendar_today_rounded,
                     ),
@@ -283,6 +294,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
           ),
         Spacer(),
         FilledButton(
+          child: Text('Next'),
           onPressed: () async {
             if (_tabController.index == 1) {
               showDialogLoading(context);
@@ -312,10 +324,24 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               });
             }
           },
-          child: Text('Next'),
         ),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _dates.dispose();
+    super.dispose();
   }
 
   @override

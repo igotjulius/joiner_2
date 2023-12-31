@@ -680,7 +680,7 @@ class UserController extends Auth {
         _currentUser.id,
         queryString: queryString.isNotEmpty ? queryString : null,
       );
-      return response.data!;
+      return response.data;
     } catch (e, stack) {
       print('Error in fetching available cars: $e');
       print(stack);

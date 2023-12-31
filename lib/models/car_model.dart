@@ -13,6 +13,7 @@ class CarModel {
   final DateTime endDate;
   final double price;
   final List<String>? photoUrl;
+  final List<Map<String, dynamic>>? schedule;
 
   const CarModel({
     this.licensePlate,
@@ -24,6 +25,7 @@ class CarModel {
     required this.endDate,
     required this.price,
     this.photoUrl,
+    this.schedule,
   });
 
   factory CarModel.fromJson(Map<String, dynamic> json) =>

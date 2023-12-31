@@ -61,44 +61,19 @@ class BudgetCategoryWidget extends StatelessWidget {
           : () async {
               confirmationDialog(context);
             },
-      child: Container(
-        height: 65,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            color: Color(0xff9c9c9c),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ].divide(
-                  SizedBox(
-                    width: 8,
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  withCurrency(
-                    Text(amount.toString()),
-                  ),
-                ].divide(
-                  SizedBox(
-                    width: 8,
-                  ),
-                ),
-              ),
-            ],
-          ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: TextStyle(fontSize: 16),
+            ),
+            withCurrency(
+              Text(amount.toString()),
+            ),
+          ],
         ),
       ),
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:joiner_1/utils/utils.dart';
 
 class ParticipantBudget extends StatelessWidget {
@@ -7,57 +6,31 @@ class ParticipantBudget extends StatelessWidget {
   final String? participantFname;
   final String? participantLname;
   final double? amount;
-  const ParticipantBudget(
-      {super.key,
-      this.id,
-      this.participantFname,
-      this.participantLname,
-      this.amount});
+  const ParticipantBudget({
+    super.key,
+    this.id,
+    this.participantFname,
+    this.participantLname,
+    this.amount,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 65,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Color(0xff9c9c9c),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Text(
-                  '${participantFname!} ${participantLname!}',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ].divide(
-                SizedBox(
-                  width: 8,
-                ),
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '${participantFname!} ${participantLname!}',
+          ),
+          withCurrency(
+            Text(
+              amount.toString(),
+              style: TextStyle(fontSize: 16),
             ),
-            Row(
-              children: [
-                Text(
-                  NumberFormat.currency(
-                    symbol: '₱', // Currency symbol
-                    decimalDigits: 2, // Number of decimal places
-                  ).format(amount!),
-                  style: TextStyle(fontSize: 16),
-                ),
-              ].divide(
-                SizedBox(
-                  width: 8,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

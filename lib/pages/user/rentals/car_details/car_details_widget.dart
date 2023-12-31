@@ -44,68 +44,99 @@ class _CarDetailsState extends State<CarDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: [
-          imageCarousel(),
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        withCurrency(
-                          Text(
-                            '${widget.car.price} / day',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              imageCarousel(),
+              SizedBox(
+                height: 10,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      withCurrency(
+                        Text(
+                          '${widget.car.price} / day',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
-                        FilledButton(
-                          onPressed: () {
-                            context.pushNamed(
-                              'Booking',
-                              extra: widget.car,
-                            );
-                          },
-                          child: Text('Rent now'),
-                        ),
-                      ],
-                    ),
-                    Chip(
-                      label: Text(
-                        widget.car.availability,
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  'Available Dates',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                Text(
-                    '${DateFormat('MMM d').format(widget.car.startDate)} - ${DateFormat('MMM d').format(widget.car.endDate)}'),
-                Text(
-                  'Car owner',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                Text(widget.car.ownerName!),
-              ].divide(
-                SizedBox(
-                  height: 10,
+                      FilledButton(
+                        onPressed: () {
+                          context.pushNamed(
+                            'Booking',
+                            extra: widget.car,
+                          );
+                        },
+                        child: Text('Rent now'),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Available Dates',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      Text(
+                        '${DateFormat('MMM d').format(widget.car.startDate)} - ${DateFormat('MMM d').format(widget.car.endDate)}',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Car owner',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      Text(
+                        widget.car.ownerName!,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ],
+                  ),
+                  Divider(),
+                  Text(
+                    'Unavailable dates',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  ListView.builder(
+                    itemCount: widget.car.schedule?.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          Text(
+                            '${DateFormat('MMM d').format(DateTime.parse(widget.car.schedule![index]['rentalStartDate']))} - ${DateFormat('MMM d').format(DateTime.parse(widget.car.schedule![index]['rentalEndDate']))}',
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ].divide(
+                  SizedBox(
+                    height: 10,
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

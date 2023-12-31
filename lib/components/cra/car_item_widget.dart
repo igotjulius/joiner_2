@@ -65,7 +65,6 @@ class _CarItemWidgetState extends State<CarItemWidget> {
   Widget build(BuildContext context) {
     final isCra = context.watch<Auth>() is CraController;
     return Card(
-      surfaceTintColor: Theme.of(context).colorScheme.secondary,
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
         onLongPress: isCra ? handleLongPress : null,
@@ -85,90 +84,110 @@ class _CarItemWidgetState extends State<CarItemWidget> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "${widget.car.licensePlate}",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  Card(
+                    child: CachedNetworkImage(
+                      imageUrl: getImageUrl(widget.car.photoUrl![0]),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.error,
+                        color: Colors.red,
+                      ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      width: 150.0,
+                      height: 100.0,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.contain,
+                          ),
                         ),
+                      ),
+                    ),
                   ),
-                  Text(
-                    widget.car.availability,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                  ),
-                ],
-              ),
-              Divider(
-                indent: 4,
-                endIndent: 4,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    Card(
-                      surfaceTintColor:
-                          Theme.of(context).colorScheme.primaryContainer,
-                      child: CachedNetworkImage(
-                        imageUrl: getImageUrl(widget.car.photoUrl![0]),
-                        errorWidget: (context, url, error) => Icon(
-                          Icons.error,
-                          color: Colors.red,
-                        ),
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        width: 150.0,
-                        height: 100.0,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.contain,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DefaultTextStyle(
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
                             ),
-                          ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'License Plate:',
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    "${widget.car.licensePlate}",
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Vehicle Type:',
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    widget.car.vehicleType,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Price:',
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      withCurrency(
+                                        Text(
+                                          widget.car.price.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 4,
+                                      ),
+                                      Text('/ day'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    DefaultTextStyle(
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w400,
-                          ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.car.vehicleType,
-                          ),
-                          Row(
-                            children: [
-                              withCurrency(
-                                Text(
-                                  widget.car.price.toString(),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text('/ day'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ],
           ),
