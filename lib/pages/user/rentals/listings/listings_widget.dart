@@ -91,7 +91,17 @@ class _ListingsWidgetState extends State<ListingsWidget> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: InkWell(
+                      child: CustomTextInput(
+                        hintText: 'Filter by dates',
+                        controller: _datesController,
+                        readOnly: true,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            _datesController.clear();
+                            _datePicked = null;
+                          },
+                          icon: Icon(Icons.clear_rounded),
+                        ),
                         onTap: () {
                           showDateRangePicker(
                             context: context,
@@ -108,11 +118,6 @@ class _ListingsWidgetState extends State<ListingsWidget> {
                             }
                           });
                         },
-                        child: CustomTextInput(
-                          hintText: 'Filter by dates',
-                          controller: _datesController,
-                          enabled: false,
-                        ),
                       ),
                     ),
                     Expanded(

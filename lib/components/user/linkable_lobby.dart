@@ -21,9 +21,9 @@ class LinkableLobby extends StatefulWidget {
 class _LinkableLobbyState extends State<LinkableLobby> {
   @override
   Widget build(BuildContext context) {
-    final _lobbies =
-        (context.read<Auth>() as UserController).activeLobbies.where((element) {
-      print('${element.id}  ${widget.rental?.linkedLobbyId}');
+    final _lobbies = (context.watch<Auth>() as UserController)
+        .activeLobbies
+        .where((element) {
       return element.id != widget.rental?.linkedLobbyId;
     }).toList();
     return Container(
@@ -39,6 +39,7 @@ class _LinkableLobbyState extends State<LinkableLobby> {
                     itemBuilder: (context, index) {
                       final lobby = _lobbies[index];
                       return Card(
+                        color: Colors.white,
                         child: InkWell(
                           onTap: () {
                             showDialog(

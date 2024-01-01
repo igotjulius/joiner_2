@@ -26,7 +26,7 @@ class _RentalsWidgetState extends State<RentalsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final rentals = provider.rentals;
+    final rentals = context.watch<Auth>().rentals;
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(

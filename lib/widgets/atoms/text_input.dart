@@ -22,9 +22,10 @@ class CustomTextInput extends StatefulWidget {
   final EdgeInsets? contentPadding;
   final bool? isDense;
   final TextInputDirection? direction;
-  final Icon? suffixIcon;
+  final Widget? suffixIcon;
   final TextStyle? labelStyle;
   final AutovalidateMode? autovalidateMode;
+  final void Function()? onTap;
 
   CustomTextInput({
     super.key,
@@ -48,6 +49,7 @@ class CustomTextInput extends StatefulWidget {
     this.suffixIcon,
     this.labelStyle,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
+    this.onTap,
   }) : inputFormatters =
             inputFormatters ?? FilteringTextInputFormatter.singleLineFormatter;
 
@@ -94,6 +96,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
 
   Widget customTextField() {
     return TextFormField(
+      onTap: widget.onTap,
       readOnly: widget.readOnly,
       initialValue: widget.initialValue,
       controller: widget.controller,

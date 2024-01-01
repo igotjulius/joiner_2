@@ -26,23 +26,35 @@ class AuthController extends ChangeNotifier {
   static List<GoRoute> baseRoutes() {
     return [
       GoRoute(
-          name: 'Login',
-          path: '/login',
-          builder: (context, params) => LoginPageWidget(),
-          pageBuilder: (context, state) => topToBottomTransition<void>(
-              context: context, state: state, child: LoginPageWidget())),
+        name: 'Login',
+        path: '/login',
+        builder: (context, params) => LoginPageWidget(),
+        pageBuilder: (context, state) => topToBottomTransition<void>(
+          context: context,
+          state: state,
+          child: LoginPageWidget(),
+        ),
+      ),
       GoRoute(
-          name: 'Sign Up',
-          path: '/sign-up',
-          builder: (context, params) => SignUpPageWidget(),
-          pageBuilder: (context, state) => topToBottomTransition<void>(
-              context: context, state: state, child: SignUpPageWidget())),
+        name: 'Sign Up',
+        path: '/sign-up',
+        builder: (context, params) => SignUpPageWidget(),
+        pageBuilder: (context, state) => topToBottomTransition<void>(
+          context: context,
+          state: state,
+          child: SignUpPageWidget(),
+        ),
+      ),
       GoRoute(
-          name: 'Verification',
-          path: '/verification',
-          builder: (context, params) => VerificationWidget(),
-          pageBuilder: (context, state) => topToBottomTransition<void>(
-              context: context, state: state, child: SignUpPageWidget())),
+        name: 'Verification',
+        path: '/verification',
+        builder: (context, params) => VerificationWidget(),
+        pageBuilder: (context, state) => topToBottomTransition<void>(
+          context: context,
+          state: state,
+          child: VerificationWidget(),
+        ),
+      ),
     ];
   }
 
