@@ -29,7 +29,7 @@ import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
 import 'package:joiner_1/pages/user/rentals/payment_result/result_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rentals/rentals_widget.dart';
 import 'package:joiner_1/service/api_service.dart';
-import 'package:joiner_1/utils/generic_response.dart';
+import 'package:joiner_1/service/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:joiner_1/utils/utils.dart';
@@ -345,6 +345,25 @@ class UserController extends Auth {
     return false;
   }
 
+  // HOST Split expenses TODO: check
+  Future<bool> resetExpenses(ExpenseModel expenseModel, String lobbyId) async {
+    try {
+      final result = await _apiService.resetExpenses(
+          expenseModel, _currentUser.id, lobbyId);
+      final currentLobby = _currentUser.activeLobby
+          .firstWhere((element) => element.id == lobbyId);
+      currentLobby.expense = result.data?['expenses'] ?? currentLobby.expense;
+      currentLobby.participants =
+          result.data?['participant'] ?? currentLobby.participants;
+      notifyListeners();
+      return true;
+    } catch (e, stack) {
+      print('Error resetting expenses: $e');
+      print(stack);
+    }
+    return false;
+  }
+
   // HOST Add Expenses TODO: implemented
   Future<bool> putExpenses(ExpenseModel expenseModel, String lobbyId) async {
     try {
@@ -354,7 +373,7 @@ class UserController extends Auth {
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.expense = result.data?['expenses'];
       currentLobby.participants = result.data?['participants'];
-      super.notifyListeners();
+      notifyListeners();
       return true;
     } catch (e, stack) {
       print('Error in adding expense: $e');
@@ -375,7 +394,7 @@ class UserController extends Auth {
       final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.expense = result.data;
-      super.notifyListeners();
+      notifyListeners();
       return true;
     } catch (e) {
       print('Error in deleting expense: $e');
@@ -396,6 +415,30 @@ class UserController extends Auth {
       return true;
     } catch (e, stack) {
       print('Error in deleting expense: $e');
+      print(stack);
+    }
+    return false;
+  }
+
+  // Increase a participant's own contribution TODO: implemented
+  Future<bool> increaseContribution(
+      String lobbyId, double amount, double percent) async {
+    try {
+      final participant = _currentUser.activeLobby
+          .firstWhere((element) => element.id == lobbyId)
+          .participants!
+          .firstWhere((element) => element.userId == _currentUser.id);
+      final result = await _apiService.increaseContribution(
+        {'amount': amount, 'inPercent': percent / 100},
+        _currentUser.id,
+        lobbyId,
+        participant.id!,
+      );
+      participant.contribution = result.data?.contribution;
+      notifyListeners();
+      return true;
+    } catch (e, stack) {
+      print('Error in increasing contribution: $e');
       print(stack);
     }
     return false;
@@ -496,13 +539,12 @@ class UserController extends Auth {
   // Remove participant from the lobby TODO: implemented
   Future<bool> removeParticipant(String lobbyId, String participantId) async {
     try {
-      await _apiService.removeParticipant(
+      final result = await _apiService.removeParticipant(
           _currentUser.id, lobbyId, participantId);
       final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
-      currentLobby.participants
-          ?.removeWhere((element) => element.id == participantId);
-      super.notifyListeners();
+      currentLobby.participants = result.data;
+      notifyListeners();
       return true;
     } catch (e, stack) {
       print('Error in removing participant: $e');

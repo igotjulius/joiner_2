@@ -33,13 +33,28 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
   }
 
   void addFriendToInvites(String friendId, String firstName, String lastName) {
-    invitedFriends.add(new ParticipantModel(
-      userId: friendId,
-      firstName: firstName,
-      lastName: lastName,
-      joinStatus: 'Pending',
-      type: 'Joiner',
-    ));
+    setState(() {});
+  }
+
+  void removeFromInvites(String friendId) {
+    invitedFriends.removeWhere((element) => element.id == friendId);
+    setState(() {});
+  }
+
+  void onCheckBoxTap(
+      bool value, String friendId, String firstName, String lastName) {
+    if (value) {
+      invitedFriends.add(new ParticipantModel(
+        userId: friendId,
+        firstName: firstName,
+        lastName: lastName,
+        joinStatus: 'Pending',
+        type: 'Joiner',
+      ));
+    } else {
+      invitedFriends.removeWhere((element) => element.userId == friendId);
+    }
+    setState(() {});
   }
 
   @override
@@ -52,38 +67,40 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Container(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Invite your friends'),
-                  IconButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    icon: Icon(Icons.close_rounded),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: friendList.length,
-                  itemBuilder: (context, index) {
-                    return ParticipantMole(
-                      firstName: friendList[index].firstName,
-                      lastName: friendList[index].lastName,
-                      friendUserId: friendList[index].friendId,
-                      showCheckBox: true,
-                      addFriendToInvite: addFriendToInvites,
-                    );
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Invite your friends'),
+                IconButton(
+                  onPressed: () {
+                    context.pop();
                   },
+                  icon: Icon(Icons.close_rounded),
                 ),
-              ),
+              ],
+            ),
+            Expanded(
+              child: friendList.length > 0
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: friendList.length,
+                      itemBuilder: (context, index) {
+                        return ParticipantMole(
+                          firstName: friendList[index].firstName,
+                          lastName: friendList[index].lastName,
+                          friendUserId: friendList[index].friendId,
+                          showCheckBox: true,
+                          onCheckBoxTap: onCheckBoxTap,
+                        );
+                      },
+                    )
+                  : Center(child: Text('There\'s no one to invite :(')),
+            ),
+            if (invitedFriends.length > 0)
               FilledButton(
                 child: Text('Invite'),
                 onPressed: () {
@@ -103,8 +120,7 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
                   context.pop();
                 },
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );

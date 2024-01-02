@@ -113,9 +113,10 @@ class _CustomTextInputState extends State<CustomTextInput> {
         hintText: widget.hintText,
         fillColor: widget.fillColor,
         filled: widget.fillColor == null ? false : true,
-        enabledBorder:
-            // widget.fillColor == null? null:
-            OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        disabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
         ),
         errorText: widget.errorText,

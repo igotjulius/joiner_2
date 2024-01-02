@@ -1,3 +1,7 @@
+import 'package:go_router/go_router.dart';
+import 'package:joiner_1/controllers/auth_controller.dart';
+import 'package:joiner_1/controllers/user_controller.dart';
+import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/resources/modals/add_budget_widget.dart';
@@ -5,6 +9,7 @@ import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/budget_category.dart';
 import 'package:joiner_1/widgets/atoms/participant_budget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BudgetWidget extends StatefulWidget {
   final FabController fabController;
@@ -33,26 +38,6 @@ class _BudgetWidgetState extends State<BudgetWidget>
     ),
   ];
   int _index = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.fabController.onTapHandler = fabHandler;
-    _tabController = TabController(
-      vsync: this,
-      length: _tabs.length,
-      initialIndex: 0,
-    )..addListener(() => setState(() {}));
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.model.controller != null) widget.model.controller?.close();
-    });
-  }
 
   void fabHandler() {
     widget.model.controller = showBottomSheet(
@@ -137,21 +122,61 @@ class _BudgetWidgetState extends State<BudgetWidget>
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Participants',
+                'Contributions',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              Text(
-                'Contribution',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Spacer(),
+              if (context.read<Auth?>()?.profile?.id ==
+                  widget.currentLobby.hostId)
+                splitOption(),
             ],
           ),
           contributions(),
         ],
       ),
+    );
+  }
+
+  Widget splitOption() {
+    return Row(
+      children: [
+        Text(
+          'Split equally',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        Checkbox(
+          value: widget.currentLobby.expense?.splitEqually,
+          onChanged: (value) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Split expenses'),
+                  content: Text(
+                      'This will reset each participant\'s contribution. Do you want to continue?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        final nExpenses = ExpenseModel(
+                          items: widget.currentLobby.expense?.items,
+                          total: widget.currentLobby.expense?.total,
+                          splitEqually: value,
+                        );
+                        (context.read<Auth?>() as UserController)
+                            .resetExpenses(nExpenses, widget.currentLobby.id!)
+                            .then((value) => context.pop());
+                      },
+                      child: Text('Yes'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -162,12 +187,9 @@ class _BudgetWidgetState extends State<BudgetWidget>
       itemBuilder: (context, index) {
         if (widget.currentLobby.participants?[index].joinStatus == 'Joined')
           return ParticipantBudget(
-            id: widget.currentLobby.participants?[index].id,
-            participantFname:
-                widget.currentLobby.participants?[index].firstName,
-            participantLname: widget.currentLobby.participants?[index].lastName,
-            amount: widget
-                .currentLobby.participants?[index].contribution!['amount'],
+            lobbyId: widget.currentLobby.id!,
+            participant: widget.currentLobby.participants![index],
+            totalExpense: widget.currentLobby.expense!.total!,
           );
         return null;
       },
@@ -175,7 +197,28 @@ class _BudgetWidgetState extends State<BudgetWidget>
   }
 
   @override
+  void initState() {
+    super.initState();
+    widget.fabController.onTapHandler = fabHandler;
+    _tabController = TabController(
+      vsync: this,
+      length: _tabs.length,
+      initialIndex: 0,
+    )..addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.model.controller != null) widget.model.controller?.close();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    context.watch<Auth?>();
     return Padding(
       padding: EdgeInsets.all(20.0),
       child: Column(

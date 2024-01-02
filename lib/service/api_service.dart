@@ -7,7 +7,7 @@ import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
 import 'package:joiner_1/models/rental_model.dart';
-import 'package:joiner_1/utils/generic_response.dart';
+import 'package:joiner_1/service/generic_response.dart';
 import 'package:retrofit/http.dart';
 import '../models/lobby_model.dart';
 
@@ -139,7 +139,7 @@ abstract class ApiService {
 
   // Remove a participant from the lobby
   @DELETE('user/{userId}/lobby/{lobbyId}/participant/{participantId}')
-  Future<void> removeParticipant(
+  Future<ResponseModel<List<ParticipantModel>>> removeParticipant(
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
     @Path('participantId') String participantId,
@@ -277,7 +277,15 @@ abstract class ApiService {
     @Path('lobbyId') String lobbyId,
   );
 
-  //Create expenses
+  // Split expenses equally or not, resets each participant's contribution
+  @POST('user/{userId}/lobby/{lobbyId}/expense')
+  Future<ResponseModel<Map<String, dynamic>>> resetExpenses(
+    @Body() ExpenseModel body,
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+  );
+
+  // Add expenses
   @PUT('user/{userId}/lobby/{lobbyId}/expense')
   Future<ResponseModel<Map<String, dynamic>>> putExpenses(
     @Body() ExpenseModel expense,
@@ -286,26 +294,34 @@ abstract class ApiService {
     @Header('Content-Type') String contentType = 'application/json',
   });
 
-  //Get Expenses
+  // Get Expenses
   @GET('user/{userId}/lobby/{lobbyId}/expense')
   Future<ResponseModel<ExpenseModel>> getExpenses(
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
   );
 
-  //HOST Delete Expenses
+  // HOST Delete Expenses
   @DELETE('user/{userId}/lobby/{lobbyId}/expense')
   Future<ResponseModel<ExpenseModel>> deleteExpenses(
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
   );
 
-  //HOST Delete SPECIFIC Expense
+  // HOST Delete SPECIFIC Expense
   @DELETE('user/{userId}/lobby/{lobbyId}/expense/{label}')
   Future<ResponseModel<Map<String, dynamic>>> deleteSpecificExpense(
     @Path('userId') String userId,
     @Path('lobbyId') String lobbyId,
     @Path('label') String label,
+  );
+
+  @POST('user/{userId}/lobby/{lobbyId}/budget/{participantId}')
+  Future<ResponseModel<ParticipantModel>> increaseContribution(
+    @Body() Map<String, double> body,
+    @Path('userId') String userId,
+    @Path('lobbyId') String lobbyId,
+    @Path('participantId') String participantId,
   );
 
   // CRA API's

@@ -12,11 +12,11 @@ class ParticipantModel {
   final String? firstName;
   final String? lastName;
   final String? joinStatus;
-  final Map<String, double>? contribution;
+  Map<String, double>? contribution;
   final String? type;
   final List? pledges;
 
-  const ParticipantModel({
+  ParticipantModel({
     this.id,
     this.userId,
     this.firstName,
