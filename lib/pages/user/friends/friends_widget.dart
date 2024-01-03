@@ -134,8 +134,7 @@ class _FriendsWidgetState extends State<FriendsWidget> {
           itemBuilder: (context, index) {
             return InkWell(
               onLongPress: () {
-                (context.read<Auth>() as UserController)
-                    .removeFriendRequest(list[index].friendId);
+                showRemoveFriendConfirmationDialog(context, list[index]);
               },
               child: AcceptedFriendAtom(
                 name: '${list[index].firstName} ${list[index].lastName}',
@@ -180,6 +179,34 @@ class _FriendsWidgetState extends State<FriendsWidget> {
           },
         ),
       ],
+    );
+  }
+
+  void showRemoveFriendConfirmationDialog(BuildContext context, FriendModel friend) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Remove of Friend'),
+          content: Text('Are you sure you want to remove ${friend.firstName} ${friend.lastName} as a friend?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); 
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                (context.read<Auth>() as UserController)
+                    .removeFriendRequest(friend.friendId);
+                Navigator.of(context).pop();
+              },
+              child: Text('Remove'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

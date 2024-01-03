@@ -26,7 +26,7 @@ class ParticipantBudget extends StatelessWidget {
           ),
           withCurrency(
             Text(
-              amount.toString(),
+              amount!.toStringAsFixed(2),
               style: TextStyle(fontSize: 16),
             ),
           ),

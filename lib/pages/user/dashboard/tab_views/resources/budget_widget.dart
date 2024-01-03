@@ -225,7 +225,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
               ),
               withCurrency(
                 Text(
-                  '${widget.currentLobby.expense?.total}',
+                  '${widget.currentLobby.expense?.total!.toStringAsFixed(2)}',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
