@@ -156,6 +156,8 @@ class _AccountWidgetState extends State<AccountWidget> {
   }
 
   Future _editDetails() {
+    _firstNameController.text = _currentUser.firstName;
+    _lastNameController.text = _currentUser.lastName;
     return showDialog(
         context: context,
         builder: (context) {
@@ -168,6 +170,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                   CustomTextInput(
                     label: 'First name',
                     controller: _firstNameController,
+                    validator: isEmpty,
                   ),
                   SizedBox(
                     height: 10,
@@ -175,6 +178,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                   CustomTextInput(
                     label: 'Last name',
                     controller: _lastNameController,
+                    validator: isEmpty,
                   ),
                   SizedBox(
                     height: 20,
@@ -183,6 +187,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                     width: double.maxFinite,
                     child: FilledButton(
                       onPressed: () async {
+                        if(_firstNameController.text.isEmpty || _lastNameController.text.isEmpty) {return;}
                         showDialogLoading(context);
                         final result = await context.read<Auth>().editAccount(
                             _firstNameController.text,
@@ -192,7 +197,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                           context.pop();
                           _resetController();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            showSuccess('Changes saved'),
+                            showSuccess('Profile Saved'),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(

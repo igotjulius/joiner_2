@@ -38,7 +38,7 @@ class _ParticipantBudgetState extends State<ParticipantBudget> {
           Spacer(),
           withCurrency(
             Text(
-              widget.participant.contribution!['amount'].toString(),
+              widget.participant.contribution!['amount']!.toStringAsFixed(2),
               style: TextStyle(fontSize: 16),
             ),
           ),

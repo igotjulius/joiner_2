@@ -26,6 +26,7 @@ class _EditLobbyWidgetState extends State<EditLobbyWidget> {
   void initState() {
     super.initState();
     _titleInput = TextEditingController(text: widget.currentLobby.title);
+    _destInput = TextEditingController(text: widget.currentLobby.destination);
     if (widget.currentLobby.startDate != null) {
       _datePicked = DateTimeRange(
         start: widget.currentLobby.startDate!,
