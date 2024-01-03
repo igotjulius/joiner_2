@@ -80,10 +80,6 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                           );
                         },
                       );
-                      // _controller?.closed.then((value) {
-                      //   setState(() {});
-                      //   widget.setParentState(() {});
-                      // });
                     },
                     child: Text('Edit details'),
                   ),

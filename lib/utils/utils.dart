@@ -27,7 +27,7 @@ extension ListDivideExt<T extends Widget> on Iterable<T> {
 DateTime get getCurrentTimestamp => DateTime.now();
 
 String getImageUrl(String imageUrl) {
-  if (imageUrl.startsWith('http'))
+  if (imageUrl.startsWith('https'))
     return imageUrl;
   else
     return '$serverUrl$imageUrl';

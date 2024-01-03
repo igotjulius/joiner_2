@@ -30,11 +30,11 @@ class _CarItemWidgetState extends State<CarItemWidget> {
             TextButton(
               onPressed: () {
                 showDialogLoading(context);
-                context
-                    .read<CraController>()
+                (context.read<Auth>() as CraController)
                     .removeCar(widget.car.licensePlate!)
                     .then((value) {
                   if (value) {
+                    context.pop();
                     context.pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       showSuccess('Car removed'),
@@ -98,15 +98,17 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                           CircularProgressIndicator(),
                       width: 150.0,
                       height: 100.0,
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
+                      // imageBuilder: (context, imageProvider) {
+                      //   return Container(
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(8.0),
+                      //       image: DecorationImage(
+                      //         image: imageProvider,
+                      //         fit: BoxFit.contain,
+                      //       ),
+                      //     ),
+                      //   );
+                      // },
                     ),
                   ),
                   Expanded(

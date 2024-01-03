@@ -6,8 +6,8 @@ import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
 
-class ActiveLobbyMolecule extends StatelessWidget {
-  ActiveLobbyMolecule({
+class LobbyMolecule extends StatelessWidget {
+  LobbyMolecule({
     super.key,
   });
 
@@ -68,7 +68,7 @@ class ActiveLobbyMolecule extends StatelessWidget {
               );
             },
             child: Card(
-              elevation: 4,
+              elevation: 2,
               child: Padding(
                 padding: EdgeInsetsDirectional.all(10),
                 child: Row(

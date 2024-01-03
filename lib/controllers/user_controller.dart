@@ -18,6 +18,7 @@ import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/pages/shared_pages/account/account_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rentals/rental_details/rental_details_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/lobby/archived_lobby_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby_creation/lobby_creation_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/map_feature/map_feature.dart';
@@ -81,6 +82,16 @@ class UserController extends Auth {
             context: context,
             state: state,
             child: MapFeature(),
+          ),
+        ),
+        GoRoute(
+          name: 'Archive',
+          path: 'archive',
+          builder: (context, state) => ArchivedLobbies(),
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: ArchivedLobbies(),
           ),
         ),
         GoRoute(
@@ -252,8 +263,20 @@ class UserController extends Auth {
     - CRUD Poll
     - CUD Participants
   */
+  List<LobbyModel> get archivedLobbies =>
+      _currentUser.activeLobby.where((element) {
+        if (element.endDate != null)
+          return element.endDate!.isBefore(getCurrentTimestamp);
+        return false;
+      }).toList();
   List<LobbyModel> get pendingLobbies => _currentUser.pendingLobby;
-  List<LobbyModel> get activeLobbies => _currentUser.activeLobby;
+  List<LobbyModel> get activeLobbies =>
+      _currentUser.activeLobby.where((element) {
+        if (element.endDate != null) {
+          return element.endDate!.isAfter(getCurrentTimestamp);
+        }
+        return false;
+      }).toList();
   List<FriendModel> get friends => _currentUser.friends;
   List<FriendModel> get acceptedFriends => _currentUser.friends
       .where((element) => element.status == 'Accepted')
@@ -345,7 +368,7 @@ class UserController extends Auth {
     return false;
   }
 
-  // HOST Split expenses TODO: check
+  // HOST Split expenses TODO: implemented
   Future<bool> resetExpenses(ExpenseModel expenseModel, String lobbyId) async {
     try {
       final result = await _apiService.resetExpenses(
@@ -553,7 +576,7 @@ class UserController extends Auth {
     return false;
   }
 
-  // Accept invitation to join a lobby // TODO: check
+  // Accept invitation to join a lobby // TODO: implemented
   Future<void> acceptLobbyInvitation(String lobbyId) async {
     try {
       await _apiService
@@ -572,7 +595,7 @@ class UserController extends Auth {
     }
   }
 
-  // Decline invitation to join a lobby // TODO: check
+  // Decline invitation to join a lobby // TODO: implemented
   Future<void> declineLobbyInvitation(String lobbyId) async {
     try {
       await _apiService
