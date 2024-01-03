@@ -138,7 +138,7 @@ class _RentalDetailsState extends State<RentalDetails> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Booked at',
+                  'Transaction date',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Row(

@@ -10,6 +10,7 @@ import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/info_container.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +30,13 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
   final _formKey = GlobalKey<FormState>();
   DateTimeRange _datePicked =
       DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  TimeOfDay? _pickUpTime;
+  TimeOfDay? _returnTime;
   PickedImages _imagePicker = PickedImages();
   late TabController _tabController;
   TextEditingController _dates = TextEditingController();
+  TextEditingController _pickUpTimeCtrl = TextEditingController();
+  TextEditingController _returnTimeCtrl = TextEditingController();
 
   bool isSelectedDatesValid(
       List<Map<String, dynamic>> schedule, DateTime start, DateTime end) {
@@ -53,113 +58,192 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
     return true;
   }
 
+  bool isSelectedTimeValid(TimeOfDay time) {
+    if (6 < time.hour && time.hour < 18)
+      return true;
+    else
+      return false;
+  }
+
   Widget uploadId() {
     final theme = Theme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Text(
-          'Please Upload any Government ID',
-        ),
-        Expanded(
-          child: SizedBox(
-            height: 300,
-            width: 300,
-            child: Card(
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: () async {
-                  await _imagePicker.selectImage();
-                  setState(() {
-                    _noImage = null;
-                  });
-                },
-                child: _imagePicker.getImage() != null
-                    ? displayImage()
-                    : Center(
-                        child: Text('Tap to Upload'),
-                      ),
-              ),
-            ),
-          ),
-        ),
-        if (_noImage != null)
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Text(
-              _noImage!,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: theme.colorScheme.error),
-            ),
-          ),
-        SizedBox(
-          height: 20,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Pick dates',
-              style: Theme.of(context).textTheme.titleSmall,
+              'Please Upload any Government ID',
             ),
             SizedBox(
-              height: 4,
-            ),
-            InkWell(
-              onTap: () async {
-                showDateRangePicker(
-                  context: context,
-                  firstDate: getCurrentTimestamp.isBefore(widget.car.startDate)
-                      ? widget.car.startDate
-                      : getCurrentTimestamp,
-                  lastDate: getCurrentTimestamp.isAfter(widget.car.endDate)
-                      ? getCurrentTimestamp
-                      : widget.car.endDate,
-                ).then((value) {
-                  if (value != null) {
+              height: 300,
+              width: 400,
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: () async {
+                    await _imagePicker.selectImage();
                     setState(() {
-                      _dates.text =
-                          '${DateFormat('MMM d').format(value.start)} - ${DateFormat('MMM d').format(value.end)}';
+                      _noImage = null;
                     });
-                    _datePicked = value;
-                  }
-                });
-              },
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  inputDecorationTheme:
-                      Theme.of(context).inputDecorationTheme.copyWith(
-                            disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                ),
-                child: Form(
-                  key: _formKey,
-                  child: CustomTextInput(
-                    controller: _dates,
-                    validator: (value) {
-                      final isValid = isSelectedDatesValid(
-                        widget.car.schedule!,
-                        _datePicked.start,
-                        _datePicked.end,
-                      );
-                      if (!isValid)
-                        return 'Selected dates have already been rented';
-                      return datesValidator(value, _datePicked.duration.inDays);
-                    },
-                    suffixIcon: Icon(
-                      Icons.calendar_today_rounded,
-                    ),
-                    enabled: false,
-                  ),
+                  },
+                  child: _imagePicker.getImage() != null
+                      ? displayImage()
+                      : Center(
+                          child: Text('Tap to Upload'),
+                        ),
                 ),
               ),
+            ),
+            if (_noImage != null)
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  _noImage!,
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: theme.colorScheme.error),
+                ),
+              ),
+            SizedBox(
+              height: 20,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Pick dates',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                InkWell(
+                  onTap: () async {
+                    showDateRangePicker(
+                      context: context,
+                      firstDate:
+                          getCurrentTimestamp.isBefore(widget.car.startDate)
+                              ? widget.car.startDate
+                              : getCurrentTimestamp,
+                      lastDate: getCurrentTimestamp.isAfter(widget.car.endDate)
+                          ? getCurrentTimestamp
+                          : widget.car.endDate,
+                    ).then((value) {
+                      if (value != null) {
+                        setState(() {
+                          _dates.text =
+                              '${DateFormat('MMM d').format(value.start)} - ${DateFormat('MMM d').format(value.end)}';
+                        });
+                        _datePicked = value;
+                      }
+                    });
+                  },
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      inputDecorationTheme:
+                          Theme.of(context).inputDecorationTheme.copyWith(
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                              ),
+                    ),
+                    child: CustomTextInput(
+                      controller: _dates,
+                      validator: (value) {
+                        final isValid = isSelectedDatesValid(
+                          widget.car.schedule!,
+                          _datePicked.start,
+                          _datePicked.end,
+                        );
+                        if (!isValid)
+                          return 'Selected dates have already been rented';
+                        return datesValidator(
+                            value, _datePicked.duration.inDays);
+                      },
+                      suffixIcon: Icon(
+                        Icons.calendar_today_rounded,
+                      ),
+                      enabled: false,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Pick-up time',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                InkWell(
+                  onTap: () async {
+                    final value = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (value != null) {
+                      setState(() {
+                        _pickUpTimeCtrl.text = value.format(context);
+                        _pickUpTime = value;
+                      });
+                    }
+                  },
+                  child: displayTimePicker(_pickUpTimeCtrl, _pickUpTime),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Return time',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                InkWell(
+                  onTap: () async {
+                    final value = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (value != null) {
+                      setState(() {
+                        _returnTimeCtrl.text = value.format(context);
+                        _returnTime = value;
+                      });
+                    }
+                  },
+                  child: displayTimePicker(_returnTimeCtrl, _returnTime),
+                ),
+              ],
             ),
           ],
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget displayTimePicker(
+      TextEditingController controller, TimeOfDay? timePicked) {
+    return CustomTextInput(
+      suffixIcon: Icon(MdiIcons.clockOutline),
+      controller: controller,
+      enabled: false,
+      validator: (value) {
+        if (timePicked != null && !isSelectedTimeValid(timePicked)) {
+          return 'Available time: 7 AM - 6 PM';
+        }
+        return isEmpty(value);
+      },
     );
   }
 
@@ -196,63 +280,14 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Start Date',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.grey),
-                    ),
-                    Text(
-                      '${DateFormat('MMM d').format(_datePicked.start)}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'End Date',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.grey),
-                    ),
-                    Text(
-                      '${DateFormat('MMM d').format(_datePicked.end)}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Duration',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.grey),
-                    ),
-                    Text(
-                      '${_datePicked.duration.inDays} day${_datePicked.duration.inDays > 1 ? 's' : ''}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
+                details('Start date',
+                    '${DateFormat('MMM d').format(_datePicked.start)}'),
+                details('Pick-up time', _pickUpTime?.format(context) ?? ''),
+                details('End date',
+                    '${DateFormat('MMM d').format(_datePicked.end)}'),
+                details('Return time', _returnTime?.format(context) ?? ''),
+                details('Duration',
+                    '${_datePicked.duration.inDays} day${_datePicked.duration.inDays > 1 ? 's' : ''}'),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -274,9 +309,35 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                     ),
                   ],
                 ),
-              ],
+              ].divide(
+                SizedBox(
+                  height: 8,
+                ),
+              ),
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  Row details(String label, String content) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: Colors.grey),
+        ),
+        Text(
+          content,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w500),
         ),
       ],
     );
@@ -296,12 +357,17 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
         FilledButton(
           child: Text('Next'),
           onPressed: () async {
+            final startDateConverted = _datePicked.start.add(Duration(
+                hours: _pickUpTime!.hour, minutes: _pickUpTime!.minute));
+            final endDateConverted = _datePicked.end.add(Duration(
+                hours: _returnTime!.hour, minutes: _returnTime!.minute));
+            print(_datePicked.start.toUtc());
             if (_tabController.index == 1) {
               showDialogLoading(context);
               final rental = CarRentalModel(
                 licensePlate: widget.car.licensePlate,
-                startRental: _datePicked.start.toString(),
-                endRental: _datePicked.end.toString(),
+                startRental: startDateConverted.toString(),
+                endRental: endDateConverted.toString(),
                 duration: _datePicked.duration.inDays,
               );
               final redirUrl = await (context.read<Auth>() as UserController)
@@ -357,7 +423,8 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(
+            Expanded(
+              // fit: FlexFit.tight,
               child: TabBarView(
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
@@ -409,7 +476,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                 ),
               ),
             ),
-            Expanded(child: navButtons()),
+            navButtons(),
           ],
         ),
       ),
