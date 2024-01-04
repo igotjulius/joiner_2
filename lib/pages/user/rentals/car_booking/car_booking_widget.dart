@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:joiner_1/models/car_rental_model.dart';
 import 'package:joiner_1/utils/image_handler.dart';
 import 'package:joiner_1/utils/utils.dart';
-import 'package:joiner_1/widgets/atoms/info_container.dart';
 import 'package:joiner_1/widgets/atoms/text_input.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +36,8 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
   TextEditingController _dates = TextEditingController();
   TextEditingController _pickUpTimeCtrl = TextEditingController();
   TextEditingController _returnTimeCtrl = TextEditingController();
+  bool _isCashSelected = true;
+  bool _isOnlineSelected = false;
 
   bool isSelectedDatesValid(
       List<Map<String, dynamic>> schedule, DateTime start, DateTime end) {
@@ -263,18 +264,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
   Widget additionalDetails() {
     return Column(
       children: [
-        InfoContainer(
-          filled: true,
-          child: Text(
-            'Click next to proceed to the payment page',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -317,11 +306,56 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
             ),
           ),
         ),
+        choices(),
       ],
     );
   }
 
-  Row details(String label, String content) {
+  Widget choices() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Select payment method',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            ChoiceChip.elevated(
+              selected: _isCashSelected,
+              label: Text('Cash'),
+              selectedColor: Theme.of(context).colorScheme.primary,
+              onSelected: (value) {
+                setState(() {
+                  _isCashSelected = value;
+                  if (_isOnlineSelected) {
+                    _isOnlineSelected = false;
+                  }
+                });
+              },
+            ),
+            SizedBox(width: 20),
+            ChoiceChip.elevated(
+              selected: _isOnlineSelected,
+              selectedColor: Theme.of(context).colorScheme.primary,
+              label: Text('Online'),
+              onSelected: (value) {
+                setState(() {
+                  _isOnlineSelected = value;
+                  if (_isCashSelected) {
+                    _isCashSelected = false;
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget details(String label, String content) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -361,7 +395,6 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                 hours: _pickUpTime!.hour, minutes: _pickUpTime!.minute));
             final endDateConverted = _datePicked.end.add(Duration(
                 hours: _returnTime!.hour, minutes: _returnTime!.minute));
-            print(_datePicked.start.toUtc());
             if (_tabController.index == 1) {
               showDialogLoading(context);
               final rental = CarRentalModel(
@@ -372,9 +405,15 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               );
               final redirUrl = await (context.read<Auth>() as UserController)
                   .postRental(rental, _imagePicker.getImage()!);
-              await launchUrl(Uri.parse(redirUrl!),
-                  mode: LaunchMode.externalApplication);
+              if (_isOnlineSelected) {
+                await launchUrl(Uri.parse(redirUrl!),
+                    mode: LaunchMode.externalApplication);
+              }
               context.pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                showSuccess('Booking successful'),
+              );
+              context.goNamed('CarRentals');
             }
             if (_imagePicker.getImage() == null) {
               setState(() {
@@ -382,7 +421,7 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               });
               return;
             }
-            if (_tabController.index < 2 && _formKey.currentState != null) {
+            if (_formKey.currentState != null) {
               setState(() {
                 if (_formKey.currentState!.validate()) {
                   if (_noImage == null) _tabController.index++;

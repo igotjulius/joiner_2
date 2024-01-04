@@ -146,9 +146,7 @@ class _NavBarPageState extends State<NavBarPage> {
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
     return Scaffold(
-      body: SafeArea(
-        child: tabs[_currentPageName]!,
-      ),
+      body: tabs[_currentPageName]!,
       extendBody: true,
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(10),

@@ -140,11 +140,13 @@ ThemeData lightTheme(BuildContext context) {
     chipTheme: ChipThemeData(
       labelStyle: textTheme().bodyMedium?.copyWith(
             fontWeight: FontWeight.w600,
-            color: lightThemeColors().secondary,
+            color: MaterialStateColor.resolveWith((states) {
+              if (states.contains(MaterialState.selected)) return Colors.white;
+              return lightThemeColors().secondary;
+            }),
             fontFamily: 'Poppins',
           ),
-      secondarySelectedColor: lightThemeColors().primaryContainer,
-      // side: BorderSide(color: lightThemeColors().primary),
+      secondarySelectedColor: lightThemeColors().primary,
       side: MaterialStateBorderSide.resolveWith((states) {
         if (states.contains(MaterialState.selected)) {
           return BorderSide.none;

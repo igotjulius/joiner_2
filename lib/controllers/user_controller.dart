@@ -377,7 +377,7 @@ class UserController extends Auth {
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.expense = result.data?['expenses'] ?? currentLobby.expense;
       currentLobby.participants =
-          result.data?['participant'] ?? currentLobby.participants;
+          result.data?['participants'] ?? currentLobby.participants;
       notifyListeners();
       return true;
     } catch (e, stack) {

@@ -133,6 +133,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
                 splitOption(),
             ],
           ),
+          SizedBox(height: 10),
           contributions(),
         ],
       ),
@@ -142,13 +143,11 @@ class _BudgetWidgetState extends State<BudgetWidget>
   Widget splitOption() {
     return Row(
       children: [
-        Text(
-          'Split equally',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        Checkbox(
-          value: widget.currentLobby.expense?.splitEqually,
-          onChanged: (value) {
+        TextButton(
+          child: Text(
+            'Split equally',
+          ),
+          onPressed: () {
             showDialog(
               context: context,
               builder: (context) {
@@ -159,14 +158,27 @@ class _BudgetWidgetState extends State<BudgetWidget>
                   actions: [
                     TextButton(
                       onPressed: () {
+                        showDialogLoading(context);
                         final nExpenses = ExpenseModel(
                           items: widget.currentLobby.expense?.items,
                           total: widget.currentLobby.expense?.total,
-                          splitEqually: value,
                         );
                         (context.read<Auth?>() as UserController)
                             .resetExpenses(nExpenses, widget.currentLobby.id!)
-                            .then((value) => context.pop());
+                            .then((value) {
+                          context.pop();
+                          context.pop();
+                          if (value) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              showSuccess('Contributions reset'),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              showError('Error in resetting',
+                                  Theme.of(context).colorScheme.error),
+                            );
+                          }
+                        });
                       },
                       child: Text('Yes'),
                     ),
@@ -219,7 +231,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
   @override
   Widget build(BuildContext context) {
     context.watch<Auth?>();
-    return Padding(
+    return Container(
       padding: EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -227,7 +239,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ChoiceChip(
+              ChoiceChip.elevated(
                 label: Text('Expenses'),
                 selected: _index == 0 ? true : false,
                 showCheckmark: false,
@@ -241,7 +253,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
               SizedBox(
                 width: 10,
               ),
-              ChoiceChip(
+              ChoiceChip.elevated(
                 label: Text('Budget'),
                 selected: _index == 1 ? true : false,
                 showCheckmark: false,

@@ -27,85 +27,6 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
   late TabController _tabController;
   late UserController provider;
 
-  @override
-  void initState() {
-    super.initState();
-    provider = context.read<Auth>() as UserController;
-    provider.refetchLobbies();
-    provider.refetchRentals();
-    provider.refetchFriendsList();
-    _tabController =
-        TabController(length: _tabs.length, vsync: this, initialIndex: 0);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    context.watch<Auth>();
-    return ChangeNotifierProvider<UserController>.value(
-      value: provider,
-      child: Scaffold(
-        floatingActionButton: _tabController.index != 0
-            ? FloatingActionButton(
-                onPressed: () {
-                  context.goNamed('LobbyCreation');
-                },
-                child: const Icon(
-                  Icons.add,
-                ),
-              )
-            : null,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          toolbarHeight: 0,
-          backgroundColor: Color(0xfffafafa),
-          bottom: TabBar(
-            tabs: _tabs,
-            controller: _tabController,
-            onTap: (value) => setState(() {}),
-          ),
-        ),
-        body: TabBarView(
-          key: Key('userDashboard'),
-          controller: _tabController,
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  child: PromosList(),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          context.pushNamed('Archive');
-                        },
-                        icon: Icon(Icons.archive_outlined),
-                      ),
-                    ],
-                  ),
-                  displayLobbies(),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget displayLobbies() {
     final pendingLobbies = provider.pendingLobbies;
     final activeLobbies = provider.activeLobbies;
@@ -139,5 +60,86 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
               ],
             ),
           );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    provider = context.read<Auth>() as UserController;
+    provider.refetchLobbies();
+    provider.refetchRentals();
+    provider.refetchFriendsList();
+    _tabController =
+        TabController(length: _tabs.length, vsync: this, initialIndex: 0);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    context.watch<Auth>();
+    return ChangeNotifierProvider<UserController>.value(
+      value: provider,
+      child: SafeArea(
+        child: Scaffold(
+          floatingActionButton: _tabController.index != 0
+              ? FloatingActionButton(
+                  onPressed: () {
+                    context.goNamed('LobbyCreation');
+                  },
+                  child: const Icon(
+                    Icons.add,
+                  ),
+                )
+              : null,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            toolbarHeight: 0,
+            backgroundColor: Color(0xfffafafa),
+            bottom: TabBar(
+              tabs: _tabs,
+              controller: _tabController,
+              onTap: (value) => setState(() {}),
+            ),
+          ),
+          body: TabBarView(
+            key: Key('userDashboard'),
+            controller: _tabController,
+            children: [
+              Column(
+                children: [
+                  Expanded(
+                    child: PromosList(),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            context.pushNamed('Archive');
+                          },
+                          icon: Icon(Icons.archive_outlined),
+                        ),
+                      ],
+                    ),
+                    displayLobbies(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

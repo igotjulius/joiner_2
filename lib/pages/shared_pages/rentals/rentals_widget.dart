@@ -14,8 +14,13 @@ class RentalsWidget extends StatefulWidget {
 }
 
 class _RentalsWidgetState extends State<RentalsWidget> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   late Auth provider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    provider.refetchRentals();
+  }
 
   @override
   void initState() {
@@ -28,7 +33,6 @@ class _RentalsWidgetState extends State<RentalsWidget> {
   Widget build(BuildContext context) {
     final rentals = context.watch<Auth>().rentals;
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         title: Text(
           'Rentals',
