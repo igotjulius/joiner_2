@@ -50,6 +50,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
       length: _tabs.length,
       initialIndex: 0,
     );
+    (context.read<Auth?>() as UserController).refetchLobbies();
   }
 
   @override

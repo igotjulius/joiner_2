@@ -60,6 +60,8 @@ class ResponseModel<T> {
         };
       } else if (json.containsKey('friendId'))
         converted = FriendModel.fromJson(json);
+      else if (json.containsKey('contribution'))
+        converted = ParticipantModel.fromJson(json);
 
       return converted as T;
     } else if (json is List) {
@@ -82,16 +84,13 @@ class ResponseModel<T> {
       else if (data.containsKey('friendId')) {
         converted =
             json.map((element) => FriendModel.fromJson(element)).toList();
-      } else if (data.containsKey('question')) {
+      } else if (data.containsKey('question'))
         converted = json.map((element) => PollModel.fromJson(element)).toList();
-      }
 
       return converted as T;
-    } else if (json == null) {
+    } else if (json == null)
       return null;
-    } else if (json is String) {
-      return json as T;
-    }
+    else if (json is String) return json as T;
     throw ArgumentError.value(json, 'json', 'Cannot handle this JSON payload');
   }
 

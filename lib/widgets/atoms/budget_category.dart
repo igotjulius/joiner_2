@@ -71,7 +71,7 @@ class BudgetCategoryWidget extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             withCurrency(
-              Text(amount.toString()),
+              Text(amount.toStringAsFixed(2)),
             ),
           ],
         ),

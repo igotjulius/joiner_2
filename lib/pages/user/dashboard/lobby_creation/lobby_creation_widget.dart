@@ -19,6 +19,7 @@ class LobbyCreationWidget extends StatefulWidget {
 class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
   DateTimeRange? _datePicked;
   TextEditingController _titleInput = TextEditingController();
+  TextEditingController _datesInput = TextEditingController();
   late TextEditingController _destInput;
   final _formKey = GlobalKey<FormState>();
 
@@ -121,42 +122,24 @@ class _LobbyCreationWidgetState extends State<LobbyCreationWidget> {
                       height: 4,
                     ),
                     InkWell(
-                      onTap: () async {
-                        _datePicked = await showDateRangePicker(
+                      onTap: () {
+                        showDateRangePicker(
                           context: context,
                           firstDate: getCurrentTimestamp,
                           lastDate: DateTime(2050),
-                        );
-                        if (_datePicked != null) {
-                          setState(() {});
-                        }
+                        ).then((value) {
+                          if (value != null) {
+                            _datePicked = value;
+                            _datesInput.text = _datePicked!.duration.inDays == 0
+                                ? "${DateFormat('MMM d').format(_datePicked!.start)}"
+                                : "${DateFormat('MMM d').format(_datePicked!.start)} - ${DateFormat('MMM d').format(_datePicked!.end)}";
+                          }
+                        });
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 10),
-                              child: Icon(
-                                Icons.calendar_today,
-                                color: Color(0xFF52B2FA),
-                                size: 24.0,
-                              ),
-                            ),
-                            Text(
-                              _datePicked != null
-                                  ? (_datePicked!.duration.inDays == 0
-                                      ? "${DateFormat('MMM d').format(_datePicked!.start)}"
-                                      : "${DateFormat('MMM d').format(_datePicked!.start)} - ${DateFormat('MMM d').format(_datePicked!.end)}")
-                                  : '',
-                            ),
-                          ].divide(SizedBox(width: 10.0)),
-                        ),
+                      child: CustomTextInput(
+                        suffixIcon: Icon(Icons.calendar_month_rounded),
+                        enabled: false,
+                        controller: _datesInput,
                       ),
                     ),
                   ],

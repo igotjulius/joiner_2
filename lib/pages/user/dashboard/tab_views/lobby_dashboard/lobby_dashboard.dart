@@ -80,10 +80,6 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                           );
                         },
                       );
-                      // _controller?.closed.then((value) {
-                      //   setState(() {});
-                      //   widget.setParentState(() {});
-                      // });
                     },
                     child: Text('Edit details'),
                   ),
@@ -114,6 +110,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                   ),
                   Text(
                     _currentLobby.participants!
+                        .where((participant) => participant.type == 'Joiner')
                         .map((participant) =>
                             '${participant.firstName} ${participant.lastName}')
                         .join(', '),
@@ -201,7 +198,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                     ? Text('-')
                     : withCurrency(
                         Text(
-                          '${_currentLobby.expense?.total}',
+                          '${_currentLobby.expense?.total?.toStringAsFixed(2)}',
                         ),
                       ),
               ],
@@ -238,7 +235,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
             children: [
               Text("${label?[index]}"),
               withCurrency(
-                Text("${value?[index]}"),
+                Text("${value?[index].toStringAsFixed(2)}"),
               ),
             ],
           );

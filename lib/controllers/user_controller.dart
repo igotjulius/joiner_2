@@ -18,6 +18,7 @@ import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/pages/shared_pages/account/account_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rentals/rental_details/rental_details_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/lobby/archived_lobby_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby_creation/lobby_creation_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/map_feature/map_feature.dart';
@@ -29,7 +30,7 @@ import 'package:joiner_1/pages/user/rentals/listings/listings_widget.dart';
 import 'package:joiner_1/pages/user/rentals/payment_result/result_widget.dart';
 import 'package:joiner_1/pages/shared_pages/rentals/rentals_widget.dart';
 import 'package:joiner_1/service/api_service.dart';
-import 'package:joiner_1/utils/generic_response.dart';
+import 'package:joiner_1/service/generic_response.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:joiner_1/utils/utils.dart';
@@ -81,6 +82,16 @@ class UserController extends Auth {
             context: context,
             state: state,
             child: MapFeature(),
+          ),
+        ),
+        GoRoute(
+          name: 'Archive',
+          path: 'archive',
+          builder: (context, state) => ArchivedLobbies(),
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: ArchivedLobbies(),
           ),
         ),
         GoRoute(
@@ -252,8 +263,20 @@ class UserController extends Auth {
     - CRUD Poll
     - CUD Participants
   */
+  List<LobbyModel> get archivedLobbies =>
+      _currentUser.activeLobby.where((element) {
+        if (element.endDate != null)
+          return element.endDate!.isBefore(getCurrentTimestamp);
+        return false;
+      }).toList();
   List<LobbyModel> get pendingLobbies => _currentUser.pendingLobby;
-  List<LobbyModel> get activeLobbies => _currentUser.activeLobby;
+  List<LobbyModel> get activeLobbies =>
+      _currentUser.activeLobby.where((element) {
+        if (element.endDate != null) {
+          return element.endDate!.isAfter(getCurrentTimestamp);
+        }
+        return false;
+      }).toList();
   List<FriendModel> get friends => _currentUser.friends;
   List<FriendModel> get acceptedFriends => _currentUser.friends
       .where((element) => element.status == 'Accepted')
@@ -345,6 +368,25 @@ class UserController extends Auth {
     return false;
   }
 
+  // HOST Split expenses TODO: implemented
+  Future<bool> resetExpenses(ExpenseModel expenseModel, String lobbyId) async {
+    try {
+      final result = await _apiService.resetExpenses(
+          expenseModel, _currentUser.id, lobbyId);
+      final currentLobby = _currentUser.activeLobby
+          .firstWhere((element) => element.id == lobbyId);
+      currentLobby.expense = result.data?['expenses'] ?? currentLobby.expense;
+      currentLobby.participants =
+          result.data?['participant'] ?? currentLobby.participants;
+      notifyListeners();
+      return true;
+    } catch (e, stack) {
+      print('Error resetting expenses: $e');
+      print(stack);
+    }
+    return false;
+  }
+
   // HOST Add Expenses TODO: implemented
   Future<bool> putExpenses(ExpenseModel expenseModel, String lobbyId) async {
     try {
@@ -354,7 +396,7 @@ class UserController extends Auth {
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.expense = result.data?['expenses'];
       currentLobby.participants = result.data?['participants'];
-      super.notifyListeners();
+      notifyListeners();
       return true;
     } catch (e, stack) {
       print('Error in adding expense: $e');
@@ -375,7 +417,7 @@ class UserController extends Auth {
       final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
       currentLobby.expense = result.data;
-      super.notifyListeners();
+      notifyListeners();
       return true;
     } catch (e) {
       print('Error in deleting expense: $e');
@@ -396,6 +438,30 @@ class UserController extends Auth {
       return true;
     } catch (e, stack) {
       print('Error in deleting expense: $e');
+      print(stack);
+    }
+    return false;
+  }
+
+  // Increase a participant's own contribution TODO: implemented
+  Future<bool> increaseContribution(
+      String lobbyId, double amount, double percent) async {
+    try {
+      final participant = _currentUser.activeLobby
+          .firstWhere((element) => element.id == lobbyId)
+          .participants!
+          .firstWhere((element) => element.userId == _currentUser.id);
+      final result = await _apiService.increaseContribution(
+        {'amount': amount, 'inPercent': percent / 100},
+        _currentUser.id,
+        lobbyId,
+        participant.id!,
+      );
+      participant.contribution = result.data?.contribution;
+      notifyListeners();
+      return true;
+    } catch (e, stack) {
+      print('Error in increasing contribution: $e');
       print(stack);
     }
     return false;
@@ -496,13 +562,12 @@ class UserController extends Auth {
   // Remove participant from the lobby TODO: implemented
   Future<bool> removeParticipant(String lobbyId, String participantId) async {
     try {
-      await _apiService.removeParticipant(
+      final result = await _apiService.removeParticipant(
           _currentUser.id, lobbyId, participantId);
       final currentLobby = _currentUser.activeLobby
           .firstWhere((element) => element.id == lobbyId);
-      currentLobby.participants
-          ?.removeWhere((element) => element.id == participantId);
-      super.notifyListeners();
+      currentLobby.participants = result.data;
+      notifyListeners();
       return true;
     } catch (e, stack) {
       print('Error in removing participant: $e');
@@ -511,7 +576,7 @@ class UserController extends Auth {
     return false;
   }
 
-  // Accept invitation to join a lobby // TODO: check
+  // Accept invitation to join a lobby // TODO: implemented
   Future<void> acceptLobbyInvitation(String lobbyId) async {
     try {
       await _apiService
@@ -530,7 +595,7 @@ class UserController extends Auth {
     }
   }
 
-  // Decline invitation to join a lobby // TODO: check
+  // Decline invitation to join a lobby // TODO: implemented
   Future<void> declineLobbyInvitation(String lobbyId) async {
     try {
       await _apiService

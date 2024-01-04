@@ -8,7 +8,7 @@ import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
 import 'package:joiner_1/widgets/molecules/lobby_invitation_mole.dart';
 
 class LobbiesWidget extends StatefulWidget {
-  const LobbiesWidget({Key? key}) : super(key: key);
+  const LobbiesWidget({super.key});
 
   @override
   _LobbiesWidgetState createState() => _LobbiesWidgetState();
@@ -83,7 +83,22 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: displayLobbies(),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          context.pushNamed('Archive');
+                        },
+                        icon: Icon(Icons.archive_outlined),
+                      ),
+                    ],
+                  ),
+                  displayLobbies(),
+                ],
+              ),
             ),
           ],
         ),
@@ -120,7 +135,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
                       LobbyInvitationMolecule(lobbies: pendingLobbies),
                     ],
                   ),
-                ActiveLobbyMolecule(),
+                LobbyMolecule(),
               ],
             ),
           );

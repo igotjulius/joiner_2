@@ -10,7 +10,7 @@ class ParticipantMole extends StatefulWidget {
   final String lastName;
   final String friendUserId;
   final bool? showCheckBox;
-  final Function(String, String, String)? addFriendToInvite;
+  final void Function(bool, String, String, String)? onCheckBoxTap;
   final String? suffixLabel;
   final bool? showRemoveOption;
   final String? lobbyId;
@@ -22,7 +22,7 @@ class ParticipantMole extends StatefulWidget {
     required this.friendUserId,
     this.lobbyId,
     this.showCheckBox,
-    this.addFriendToInvite,
+    this.onCheckBoxTap,
     this.suffixLabel,
     this.showRemoveOption,
   }) : super(key: key);
@@ -71,13 +71,14 @@ class _ParticipantMoleState extends State<ParticipantMole> {
                   Checkbox(
                     value: isChecked,
                     onChanged: (value) {
+                      widget.onCheckBoxTap!(
+                        value!,
+                        widget.friendUserId,
+                        widget.firstName,
+                        widget.lastName,
+                      );
                       setState(() {
-                        isChecked = value!;
-                        widget.addFriendToInvite!(
-                          widget.friendUserId,
-                          widget.firstName,
-                          widget.lastName,
-                        );
+                        isChecked = value;
                       });
                     },
                   ),
