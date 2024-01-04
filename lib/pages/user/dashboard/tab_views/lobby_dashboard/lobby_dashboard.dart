@@ -102,7 +102,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
               Row(
                 children: [
                   Text(
-                    'Joiners: ',
+                    'Participants: ',
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   SizedBox(
