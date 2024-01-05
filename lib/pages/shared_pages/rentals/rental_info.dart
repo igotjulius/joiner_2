@@ -40,7 +40,7 @@ class _RentalInfoState extends State<RentalInfo> {
                 children: [
                   withCurrency(
                     Text(
-                      '${widget.rental?.price}',
+                      '${widget.rental?.price?.toStringAsFixed(2)}',
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge

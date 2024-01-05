@@ -67,7 +67,7 @@ class _RentalDetailsState extends State<RentalDetails> {
                 ),
                 withCurrency(
                   Text(
-                    '${widget.rental?.price}',
+                    '${widget.rental?.price?.toStringAsFixed(2)}',
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),

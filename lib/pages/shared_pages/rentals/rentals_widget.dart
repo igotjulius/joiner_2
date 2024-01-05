@@ -3,8 +3,10 @@ import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/cra_controller.dart';
 import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/pages/shared_pages/rentals/rental_info.dart';
+import 'package:joiner_1/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'dart:core';
 
 class RentalsWidget extends StatefulWidget {
   const RentalsWidget({super.key});
@@ -15,6 +17,9 @@ class RentalsWidget extends StatefulWidget {
 
 class _RentalsWidgetState extends State<RentalsWidget> {
   late Auth provider;
+  late List<RentalModel> rentals;
+  late List<RentalModel> filteredRentals;
+  int? selectedMonth;
 
   @override
   void didChangeDependencies() {
@@ -26,19 +31,47 @@ class _RentalsWidgetState extends State<RentalsWidget> {
   void initState() {
     super.initState();
     provider = context.read<Auth>();
+    rentals = provider.rentals;
+    filteredRentals = List.from(rentals);
     provider.refetchRentals();
+  }
+
+  List<RentalModel> filterAndSortRentalsByMonth(int month) {
+    return rentals
+        .where((rental) => rental.startRental!.month == month)
+        .toList()
+      ..sort((a, b) => a.startRental!.compareTo(b.startRental!));
   }
 
   @override
   Widget build(BuildContext context) {
-    final rentals = context.watch<Auth>().rentals;
+    rentals = context.watch<Auth>().rentals;
+    double totalSum =
+        filteredRentals.fold(0.0, (sum, rental) => sum + (rental.price ?? 0.0));
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Rentals',
         ),
         actions: provider is CraController
-            ? null
+            ? [
+                Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Row(
+                    children: [
+                      Text('Earnings: ',
+                          style: Theme.of(context).textTheme.displaySmall),
+                      withCurrency(Text(
+                        '${totalSum.toStringAsFixed(2)}',
+                        style:
+                            Theme.of(context).textTheme.displaySmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                      )),
+                    ],
+                  ),
+                )
+              ]
             : [
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
@@ -80,19 +113,72 @@ class _RentalsWidgetState extends State<RentalsWidget> {
               )
             : Column(
                 children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: FilledButton(
+                            child: Text(
+                                'Filter by ${selectedMonth != null ? Month.values[selectedMonth! - 1].toString().split('.').last : 'Month'}'),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Choose a Month'),
+                                    content: Column(
+                                      children: List.generate(Month.values.length,
+                                          (index) {
+                                        final month = index + 1;
+                                        return ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              selectedMonth = month;
+                                              filteredRentals =
+                                                  filterAndSortRentalsByMonth(
+                                                      selectedMonth!);
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                              '${Month.values[index].toString().split('.').last}'),
+                                        );
+                                      }),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      if (selectedMonth != null)
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            setState(() {
+                              selectedMonth = null;
+                              filteredRentals = rentals;
+                            });
+                          },
+                        ),
+                    ],
+                  ),
                   Flexible(
                     child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: rentals.length,
+                      itemCount: filteredRentals.length,
                       itemBuilder: (context, index) {
-                        RentalModel rental = rentals[index];
+                        RentalModel rental = filteredRentals[index];
                         return RentalInfo(
                           rental: rental,
                         );
                       },
                     ),
                   ),
-                ],
+                ].divide(SizedBox(height: 10)),
               ),
       ),
     );

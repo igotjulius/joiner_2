@@ -319,7 +319,7 @@ class _AddCarWidgetState extends State<AddCarWidget> {
 
   Widget price() {
     return CustomTextInput(
-      label: 'Price',
+      label: 'Price (per Day)',
       labelStyle:
           Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
       controller: _priceController,
