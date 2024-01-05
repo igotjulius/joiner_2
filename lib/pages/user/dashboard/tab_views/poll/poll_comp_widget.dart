@@ -61,55 +61,55 @@ class _PollCompWidgetState extends State<PollCompWidget> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Container(
-        child: Padding(
-          padding: EdgeInsetsDirectional.all(20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text('Poll'),
-                ],
-              ),
-              Flexible(
-                child: polls == null || polls.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.not_interested,
-                                  size: 48.0,
-                                  color: Colors.grey,
-                                ),
-                                Icon(
-                                  Icons.poll,
-                                  size: 48.0,
-                                  color: Colors.grey,
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 8.0),
-                            Text('No widget polls as of the moment.'),
-                          ],
-                        ),
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: polls.length,
-                        itemBuilder: (context, index) {
-                          return PollMolecule(
-                            poll: polls[index],
-                            lobbyId: widget.currentLobbyId,
-                          );
-                        },
+        padding:
+            const EdgeInsets.only(right: 20, left: 20, top: 20, bottom: 56),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('Poll'),
+              ],
+            ),
+            Flexible(
+              child: polls == null || polls.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.not_interested,
+                                size: 48.0,
+                                color: Colors.grey,
+                              ),
+                              Icon(
+                                Icons.poll,
+                                size: 48.0,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8.0),
+                          Text('No widget polls as of the moment.'),
+                        ],
                       ),
-              ),
-            ].divide(SizedBox(height: 10.0)),
-          ),
+                    )
+                  : ListView.builder(
+                      primary: false,
+                      shrinkWrap: true,
+                      itemCount: polls.length,
+                      itemBuilder: (context, index) {
+                        return PollMolecule(
+                          poll: polls[index],
+                          lobbyId: widget.currentLobbyId,
+                        );
+                      },
+                    ),
+            ),
+          ].divide(SizedBox(height: 10.0)),
         ),
       ),
     );

@@ -273,9 +273,9 @@ class UserController extends Auth {
   List<LobbyModel> get activeLobbies =>
       _currentUser.activeLobby.where((element) {
         if (element.endDate != null) {
-          return element.endDate!.isAfter(getCurrentTimestamp);
+          return !element.endDate!.isBefore(getCurrentTimestamp);
         }
-        return false;
+        return true;
       }).toList();
   List<FriendModel> get friends => _currentUser.friends;
   List<FriendModel> get acceptedFriends => _currentUser.friends
@@ -315,7 +315,7 @@ class UserController extends Auth {
     try {
       final result = await _apiService.createLobby(lobby, _currentUser.id);
       _currentUser.activeLobby.add(result.data!);
-      super.notifyListeners();
+      notifyListeners();
       return result.data;
     } catch (e) {
       print('Error in creating lobby: $e');

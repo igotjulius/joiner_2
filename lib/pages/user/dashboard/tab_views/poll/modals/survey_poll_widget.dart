@@ -18,6 +18,8 @@ class SurveyPollWidget extends StatefulWidget {
 class _SurveyPollWidgetState extends State<SurveyPollWidget> {
   TextEditingController _questionController = TextEditingController();
   List<TextEditingController> _choicesController = [];
+  String? _emptyQuestion;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +63,12 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                 hintText: 'What are you deciding about?',
                 controller: _questionController,
                 fillColor: Theme.of(context).colorScheme.primaryContainer,
+                errorText: _emptyQuestion,
+                onChanged: (value) {
+                  setState(() {
+                    _emptyQuestion = null;
+                  });
+                },
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +82,7 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                     },
                   ),
                   ListView.separated(
-                    scrollDirection: Axis.vertical,
+                    primary: false,
                     shrinkWrap: true,
                     itemCount: _choicesController.length,
                     itemBuilder: (context, index) {
@@ -97,9 +105,25 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: () async {
+                        if (_questionController.text.trim().isEmpty) {
+                          setState(() {
+                            _emptyQuestion = 'Question is required';
+                          });
+                          return;
+                        }
+                        if (!_choicesController
+                            .any((element) => element.text.trim().isNotEmpty)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            showError('A choice is required',
+                                Theme.of(context).colorScheme.error),
+                          );
+                          return;
+                        }
                         List<String> choices = [];
-                        _choicesController
-                            .forEach((element) => choices.add(element.text));
+                        _choicesController.forEach((element) {
+                          if (element.text.trim().isNotEmpty)
+                            choices.add(element.text);
+                        });
                         final nPoll = PollModel(
                           question: _questionController.text,
                           choices: choices,

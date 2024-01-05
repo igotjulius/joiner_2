@@ -17,6 +17,7 @@ class LobbyMolecule extends StatelessWidget {
   Widget build(BuildContext context) {
     final lobbies = context.watch<UserController>().activeLobbies;
     return ListView.separated(
+      primary: false,
       shrinkWrap: true,
       separatorBuilder: (context, index) {
         return SizedBox(
