@@ -17,26 +17,35 @@ class CarDetails extends StatefulWidget {
 class _CarDetailsState extends State<CarDetails> {
   Widget imageCarousel() {
     final images = widget.car.photoUrl;
-    return Card(
-      child: CarouselSlider.builder(
-        itemCount: images?.length,
-        options: CarouselOptions(
-          enlargeCenterPage: true,
-          enableInfiniteScroll: false,
-        ),
-        itemBuilder: (context, index, viewIndex) {
-          return CachedNetworkImage(
-            imageUrl: getImageUrl(images![index]),
-            errorWidget: (context, url, error) => Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
-            placeholder: (context, url) => Center(
-              child: const CircularProgressIndicator(),
-            ),
-          );
-        },
+    return CarouselSlider.builder(
+      itemCount: images?.length,
+      options: CarouselOptions(
+        enlargeCenterPage: true,
+        enableInfiniteScroll: false,
       ),
+      itemBuilder: (context, index, viewIndex) {
+        return CachedNetworkImage(
+          imageUrl: getImageUrl(images![index]),
+          errorWidget: (context, url, error) => Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+          placeholder: (context, url) => Center(
+            child: const CircularProgressIndicator(),
+          ),
+          imageBuilder: (context, imageProvider) {
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

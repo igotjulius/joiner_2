@@ -209,58 +209,47 @@ class _NavBarPageState extends State<NavBarPage> {
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
     return Scaffold(
-      body: SafeArea(child: _currentPage ?? tabs[_currentPageName]!),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white54,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey[300]!,
-              offset: const Offset(
-                0.0,
-                -1.0,
+      body: _currentPage ?? tabs[_currentPageName]!,
+      bottomNavigationBar: Material(
+        elevation: 20,
+        child: Container(
+          child: GNav(
+            selectedIndex: currentIndex,
+            onTabChange: (i) => setState(() {
+              _currentPage = null;
+              _currentPageName = tabs.keys.toList()[i];
+            }),
+            color: Colors.grey,
+            activeColor: Theme.of(context).primaryColor,
+            tabBackgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            padding: EdgeInsets.all(10),
+            gap: 8,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            duration: Duration(milliseconds: 500),
+            haptic: false,
+            tabMargin: EdgeInsets.all(10),
+            textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
+            tabs: [
+              GButton(
+                icon: Icons.directions_car,
+                text: 'Cars',
+                iconSize: 24.0,
               ),
-              blurRadius: 10.0,
-              spreadRadius: 2.0,
-            ),
-          ],
-        ),
-        child: GNav(
-          selectedIndex: currentIndex,
-          onTabChange: (i) => setState(() {
-            _currentPage = null;
-            _currentPageName = tabs.keys.toList()[i];
-          }),
-          color: Colors.grey,
-          activeColor: Theme.of(context).primaryColor,
-          tabBackgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          padding: EdgeInsetsDirectional.all(10),
-          gap: 8,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          duration: Duration(milliseconds: 500),
-          haptic: false,
-          tabMargin: EdgeInsets.all(10),
-          textStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w600,
+              GButton(
+                icon: Icons.receipt_rounded,
+                text: 'Rentals',
+                iconSize: 24.0,
               ),
-          tabs: [
-            GButton(
-              icon: Icons.directions_car,
-              text: 'Cars',
-              iconSize: 24.0,
-            ),
-            GButton(
-              icon: Icons.receipt_rounded,
-              text: 'Rentals',
-              iconSize: 24.0,
-            ),
-            GButton(
-              icon: Icons.person,
-              text: 'Account',
-              iconSize: 24.0,
-            ),
-          ],
+              GButton(
+                icon: Icons.person,
+                text: 'Account',
+                iconSize: 24.0,
+              ),
+            ],
+          ),
         ),
       ),
     );

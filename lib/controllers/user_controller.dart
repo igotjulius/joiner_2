@@ -634,6 +634,33 @@ class UserController extends Auth {
     }
   }
 
+  // User Renting a Car // TODO: implemented
+  Future<String?> postRental(
+      CarRentalModel carRental, XFile image, bool isCash) async {
+    try {
+      List<MultipartFile> converted = [];
+      converted.add(MultipartFile.fromBytes(
+        await image.readAsBytes(),
+        filename: image.name,
+        contentType: MediaType('application', 'octet-stream'),
+      ));
+      final result = await _apiService.postRental(
+        _currentUser.id,
+        isCash ? 'cash' : 'online',
+        licensePlate: carRental.licensePlate!,
+        startRental: carRental.startRental!,
+        endRental: carRental.endRental!,
+        duration: carRental.duration!,
+        files: converted,
+      );
+      return result.data;
+    } catch (e, stack) {
+      print('Error in booking: $e');
+      print(stack);
+    }
+    return null;
+  }
+
   Future<bool> linkRentalToLobby(RentalModel rental, String lobbyId) async {
     try {
       await _apiService.linkRentalToLobby(rental, _currentUser.id, lobbyId);
@@ -748,31 +775,6 @@ class UserController extends Auth {
       return response.data;
     } catch (e, stack) {
       print('Error in fetching available cars: $e');
-      print(stack);
-    }
-    return null;
-  }
-
-  // User Renting a Car // TODO: implemented
-  Future<String?> postRental(CarRentalModel carRental, XFile image) async {
-    try {
-      List<MultipartFile> converted = [];
-      converted.add(MultipartFile.fromBytes(
-        await image.readAsBytes(),
-        filename: image.name,
-        contentType: MediaType('application', 'octet-stream'),
-      ));
-      final result = await _apiService.postRental(
-        _currentUser.id,
-        licensePlate: carRental.licensePlate!,
-        startRental: carRental.startRental!,
-        endRental: carRental.endRental!,
-        duration: carRental.duration!,
-        files: converted,
-      );
-      return result.data;
-    } catch (e, stack) {
-      print('Error in booking: $e');
       print(stack);
     }
     return null;

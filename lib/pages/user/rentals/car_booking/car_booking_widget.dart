@@ -404,7 +404,8 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
                 duration: _datePicked.duration.inDays,
               );
               final redirUrl = await (context.read<Auth>() as UserController)
-                  .postRental(rental, _imagePicker.getImage()!);
+                  .postRental(
+                      rental, _imagePicker.getImage()!, _isCashSelected);
               if (_isOnlineSelected) {
                 await launchUrl(Uri.parse(redirUrl!),
                     mode: LaunchMode.externalApplication);
