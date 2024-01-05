@@ -57,97 +57,104 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Container(
-        padding: EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${_currentLobby.title}",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      _controller = showBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return EditLobbyWidget(
-                            currentLobby: _currentLobby,
-                          );
-                        },
-                      );
-                    },
-                    child: Text('Edit details'),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Host: ',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    hostParticipant(),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Participants: ',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    _currentLobby.participants!
-                        .where((participant) => participant.type == 'Joiner')
-                        .map((participant) =>
-                            '${participant.firstName} ${participant.lastName}')
-                        .join(', '),
-                  ),
-                ],
-              ),
-              Divider(),
-              Text(
-                'Details',
-                style: _textStyleMed,
-              ),
-              lobbyDetails(),
-              Text(
-                'Expenses',
-                style: _textStyleMed,
-              ),
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      expenses(),
-                    ],
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${_currentLobby.title}",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                TextButton(
+                  onPressed: () {
+                    _controller = showBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return EditLobbyWidget(
+                          currentLobby: _currentLobby,
+                        );
+                      },
+                    );
+                  },
+                  child: Text('Edit details'),
+                ),
+              ],
+            ),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Host: ',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          hostParticipant(),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Participants: ',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          _currentLobby.participants!
+                              .where(
+                                  (participant) => participant.type == 'Joiner')
+                              .map((participant) =>
+                                  '${participant.firstName} ${participant.lastName}')
+                              .join(', '),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    Text(
+                      'Details',
+                      style: _textStyleMed,
+                    ),
+                    lobbyDetails(),
+                    Text(
+                      'Expenses',
+                      style: _textStyleMed,
+                    ),
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            expenses(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Polls',
+                      style: _textStyleMed,
+                    ),
+                    polls(),
+                  ].divide(
+                    SizedBox(
+                      height: 10,
+                    ),
                   ),
                 ),
               ),
-              Text(
-                'Polls',
-                style: _textStyleMed,
-              ),
-              polls(),
-            ].divide(
-              SizedBox(
-                height: 10,
-              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -224,6 +231,7 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
       final label = _currentLobby.expense?.items?.keys.toList();
       final value = _currentLobby.expense?.items?.values.toList();
       return ListView.separated(
+        primary: false,
         shrinkWrap: true,
         itemCount: _currentLobby.expense!.items!.length,
         separatorBuilder: (context, index) => Divider(
@@ -263,24 +271,22 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
               )
             else
               ListView.separated(
+                primary: false,
                 shrinkWrap: true,
                 itemCount: _currentLobby.poll!.length,
-                separatorBuilder: (context, index) => Divider(),
+                separatorBuilder: (context, index) => Divider(height: 10),
                 itemBuilder: (context, index) {
                   PollModel poll = _currentLobby.poll![index];
                   final highestChoice = highestCount(poll.choices!);
 
-                  return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("${poll.question}"),
-                        Text(
-                          '${highestChoice['title']} : ${highestChoice['voters'].length}',
-                        ),
-                      ],
-                    ),
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("${poll.question}"),
+                      Text(
+                        '${highestChoice['title']} : ${highestChoice['voters'].length}',
+                      ),
+                    ],
                   );
                 },
               ),

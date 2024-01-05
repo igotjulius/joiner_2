@@ -61,6 +61,19 @@ class _CarItemWidgetState extends State<CarItemWidget> {
     );
   }
 
+  Widget label(String label, String content) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        Text(content),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isCra = context.watch<Auth>() is CraController;
@@ -85,112 +98,114 @@ class _CarItemWidgetState extends State<CarItemWidget> {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Card(
-                    child: CachedNetworkImage(
-                      imageUrl: getImageUrl(widget.car.photoUrl![0]),
-                      errorWidget: (context, url, error) => Icon(
-                        Icons.error,
-                        color: Colors.red,
-                      ),
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      width: 150.0,
-                      height: 100.0,
-                      // imageBuilder: (context, imageProvider) {
-                      //   return Container(
-                      //     decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(8.0),
-                      //       image: DecorationImage(
-                      //         image: imageProvider,
-                      //         fit: BoxFit.contain,
-                      //       ),
-                      //     ),
-                      //   );
-                      // },
-                    ),
+              Card(
+                child: CachedNetworkImage(
+                  imageUrl: getImageUrl(widget.car.photoUrl![0]),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                    color: Colors.red,
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DefaultTextStyle(
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'License Plate:',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "${widget.car.licensePlate}",
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Vehicle Type:',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    widget.car.vehicleType,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Price:',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      withCurrency(
-                                        Text(
-                                          widget.car.price.toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headlineMedium,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                      Text('/ day'),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  // width: 150.0,
+                  height: 100.0,
+                  imageBuilder: (context, imageProvider) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
                         ),
                       ),
+                    );
+                  },
+                ),
+              ),
+              Column(
+                children: [
+                  withCurrency(
+                    Text(
+                      '${widget.car.price}',
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
-                  )
+                  ),
+                  label('License Plate', '${widget.car.licensePlate}'),
+                  label('Vehicle Type', '${widget.car.vehicleType}'),
                 ],
               ),
+              // Expanded(
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: DefaultTextStyle(
+              //       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              //             fontWeight: FontWeight.w500,
+              //             color: Theme.of(context).colorScheme.onSurfaceVariant,
+              //           ),
+              //       child: Column(
+              //         children: [
+              //           Row(
+              //             children: [
+              //               Expanded(
+              //                 child: Text(
+              //                   'License Plate:',
+              //                   style: Theme.of(context).textTheme.titleSmall,
+              //                 ),
+              //               ),
+              //               Expanded(
+              //                 child: Text(
+              //                   "${widget.car.licensePlate}",
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //           Row(
+              //             children: [
+              //               Expanded(
+              //                 child: Text(
+              //                   'Vehicle Type:',
+              //                   style: Theme.of(context).textTheme.titleSmall,
+              //                 ),
+              //               ),
+              //               Expanded(
+              //                 child: Text(
+              //                   widget.car.vehicleType,
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //           Row(
+              //             children: [
+              //               Expanded(
+              //                 child: Text(
+              //                   'Price:',
+              //                   style: Theme.of(context).textTheme.titleSmall,
+              //                 ),
+              //               ),
+              //               Expanded(
+              //                 child: Row(
+              //                   children: [
+              //                     withCurrency(
+              //                       Text(
+              //                         widget.car.price.toString(),
+              //                         style: Theme.of(context)
+              //                             .textTheme
+              //                             .headlineMedium,
+              //                       ),
+              //                     ),
+              //                     SizedBox(
+              //                       width: 4,
+              //                     ),
+              //                     Text('/ day'),
+              //                   ],
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

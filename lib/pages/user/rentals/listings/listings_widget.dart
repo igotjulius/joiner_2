@@ -35,19 +35,17 @@ class _ListingsWidgetState extends State<ListingsWidget> {
             child: Text('No available cars found :('),
           );
         final cars = snapshot.data!;
-        return SingleChildScrollView(
-          child: ListView.separated(
-            shrinkWrap: true,
-            itemCount: cars.length,
-            itemBuilder: (context, index) {
-              return CarItemWidget(car: cars[index]);
-            },
-            separatorBuilder: (context, index) {
-              return SizedBox(
-                height: 10,
-              );
-            },
-          ),
+        return ListView.separated(
+          shrinkWrap: true,
+          itemCount: cars.length,
+          itemBuilder: (context, index) {
+            return CarItemWidget(car: cars[index]);
+          },
+          separatorBuilder: (context, index) {
+            return SizedBox(
+              height: 10,
+            );
+          },
         );
       },
     );

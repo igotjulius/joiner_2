@@ -174,6 +174,7 @@ class CraController extends Auth {
       price: car.price,
       files: converted,
     );
+    print(result.message);
     // Return error message if car is already registered by its licenseplate
     if (result.code == 406) return result.message;
     _currentUser.vehicles.add(result.data!);

@@ -261,7 +261,8 @@ abstract class ApiService {
   @MultiPart()
   @POST('user/{userId}/rent/car')
   Future<ResponseModel<String>> postRental(
-    @Path('userId') String craUserId, {
+    @Path('userId') String craUserId,
+    @Query('method') String method, {
     @Part() required String licensePlate,
     @Part() required String startRental,
     @Part() required String endRental,
@@ -361,7 +362,7 @@ abstract class ApiService {
   // Registering a car and uploading an image
   @MultiPart()
   @POST('cra/{craUserId}/register/car')
-  Future<ResponseModel<CarModel>> registerCar(
+  Future<ResponseModel<CarModel?>> registerCar(
     @Path('craUserId') String craUserId, {
     @Part() required String licensePlate,
     @Part() required String ownerId,
@@ -377,7 +378,7 @@ abstract class ApiService {
   // Editing a car
   @MultiPart()
   @PUT('cra/{craUserId}/car/{licensePlate}')
-  Future<ResponseModel<CarModel>> editCar(
+  Future<ResponseModel<CarModel?>> editCar(
     @Path('craUserId') String craUserId,
     @Path('licensePlate') String carLicensePlate, {
     @Part() required String licensePlate,

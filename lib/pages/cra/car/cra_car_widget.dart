@@ -34,14 +34,10 @@ class _CraCarWidgetState extends State<CraCarWidget> {
         },
         child: Icon(Icons.add),
       ),
-      body: mainBody(),
-    );
-  }
-
-  Padding mainBody() {
-    return Padding(
-      padding: EdgeInsets.all(20),
-      child: displayCars(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: displayCars(),
+      ),
     );
   }
 
@@ -73,18 +69,24 @@ class _CraCarWidgetState extends State<CraCarWidget> {
             ),
           )
         : SingleChildScrollView(
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: cars.length,
-              itemBuilder: (context, index) {
-                final car = cars[index];
-                return CarItemWidget(car: car);
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(
-                  height: 10,
-                );
-              },
+            child: Column(
+              children: [
+                ListView.separated(
+                  primary: false,
+                  shrinkWrap: true,
+                  itemCount: cars.length,
+                  itemBuilder: (context, index) {
+                    final car = cars[index];
+                    return CarItemWidget(car: car);
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      height: 10,
+                    );
+                  },
+                ),
+                SizedBox(height: 56),
+              ],
             ),
           );
   }

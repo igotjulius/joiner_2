@@ -42,12 +42,6 @@ class _ParticipantBudgetState extends State<ParticipantBudget> {
               style: TextStyle(fontSize: 16),
             ),
           ),
-          SizedBox(
-            width: 20,
-          ),
-          Text((widget.participant.contribution!['inPercent']! * 100)
-                  .toString() +
-              '%'),
         ],
       ),
     );

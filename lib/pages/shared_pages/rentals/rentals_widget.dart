@@ -85,7 +85,7 @@ class _RentalsWidgetState extends State<RentalsWidget> {
               ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: rentals.isEmpty
             ? Center(
                 child: Column(

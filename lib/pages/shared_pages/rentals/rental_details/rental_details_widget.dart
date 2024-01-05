@@ -82,14 +82,11 @@ class _RentalDetailsState extends State<RentalDetails> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                label('Payment Method',
+                    widget.rental!.paymentId != null ? 'Online' : 'Cash'),
                 label('Rental Id', widget.rental!.id!),
-                label('Payment Id', widget.rental!.paymentId!),
-                label(
-                  'Payment Status',
-                  widget.rental!.paymentStatus! == 'active'
-                      ? 'Pending payment'
-                      : 'Paid',
-                ),
+                if (widget.rental!.paymentId != null)
+                  label('Payment Id', widget.rental!.paymentId!),
                 timeline(),
               ].divide(
                 SizedBox(

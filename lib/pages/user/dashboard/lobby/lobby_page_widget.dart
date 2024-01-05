@@ -123,6 +123,7 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
             children: [
               Expanded(
                 child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                   controller: _tabBarController,
                   children: [
                     LobbyDashboardWidget(

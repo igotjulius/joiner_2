@@ -46,6 +46,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
             ),
           )
         : SingleChildScrollView(
+            primary: true,
             child: Column(
               children: [
                 if (pendingLobbies.length != 0)
@@ -118,7 +119,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
                     Row(
@@ -132,7 +133,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
                         ),
                       ],
                     ),
-                    displayLobbies(),
+                    Expanded(child: displayLobbies()),
                   ],
                 ),
               ),
