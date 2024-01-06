@@ -268,7 +268,6 @@ class _EditCarWidgetState extends State<EditCarWidget> {
                               ),
                     ),
                     child: CustomTextInput(
-                      key: ValueKey(_model.datesController.text),
                       controller: _model.datesController,
                       validator: _model.datesValidator,
                       prefixIcon: Icon(

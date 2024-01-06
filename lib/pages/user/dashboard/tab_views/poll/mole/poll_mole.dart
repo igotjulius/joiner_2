@@ -22,6 +22,7 @@ class PollMolecule extends StatefulWidget {
 
 class _PollMoleculeState extends State<PollMolecule> {
   late PollMoleModel _model;
+  bool _isHost = false;
 
   Future<dynamic> confirmationDialog() {
     return showDialog(
@@ -57,6 +58,15 @@ class _PollMoleculeState extends State<PollMolecule> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final currentLobby = (context.read<Auth>() as UserController)
+        .activeLobbies
+        .firstWhere((element) => element.id == widget.lobbyId);
+    _isHost = context.read<Auth>().profile!.id! == currentLobby.hostId;
   }
 
   @override
@@ -124,39 +134,40 @@ class _PollMoleculeState extends State<PollMolecule> {
                 );
               },
             ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.delete,
-                    size: 24.0,
+            if (_isHost)
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      size: 24.0,
+                    ),
+                    onPressed: () {
+                      confirmationDialog();
+                    },
                   ),
-                  onPressed: () {
-                    confirmationDialog();
-                  },
-                ),
-                TextButton(
-                  onPressed: () {
-                    provider
-                        .closePoll(widget.lobbyId, _model.poll.id!)
-                        .then((value) {
-                      if (value) {
-                        setState(() {});
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          showError('Can\'t close poll :(',
-                              Theme.of(context).colorScheme.error),
-                        );
-                      }
-                    });
-                  },
-                  child:
-                      Text(_model.poll.isOpen! ? 'Close poll' : 'Re-open poll'),
-                ),
-              ],
-            ),
+                  TextButton(
+                    onPressed: () {
+                      provider
+                          .closePoll(widget.lobbyId, _model.poll.id!)
+                          .then((value) {
+                        if (value) {
+                          setState(() {});
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            showError('Can\'t close poll :(',
+                                Theme.of(context).colorScheme.error),
+                          );
+                        }
+                      });
+                    },
+                    child: Text(
+                        _model.poll.isOpen! ? 'Close poll' : 'Re-open poll'),
+                  ),
+                ],
+              ),
           ].divide(
             SizedBox(
               height: 10,

@@ -139,8 +139,10 @@ class _ParticipantBudgetState extends State<ParticipantBudget> {
                                                 as UserController)
                                             .increaseContribution(
                                           widget.lobbyId,
-                                          double.parse(_amountController.text),
-                                          double.parse(_percentController.text),
+                                          double.parse(
+                                              _amountController.text.trim()),
+                                          double.parse(
+                                              _percentController.text.trim()),
                                         )
                                             .then((value) {
                                           context.pop();

@@ -80,6 +80,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
             ],
           ),
           expenses(),
+          SizedBox(height: 56),
         ],
       ),
     );
@@ -135,6 +136,7 @@ class _BudgetWidgetState extends State<BudgetWidget>
           ),
           SizedBox(height: 10),
           contributions(),
+          SizedBox(height: 56),
         ],
       ),
     );

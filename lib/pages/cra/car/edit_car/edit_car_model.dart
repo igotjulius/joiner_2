@@ -41,10 +41,10 @@ class EditCarModel {
     final uCar = CarModel(
       licensePlate: car.licensePlate!,
       vehicleType: vehicleType!,
-      availability: availabilityController.text,
+      availability: availabilityController.text.trim(),
       startDate: datePicked!.start,
       endDate: datePicked!.end,
-      price: double.parse(priceController.text),
+      price: double.parse(priceController.text.trim()),
     );
     return (context.read<Auth>() as CraController)
         .editCar(uCar, imagePicker.getImages());

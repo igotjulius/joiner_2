@@ -127,8 +127,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   showDialogLoading(context);
                                   context
                                       .read<AuthController>()
-                                      .loginUser(_emailController.text,
-                                          _passwordController.text)
+                                      .loginUser(
+                                        _emailController.text.trim(),
+                                        _passwordController.text.trim(),
+                                      )
                                       .then(
                                     (value) {
                                       context.pop();

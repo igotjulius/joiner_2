@@ -133,7 +133,7 @@ class _ListingsWidgetState extends State<ListingsWidget> {
                                 .getAvailableCars(
                           dateFilter: _datePicked,
                           priceFilter: _priceController.text.trim().isNotEmpty
-                              ? double.parse(_priceController.text)
+                              ? double.parse(_priceController.text.trim())
                               : null,
                         );
                         setState(() {});

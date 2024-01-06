@@ -61,18 +61,18 @@ class _PollCompWidgetState extends State<PollCompWidget> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Container(
-        padding:
-            const EdgeInsets.only(right: 20, left: 20, top: 20, bottom: 56),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('Poll'),
-              ],
-            ),
-            Flexible(
-              child: polls == null || polls.isEmpty
+        padding: const EdgeInsets.only(right: 20, left: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('Poll'),
+                ],
+              ),
+              polls == null || polls.isEmpty
                   ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -108,8 +108,9 @@ class _PollCompWidgetState extends State<PollCompWidget> {
                         );
                       },
                     ),
-            ),
-          ].divide(SizedBox(height: 10.0)),
+              SizedBox(height: 64),
+            ].divide(SizedBox(height: 10.0)),
+          ),
         ),
       ),
     );

@@ -51,7 +51,7 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
                   if (_formKey.currentState!.validate()) {
                     showDialogLoading(context);
                     (context.read<Auth>() as UserController)
-                        .inviteFriend(_emailController.text)
+                        .inviteFriend(_emailController.text.trim())
                         .then((value) {
                       context.pop();
                       if (value?.code == HttpStatus.ok) {

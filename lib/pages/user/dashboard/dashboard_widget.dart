@@ -45,21 +45,21 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
               ],
             ),
           )
-        : SingleChildScrollView(
-            primary: true,
-            child: Column(
-              children: [
-                if (pendingLobbies.length != 0)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Invitations'),
-                      LobbyInvitationMolecule(lobbies: pendingLobbies),
-                    ],
-                  ),
-                LobbyMolecule(),
-              ],
-            ),
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (pendingLobbies.length != 0)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: LobbyInvitationMolecule(lobbies: pendingLobbies),
+                ),
+              Text(
+                'Active Lobbies',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              SizedBox(height: 10),
+              LobbyMolecule(),
+            ],
           );
   }
 
@@ -86,14 +86,18 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     return ChangeNotifierProvider<UserController>.value(
       value: provider,
       child: SafeArea(
+        bottom: false,
         child: Scaffold(
           floatingActionButton: _tabController.index != 0
-              ? FloatingActionButton(
-                  onPressed: () {
-                    context.goNamed('LobbyCreation');
-                  },
-                  child: const Icon(
-                    Icons.add,
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 72),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      context.goNamed('LobbyCreation');
+                    },
+                    child: const Icon(
+                      Icons.add,
+                    ),
                   ),
                 )
               : null,
@@ -111,30 +115,28 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
             key: Key('userDashboard'),
             controller: _tabController,
             children: [
-              Column(
-                children: [
-                  Expanded(
-                    child: PromosList(),
-                  ),
-                ],
-              ),
+              PromosList(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            context.pushNamed('Archive');
-                          },
-                          icon: Icon(Icons.archive_outlined),
-                        ),
-                      ],
-                    ),
-                    Expanded(child: displayLobbies()),
-                  ],
+                child: SingleChildScrollView(
+                  primary: true,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              context.pushNamed('Archive');
+                            },
+                            icon: Icon(Icons.archive_outlined),
+                          ),
+                        ],
+                      ),
+                      displayLobbies(),
+                      SizedBox(height: 144),
+                    ],
+                  ),
                 ),
               ),
             ],

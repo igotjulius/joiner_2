@@ -63,15 +63,15 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                   showDialogLoading(context);
                   final provider = (context.read<Auth>() as CraController);
                   final nCar = CarModel(
-                    licensePlate: _licenseController.text,
+                    licensePlate: _licenseController.text.trim(),
                     ownerId: provider.profile.id!,
                     ownerName:
                         '${provider.profile.firstName} ${provider.profile.lastName}',
-                    vehicleType: _vehicleTypeController.text,
+                    vehicleType: _vehicleTypeController.text.trim(),
                     availability: 'Available',
                     startDate: _datePicked!.start,
                     endDate: _datePicked!.end,
-                    price: double.parse(_priceController.text),
+                    price: double.parse(_priceController.text.trim()),
                   );
                   provider
                       .registerCar(nCar, _imagePicker.getImages())

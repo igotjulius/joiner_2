@@ -29,58 +29,65 @@ class _FriendsWidgetState extends State<FriendsWidget> {
     final pendingFriendsList = provider.pendingFriends;
     final acceptedFriendsList = provider.acceptedFriends;
     final forApprovalList = provider.forApproval;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Friends',
+    return SafeArea(
+      bottom: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Friends',
+          ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
-        child: pendingFriendsList.isEmpty &&
-                forApprovalList.isEmpty &&
-                acceptedFriendsList.isEmpty
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        body: Padding(
+          padding: const EdgeInsets.only(right: 20, left: 20),
+          child: pendingFriendsList.isEmpty &&
+                  forApprovalList.isEmpty &&
+                  acceptedFriendsList.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.person_add,
+                        size: 48.0,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(height: 8.0),
+                      Text('Add your friends here'),
+                    ],
+                  ),
+                )
+              : Column(
                   children: [
-                    Icon(
-                      Icons.person_add,
-                      size: 48.0,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(height: 8.0),
-                    Text('Add your friends here'),
-                  ],
-                ),
-              )
-            : Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        if (pendingFriendsList.isNotEmpty)
-                          pendingFriends(pendingFriendsList),
-                        if (forApprovalList.isNotEmpty)
-                          waitingApproval(forApprovalList),
-                        if (acceptedFriendsList.isNotEmpty)
-                          acceptedFriends(acceptedFriendsList),
-                      ].divide(
-                        SizedBox(
-                          height: 20,
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          if (pendingFriendsList.isNotEmpty)
+                            pendingFriends(pendingFriendsList),
+                          if (forApprovalList.isNotEmpty)
+                            waitingApproval(forApprovalList),
+                          if (acceptedFriendsList.isNotEmpty)
+                            acceptedFriends(acceptedFriendsList),
+                          SizedBox(height: 32),
+                        ].divide(
+                          SizedBox(
+                            height: 20,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.pushNamed('InviteFriend');
-        },
-        child: Icon(Icons.add),
+                  ],
+                ),
+        ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 72),
+          child: FloatingActionButton(
+            onPressed: () {
+              context.pushNamed('InviteFriend');
+            },
+            child: Icon(Icons.add),
+          ),
+        ),
       ),
     );
   }
@@ -182,17 +189,19 @@ class _FriendsWidgetState extends State<FriendsWidget> {
     );
   }
 
-  void showRemoveFriendConfirmationDialog(BuildContext context, FriendModel friend) {
+  void showRemoveFriendConfirmationDialog(
+      BuildContext context, FriendModel friend) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Confirm Remove of Friend'),
-          content: Text('Are you sure you want to remove ${friend.firstName} ${friend.lastName} as a friend?'),
+          content: Text(
+              'Are you sure you want to remove ${friend.firstName} ${friend.lastName} as a friend?'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
               child: Text('Cancel'),
             ),

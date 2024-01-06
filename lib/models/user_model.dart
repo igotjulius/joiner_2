@@ -11,8 +11,7 @@ class UserModel extends User {
   @JsonKey(name: '_id')
   final String id;
   @JsonKey(includeIfNull: false)
-  String? contactNo, address;
-  String firstName, lastName, email, password;
+  String firstName, lastName, email, password, contactNo, address;
   List<LobbyModel> pendingLobby;
   List<LobbyModel> activeLobby;
   List<FriendModel> friends;
@@ -25,8 +24,8 @@ class UserModel extends User {
     required this.lastName,
     required this.email,
     required this.password,
-    this.address,
-    this.contactNo,
+    required this.address,
+    required this.contactNo,
     required this.friends,
     required this.pendingLobby,
     required this.activeLobby,

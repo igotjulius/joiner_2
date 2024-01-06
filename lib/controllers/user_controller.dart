@@ -798,13 +798,20 @@ class UserController extends Auth {
   }
 
   // Edit user profile // TODO: implemented
-  Future<bool> editAccount(String firstName, String lastName) async {
+  Future<bool> editAccount(String firstName, String lastName, String address,
+      String contactNo) async {
     try {
-      final result = await _apiService.editAccount(
-          {'firstName': firstName, 'lastName': lastName}, _currentUser.id);
+      final result = await _apiService.editAccount({
+        'firstName': firstName,
+        'lastName': lastName,
+        'address': address,
+        'contactNo': contactNo
+      }, _currentUser.id);
       if (result.code == HttpStatus.ok) {
         _currentUser.firstName = firstName;
         _currentUser.lastName = lastName;
+        _currentUser.address = address;
+        _currentUser.contactNo = contactNo;
         notifyListeners();
         return true;
       } else

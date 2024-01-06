@@ -61,54 +61,55 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
           },
           child: Container(
             height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: EdgeInsetsDirectional.all(20),
-              child: Column(
-                children: [
-                  Container(
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.blue,
+                    ),
+                  ),
+                  child: TabBar(
+                    splashBorderRadius: BorderRadius.circular(20),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.blue[300],
+                    indicator: BoxDecoration(
+                      color: Colors.blue,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.blue,
-                      ),
                     ),
-                    child: TabBar(
-                      splashBorderRadius: BorderRadius.circular(20),
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.blue[300],
-                      indicator: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      controller: _tabController,
-                      onTap: (value) {
-                        _tabController.index = value;
-                      },
-                      tabs: _tabs,
-                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    controller: _tabController,
+                    onTap: (value) {
+                      _tabController.index = value;
+                    },
+                    tabs: _tabs,
                   ),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        Provider.value(
-                          value: _userModel,
-                          child: UserSignUpMole(
-                            formKey: joinerFormKey,
-                          ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      Provider.value(
+                        value: _userModel,
+                        child: UserSignUpMole(
+                          formKey: joinerFormKey,
                         ),
-                        Provider.value(
-                          value: _craModel,
-                          child: CraSignUpMole(
-                            formKey: rentFormKey,
-                          ),
+                      ),
+                      Provider.value(
+                        value: _craModel,
+                        child: CraSignUpMole(
+                          formKey: rentFormKey,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Row(
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
@@ -162,10 +163,10 @@ class _SignUpPageWidgetState extends State<SignUpPageWidget>
                       ),
                     ],
                   ),
-                ].divide(SizedBox(
-                  height: 20,
-                )),
-              ),
+                ),
+              ].divide(SizedBox(
+                height: 20,
+              )),
             ),
           ),
         ),

@@ -18,6 +18,8 @@ class _AccountWidgetState extends State<AccountWidget> {
   late User _currentUser;
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
+  TextEditingController _contactController = TextEditingController();
   TextEditingController _passController = TextEditingController();
   TextEditingController _nPassController = TextEditingController();
   String? _errorText;
@@ -33,59 +35,67 @@ class _AccountWidgetState extends State<AccountWidget> {
   @override
   Widget build(BuildContext context) {
     _currentUser = context.watch<Auth>().profile!;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Account',
+    return SafeArea(
+      bottom: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Account',
+          ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SingleChildScrollView(
+            child: Column(
               children: [
-                Image.asset(
-                  'assets/images/User_05c_(1).png',
-                  width: 65,
-                  height: 65,
-                  fit: BoxFit.fill,
+                Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/User_05c_(1).png',
+                      width: 65,
+                      height: 65,
+                      fit: BoxFit.fill,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      "${_currentUser.firstName} ${_currentUser.lastName[0]}.",
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                    Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        editDetails();
+                      },
+                      icon: Icon(Icons.edit_rounded),
+                    ),
+                  ],
+                ),
+                accountDetails(),
+                SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  children: [
+                    changePassword(),
+                    logout(),
+                  ].divide(
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ),
                 ),
                 SizedBox(
-                  width: 20,
+                  height: 64,
                 ),
-                Text(
-                  "${_currentUser.firstName} ${_currentUser.lastName[0]}.",
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                Spacer(),
-                IconButton(
-                  onPressed: () {
-                    editDetails();
-                  },
-                  icon: Icon(Icons.edit_rounded),
-                ),
-              ],
-            ),
-            accountDetails(),
-            SizedBox(
-              height: 20,
-            ),
-            Column(
-              children: [
-                changePassword(),
-                logout(),
               ].divide(
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
               ),
-            ),
-          ].divide(
-            SizedBox(
-              height: 20,
             ),
           ),
         ),
@@ -129,61 +139,79 @@ class _AccountWidgetState extends State<AccountWidget> {
   Future editDetails() {
     _firstNameController.text = _currentUser.firstName;
     _lastNameController.text = _currentUser.lastName;
+    _addressController.text = _currentUser.address;
+    _contactController.text = _currentUser.contactNo;
     return showDialog(
         context: context,
         builder: (context) {
           return Dialog(
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CustomTextInput(
-                    label: 'First name',
-                    controller: _firstNameController,
-                    validator: isEmpty,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CustomTextInput(
-                    label: 'Last name',
-                    controller: _lastNameController,
-                    validator: isEmpty,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: FilledButton(
-                      onPressed: () async {
-                        if (_firstNameController.text.isEmpty ||
-                            _lastNameController.text.isEmpty) {
-                          return;
-                        }
-                        showDialogLoading(context);
-                        final result = await context.read<Auth>().editAccount(
-                            _firstNameController.text,
-                            _lastNameController.text);
-                        context.pop();
-                        if (result) {
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomTextInput(
+                      label: 'First name',
+                      controller: _firstNameController,
+                      validator: isEmpty,
+                    ),
+                    CustomTextInput(
+                      label: 'Last name',
+                      controller: _lastNameController,
+                      validator: isEmpty,
+                    ),
+                    CustomTextInput(
+                      label: 'Address',
+                      controller: _addressController,
+                      validator: isEmpty,
+                    ),
+                    CustomTextInput(
+                      label: 'Contact no.',
+                      controller: _contactController,
+                      validator: validateMobile,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: FilledButton(
+                        onPressed: () async {
+                          if (_firstNameController.text.isEmpty ||
+                              _lastNameController.text.isEmpty) {
+                            return;
+                          }
+                          showDialogLoading(context);
+                          final result = await context.read<Auth>().editAccount(
+                                _firstNameController.text.trim(),
+                                _lastNameController.text.trim(),
+                                _addressController.text.trim(),
+                                _contactController.text.trim(),
+                              );
                           context.pop();
-                          _resetController();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            showSuccess('Profile Saved'),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            showError('Can\'t edit profile :(',
-                                Theme.of(context).colorScheme.error),
-                          );
-                        }
-                      },
-                      child: Text('Save'),
+                          if (result) {
+                            context.pop();
+                            _resetController();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              showSuccess('Profile Saved'),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              showError('Can\'t edit profile :(',
+                                  Theme.of(context).colorScheme.error),
+                            );
+                          }
+                        },
+                        child: Text('Save'),
+                      ),
+                    ),
+                  ].divide(
+                    SizedBox(
+                      height: 10,
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           );
@@ -241,8 +269,10 @@ class _AccountWidgetState extends State<AccountWidget> {
                                 if (_passFormKey.currentState!.validate()) {
                                   showDialogLoading(context);
                                   final result = await (context.read<Auth>())
-                                      .changePassword(_passController.text,
-                                          _nPassController.text);
+                                      .changePassword(
+                                    _passController.text.trim(),
+                                    _nPassController.text.trim(),
+                                  );
                                   context.pop();
                                   if (result) {
                                     context.pop();

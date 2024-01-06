@@ -69,48 +69,51 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
   }
 
   Widget mainDisplay() {
-    return Scaffold(
-      appBar: appBar(),
-      body: mainContent(),
-      floatingActionButton: showFab && _tabBarController.index > 1
-          ? Visibility(
-              visible: true,
-              child: FloatingActionButton(
-                onPressed: () {
-                  setState(() {
-                    showFab = false;
-                  });
-                  switch (_tabBarController.index) {
-                    case 2:
-                      _fabControllers[0].onTapHandler!();
-                      budgetModel.controller?.closed.then((value) {
-                        setState(() {
-                          showFab = true;
+    return SafeArea(
+      bottom: false,
+      child: Scaffold(
+        appBar: appBar(),
+        body: mainContent(),
+        floatingActionButton: showFab && _tabBarController.index > 1
+            ? Visibility(
+                visible: true,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    setState(() {
+                      showFab = false;
+                    });
+                    switch (_tabBarController.index) {
+                      case 2:
+                        _fabControllers[0].onTapHandler!();
+                        budgetModel.controller?.closed.then((value) {
+                          setState(() {
+                            showFab = true;
+                          });
                         });
-                      });
-                      break;
-                    case 3:
-                      _fabControllers[1].onTapHandler!();
-                      pollModel.controller?.closed.then((value) {
-                        setState(() {
-                          showFab = true;
+                        break;
+                      case 3:
+                        _fabControllers[1].onTapHandler!();
+                        pollModel.controller?.closed.then((value) {
+                          setState(() {
+                            showFab = true;
+                          });
                         });
-                      });
-                      break;
-                    case 4:
-                      _fabControllers[2].onTapHandler!();
-                      joinersModel.controller?.closed.then((value) {
-                        setState(() {
-                          showFab = true;
+                        break;
+                      case 4:
+                        _fabControllers[2].onTapHandler!();
+                        joinersModel.controller?.closed.then((value) {
+                          setState(() {
+                            showFab = true;
+                          });
                         });
-                      });
-                    default:
-                  }
-                },
-                child: Icon(Icons.add_rounded),
-              ),
-            )
-          : null,
+                      default:
+                    }
+                  },
+                  child: Icon(Icons.add_rounded),
+                ),
+              )
+            : null,
+      ),
     );
   }
 

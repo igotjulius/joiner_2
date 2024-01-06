@@ -61,7 +61,9 @@ class _InviteParticipantsWidgetState extends State<InviteParticipantsWidget> {
   void initState() {
     super.initState();
     provider = context.read<UserController>();
-    friendList = filter(provider.friends);
+    friendList = filter(provider.friends
+        .where((element) => element.status == 'Accepted')
+        .toList());
   }
 
   @override

@@ -125,7 +125,7 @@ class _SurveyPollWidgetState extends State<SurveyPollWidget> {
                             choices.add(element.text);
                         });
                         final nPoll = PollModel(
-                          question: _questionController.text,
+                          question: _questionController.text.trim(),
                           choices: choices,
                         );
                         final provider = context.read<Auth>() as UserController;

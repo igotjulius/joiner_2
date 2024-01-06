@@ -19,47 +19,48 @@ class LobbyMolecule extends StatelessWidget {
     return ListView.separated(
       primary: false,
       shrinkWrap: true,
-      separatorBuilder: (context, index) {
-        return SizedBox(
-          height: 10,
-        );
-      },
+      padding: EdgeInsets.zero,
       itemCount: lobbies.length,
+      separatorBuilder: (context, index) => SizedBox(height: 10),
       itemBuilder: (context, index) {
-        return Material(
+        return Card(
+          elevation: 2,
+          clipBehavior: Clip.antiAlias,
           child: InkWell(
-            splashColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
+            // splashColor: Colors.transparent,
+            // focusColor: Colors.transparent,
+            // hoverColor: Colors.transparent,
+            // highlightColor: Colors.transparent,
             onLongPress: () async {
-              showDialog(
-                context: context,
-                builder: ((context) => AlertDialog(
-                      title: Text('Delete'),
-                      content:
-                          Text('Are you sure you want to cancel this trip?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            (context.read<Auth>() as UserController)
-                                .deleteLobby(lobbies[index].id!);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              showSuccess('Lobby Deleted'),
-                            );
-                            context.pop();
-                          },
-                          child: Text('Yes'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.pop();
-                          },
-                          child: Text('No'),
-                        ),
-                      ],
-                    )),
-              );
+              final userId = context.read<Auth>().profile?.id;
+              if (userId == lobbies[index].hostId)
+                showDialog(
+                  context: context,
+                  builder: ((context) => AlertDialog(
+                        title: Text('Delete'),
+                        content:
+                            Text('Are you sure you want to cancel this trip?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              (context.read<Auth>() as UserController)
+                                  .deleteLobby(lobbies[index].id!);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                showSuccess('Lobby Deleted'),
+                              );
+                              context.pop();
+                            },
+                            child: Text('Yes'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context.pop();
+                            },
+                            child: Text('No'),
+                          ),
+                        ],
+                      )),
+                );
             },
             onTap: () {
               context.pushNamed(
@@ -68,59 +69,54 @@ class LobbyMolecule extends StatelessWidget {
                 extra: lobbies[index],
               );
             },
-            child: Card(
-              elevation: 2,
-              child: Padding(
-                padding: EdgeInsetsDirectional.all(10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Container(
-                      width: 40.0,
-                      height: 40.0,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.asset(
-                        'assets/images/lambug-beach-badian.png',
-                        fit: BoxFit.cover,
-                      ),
+            child: Padding(
+              padding: EdgeInsetsDirectional.all(10),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
+                    width: 40.0,
+                    height: 40.0,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                     ),
-                    SizedBox(width: 10.0),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            lobbies[index].title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.w400,
-                                ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                lobbies[index].startDate != null
-                                    ? "${dateFormat.format(lobbies[index].startDate!)} - ${dateFormat.format(lobbies[index].endDate!)}"
-                                    : '-',
-                                style: Theme.of(context).textTheme.titleSmall,
-                              ),
-                              Text(
-                                '${lobbies[index].participants!.length} people involved',
-                                style: Theme.of(context).textTheme.titleSmall,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    child: Image.asset(
+                      'assets/images/lambug-beach-badian.png',
+                      fit: BoxFit.cover,
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 10.0),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          lobbies[index].title,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              lobbies[index].startDate != null
+                                  ? "${dateFormat.format(lobbies[index].startDate!)} - ${dateFormat.format(lobbies[index].endDate!)}"
+                                  : '-',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            Text(
+                              '${lobbies[index].participants!.length} people involved',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

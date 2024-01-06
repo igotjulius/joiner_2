@@ -14,7 +14,7 @@ class _PromosListState extends State<PromosList> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.only(right: 20, left: 20, top: 20),
         child: Column(
           children: [
             Row(
@@ -47,6 +47,7 @@ class _PromosListState extends State<PromosList> {
               '999/night',
               'Immerse yourself in the tropical paradise of El Nido, Palawan. Indulge in the serenity of our luxurious accommodations, providing the perfect haven for your dream island getaway.',
             ),
+            SizedBox(height: 64),
           ].divide(
             SizedBox(
               height: 20,

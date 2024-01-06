@@ -63,7 +63,7 @@ class _VerificationWidgetState extends State<VerificationWidget> {
                       showDialogLoading(context);
                       context
                           .read<AuthController>()
-                          .verify(_codeController.text)
+                          .verify(_codeController.text.trim())
                           .then((value) {
                         context.pop();
                         if (!value) {

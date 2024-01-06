@@ -19,6 +19,7 @@ class AddBudgetWidget extends StatefulWidget {
 class _AddBudgetWidgetState extends State<AddBudgetWidget> {
   TextEditingController _labelController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -32,63 +33,70 @@ class _AddBudgetWidgetState extends State<AddBudgetWidget> {
     return Material(
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Add an expense'),
-                IconButton(
-                  onPressed: () {
-                    context.pop();
-                  },
-                  icon: Icon(Icons.close_rounded),
-                ),
-              ],
-            ),
-            CustomTextInput(
-              label: 'Label',
-              controller: _labelController,
-              validator: isEmpty,
-            ),
-            CustomTextInput(
-              label: 'Amount',
-              controller: _amountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: FilteringTextInputFormatter.digitsOnly,
-              validator: isEmpty,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              width: double.maxFinite,
-              child: FilledButton(
-                child: Text('Add'),
-                onPressed: () {
-                  final provider = context.read<Auth>() as UserController;
-                  double amount = double.parse(_amountController.text);
-                  provider
-                      .putExpenses(
-                    ExpenseModel(items: {_labelController.text: amount}),
-                    widget.lobbyId,
-                  )
-                      .then((value) {
-                    if (value)
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Add an expense'),
+                  IconButton(
+                    onPressed: () {
                       context.pop();
-                    else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        showError('Can\'t add exepense',
-                            Theme.of(context).colorScheme.error),
-                      );
-                    }
-                  });
-                },
+                    },
+                    icon: Icon(Icons.close_rounded),
+                  ),
+                ],
               ),
-            ),
-          ].divide(
-            SizedBox(
-              height: 10,
+              CustomTextInput(
+                label: 'Label',
+                controller: _labelController,
+                validator: isEmpty,
+              ),
+              CustomTextInput(
+                label: 'Amount',
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: FilteringTextInputFormatter.digitsOnly,
+                validator: isEmpty,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                width: double.maxFinite,
+                child: FilledButton(
+                  child: Text('Add'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      final provider = context.read<Auth>() as UserController;
+                      double amount =
+                          double.parse(_amountController.text.trim());
+                      provider
+                          .putExpenses(
+                        ExpenseModel(
+                            items: {_labelController.text.trim(): amount}),
+                        widget.lobbyId,
+                      )
+                          .then((value) {
+                        if (value)
+                          context.pop();
+                        else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            showError('Can\'t add exepense',
+                                Theme.of(context).colorScheme.error),
+                          );
+                        }
+                      });
+                    }
+                  },
+                ),
+              ),
+            ].divide(
+              SizedBox(
+                height: 10,
+              ),
             ),
           ),
         ),

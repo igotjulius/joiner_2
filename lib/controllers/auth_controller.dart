@@ -180,7 +180,8 @@ abstract class Auth extends ChangeNotifier {
   Future<bool> cacheUser();
   Future<bool> logout();
   Future<bool> changePassword(String currentPassword, String nPassword);
-  Future<bool> editAccount(String firstName, String lastName);
+  Future<bool> editAccount(
+      String firstName, String lastName, String address, String contactNo);
   void refetchRentals();
   List<RentalModel> get rentals;
 }
