@@ -7,6 +7,8 @@ class CarModel {
   final String? licensePlate;
   final String? ownerName;
   final String? ownerId;
+  final String? location;
+  final String? contactNo;
   final String vehicleType;
   final String availability;
   final DateTime startDate;
@@ -19,6 +21,8 @@ class CarModel {
     this.licensePlate,
     this.ownerId,
     this.ownerName,
+    this.location,
+    this.contactNo,
     required this.vehicleType,
     required this.availability,
     required this.startDate,

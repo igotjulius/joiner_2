@@ -127,25 +127,52 @@ class _RentalsWidgetState extends State<RentalsWidget> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title: const Text('Choose a Month'),
-                                    content: Column(
-                                      children: List.generate(Month.values.length,
-                                          (index) {
-                                        final month = index + 1;
-                                        return ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              selectedMonth = month;
-                                              filteredRentals =
-                                                  filterAndSortRentalsByMonth(
-                                                      selectedMonth!);
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                              '${Month.values[index].toString().split('.').last}'),
-                                        );
-                                      }),
+                                    title: Center(child: const Text('Choose a Month')),
+                                    content: SizedBox(
+                                      width: 50,
+                                      child: ListView.separated(
+                                        itemCount: Month.values.length,
+                                        itemBuilder: (context, index) {
+                                          final month = index + 1;
+                                          return SizedBox(
+                                            width: double.maxFinite,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  selectedMonth = month;
+                                                  filteredRentals =
+                                                      filterAndSortRentalsByMonth(
+                                                          selectedMonth!);
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                '${Month.values[index].toString().split('.').last}',
+                                                style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  color: selectedMonth == month
+                                                      ? Colors.white
+                                                      : Theme.of(context)
+                                                          .textTheme
+                                                          .labelLarge!
+                                                          .color,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                padding: EdgeInsets.all(12.0),
+                                                backgroundColor:
+                                                    selectedMonth == month
+                                                        ? Theme.of(context)
+                                                            .primaryColor
+                                                        : null,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) {
+                                          return SizedBox(height: 7);
+                                        },
+                                      ),
                                     ),
                                   );
                                 },

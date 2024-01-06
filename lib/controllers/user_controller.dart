@@ -648,6 +648,8 @@ class UserController extends Auth {
         _currentUser.id,
         isCash ? 'cash' : 'online',
         licensePlate: carRental.licensePlate!,
+        location: carRental.location!,
+        contactNo: carRental.contactNo!,
         startRental: carRental.startRental!,
         endRental: carRental.endRental!,
         duration: carRental.duration!,

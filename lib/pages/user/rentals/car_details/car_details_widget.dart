@@ -119,6 +119,32 @@ class _CarDetailsState extends State<CarDetails> {
                       ),
                     ],
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Contact No.',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      Text(
+                        widget.car.contactNo!,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Address',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      Text(
+                        widget.car.location!,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ],
+                  ),
                   Divider(),
                   Text(
                     'Unavailable dates',

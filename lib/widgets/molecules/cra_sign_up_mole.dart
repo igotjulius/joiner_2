@@ -114,6 +114,8 @@ class CraSignUpMoleModel {
       lastName: lNameController.text,
       email: emailController.text,
       password: passwordController.text,
+      address: addressController.text,
+      contactNo: contactController.text,
       vehicles: [],
       rentals: [],
     );

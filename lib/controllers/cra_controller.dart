@@ -167,6 +167,8 @@ class CraController extends Auth {
       licensePlate: car.licensePlate!,
       ownerId: car.ownerId!,
       ownerName: car.ownerName!,
+      location: car.location!,
+      contactNo: car.contactNo!,
       vehicleType: car.vehicleType,
       availability: car.availability,
       startDate: car.startDate.toString(),
