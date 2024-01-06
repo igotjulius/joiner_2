@@ -50,6 +50,17 @@ class _UserSignUpMoleState extends State<UserSignUpMole> {
                 }),
               ),
               CustomTextInput(
+                label: 'Address',
+                controller: _model.addressController,
+                validator: isEmpty,
+              ),
+              CustomTextInput(
+                label: 'Contact no.',
+                controller: _model.contactController,
+                keyboardType: TextInputType.phone,
+                validator: validateMobile,
+              ),
+              CustomTextInput(
                 label: 'Password',
                 controller: _model.passwordController,
                 obscureText: true,
@@ -77,6 +88,8 @@ class UserSignUpMoleModel {
   TextEditingController fNameController = TextEditingController();
   TextEditingController lNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController contactController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPassController = TextEditingController();
   String? emailError;
@@ -96,10 +109,12 @@ class UserSignUpMoleModel {
   UserModel getUserInput() {
     return UserModel(
       id: '',
-      firstName: fNameController.text,
-      lastName: lNameController.text,
-      email: emailController.text,
-      password: passwordController.text,
+      firstName: fNameController.text.trim(),
+      lastName: lNameController.text.trim(),
+      email: emailController.text.trim(),
+      address: addressController.text.trim(),
+      contactNo: contactController.text.trim(),
+      password: passwordController.text.trim(),
       friends: [],
       pendingLobby: [],
       activeLobby: [],

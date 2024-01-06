@@ -63,20 +63,20 @@ class _AccountWidgetState extends State<AccountWidget> {
                 Spacer(),
                 IconButton(
                   onPressed: () {
-                    _editDetails();
+                    editDetails();
                   },
                   icon: Icon(Icons.edit_rounded),
                 ),
               ],
             ),
-            _details(),
+            accountDetails(),
             SizedBox(
               height: 20,
             ),
             Column(
               children: [
-                _changePassword(),
-                _logout(),
+                changePassword(),
+                logout(),
               ].divide(
                 SizedBox(
                   height: 10,
@@ -93,69 +93,40 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  Widget _details() {
-    final textTheme = Theme.of(context).textTheme;
+  Widget accountDetails() {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'First name',
-              style: textTheme.titleMedium,
-            ),
-            Text(
-              _currentUser.firstName,
-              style:
-                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-        Divider(
-          indent: 4,
-          endIndent: 4,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Last name',
-              style: textTheme.titleMedium,
-            ),
-            Text(
-              "${_currentUser.lastName}",
-              style:
-                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-        Divider(
-          indent: 4,
-          endIndent: 4,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Email',
-              style: textTheme.titleMedium,
-            ),
-            Text(
-              "${_currentUser.email}",
-              style:
-                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
+        details('First name', _currentUser.firstName),
+        details('Last name', _currentUser.lastName),
+        details('Email', _currentUser.email),
+        details('Address', _currentUser.address),
+        details('Contact no.', _currentUser.contactNo),
       ].divide(
-        SizedBox(
-          height: 4,
-        ),
+        Divider(),
       ),
     );
   }
 
-  Future _editDetails() {
+  Widget details(String label, String? content) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        Text(
+          '$content',
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+
+  Future editDetails() {
     _firstNameController.text = _currentUser.firstName;
     _lastNameController.text = _currentUser.lastName;
     return showDialog(
@@ -187,7 +158,10 @@ class _AccountWidgetState extends State<AccountWidget> {
                     width: double.maxFinite,
                     child: FilledButton(
                       onPressed: () async {
-                        if(_firstNameController.text.isEmpty || _lastNameController.text.isEmpty) {return;}
+                        if (_firstNameController.text.isEmpty ||
+                            _lastNameController.text.isEmpty) {
+                          return;
+                        }
                         showDialogLoading(context);
                         final result = await context.read<Auth>().editAccount(
                             _firstNameController.text,
@@ -216,7 +190,7 @@ class _AccountWidgetState extends State<AccountWidget> {
         });
   }
 
-  Widget _changePassword() {
+  Widget changePassword() {
     return TextButton.icon(
       style: TextButton.styleFrom(
         minimumSize: Size.fromHeight(10),
@@ -312,7 +286,7 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  Widget _logout() {
+  Widget logout() {
     return TextButton.icon(
       onPressed: () {
         showDialogLoading(context);

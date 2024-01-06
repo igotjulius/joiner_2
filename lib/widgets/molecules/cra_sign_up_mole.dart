@@ -110,10 +110,12 @@ class CraSignUpMoleModel {
   CraUserModel getUserInput() {
     return CraUserModel(
       id: '',
-      firstName: fNameController.text,
-      lastName: lNameController.text,
-      email: emailController.text,
-      password: passwordController.text,
+      firstName: fNameController.text.trim(),
+      lastName: lNameController.text.trim(),
+      email: emailController.text.trim(),
+      address: addressController.text.trim(),
+      contactNo: contactController.text.trim(),
+      password: passwordController.text.trim(),
       vehicles: [],
       rentals: [],
     );

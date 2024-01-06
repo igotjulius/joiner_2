@@ -20,7 +20,7 @@ class _PromosListState extends State<PromosList> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Seeking for a Destination?'),
+                Flexible(child: Text('Seeking for a Destination?')),
                 TextButton(
                   onPressed: () {
                     context.pushNamed('BrowseMap');
