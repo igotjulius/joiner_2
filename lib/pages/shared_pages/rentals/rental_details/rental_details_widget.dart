@@ -148,7 +148,7 @@ class _RentalDetailsState extends State<RentalDetails> {
                 ),
                 Row(
                   children: [
-                    Text(DateFormat("EEE").format(widget.rental!.createdAt!)),
+                    Text(DateFormat('EEE').format(widget.rental!.createdAt!)),
                     Container(
                       height: 5,
                       width: 5,
@@ -159,7 +159,7 @@ class _RentalDetailsState extends State<RentalDetails> {
                     ),
                     Text(
                       DateFormat("MMM d 'at' h:mm a")
-                          .format(widget.rental!.createdAt!),
+                          .format(widget.rental!.createdAt!.add(Duration(hours: 8))),
                     ),
                   ].divide(
                     SizedBox(
