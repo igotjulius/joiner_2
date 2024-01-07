@@ -70,7 +70,7 @@ class _CarDetailsState extends State<CarDetails> {
                     children: [
                       withCurrency(
                         Text(
-                          '${widget.car.price} / day',
+                          '${widget.car.price.toStringAsFixed(2)} / day',
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall

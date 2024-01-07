@@ -125,7 +125,7 @@ class _CarItemWidgetState extends State<CarItemWidget> {
                 children: [
                   withCurrency(
                     Text(
-                      '${widget.car.price}',
+                      '${widget.car.price.toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
