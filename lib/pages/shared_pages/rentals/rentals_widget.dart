@@ -18,7 +18,6 @@ class RentalsWidget extends StatefulWidget {
 class _RentalsWidgetState extends State<RentalsWidget> {
   late Auth provider;
   late List<RentalModel> rentals;
-  late List<RentalModel> filteredRentals;
   int? selectedMonth;
 
   @override
@@ -32,22 +31,25 @@ class _RentalsWidgetState extends State<RentalsWidget> {
     super.initState();
     provider = context.read<Auth>();
     rentals = provider.rentals;
-    filteredRentals = List.from(rentals);
     provider.refetchRentals();
   }
 
-  List<RentalModel> filterAndSortRentalsByMonth(int month) {
-    return rentals
-        .where((rental) => rental.startRental!.month == month)
-        .toList()
-      ..sort((a, b) => a.startRental!.compareTo(b.startRental!));
+  List<RentalModel> filterAndSortRentalsByMonth(int? month) {
+    if (month != null) {
+      return rentals
+          .where((rental) => rental.startRental!.month == month)
+          .toList()
+        ..sort((a, b) => a.startRental!.compareTo(b.startRental!));
+    } else {
+      return rentals..sort((a, b) => a.startRental!.compareTo(b.startRental!));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     rentals = context.watch<Auth>().rentals;
-    double totalSum =
-        filteredRentals.fold(0.0, (sum, rental) => sum + (rental.price ?? 0.0));
+    double totalSum = filterAndSortRentalsByMonth(selectedMonth)
+        .fold(0.0, (sum, rental) => sum + (rental.price ?? 0.0));
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -127,10 +129,12 @@ class _RentalsWidgetState extends State<RentalsWidget> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title: Center(child: const Text('Choose a Month')),
+                                    title: Center(
+                                        child: const Text('Choose a Month')),
                                     content: SizedBox(
-                                      width: 50,
+                                      width: 150,
                                       child: ListView.separated(
+                                        shrinkWrap: true,
                                         itemCount: Month.values.length,
                                         itemBuilder: (context, index) {
                                           final month = index + 1;
@@ -140,11 +144,8 @@ class _RentalsWidgetState extends State<RentalsWidget> {
                                               onPressed: () {
                                                 setState(() {
                                                   selectedMonth = month;
-                                                  filteredRentals =
-                                                      filterAndSortRentalsByMonth(
-                                                          selectedMonth!);
                                                 });
-                                                Navigator.pop(context);
+                                                context.pop();
                                               },
                                               child: Text(
                                                 '${Month.values[index].toString().split('.').last}',
@@ -187,26 +188,32 @@ class _RentalsWidgetState extends State<RentalsWidget> {
                           onPressed: () {
                             setState(() {
                               selectedMonth = null;
-                              filteredRentals = rentals;
                             });
                           },
                         ),
                     ],
                   ),
-                  Flexible(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: filteredRentals.length,
-                      itemBuilder: (context, index) {
-                        RentalModel rental = filteredRentals[index];
-                        return RentalInfo(
-                          rental: rental,
-                        );
-                      },
-                    ),
-                  ),
+                  displayRentals(),
                 ].divide(SizedBox(height: 10)),
               ),
+      ),
+    );
+  }
+
+  Widget displayRentals() {
+    final filteredRentals = selectedMonth == null
+        ? rentals
+        : filterAndSortRentalsByMonth(selectedMonth);
+    return Flexible(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: filteredRentals.length,
+        itemBuilder: (context, index) {
+          RentalModel rental = filteredRentals[index];
+          return RentalInfo(
+            rental: rental,
+          );
+        },
       ),
     );
   }

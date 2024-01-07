@@ -96,7 +96,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           }
           if (loggingOut) return '/login';
           return null;
-          // return appState.redirectState(state);
         },
       ),
       debugShowCheckedModeBanner: false,

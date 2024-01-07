@@ -70,6 +70,10 @@ class _VerificationWidgetState extends State<VerificationWidget> {
                           setState(() {
                             _verificationError = 'Invalid code';
                           });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            showSuccess('Account verified'),
+                          );
                         }
                       });
                     },
