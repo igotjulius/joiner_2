@@ -264,6 +264,8 @@ abstract class ApiService {
     @Path('userId') String craUserId,
     @Query('method') String method, {
     @Part() required String licensePlate,
+    @Part() required String location,
+    @Part() required String contactNo,
     @Part() required String startRental,
     @Part() required String endRental,
     @Part() required int duration,
@@ -367,6 +369,8 @@ abstract class ApiService {
     @Part() required String licensePlate,
     @Part() required String ownerId,
     @Part() required String ownerName,
+    @Part() required String location,
+    @Part() required String contactNo,
     @Part() required String vehicleType,
     @Part() required String availability,
     @Part() required String startDate,

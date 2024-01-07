@@ -5,12 +5,16 @@ part 'car_rental_model.g.dart';
 @JsonSerializable()
 class CarRentalModel {
 final String? licensePlate;
+final String? location;
+final String? contactNo;
 final String? startRental;
 final String? endRental;
 final int? duration;
 
   const CarRentalModel ({
     this.licensePlate,
+    this.location,
+    this.contactNo,
     this.startRental,
     this.endRental,
     this.duration,

@@ -399,6 +399,8 @@ class _CarBookingWidgetState extends State<CarBookingWidget>
               showDialogLoading(context);
               final rental = CarRentalModel(
                 licensePlate: widget.car.licensePlate,
+                location: widget.car.location,
+                contactNo: widget.car.contactNo,
                 startRental: startDateConverted.toString(),
                 endRental: endDateConverted.toString(),
                 duration: _datePicked.duration.inDays,

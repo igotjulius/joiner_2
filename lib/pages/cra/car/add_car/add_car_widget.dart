@@ -67,7 +67,9 @@ class _AddCarWidgetState extends State<AddCarWidget> {
                     ownerId: provider.profile.id!,
                     ownerName:
                         '${provider.profile.firstName} ${provider.profile.lastName}',
-                    vehicleType: _vehicleTypeController.text.trim(),
+                    location: provider.profile.address!,
+                    contactNo: provider.profile.contactNo!,
+                    vehicleType: _vehicleTypeController.text,
                     availability: 'Available',
                     startDate: _datePicked!.start,
                     endDate: _datePicked!.end,

@@ -82,11 +82,19 @@ class _RentalDetailsState extends State<RentalDetails> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                label(
+                  isCra ? 'Renter\'s Name' : 'Vehicle Owner',
+                  isCra
+                      ? widget.rental!.renterName!
+                      : widget.rental!.vehicleOwner!,
+                ),
                 label('Payment Method',
                     widget.rental!.paymentId != null ? 'Online' : 'Cash'),
                 label('Rental Id', widget.rental!.id!),
                 if (widget.rental!.paymentId != null)
                   label('Payment Id', widget.rental!.paymentId!),
+                if (!isCra) label('Contact No', widget.rental!.contactNo!),
+                if (!isCra) label('Address', widget.rental!.location!),
                 timeline(),
               ].divide(
                 SizedBox(
@@ -140,7 +148,7 @@ class _RentalDetailsState extends State<RentalDetails> {
                 ),
                 Row(
                   children: [
-                    Text(DateFormat("EEE").format(widget.rental!.createdAt!)),
+                    Text(DateFormat('EEE').format(widget.rental!.createdAt!)),
                     Container(
                       height: 5,
                       width: 5,
@@ -151,7 +159,7 @@ class _RentalDetailsState extends State<RentalDetails> {
                     ),
                     Text(
                       DateFormat("MMM d 'at' h:mm a")
-                          .format(widget.rental!.createdAt!),
+                          .format(widget.rental!.createdAt!.add(Duration(hours: 8))),
                     ),
                   ].divide(
                     SizedBox(

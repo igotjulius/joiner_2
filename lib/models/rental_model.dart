@@ -10,6 +10,8 @@ class RentalModel {
   final String? id;
   final String? licensePlate;
   final String? vehicleOwner;
+  final String? location;
+  final String? contactNo;
   final String? renterUserId;
   final String? renterName;
   final DateTime? startRental;
@@ -26,6 +28,8 @@ class RentalModel {
     this.id,
     this.licensePlate,
     this.vehicleOwner,
+    this.location,
+    this.contactNo,
     this.renterUserId,
     this.renterName,
     this.startRental,
