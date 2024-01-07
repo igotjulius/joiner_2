@@ -32,6 +32,7 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     final activeLobbies = provider.activeLobbies;
     return activeLobbies.length == 0 && pendingLobbies.isEmpty
         ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.info_outline,
@@ -42,21 +43,24 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
               Text('No Active Lobbies'),
             ],
           )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (pendingLobbies.length != 0)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: LobbyInvitationMolecule(lobbies: pendingLobbies),
+        : SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (pendingLobbies.length != 0)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: LobbyInvitationMolecule(lobbies: pendingLobbies),
+                  ),
+                Text(
+                  'Active Lobbies',
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-              Text(
-                'Active Lobbies',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              SizedBox(height: 10),
-              LobbyMolecule(),
-            ],
+                SizedBox(height: 10),
+                LobbyMolecule(),
+                SizedBox(height: 144),
+              ],
+            ),
           );
   }
 
@@ -117,25 +121,21 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
               PromosList(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SingleChildScrollView(
-                  primary: true,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              context.pushNamed('Archive');
-                            },
-                            icon: Icon(Icons.archive_outlined),
-                          ),
-                        ],
-                      ),
-                      displayLobbies(),
-                      SizedBox(height: 144),
-                    ],
-                  ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            context.pushNamed('Archive');
+                          },
+                          icon: Icon(Icons.archive_outlined),
+                        ),
+                      ],
+                    ),
+                    Expanded(child: displayLobbies()),
+                  ],
                 ),
               ),
             ],
