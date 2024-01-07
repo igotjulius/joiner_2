@@ -31,19 +31,16 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
     final pendingLobbies = provider.pendingLobbies;
     final activeLobbies = provider.activeLobbies;
     return activeLobbies.length == 0 && pendingLobbies.isEmpty
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 52.0,
-                  color: Colors.grey,
-                ),
-                SizedBox(height: 8.0),
-                Text('No Active Lobbies'),
-              ],
-            ),
+        ? Column(
+            children: [
+              Icon(
+                Icons.info_outline,
+                size: 52.0,
+                color: Colors.grey,
+              ),
+              SizedBox(height: 8.0),
+              Text('No Active Lobbies'),
+            ],
           )
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +105,9 @@ class _LobbiesWidgetState extends State<LobbiesWidget>
             bottom: TabBar(
               tabs: _tabs,
               controller: _tabController,
-              onTap: (value) => setState(() {}),
+              onTap: (value) {
+                (context.read<Auth>() as UserController).refetchLobbies();
+              },
             ),
           ),
           body: TabBarView(

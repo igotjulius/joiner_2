@@ -490,11 +490,14 @@ class UserController extends Auth {
   }
 
   // Vote to a poll TODO: implemented
-  Future<bool> votePoll(String choice, String lobbyId) async {
+  Future<bool> votePoll(String question, String choice, String lobbyId) async {
     try {
-      await _apiService.votePoll({'title': choice}, _currentUser.id, lobbyId);
-      super.notifyListeners();
-
+      await _apiService.votePoll(
+        {'question': question, 'title': choice},
+        _currentUser.id,
+        lobbyId,
+      );
+      notifyListeners();
       return true;
     } catch (e) {
       print('Error in voting poll: $e');

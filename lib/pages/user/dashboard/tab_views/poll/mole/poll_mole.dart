@@ -51,7 +51,7 @@ class _PollMoleculeState extends State<PollMolecule> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              context.pop();
             },
             child: Text('No'),
           ),
@@ -104,8 +104,11 @@ class _PollMoleculeState extends State<PollMolecule> {
                       ),
                       onTap: () {
                         provider
-                            .votePoll(_model.poll.choices![index]['title'],
-                                widget.lobbyId)
+                            .votePoll(
+                          _model.poll.question!,
+                          _model.poll.choices![index]['title'],
+                          widget.lobbyId,
+                        )
                             .then((value) {
                           if (value) {
                             _model.votePoll(index);

@@ -3,6 +3,7 @@ import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class LobbyInvitationMolecule extends StatefulWidget {
   final List<LobbyModel>? lobbies;
@@ -65,8 +66,10 @@ class _LobbyInvitationMoleculeState extends State<LobbyInvitationMolecule> {
                                   style:
                                       Theme.of(context).textTheme.headlineSmall,
                                 ),
+                                // Text(
+                                //   'Planned Date: ${lobby.startDate != null ? DateFormat('MMM d').format(lobby.startDate!) : ''} - ${lobby.endDate != null ? DateFormat('MMM d').format(lobby.endDate!) : ''}',
                                 Text(
-                                  'Planned Date: ${lobby.startDate ?? ''} - ${lobby.endDate ?? ''}',
+                                  'Planned Date: ${lobby.startDate} - ${lobby.endDate}',
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                               ],

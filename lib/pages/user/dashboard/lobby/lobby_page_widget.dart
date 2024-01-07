@@ -202,7 +202,9 @@ class _LobbyPageWidgetState extends State<LobbyPageWidget>
         isScrollable: true,
         tabs: _tabs,
         controller: _tabBarController,
-        onTap: (i) => setState(() {}),
+        onTap: (i) {
+          (context.read<Auth>() as UserController).refetchLobbies();
+        },
       ),
     );
   }
