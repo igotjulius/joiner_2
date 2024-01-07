@@ -125,12 +125,15 @@ class _AccountWidgetState extends State<AccountWidget> {
           label,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        Text(
-          '$content',
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(fontWeight: FontWeight.w500),
+        Spacer(),
+        Flexible(
+          child: Text(
+            '$content',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(fontWeight: FontWeight.w500),
+          ),
         ),
       ],
     );
