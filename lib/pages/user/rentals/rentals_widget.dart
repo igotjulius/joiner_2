@@ -1,15 +1,16 @@
+import 'package:joiner_1/models/rental_model.dart';
+import 'package:joiner_1/models/user_model.dart';
+import 'package:joiner_1/pages/user/provider/user_provider.dart';
+import 'package:joiner_1/widgets/atoms/user_rental_info.dart';
+import 'package:provider/provider.dart';
+
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'rentals_model.dart';
 export 'rentals_model.dart';
 
 class RentalsWidget extends StatefulWidget {
-  const RentalsWidget({
-    Key? key,
-    this.loc,
-  }) : super(key: key);
-
-  final LatLng? loc;
+  const RentalsWidget({super.key});
 
   @override
   _RentalsWidgetState createState() => _RentalsWidgetState();
@@ -17,6 +18,7 @@ class RentalsWidget extends StatefulWidget {
 
 class _RentalsWidgetState extends State<RentalsWidget> {
   late RentalsModel _model;
+  List<RentalModel>? rentals;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -24,6 +26,7 @@ class _RentalsWidgetState extends State<RentalsWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => RentalsModel());
+    rentals = context.read<UserProvider>().currentUser.rentals;
   }
 
   @override
@@ -67,7 +70,15 @@ class _RentalsWidgetState extends State<RentalsWidget> {
           child: Column(
             children: [
               Flexible(
-                child: _model.getRentals(),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: rentals?.length,
+                  itemBuilder: (context, index) {
+                    return RentalInfo(
+                      rental: rentals?[index],
+                    );
+                  },
+                ),
               ),
             ],
           ),

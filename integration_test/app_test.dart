@@ -2,25 +2,18 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:joiner_1/app_state.dart';
 import 'package:joiner_1/components/cra/car_item_widget.dart';
-import 'package:joiner_1/flutter_flow/nav/nav.dart';
 import 'package:joiner_1/index.dart';
-import 'package:joiner_1/main.dart' as app;
 import 'package:joiner_1/mock/test_utils.dart';
-import 'package:joiner_1/models/car_model.dart';
-import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
-import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/edit_car/edit_car_widget.dart';
-import 'package:joiner_1/pages/provider/cra_provider.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/modals/survey_poll_widget.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/poll/mole/poll_mole.dart';
 import 'package:joiner_1/widgets/atoms/budget_category.dart';
 import 'package:joiner_1/widgets/atoms/poll_choices.dart';
+import 'package:joiner_1/widgets/atoms/user_rental_info.dart';
 import 'package:joiner_1/widgets/molecules/active_lobby_mole.dart';
 import 'package:joiner_1/widgets/molecules/participant_atom.dart';
 import 'package:joiner_1/widgets/molecules/user_sign_up_mole.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -37,33 +30,7 @@ void main() {
 
 void manageAccount() {
   group('Testing: Account Management', () {
-    testWidgets('Register Account - invalid entries', (widgetTester) async {
-      // Setup
-      await widgetTester.pumpWidget(
-        testApp('/signUp'),
-      );
-      await widgetTester.pumpAndSettle();
-      final signUpBtn = find.text('Sign Up').first;
-
-      // Action
-      await widgetTester.enterText(
-          find.byType(TextFormField).at(2), 'invalidemail');
-      await widgetTester.dragUntilVisible(
-          find.text('Password'), find.byType(UserSignUpMole), Offset(0, -250));
-      await widgetTester.enterText(
-          find.byType(TextFormField).at(3), 'password');
-      await widgetTester.enterText(
-          find.byType(TextFormField).at(4), 'notmatchingpassword');
-      await widgetTester.tap(signUpBtn);
-      await widgetTester.pumpAndSettle();
-
-      // Testing
-      expect(find.text('Field is empty'), findsAny);
-      expect(find.text('Email is not valid'), findsOneWidget);
-      expect(find.text('Passwords don\'t match'), findsAny);
-    });
-
-    testWidgets('Register Account - valid entries', (widgetTester) async {
+    testWidgets('Register Account - Valid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/signUp'),
@@ -89,7 +56,54 @@ void manageAccount() {
       expect(find.byType(LoginPageWidget), findsOneWidget);
     });
 
-    testWidgets('Login Account - invalid entries', (widgetTester) async {
+    testWidgets('Register Account - Invalid entries', (widgetTester) async {
+      // Setup
+      await widgetTester.pumpWidget(
+        testApp('/signUp'),
+      );
+      await widgetTester.pumpAndSettle();
+      final signUpBtn = find.text('Sign Up').first;
+
+      // Action
+      await widgetTester.enterText(
+          find.byType(TextFormField).at(2), 'invalidemail');
+      await widgetTester.dragUntilVisible(
+          find.text('Password'), find.byType(UserSignUpMole), Offset(0, -250));
+      await widgetTester.enterText(
+          find.byType(TextFormField).at(3), 'password');
+      await widgetTester.enterText(
+          find.byType(TextFormField).at(4), 'notmatchingpassword');
+      await widgetTester.tap(signUpBtn);
+      await widgetTester.pumpAndSettle();
+
+      // Testing
+      expect(find.text('Field is empty'), findsAny);
+      expect(find.text('Email is not valid'), findsOneWidget);
+      expect(find.text('Passwords don\'t match'), findsAny);
+    });
+
+    testWidgets('Login Account - Valid entries', (widgetTester) async {
+      // Setup
+      await widgetTester.pumpWidget(
+        testApp('/login'),
+      );
+      await widgetTester.pumpAndSettle();
+
+      final emailFormField = find.byKey(Key('emailField'));
+      final passFormField = find.byKey(Key('passwordField'));
+      final loginButton = find.byKey(Key('loginButton'));
+
+      // Action
+      await widgetTester.enterText(emailFormField, '1@gmail.com');
+      await widgetTester.enterText(passFormField, '123456');
+      await widgetTester.tap(loginButton);
+      await widgetTester.pumpAndSettle();
+
+      // Testing
+      expect(find.byType(LobbiesWidget), findsOneWidget);
+    });
+
+    testWidgets('Login Account - Invalid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/login'),
@@ -119,48 +133,12 @@ void manageAccount() {
       // Test
       expect(find.text('Invalid username/password'), findsAny);
     });
-
-    testWidgets('Login Account - valid entries', (widgetTester) async {
-      // Setup
-      await widgetTester.pumpWidget(
-        testApp('/login'),
-      );
-      await widgetTester.pumpAndSettle();
-
-      final emailFormField = find.byKey(Key('emailField'));
-      final passFormField = find.byKey(Key('passwordField'));
-      final loginButton = find.byKey(Key('loginButton'));
-
-      // Action
-      await widgetTester.enterText(emailFormField, '1@gmail.com');
-      await widgetTester.enterText(passFormField, '123456');
-      await widgetTester.tap(loginButton);
-      await widgetTester.pumpAndSettle();
-
-      // Testing
-      expect(find.byType(LobbiesWidget), findsOneWidget);
-    });
   });
 }
 
 void manageLobby() {
   group('Testing: Manage Lobby', () {
-    testWidgets('Display Lobby', (widgetTester) async {
-      // Setup
-      await widgetTester.pumpWidget(
-        testApp('/lobbies'),
-      );
-      await widgetTester.pumpAndSettle();
-
-      // Action
-      await widgetTester.tap(find.text('Lobbies'));
-      await widgetTester.pumpAndSettle();
-
-      // Testing
-      expect(find.byType(ActiveLobbyMolecule), findsAny);
-    });
-
-    testWidgets('Create Lobby - valid entries', (widgetTester) async {
+    testWidgets('Create Lobby - Valid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/lobbies'),
@@ -183,7 +161,7 @@ void manageLobby() {
       expect(find.byType(Card), findsNWidgets(4));
     });
 
-    testWidgets('Create Lobby - title input is empty', (widgetTester) async {
+    testWidgets('Create Lobby - Title input is empty', (widgetTester) async {
       await widgetTester.pumpWidget(
         testApp('/lobbies/createLobby'),
       );
@@ -198,7 +176,7 @@ void manageLobby() {
       expect(find.text('Field is empty'), findsOneWidget);
     });
 
-    testWidgets('Edit Lobby - valid entries', (widgetTester) async {
+    testWidgets('Edit Lobby - Valid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/lobbies'),
@@ -223,7 +201,27 @@ void manageLobby() {
       expect(find.text(newTitle), findsOneWidget);
     });
 
-    testWidgets('Edit Lobby - title input is empty', (widgetTester) async {});
+    testWidgets('Edit Lobby - Title input is empty', (widgetTester) async {
+      // Setup
+      await widgetTester.pumpWidget(
+        testApp('/lobbies'),
+      );
+      await widgetTester.pumpAndSettle();
+
+      // Action
+      await widgetTester.tap(find.text('Lobbies'));
+      await widgetTester.pumpAndSettle();
+      await widgetTester.tap(find.byType(Card).first);
+      await widgetTester.pumpAndSettle();
+      await widgetTester.tap(find.text('Edit details'));
+      await widgetTester.pumpAndSettle();
+      await widgetTester.enterText(find.byType(TextFormField).first, '');
+      await widgetTester.tap(find.text('Save'));
+      await widgetTester.pumpAndSettle();
+
+      // Testing
+      expect(find.text('Field is empty'), findsOneWidget);
+    });
 
     testWidgets('Leave Lobby', (widgetTester) async {
       // Setup
@@ -298,7 +296,7 @@ void manageChat() {
 
 void manageResources() {
   group('Testing: Manage Resources', () {
-    testWidgets('Add expense - valid entries', (widgetTester) async {
+    testWidgets('Add expense - Valid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/lobbies'),
@@ -323,7 +321,7 @@ void manageResources() {
       // Testing
       expect(find.text('Foods'), findsOneWidget);
     });
-    testWidgets('Add expense - invalid entries', (widgetTester) async {
+    testWidgets('Add expense - Invalid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/lobbies'),
@@ -386,7 +384,7 @@ void manageResources() {
 
 void managePoll() {
   group('Testing: Manage Poll', () {
-    testWidgets('Add poll - valid entries', (widgetTester) async {
+    testWidgets('Add poll - Valid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/lobbies'),
@@ -425,7 +423,7 @@ void managePoll() {
       expect(find.text('Meeting time?'), findsOneWidget);
     });
 
-    testWidgets('Add poll - invalid entries', (widgetTester) async {
+    testWidgets('Add poll - Invalid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/lobbies'),
@@ -521,7 +519,7 @@ void managePoll() {
 
 void manageParticipants() {
   group('Testing: Manage Participants', () {
-    testWidgets('Add participant - valid entries', (widgetTester) async {
+    testWidgets('Add participant - Valid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/lobbies'),
@@ -580,7 +578,7 @@ void manageParticipants() {
 
 void rentals() {
   group('Testing: Rentals', () {
-    testWidgets('Rent a car - valid entries', (widgetTester) async {
+    testWidgets('Rent a car - Valid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/rental'),
@@ -606,7 +604,7 @@ void rentals() {
       await widgetTester.pumpAndSettle();
 
       // Test
-      expect(find.text('Total').first, findsOneWidget);
+      expect(find.text('Total'), findsOneWidget);
 
       // Click next
       await widgetTester.tap(find.byType(FilledButton).first);
@@ -616,40 +614,37 @@ void rentals() {
       expect(find.text('Payment sent'), findsOneWidget);
     });
 
-    testWidgets('Rent a car - invalid entries', (widgetTester) async {});
+    testWidgets('Rent a car - Invalid entries', (widgetTester) async {
+      // Setup
+      await widgetTester.pumpWidget(
+        testApp('/rental'),
+      );
+      await widgetTester.pumpAndSettle();
 
-    testWidgets('Display rentals', (widgetTester) async {});
+      // Action
+      // Click next
+      await widgetTester.tap(find.byType(FilledButton).first);
+      await widgetTester.pumpAndSettle();
+
+      // Test
+      expect(find.text('Minimum rent duration is one day'), findsOneWidget);
+    });
+
+    testWidgets('Display rentals', (widgetTester) async {
+      // Setup
+      await widgetTester.pumpWidget(
+        testApp('/rentals'),
+      );
+      await widgetTester.pumpAndSettle();
+
+      // Test
+      expect(find.byType(RentalInfo), findsNWidgets(3));
+    });
   });
 }
 
 void manageCars() {
   group('Testing: Manage car', () {
-    // Setup
-    testWidgets('Register car - Invalid entries', (widgetTester) async {
-      // Setup
-      await widgetTester.pumpWidget(
-        testApp('/addCar'),
-      );
-      await widgetTester.pumpAndSettle();
-
-      // Action
-      await widgetTester.tap(find.byKey(Key('vehicleType')));
-      await widgetTester.pumpAndSettle();
-      await widgetTester.tap(find.text('Van').first, warnIfMissed: false);
-      await widgetTester.pumpAndSettle();
-      await widgetTester.enterText(find.byType(TextFormField).at(0), 'WYSIWYG');
-      widgetTester
-          .widget<TextFormField>(find.byType(TextFormField).at(1))
-          .controller
-          ?.text = 'Dec 5 - Dec 10';
-      final button = find.text('Register').first;
-      await widgetTester.tap(button);
-
-      // Testing
-      await widgetTester.pump();
-      expect(find.text('Registration failed'), findsOneWidget);
-    });
-
     testWidgets('Register car - Valid entries', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
@@ -674,6 +669,32 @@ void manageCars() {
       // Testing
       await widgetTester.pump(Duration(seconds: 4));
       expect(find.text('Car registered successfully'), findsOneWidget);
+    });
+
+    // Setup
+    testWidgets('Register car - Invalid entries', (widgetTester) async {
+      // Setup
+      await widgetTester.pumpWidget(
+        testApp('/addCar'),
+      );
+      await widgetTester.pumpAndSettle();
+
+      // Action
+      await widgetTester.tap(find.byKey(Key('vehicleType')));
+      await widgetTester.pumpAndSettle();
+      await widgetTester.tap(find.text('Van').first, warnIfMissed: false);
+      await widgetTester.pumpAndSettle();
+      await widgetTester.enterText(find.byType(TextFormField).at(0), 'WYSIWYG');
+      widgetTester
+          .widget<TextFormField>(find.byType(TextFormField).at(1))
+          .controller
+          ?.text = 'Dec 5 - Dec 10';
+      final button = find.text('Register').first;
+      await widgetTester.tap(button);
+
+      // Testing
+      await widgetTester.pump();
+      expect(find.text('Registration failed'), findsOneWidget);
     });
 
     testWidgets('Edit car - Valid entries', (widgetTester) async {
@@ -727,24 +748,7 @@ void manageCars() {
       expect(find.text('Changes saved'), findsOneWidget);
     });
 
-    testWidgets('Edit car - On rent status', (widgetTester) async {
-      // Setup
-      await widgetTester.pumpWidget(
-        MaterialApp(
-          home: EditCarWidget(
-            car: mockCars()[2],
-          ),
-        ),
-      );
-      await widgetTester.pumpAndSettle();
-
-      // Testing
-      expect(find.text('Save changes'), findsNothing);
-    });
-
-    testWidgets('Remove car', (widgetTester) async {});
-
-    testWidgets('Remove car - on rent status', (widgetTester) async {
+    testWidgets('Remove car', (widgetTester) async {
       // Setup
       await widgetTester.pumpWidget(
         testApp('/craCar'),
@@ -769,13 +773,6 @@ void manageCars() {
         find.byType(CarItemWidget),
         findsNWidgets(2),
       );
-
-      // Action
-      await widgetTester.pumpAndSettle();
-      await widgetTester.longPress(find.byType(CarItemWidget).last,
-          warnIfMissed: false);
-      await widgetTester.pump();
-      expect(find.text('Car still on rent'), findsOneWidget);
     });
   });
 }

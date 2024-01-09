@@ -1,4 +1,5 @@
 import 'package:joiner_1/models/helpers/user.dart';
+import 'package:joiner_1/models/rental_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
@@ -11,6 +12,7 @@ class UserModel extends User {
   final String? password;
   final String? firstName, lastName, email;
   final List<Map<String, String>>? friends;
+  final List<RentalModel>? rentals;
 
   const UserModel({
     this.id,
@@ -19,6 +21,7 @@ class UserModel extends User {
     this.email,
     this.password,
     this.friends,
+    this.rentals,
   }) : super(
           id: id,
           firstName: firstName,

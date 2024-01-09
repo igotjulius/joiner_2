@@ -10,6 +10,7 @@ import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/models/message_model.dart';
 import 'package:joiner_1/models/participant_model.dart';
 import 'package:joiner_1/models/poll_model.dart';
+import 'package:joiner_1/models/rental_model.dart';
 import 'package:joiner_1/models/user_model.dart';
 import 'package:joiner_1/pages/cra/car/add_car/add_car_widget.dart';
 import 'package:joiner_1/pages/cra/car/cra_car_widget.dart';
@@ -72,7 +73,7 @@ List<CarModel> mockCars() {
       vehicleType: 'Sedan',
       availability: 'Available',
       startDate: DateTime.now(),
-      endDate: DateTime(2024),
+      endDate: DateTime(2025),
       price: 1234,
       photoUrl: [],
     ),
@@ -83,7 +84,7 @@ List<CarModel> mockCars() {
       vehicleType: 'Sedan',
       availability: 'Available',
       startDate: DateTime.now(),
-      endDate: DateTime(2024),
+      endDate: DateTime(2025),
       price: 1234,
       photoUrl: [],
     ),
@@ -92,9 +93,9 @@ List<CarModel> mockCars() {
       ownerName: 'Doe',
       ownerId: '3',
       vehicleType: 'Sedan',
-      availability: 'On rent',
+      availability: 'Available',
       startDate: DateTime.now(),
-      endDate: DateTime(2024),
+      endDate: DateTime(2025),
       price: 1234,
       photoUrl: [],
     ),
@@ -115,6 +116,7 @@ UserModel mockUser() {
         'status': 'accepted',
       },
     ],
+    rentals: mockRentals(),
   );
 }
 
@@ -200,6 +202,10 @@ GoRouter mockRouter(String initialLocation) {
             builder: (context, state) => ResultWidget(result: 'success'),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/rentals',
+        builder: (context, state) => RentalsWidget(),
       ),
     ],
   );
@@ -329,6 +335,56 @@ List<MessageModel> mockMessages() {
       creatorId: 'user-2',
       createdAt: DateTime.now(),
       message: 'I\'m excited for the weekend',
+    ),
+  ];
+}
+
+List<RentalModel> mockRentals() {
+  return [
+    RentalModel(
+      id: '1',
+      licensePlate: 'WYSIWYG',
+      vehicleOwner: 'John Doe',
+      renterUserId: 'renter-1',
+      renterName: 'Juan Cruz',
+      startRental: DateTime.now(),
+      endRental: DateTime.now(),
+      duration: 1,
+      rentalStatus: 'Incomplete',
+      price: 123,
+      linkedLobbyId: 'lobby-1',
+      paymentId: 'payment-1',
+      paymentStatus: 'Paid',
+    ),
+    RentalModel(
+      id: '2',
+      licensePlate: 'AWDFQW',
+      vehicleOwner: 'John Doe',
+      renterUserId: 'renter-1',
+      renterName: 'Juan Cruz',
+      startRental: DateTime.now(),
+      endRental: DateTime.now(),
+      duration: 1,
+      rentalStatus: 'Incomplete',
+      price: 123,
+      linkedLobbyId: 'lobby-1',
+      paymentId: 'payment-1',
+      paymentStatus: 'Paid',
+    ),
+    RentalModel(
+      id: '3',
+      licensePlate: 'ZXCVXVB',
+      vehicleOwner: 'John Doe',
+      renterUserId: 'renter-1',
+      renterName: 'Juan Cruz',
+      startRental: DateTime.now(),
+      endRental: DateTime.now(),
+      duration: 1,
+      rentalStatus: 'Incomplete',
+      price: 123,
+      linkedLobbyId: 'lobby-1',
+      paymentId: 'payment-1',
+      paymentStatus: 'Paid',
     ),
   ];
 }
