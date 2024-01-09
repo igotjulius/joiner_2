@@ -4,6 +4,7 @@ import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/expense_model.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:joiner_1/pages/user/dashboard/lobby/lobby_page_widget.dart';
+import 'package:joiner_1/pages/user/dashboard/tab_views/resources/budget_chart.dart';
 import 'package:joiner_1/pages/user/dashboard/tab_views/resources/modals/add_budget_widget.dart';
 import 'package:joiner_1/utils/utils.dart';
 import 'package:joiner_1/widgets/atoms/budget_category.dart';
@@ -133,6 +134,10 @@ class _BudgetWidgetState extends State<BudgetWidget>
                   widget.currentLobby.hostId)
                 splitOption(),
             ],
+          ),
+          SizedBox(height: 10),
+          BudgetChart(
+            participants: widget.currentLobby.participants!,
           ),
           SizedBox(height: 10),
           contributions(),
