@@ -29,7 +29,7 @@ class _BudgetChartState extends State<BudgetChart> {
       final percentage =
           widget.participants[i].contribution!['inPercent']! * 100;
       sections.add(
-        showData(percentage, widget.participants[i].firstName!, colors[i % 10]),
+        showData(percentage, widget.participants[i].firstName!, Colors.blue),
       );
     }
     return sections;

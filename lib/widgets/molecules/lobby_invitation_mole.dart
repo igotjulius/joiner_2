@@ -3,7 +3,6 @@ import 'package:joiner_1/controllers/auth_controller.dart';
 import 'package:joiner_1/controllers/user_controller.dart';
 import 'package:joiner_1/models/lobby_model.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class LobbyInvitationMolecule extends StatefulWidget {
   final List<LobbyModel>? lobbies;

@@ -111,13 +111,16 @@ class _LobbyDashboardWidgetState extends State<LobbyDashboardWidget> {
                         SizedBox(
                           width: 8,
                         ),
-                        Text(
-                          _currentLobby.participants!
-                              .where(
-                                  (participant) => participant.type == 'Joiner')
-                              .map((participant) =>
-                                  '${participant.firstName} ${participant.lastName}')
-                              .join(', '),
+                        Container(
+                          width: 250,
+                          child: Text(
+                            _currentLobby.participants!
+                                .where((participant) =>
+                                    participant.type == 'Joiner')
+                                .map((participant) =>
+                                    '${participant.firstName} ${participant.lastName}')
+                                .join(', '),
+                          ),
                         ),
                       ],
                     ),
